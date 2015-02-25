@@ -6,5 +6,6 @@ UML/.vpprefdata/
 UML/*.vpp~*
 UML/*.vpp.working
 UML/tmp/
+UML/.lock
 
 Personal/
