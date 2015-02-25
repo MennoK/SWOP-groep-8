@@ -2,7 +2,9 @@ bin/
 .classpath
 .metadata/
 
-
+UML/.vpprefdata/
 UML/*.vpp~*
 UML/*.vpp.working
-UML/tmp
+UML/tmp/
+
+Personal/
