@@ -1,3 +1,7 @@
 bin/
 .classpath
 .metadata/
+
+
+UML/*.vpp~*
+UML/*.vpp.working
