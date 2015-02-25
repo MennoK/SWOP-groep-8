@@ -3,13 +3,13 @@ package TaskManager;
 public class Time {
 
 	
-	Time(int hours, int minutes,int seconds){
+	public Time(int hours, int minutes,int seconds){
 		setHours(hours);
 		setMinutes(minutes);
 		setSeconds(seconds);
 	}
 	
-	Time(int hours, int minutes,int seconds, int day, int month, int year){
+	public Time(int hours, int minutes,int seconds, int day, int month, int year){
 		setHours(hours);
 		setMinutes(minutes);
 		setSeconds(seconds);

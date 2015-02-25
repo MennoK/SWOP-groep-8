@@ -1,8 +1,11 @@
 package TaskManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Project {
+	
 public String getStatus() {
 	return null;
 }
@@ -15,4 +18,8 @@ public Task getTask(int taskId) {
 public String getDetails() {
 	return null;
 }
+
+	Calendar dueDate = new GregorianCalendar();
+	Calendar beginDate = new GregorianCalendar();
+	
 }
