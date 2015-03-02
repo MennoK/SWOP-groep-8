@@ -1,19 +1,21 @@
 package TaskManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectController {
-private ArrayList<Project> projects;
-public void addProject(Project project) {
+	private ArrayList<Project> projects;
+	private Clock clock;
 	
-}
-public ArrayList<Project> getAllProjects() {
-	return null;
-}
-public Project getProject(int projectId) {
-	return null;
-}
-public Task getTaskFromProject(int projectId, int taskId) {
-	return null;
-}
+	public void addProject(Project project) {
+
+	}
+
+	public List<Project> getAllProjects() {
+		return null;
+	}
+
+	public Clock getClock() {
+		return null;
+	}
 }
