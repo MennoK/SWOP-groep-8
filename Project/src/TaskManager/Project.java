@@ -13,7 +13,7 @@ public class Project {
 	private Instant creationTime;
 	private Instant dueTime;
 
-	public ProjectStatus getStatus(Instant now) {
+	public ProjectStatus getStatus() {
 		return null;
 	}
 	

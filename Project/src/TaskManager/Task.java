@@ -10,11 +10,15 @@ public class Task {
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
-	private Instant finishTime;
+	private Instant endTime;
 	private Instant startTime;
 	private boolean failed;
 
-	public TaskStatus getStatus(Instant now) {
+	public TaskStatus getStatus() {
+		return null;
+	}
+	
+	public Instant getEstimatedFinishTime(Instant now) {
 		return null;
 	}
 
@@ -50,12 +54,12 @@ public class Task {
 		this.acceptableDeviation = acceptableDeviation;
 	}
 
-	public Instant getFinishTime() {
-		return finishTime;
+	public Instant getEndTime() {
+		return endTime;
 	}
 
-	public void setFinishTime(Instant finishTime) {
-		this.finishTime = finishTime;
+	public void setEndTime(Instant endTime) {
+		this.endTime = endTime;
 	}
 
 	public Instant getStartTime() {
