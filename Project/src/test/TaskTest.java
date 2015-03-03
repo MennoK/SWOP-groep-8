@@ -39,9 +39,9 @@ public class TaskTest {
 
 		level2DependentTask = new Task("a task dependent on all kind of tasks",
 				Duration.ofHours(8), 0.2);
-		level2DependentTask.addDependency(dependentTask);
 		level2DependentTask.addDependency(finishedTask);
 		level2DependentTask.addDependency(failedTask);
+		level2DependentTask.addDependency(dependentTask);
 	}
 
 	@Test
@@ -73,6 +73,31 @@ public class TaskTest {
 	@Test
 	public void getStatusLevel2DependentTask() {
 		assertEquals(TaskStatus.UNAVAILABLE, level2DependentTask.getStatus());
+	}
+
+	@Test
+	public void getEstimatedFinishTimeAvaillableTask() {
+		assertEquals(Instant.parse("2015-03-04T08:00:00Z"),
+				baseTask.getEstimatedFinishTime(now));
+	}
+
+	@Test
+	public void getEstimatedFinishTimeUvaillableTask() {
+		assertEquals(Instant.parse("2015-03-05T08:00:00Z"),
+				dependentTask.getEstimatedFinishTime(now));
+	}
+
+	@Test
+	public void getEstimatedFinishTimeLevel2Task() {
+		assertEquals(Instant.parse("2015-03-06T08:00:00Z"),
+				level2DependentTask.getEstimatedFinishTime(now));
+	}
+
+	@Test
+	public void getEstimatedFinishTimeUvaillableTaskOverDueDependence() {
+		assertEquals(Instant.parse("2015-03-06T08:00:00Z"),
+				dependentTask.getEstimatedFinishTime(Instant
+						.parse("2015-03-05T08:00:00Z")));
 	}
 
 	@Test(expected = LoopingDependencyException.class)

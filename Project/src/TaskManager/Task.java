@@ -32,9 +32,28 @@ public class Task {
 				return TaskStatus.UNAVAILABLE;
 		return TaskStatus.AVAILABLE;
 	}
-	
+
+	private Instant add(Instant instant, Duration duration) {
+		return instant.plus(Duration.ofDays(duration.toHours() / 8));
+	}
+
 	public Instant getEstimatedFinishTime(Instant now) {
-		return null;
+		if (getStartTime() != null)
+			return add(getStartTime(), getEstimatedDuration());
+
+		if (getDependencies().size() == 0)
+			return add(now, getEstimatedDuration());
+
+		Instant dependenceFinishTime = getDependencies().get(0)
+				.getEstimatedFinishTime(now);
+		for (Task dependency : getDependencies()) {
+			if (dependenceFinishTime.compareTo(dependency
+					.getEstimatedFinishTime(now)) < 0)
+				dependenceFinishTime = dependency.getEstimatedFinishTime(now);
+		}
+		if (dependenceFinishTime.compareTo(now) < 0)
+			return add(now, getEstimatedDuration());
+		return add(dependenceFinishTime, getEstimatedDuration());
 	}
 
 	private boolean hasDependency(Task task) {
