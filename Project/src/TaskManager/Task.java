@@ -14,16 +14,45 @@ public class Task {
 	private Instant startTime;
 	private boolean failed;
 
+	public Task(String description, Duration estimatedDuration,
+			double acceptableDeviation) {
+		this.description = description;
+		this.estimatedDuration = estimatedDuration;
+		this.acceptableDeviation = acceptableDeviation;
+		this.dependencies = new ArrayList<Task>();
+	}
+
 	public TaskStatus getStatus() {
-		return null;
+		if (isFailed())
+			return TaskStatus.FAILED;
+		if (getEndTime() != null)
+			return TaskStatus.FINISHED;
+		for (Task dependency : getDependencies())
+			if (dependency.getStatus() != TaskStatus.FINISHED)
+				return TaskStatus.UNAVAILABLE;
+		return TaskStatus.AVAILABLE;
 	}
 	
 	public Instant getEstimatedFinishTime(Instant now) {
 		return null;
 	}
 
-	public void addDependency(Task dependency) {
+	private boolean hasDependency(Task task) {
+		if (getDependencies().contains(task))
+			return true;
+		for (Task dependency : getDependencies())
+			if (dependency.hasDependency(task))
+				return true;
+		return false;
+	}
 
+	public void addDependency(Task dependency)
+			throws LoopingDependencyException {
+		if (dependency.hasDependency(this))
+			throw new LoopingDependencyException(
+					"Tried to add task1 as a dependency to task2,"
+							+ " but task2 is already dependent on task1.");
+		dependencies.add(dependency);
 	}
 
 	public List<Task> getDependencies() {
