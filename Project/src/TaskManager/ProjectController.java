@@ -6,20 +6,23 @@ import java.util.List;
 
 /**
  * 
- * The class: ProjectController ...
+ * The projectController class contains a list of all the projects
+ * and the internal clock of the system. The project controller
+ * is allowed to create new projects.
  * 
  * @author Groep 8
  */
 
 public class ProjectController {
-	
+
 	private ArrayList<Project> projects;
 	private Clock clock;
 
 	/**
-	 * Default constructor : sets a new empty list of projects
+	 * Default constructor : 
+	 * sets a new empty list of projects
+	 * sets a new clock
 	 */
-	//TODO commentaar
 	public ProjectController(Clock clock){
 		projects = new ArrayList<Project>();
 		this.clock = clock;
@@ -43,18 +46,19 @@ public class ProjectController {
 	 * Adds a given project to the list of projects.
 	 * 
 	 * @param project: project to be added
-	 * @throws IllegalArgumentException //TODO
+	 * @throws IllegalArgumentException : thrown when the given project is not valid
 	 */
 	public void addProject(Project project) throws IllegalArgumentException {
 		if(!canHaveProject(project)){
-			throw new IllegalArgumentException("The given project is already in this project.");		}
+			throw new IllegalArgumentException("The given project is already in this project.");		
+		}
 		else {
 			getAllProjects().add(project);
 		}
 	}
 
 	/**
-	 * Checks if the project controller can have the given project. This is
+	 * Determines if the project controller can have the given project. This is
 	 * true if and only if the given project is not yet in the project controller
 	 * and the project is not null 
 	 *  
@@ -74,7 +78,11 @@ public class ProjectController {
 		return projects;
 	}
 
-	//TODO commentaar
+	/**
+	 * Returns the clock of the system
+	 * 
+	 * @return clock : system clock
+	 */
 	public Clock getClock() {
 		return clock;
 	}

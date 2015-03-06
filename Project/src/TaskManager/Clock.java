@@ -3,6 +3,8 @@ package TaskManager;
 import java.time.LocalDateTime;
 /**
  * 
+ * The Clock class implements the internal clock of the system.
+ * 
  * @author Groep 8
  *
  */
@@ -11,14 +13,23 @@ public class Clock {
 	private LocalDateTime currentTime;
 
 	/**
-	 * @param startTime 
+	 * The constructor of the class clock
+	 * sets the current time to the given time
+	 * 
+	 * @param startTime : the given time
 	 */
 	public Clock(LocalDateTime startTime){
 		this.currentTime = startTime;
 	}
 
-	//TODO commentaar
-	public void setTime(LocalDateTime newTime) {
+	/**
+	 * Sets the new time of the system if and only if 
+	 * the given time is valid
+	 * 
+	 * @param newTime : new time of the system
+	 * @throws IllegalArgumentException: thrown when the new time is not valid
+	 */
+	public void setTime(LocalDateTime newTime) throws IllegalArgumentException{
 		if(!canHaveTime(newTime)){
 			throw new IllegalArgumentException("The given time is before the current time");
 		}
@@ -27,13 +38,21 @@ public class Clock {
 		}
 	}
 
-	public boolean canHaveTime(LocalDateTime time){
+	/**
+	 * Determines if the class can have a new time (given as argument). The method
+	 * returns true if and only if the given time is after or equal to the current time.
+	 * 
+	 * @param time: given time
+	 * @return true if and only if the given time is after or equal to the current time
+	 */
+	private boolean canHaveTime(LocalDateTime time){
 		return time.isAfter(getTime()) || time.isEqual(getTime());
 	}
 	
 	/**
+	 * Returns the current time of the system
 	 * 
-	 * @return
+	 * @return currentTime : current time of the system
 	 */
 	public LocalDateTime getTime() {
 		return currentTime;

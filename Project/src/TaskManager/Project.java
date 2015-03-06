@@ -6,9 +6,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * This class ..
+ * The Project class describes a project in system. Every project has the
+ * same details: name, description, creation time and a due time. A project contains
+ * a list of his tasks and is allowed to create new tasks. Projects can be finished
+ * or ongoing. 
  * 
  * @author groep 8
  *
@@ -23,7 +25,8 @@ public class Project {
 	private LocalDate dueTime;
 
 	/**
-	 * Constructor of the Project class
+	 * Constructor of the Project class:
+	 * Sets a new list of tasks
 	 * 
 	 * @param name : name of the project
 	 * @param description : description of the project
@@ -56,7 +59,7 @@ public class Project {
 	 * This method adds a given task to a project
 	 * 
 	 * @param task : task to add to project
-	 * @throws IllegalArgumentException //TODO hoe werkt dit?
+	 * @throws IllegalArgumentException : thrown when the given task is not valid
 	 */
 	public void addTask(Task task) throws IllegalArgumentException {
 		if(!canHaveTask(task)){
@@ -91,11 +94,12 @@ public class Project {
 	
 	/**
 	 * Returns true if and only if all tasks of the project are finished. It returns
-	 * false if a task is failed or not yet available. 
+	 * false if a task is unavailable or not yet available. 
+	 * 
+	 * If a project does not have any tasks, the project has finished as well.
 	 * 
 	 * @return true if and only if all tasks are finished
 	 */
-	//TODO Commentaar geentasks = finished
 	private boolean hasFinished(){
 		for(Task task: getAllTasks()){
 			if(task.getStatus() == TaskStatus.UNAVAILABLE || task.getStatus() == TaskStatus.AVAILABLE){
@@ -120,10 +124,12 @@ public class Project {
 		}
 	}
 
+	//TODO implementatie
 	public Instant getEstimatedFinishTime(Instant now) {
 		return null;
 	}
 
+	//TODO implementatie
 	public Instant getTotalDelay(Instant now) {
 		return null;
 	}
@@ -177,7 +183,7 @@ public class Project {
 	 * This method sets the due time of project
 	 * 
 	 * @param dueTime: given due time of a project
-	 * @throws IllegalArgumentException //TODO hoe moet dit? 
+	 * @throws IllegalArgumentException: thrown when the given due time is not valid 
 	 */
 	public void setDueTime(LocalDate dueTime) throws IllegalArgumentException{
 		if(!canHaveDueTime(dueTime)){
@@ -187,12 +193,12 @@ public class Project {
 	}
 	
 	/**
-	 * Checks if the given due time is valid. It returns true if and 
+	 * Determines if the given due time is valid. It returns true if and 
 	 * only if the given due time is after the creation time of the project
+	 * or is equal to the creation time
 	 *
-	 * @return true if and only if the due time is after the creation time
+	 * @return true if and only if the due time is after the creation time or is equal to the creation time
 	 */
-	//TODO Commentaar
 	private boolean canHaveDueTime(LocalDate dueTime){
 		return dueTime.isAfter(getCreationTime()) || dueTime.isEqual(getCreationTime());
 	}
@@ -206,12 +212,4 @@ public class Project {
 		return creationTime;
 	}
 	
-/*	*//**
-	 * sets the creation time of a project
-	 * 
-	 * @param creationTime : given creation time of a project
-	 *//*
-	public void setCreationTime(LocalDate creationTime){
-		this.creationTime = creationTime;
-	}*/
 }
