@@ -26,24 +26,24 @@ public class ProjectTester {
 
 	@Before
 	public void setUp(){
-		project = new Project("testname", "testdescription", LocalDate.of(2015, 03, 05), LocalDate.of(2015, 03, 06));
+		project = new Project("testname", "testdescription", LocalDateTime.of(2015, 03, 05,00,00), LocalDateTime.of(2015, 03, 06,00,00));
 	}
 
 	@Test
 	public void testDueTimeSetterAfterCreationTime(){
-		project.setDueTime(LocalDate.of(2015, 03, 07));
-		assertEquals(project.getDueTime(),LocalDate.of(2015, 03, 07));
+		project.setDueTime(LocalDateTime.of(2015, 03, 07,00,00));
+		assertEquals(project.getDueTime(),LocalDateTime.of(2015, 03, 07,00,00));
 	}
 
 	@Test
 	public void testDueTimeSetterOnCreationTime(){
-		project.setDueTime(LocalDate.of(2015, 03, 05));
-		assertEquals(project.getDueTime(), LocalDate.of(2015, 03, 05));
+		project.setDueTime(LocalDateTime.of(2015, 03, 05,00,00));
+		assertEquals(project.getDueTime(), LocalDateTime.of(2015, 03, 05,00,00));
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testDueTimeSetterBeforeCreationTime(){
-		project.setDueTime(LocalDate.of(2015,03,04));		
+		project.setDueTime(LocalDateTime.of(2015,03,04,00,00));		
 	}
 
 	@Test

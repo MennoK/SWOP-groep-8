@@ -27,14 +27,14 @@ public class ProjectControllerTester {
 
 	@Test
 	public void testCreateProject(){
-		projectController.createProject("name", "description", LocalDate.of(2015, 03, 05), LocalDate.of(2015, 03, 06));
+		projectController.createProject("name", "description", LocalDateTime.of(2015, 03, 05,00,00), LocalDateTime.of(2015, 03, 06, 00,00));
 		assertEquals(projectController.getAllProjects().size(), 1);
 	}
 
 	@Test
 	public void testAddProjectValidProjects(){
-		Project project1 = new Project("name1", "descr",  LocalDate.of(2015, 03, 05), LocalDate.of(2015, 03, 06));
-		Project project2 = new Project("name2", "descr",  LocalDate.of(2015, 03, 06), LocalDate.of(2015, 03, 07));
+		Project project1 = new Project("name1", "descr",  LocalDateTime.of(2015, 03, 05,00,00), LocalDateTime.of(2015, 03, 06, 00, 00));
+		Project project2 = new Project("name2", "descr",  LocalDateTime.of(2015, 03, 06,00,00), LocalDateTime.of(2015, 03, 07, 00, 00));
 		projectController.addProject(project1);
 		projectController.addProject(project2);
 
@@ -47,7 +47,7 @@ public class ProjectControllerTester {
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddProjectThatIsAlreadyInList(){
-		Project project1 = new Project("name1", "descr",  LocalDate.of(2015, 03, 05), LocalDate.of(2015, 03, 06));
+		Project project1 = new Project("name1", "descr",  LocalDateTime.of(2015, 03, 05,00,00), LocalDateTime.of(2015, 03, 06,00,00));
 		projectController.addProject(project1);
 		projectController.addProject(project1);
 	}

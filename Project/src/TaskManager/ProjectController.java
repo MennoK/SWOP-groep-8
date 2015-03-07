@@ -1,6 +1,7 @@
 package TaskManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ProjectController {
 	 * @param creationTime: creation time of the project (only the date needed)
 	 * @param dueTime: due time of the project (only the date needed)
 	 */
-	public void createProject(String name, String description, LocalDate creationTime, LocalDate dueTime){
+	public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime){
 		Project project = new Project(name, description, creationTime, dueTime);
 		this.addProject(project);
 	}
@@ -77,7 +78,7 @@ public class ProjectController {
 	public List<Project> getAllProjects() {
 		return projects;
 	}
-
+	
 	/**
 	 * Returns the clock of the system
 	 * 
