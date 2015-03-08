@@ -2,7 +2,6 @@ package Test;
 
 import static org.junit.Assert.*;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,10 +9,9 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Clock;
+import TaskManager.TaskManClock;
 import TaskManager.Project;
 import TaskManager.ProjectController;
-import TaskManager.Task;
 
 public class ProjectControllerTester {
 
@@ -21,8 +19,8 @@ public class ProjectControllerTester {
 
 	@Before
 	public void setUp() {
-		Clock clock = new TaskManager.Clock(LocalDateTime.now());
-		projectController = new ProjectController(clock);
+		TaskManClock taskManClock = new TaskManClock(LocalDateTime.now());
+		projectController = new ProjectController(taskManClock);
 	}
 
 	@Test

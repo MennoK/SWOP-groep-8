@@ -1,13 +1,14 @@
 package TaskManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 
  * The projectController class contains a list of all the projects
- * and the internal clock of the system. The project controller
+ * and the internal taskManClock of the system. The project controller
  * is allowed to create new projects.
  * 
  * @author Groep 8
@@ -16,16 +17,16 @@ import java.util.List;
 public class ProjectController {
 
 	private ArrayList<Project> projects;
-	private Clock clock;
+	private TaskManClock taskManClock;
 
 	/**
 	 * Default constructor : 
 	 * sets a new empty list of projects
-	 * sets a new clock
+	 * sets a new taskManClock
 	 */
-	public ProjectController(Clock clock){
+	public ProjectController(TaskManClock taskManClock){
 		projects = new ArrayList<Project>();
-		this.clock = clock;
+		this.taskManClock = taskManClock;
 	}
 
 	/**
@@ -79,11 +80,25 @@ public class ProjectController {
 	}
 
 	/**
-	 * Returns the clock of the system
+	 * Returns the time
 	 * 
-	 * @return clock : system clock
+	 * @return LocalDateTime : time
 	 */
-	public Clock getClock() {
-		return clock;
+	public LocalDateTime getTime() {
+		return this.taskManClock.getTime();
+	}
+
+	public void advanceTime(LocalDateTime time)
+	{
+
+		this.taskManClock.setTime(time);
+
+		for(Project project : this.getAllProjects())
+		{
+			for(Task task: project.getAllTasks())
+			{
+				task.updateStatus();
+			}
+		}
 	}
 }
