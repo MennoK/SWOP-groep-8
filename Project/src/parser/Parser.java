@@ -55,7 +55,7 @@ public class Parser {
 		Map<String, Object> objects = (Map<String, Object>) yaml.load(input);
 
 		//create all projects given by the input file
-		constructProjects((List<LinkedHashMap<String, Object>>) objects.get("projects"), projectController);
+		constructProjects((List<LinkedHashMap<String, Object>>) objects.get("projects"), projectController);		
 
 		//create all tasks given by the input file
 		constructTasks((List<LinkedHashMap<String, Object>>) objects.get("tasks"), projectController);
@@ -69,7 +69,6 @@ public class Parser {
 	 */
 	private void constructProjects(List<LinkedHashMap<String, Object>> projects, ProjectController controller){
 		for(LinkedHashMap<String, Object> project: projects){
-
 			//get all arguments needed for a project: name, description, creation time and due time
 			String name = (String) project.get("name");
 			String description = (String) project.get("description");
@@ -104,17 +103,19 @@ public class Parser {
 			Project projectOfTask = controller.getAllProjects().get(projectNumber);
 			projectOfTask.addTask(newTask);
 
-			//A task is alternative for a failed task
+			//Sets alternative task if the task is an alternative of an other task
 			if(task.get("alternativeFor") != null){
-				int alternativeFor = (int) task.get("alternativeFor");
-				//TODO moet nog ge"implementeerd worden in task?
+				int alternativeTaskNr = (int) task.get("alternativeFor");
+				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
+				//TODO simpele setter aangemaakt in task, was nog niet ge"implementeerd
+				newTask.setAlternative(alternativeTask);
 			}
 
 			//if a task has prequisite tasks, add dependencies to the task
 			if(task.get("prerequisiteTasks") != null){
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
-				for (int taskNr : prerequisiteTasks) {
-					newTask.addDependency(projectOfTask.getAllTasks().get(taskNr));
+				for (Integer taskNr : prerequisiteTasks) {
+					newTask.addDependency(projectOfTask.getAllTasks().get(taskNr-1));
 				}
 			}
 
@@ -123,16 +124,12 @@ public class Parser {
 				String status = (String) task.get("status");
 				LocalDateTime starTime = LocalDateTime.parse((CharSequence) task.get("startTime"), dateTimeFormatter);
 				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
-				if(status.equals("finished")){
-					
-				}
-				else{
-					
-				}
-				
-			//	newTask.setStartTime(starTime);
-			//	newTask.setEndTime(endTime);
-				
+				//TODO implementatie status in task + instant moet nog veranderd worden
+
+				//newTask.setStatus(status);
+				//newTask.setStartTime(starTime);
+				//newTask.setEndTime(endTime);
+
 			}
 		}
 	}

@@ -125,4 +125,15 @@ public class Task {
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 	}
+		
+	//alternative tasks
+	public void setAlternative(Task task){
+		this.alternativeTask = task;
+	}
+	
+	public Task getAlternative(){
+		return alternativeTask;	
+	}
+	
+	private Task alternativeTask;
 }

@@ -16,15 +16,6 @@ enum TaskStatus { ONGOING, FINISHED, FAILED }
 
 public class TaskManInitFileChecker extends StreamTokenizer {
 
-	
-	public static void main(String[] args) throws FileNotFoundException {
-		if (args.length < 1){
-			System.err.println("Error: First command line argument must be filename.");
-		}else{
-			new TaskManInitFileChecker(new FileReader(args[0])).checkFile();
-		}
-	}
-	
 	DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	
 	TaskManInitFileChecker(Reader r) {

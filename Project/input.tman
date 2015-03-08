@@ -57,13 +57,13 @@ tasks:
     startTime          : "2015-01-01 09:00"
     endTime            : "2015-01-30 18:00"
 
- # - project            : 1
- #   description        : "description"
- #   estimatedDuration  : 50
- #   acceptableDeviation: 0
- #   alternativeFor     : 3
- #   prerequisiteTasks  : [ 1, 2 ]
- #   status             :
+  - project            : 1
+    description        : "description"
+    estimatedDuration  : 50
+    acceptableDeviation: 0
+    alternativeFor     : 3
+    prerequisiteTasks  : [ 1, 2 ]
+    status             :
 
   - project            : 2
     description        : "description"
