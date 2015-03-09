@@ -177,5 +177,10 @@ public class ProjectTester {
 		assertEquals(task2.getStatus(), TaskStatus.UNAVAILABLE);
 		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
 	}
+	
+	@Test
+	public void testProjectWithNoTasksIsOngoing(){
+		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
+	}
 
 }

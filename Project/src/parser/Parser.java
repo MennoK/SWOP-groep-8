@@ -108,7 +108,7 @@ public class Parser {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
 				//TODO simpele setter aangemaakt in task, was nog niet ge"implementeerd
-				newTask.setAlternative(alternativeTask);
+				newTask.setAlterternativeTask(alternativeTask);
 			}
 
 			//if a task has prequisite tasks, add dependencies to the task
