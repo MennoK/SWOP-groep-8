@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 
 
+import TaskManager.InvalidTimeException;
 import TaskManager.TaskManClock;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +21,21 @@ public class ClockTester {
 	
 	@Test
 	public void testSetTimeAfterCurrentTime(){
-		taskManClock.setTime(LocalDateTime.of(2015, 03, 07,02,00));
+		try {
+			taskManClock.setTime(LocalDateTime.of(2015, 03, 07,02,00));
+		} catch (InvalidTimeException e) {
+			e.printStackTrace();
+		}
 		assertEquals(taskManClock.getTime(),LocalDateTime.of(2015, 03, 07,02,00));
 	}
 
 	@Test
 	public void testSetTimeOnCurrentTime(){
-		taskManClock.setTime(LocalDateTime.of(2015, 03, 07,01,00));
+		try {
+			taskManClock.setTime(LocalDateTime.of(2015, 03, 07,01,00));
+		} catch (InvalidTimeException e) {
+			e.printStackTrace();
+		}
 		assertEquals(taskManClock.getTime(), LocalDateTime.of(2015, 03, 07,01,00));
 	}
 
