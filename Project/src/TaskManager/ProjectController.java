@@ -88,7 +88,7 @@ public class ProjectController {
 		return this.taskManClock.getTime();
 	}
 
-	public void advanceTime(LocalDateTime time)
+	public void advanceTime(LocalDateTime time) throws InvalidTimeException
 	{
 
 		this.taskManClock.setTime(time);
