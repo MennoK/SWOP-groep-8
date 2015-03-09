@@ -45,9 +45,6 @@ public class UseCase1ShowProjectsTester {
 		task2 = new Task("Task 2", Duration.ofHours(2), 0.4);
 		task3 = new Task("Task 3", Duration.ofHours(3), 0.4);
 		
-		
-		
-		
 		project1.addTask(task1);
 		project2.addTask(task2);
 		project2.addTask(task3); 
