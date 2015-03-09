@@ -132,12 +132,18 @@ public class Project {
 		}
 	}
 
-	//TODO implementatie
-	public Instant getEstimatedFinishTime(Instant now) {
-		return null;
+	//TODO methode testen + documentatie
+	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
+		LocalDateTime estimatedFinishTime = LocalDateTime.of(0000, 01, 01, 00, 00, 00);
+		for(Task task: getAllTasks()){
+			if(task.getEstimatedFinishTime(now).isAfter(estimatedFinishTime)){
+				estimatedFinishTime = task.getEstimatedFinishTime(now);
+			}
+		}
+		return estimatedFinishTime;
 	}
 
-	//TODO methode testen
+	//TODO methode testen + documentatie
 	public Duration getTotalDelay() {
 		LocalDateTime longestDelay = LocalDateTime.of(0000, 01, 01, 00, 00, 00);
 		for(Task task: getAllTasks()){
@@ -150,12 +156,9 @@ public class Project {
 		if (longestDelay == LocalDateTime.of(0000, 01, 01, 00, 00, 00)) {
 			return null;
 		}
-		else{
-			
-			
-			return
+		else{			
+			return Duration.between(getDueTime(), longestDelay);
 		}
-		
 	}
 
 	/**
