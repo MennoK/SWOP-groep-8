@@ -104,7 +104,7 @@ public class UseCase1ShowProjectsTester {
 	@Test
 	public void testGetTotalDelayEqualsZero() {
 		//Delay task 1 = 0h
-		task1.setStartTime(LocalDateTime.of(2015, 03, 03,08,00));
+		task1.setStartTime(LocalDateTime.of(2015, 03, 03,8,00));
 		task1.setEndTime(LocalDateTime.of(2015, 03, 03,10,00));
 		assertEquals(0, project1.getTotalDelay());
 		
