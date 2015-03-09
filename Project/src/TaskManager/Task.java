@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
-	private ArrayList<Task> dependencies;
+	private ArrayList<Task> dependencies = new ArrayList<>();
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
@@ -81,6 +81,7 @@ public class Task {
 		return add(dependenceFinishTime, getEstimatedDuration());
 	}
 	public TaskStatus getStatus() {
+		this.updateStatus();
 		return this.status;
 	}
 	public void addMultipleDependencies(ArrayList<Task> dependencies) throws LoopingDependencyException{
@@ -132,6 +133,7 @@ public class Task {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+		this.updateStatus();
 	}
 
 	public LocalDateTime getStartTime() {
@@ -144,6 +146,7 @@ public class Task {
 
 	public boolean isFailed() {
 		return failed;
+		
 	}
 
 	public void setFailed(boolean failed) {
@@ -169,7 +172,7 @@ public class Task {
 		else if (getEndTime() != null) {
 			this.status = TaskStatus.FINISHED;
 		}
-		else {
+		else if (!getDependencies().isEmpty()){
 			for (Task dependency : getDependencies()) {
 				if (dependency.getStatus() != TaskStatus.FINISHED) {
 					this.status = TaskStatus.UNAVAILABLE;
