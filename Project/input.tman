@@ -1,0 +1,82 @@
+# The file format is a simple subset of YAML.
+# Everything after '#' is ignored (i.e. single line comment)
+projects:
+  - name         : "project x"
+    description  : "a project description"
+    creationTime : "2014-01-01 09:00" # YYYY-MM-DD HH:MM
+    dueTime      : "2014-02-01 18:00"
+
+  - name         : "project y"
+    description  : "another project description"
+    creationTime : "2015-01-01 09:00"
+    dueTime      : "2016-01-01 18:00"
+
+  - name         : "project z"
+    description  : "yet another project description"
+    creationTime : "2015-04-25 09:00"
+    dueTime      : "2015-04-30 18:00"
+
+tasks:
+    # projects and tasks are incrementally numbered starting with the number 0
+  - project            : 0
+    description        : "task description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    alternativeFor     :
+    prerequisiteTasks  :
+    # a task can be finished, failed, or unspecified (i.e. ongoing)
+    status             : finished
+    # These time stamps are only required if a task is finished of failed
+    startTime          : "2014-01-01 10:00"
+    endTime            : "2014-01-02 17:00"
+
+  - project            : 1
+    description        : "another task description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    alternativeFor     :
+    prerequisiteTasks  :
+    status             :
+
+  - project            : 1
+    description        : "yet another task description"
+    estimatedDuration  : 100
+    acceptableDeviation: 10
+    alternativeFor     :
+    prerequisiteTasks  :
+    status             :
+
+  - project            : 1
+    description        : "description"
+    estimatedDuration  : 50
+    acceptableDeviation: 0
+    alternativeFor     :
+    # Inner lists are between "[" and "]". Their items are seperated by ",".
+    prerequisiteTasks  : [ 1, 2 ]
+    status             : failed
+    startTime          : "2015-01-01 09:00"
+    endTime            : "2015-01-30 18:00"
+
+  - project            : 1
+    description        : "description"
+    estimatedDuration  : 50
+    acceptableDeviation: 0
+    alternativeFor     : 3
+    prerequisiteTasks  : [ 1, 2 ]
+    status             :
+
+  - project            : 2
+    description        : "description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    alternativeFor     :
+    prerequisiteTasks  :
+    status             :
+
+  - project            : 2
+    description        : "description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    alternativeFor     :
+    prerequisiteTasks  :
+    status             :
