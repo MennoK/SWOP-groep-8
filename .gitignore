@@ -2,7 +2,7 @@ bin/
 .classpath
 .metadata/
 
-Project/
+Project/.settings
 .idea/
 
 UML/.vpprefdata/
