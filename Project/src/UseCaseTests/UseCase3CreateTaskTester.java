@@ -9,18 +9,18 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Clock;
 import TaskManager.Project;
 import TaskManager.ProjectController;
+import TaskManager.TaskManClock;
 
 public class UseCase3CreateTaskTester {
 	private ProjectController controller;
 	private Project project1;
 	@Before
 	public void setUp(){
-		Clock clock = new Clock(LocalDateTime.of(2015, 03, 07,01,00));
+		TaskManClock clock = new TaskManClock(LocalDateTime.of(2015, 03, 07,01,00));
 		controller = new ProjectController(clock);
-		project1 = new Project("Project 1", "Description 1", LocalDate.of(2015, 03, 01), LocalDate.of(2015, 03, 10));
+		project1 = new Project("Project 1", "Description 1", LocalDateTime.of(2015, 03, 01, 00,00), LocalDateTime.of(2015, 03, 10,00,00));
 		controller.addProject(project1);
 		
 	}

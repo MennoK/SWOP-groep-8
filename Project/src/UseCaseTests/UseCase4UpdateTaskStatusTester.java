@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Clock;
+import TaskManager.TaskManClock;
 import TaskManager.LoopingDependencyException;
 import TaskManager.Project;
 import TaskManager.ProjectController;
@@ -24,9 +24,9 @@ public class UseCase4UpdateTaskStatusTester {
 	private Task task3;
 	@Before
 	public void setUp() throws LoopingDependencyException{
-		Clock clock = new Clock(LocalDateTime.of(2015, 03, 07,01,00));
+		TaskManClock clock = new TaskManClock(LocalDateTime.of(2015, 03, 07,01,00));
 		controller = new ProjectController(clock);
-		project1 = new Project("Project 1", "Description 1", LocalDate.of(2015, 03, 01), LocalDate.of(2015, 03, 10));
+		project1 = new Project("Project 1", "Description 1", LocalDateTime.of(2015, 03, 01, 00 ,00), LocalDateTime.of(2015, 03, 10,00,00));
 		controller.addProject(project1);
 		task1 = new Task("Task 1", Duration.ofHours(8), 0.4);
 		task2 = new Task("Task 2", Duration.ofHours(8), 0.4);

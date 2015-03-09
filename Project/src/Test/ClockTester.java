@@ -40,7 +40,7 @@ public class ClockTester {
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testSetTimeBeforeCurrentTime(){
+	public void testSetTimeBeforeCurrentTime() throws InvalidTimeException{
 		taskManClock.setTime(LocalDateTime.of(2015, 03, 06,00,00));
 	}
 

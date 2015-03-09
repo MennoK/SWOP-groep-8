@@ -10,21 +10,21 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Clock;
 import TaskManager.Project;
 import TaskManager.ProjectController;
+import TaskManager.TaskManClock;
 
 public class UseCase2CreateProjectTester {
 
 	private ProjectController controller;
 	@Before
 	public void setUp(){
-		Clock clock = new Clock(LocalDateTime.of(2015, 03, 07,01,00));
+		TaskManClock clock = new TaskManClock(LocalDateTime.of(2015, 03, 07,01,00));
 		controller = new ProjectController(clock);;
 	}
 	@Test
 	public void testCreateProject() {
-		controller.createProject("Project 1", "Description 1", LocalDate.of(2015, 03, 01), LocalDate.of(2015, 03, 10));
+		controller.createProject("Project 1", "Description 1", LocalDateTime.of(2015, 03, 01,00,00), LocalDateTime.of(2015, 03, 10,00,00));
 		assertEquals(1, controller.getAllProjects().size());
 
 		assertEquals(controller.getAllProjects().size(),1);
@@ -38,8 +38,8 @@ public class UseCase2CreateProjectTester {
 
 	@Test
 	public void testCreateProjects(){
-		controller.createProject("name1", "descr1",  LocalDate.of(2015, 03, 05), LocalDate.of(2015, 03, 06));
-		controller.createProject("name2", "descr2",  LocalDate.of(2015, 03, 06), LocalDate.of(2015, 03, 07));
+		controller.createProject("name1", "descr1",  LocalDateTime.of(2015, 03, 05,00,00), LocalDateTime.of(2015, 03, 06,00,00));
+		controller.createProject("name2", "descr2",  LocalDateTime.of(2015, 03, 06,00,00), LocalDateTime.of(2015, 03, 07,00,00));
 
 
 		assertEquals(controller.getAllProjects().size(),2);

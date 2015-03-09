@@ -11,12 +11,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Clock;
 import TaskManager.LoopingDependencyException;
 import TaskManager.Project;
 import TaskManager.ProjectController;
 import TaskManager.ProjectStatus;
 import TaskManager.Task;
+import TaskManager.TaskManClock;
 import TaskManager.TaskStatus;
 
 public class UseCase1ShowProjectsTester {
@@ -36,11 +36,11 @@ public class UseCase1ShowProjectsTester {
 	private List<Project> allProjectsExpected;
 	@Before
 	public void setUp(){
-		Clock clock = new Clock(LocalDateTime.of(2015, 03, 07,01,00));
+		TaskManClock clock = new TaskManClock(LocalDateTime.of(2015, 03, 07,01,00));
 		controller = new ProjectController(clock);
-		project1 = new Project("Project 1", "Description 1", LocalDate.of(2015, 03, 03), LocalDate.of(2015, 03, 10));
-		project2 = new Project("Project 2", "Description 2", LocalDate.of(2015, 03, 03), LocalDate.of(2015, 03, 11));
-		project0 = new Project("Project 0", "Description 3", LocalDate.of(2015, 03, 03), LocalDate.of(2015, 03, 12));
+		project1 = new Project("Project 1", "Description 1", LocalDateTime.of(2015, 03, 03,00,00), LocalDateTime.of(2015, 03, 10,00,00));
+		project2 = new Project("Project 2", "Description 2", LocalDateTime.of(2015, 03, 03,00,00), LocalDateTime.of(2015, 03, 11,00,00));
+		project0 = new Project("Project 0", "Description 3", LocalDateTime.of(2015, 03, 03,00,00), LocalDateTime.of(2015, 03, 12,00,00));
 		task1 = new Task("Task 1", Duration.ofHours(2), 0.4);
 		task2 = new Task("Task 2", Duration.ofHours(2), 0.4);
 		task3 = new Task("Task 3", Duration.ofHours(3), 0.4);

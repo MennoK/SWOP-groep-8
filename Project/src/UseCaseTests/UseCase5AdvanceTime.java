@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Clock;
+import TaskManager.TaskManClock;
 
 public class UseCase5AdvanceTime {
-	private Clock clock;
+	private TaskManClock clock;
 	@Before
 	public void setUp(){
-		clock = new Clock(LocalDateTime.of(2015, 03, 01,01,00));
+		clock = new TaskManClock(LocalDateTime.of(2015, 03, 01,01,00));
 	}
 	@Test
 	public void testAdvanceTimeFutureSimpleTest() {
