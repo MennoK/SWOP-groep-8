@@ -29,9 +29,9 @@ public class TaskManClock {
 	 * @param newTime : new time of the system
 	 * @throws IllegalArgumentException: thrown when the new time is not valid
 	 */
-	public void setTime(LocalDateTime newTime) throws IllegalArgumentException{
+	public void setTime(LocalDateTime newTime) throws InvalidTimeException{
 		if(!canHaveTime(newTime)){
-			throw new IllegalArgumentException("The given time is before the current time");
+			throw new InvalidTimeException("The given time is before the current time");
 		}
 		else {
 			this.currentTime = newTime;

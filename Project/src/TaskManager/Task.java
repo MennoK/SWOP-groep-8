@@ -130,9 +130,11 @@ public class Task {
 		else if (getEndTime() != null) {
 			this.status = TaskStatus.FINISHED;
 		}
-		for (Task dependency : getDependencies()) {
-			if (dependency.getStatus() != TaskStatus.FINISHED) {
-				this.status = TaskStatus.UNAVAILABLE;
+		else {
+			for (Task dependency : getDependencies()) {
+				if (dependency.getStatus() != TaskStatus.FINISHED) {
+					this.status = TaskStatus.UNAVAILABLE;
+				}
 			}
 		}
 
