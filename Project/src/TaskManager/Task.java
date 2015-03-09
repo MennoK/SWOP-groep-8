@@ -1,7 +1,7 @@
 package TaskManager;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +10,8 @@ public class Task {
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
-	private Instant endTime;
-	private Instant startTime;
+	private LocalDateTime endTime;
+	private LocalDateTime startTime;
 	private boolean failed;
 	private TaskStatus status;
 
@@ -28,18 +28,18 @@ public class Task {
 		return this.status;
 	}
 
-	private Instant add(Instant instant, Duration duration) {
+	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
 
-	public Instant getEstimatedFinishTime(Instant now) {
+	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
 		if (getStartTime() != null)
 			return add(getStartTime(), getEstimatedDuration());
 
 		if (getDependencies().size() == 0)
 			return add(now, getEstimatedDuration());
 
-		Instant dependenceFinishTime = getDependencies().get(0)
+		LocalDateTime dependenceFinishTime = getDependencies().get(0)
 				.getEstimatedFinishTime(now);
 		for (Task dependency : getDependencies()) {
 			if (dependenceFinishTime.compareTo(dependency
@@ -97,19 +97,19 @@ public class Task {
 		this.acceptableDeviation = acceptableDeviation;
 	}
 
-	public Instant getEndTime() {
+	public LocalDateTime getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Instant endTime) {
+	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
 
-	public Instant getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Instant startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
