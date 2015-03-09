@@ -9,6 +9,8 @@ import org.junit.Test;
 import TaskManager.Project;
 import TaskManager.ProjectController;
 
+import java.time.LocalDateTime;
+
 public class ShowProjectTester {
 
 	private ProjectController emptyController;
@@ -25,14 +27,14 @@ public class ShowProjectTester {
 	@Before
 	public void setUp() {
 
-		clock = new TaskManClock();
+		clock = new TaskManClock(LocalDateTime.now());
 		emptyController = new ProjectController(clock);
 		singleProjectController = new ProjectController(clock);
-		project11 = new Project();
+		project11 = new Project("p11","Test 11", LocalDateTime.now(), LocalDateTime.MAX );
 		singleProjectController.addProject(project11);
 		dualProjectController = new ProjectController(clock);
-		project21 = new Project();
-		project22 = new Project();
+		project21 = new Project("p21","Test 21", LocalDateTime.now(), LocalDateTime.MAX );
+		project22 = new Project("p22","Test 22", LocalDateTime.now(), LocalDateTime.MAX );
 		dualProjectController.addProject(project21);
 		dualProjectController.addProject(project22);
 	}

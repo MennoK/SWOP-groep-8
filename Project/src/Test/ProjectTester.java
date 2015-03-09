@@ -3,7 +3,7 @@ package Test;
 import static org.junit.Assert.*;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -87,13 +87,13 @@ public class ProjectTester {
 
 		// 1 task
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50);
-		task1.setEndTime(Instant.now());
+		task1.setEndTime(LocalDateTime.now());
 		project.addTask(task1);
 		assertEquals(project.getStatus(), ProjectStatus.FINISHED);
 
 		// 2 tasks
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50);
-		task2.setEndTime(Instant.now());
+		task2.setEndTime(LocalDateTime.now());
 		project.addTask(task2);
 		assertEquals(project.getStatus(), ProjectStatus.FINISHED);		
 	}
@@ -103,8 +103,8 @@ public class ProjectTester {
 		// 1(finished) -> 2(finished)
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50);
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50);
-		task1.setEndTime(Instant.now());
-		task2.setEndTime(Instant.now());
+		task1.setEndTime(LocalDateTime.now());
+		task2.setEndTime(LocalDateTime.now());
 		task2.addDependency(task1);
 		project.addTask(task1);
 		project.addTask(task2);
@@ -120,7 +120,7 @@ public class ProjectTester {
 
 		// 1(failed) -x-> 2(finished) <- 3(finished)
 		Task task3 = new Task("testdescriptionTask3", Duration.ofHours(8), 50);
-		task3.setEndTime(Instant.now());
+		task3.setEndTime(LocalDateTime.now());
 		task2.addDependency(task3);
 		assertEquals(task1.getStatus(), TaskStatus.FAILED);	
 		assertEquals(task2.getStatus(), TaskStatus.FINISHED);	
@@ -166,7 +166,7 @@ public class ProjectTester {
 
 		// 1(finished)->2(available)
 
-		task1.setEndTime(Instant.now());
+		task1.setEndTime(LocalDateTime.now());
 		assertEquals(task1.getStatus(), TaskStatus.FINISHED);
 		assertEquals(task2.getStatus(), TaskStatus.AVAILABLE);
 		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
