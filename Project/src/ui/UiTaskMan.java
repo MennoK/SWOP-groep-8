@@ -1,25 +1,74 @@
 package ui;
 
+import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import TaskManager.Clock;
+import com.sun.xml.internal.ws.api.pipe.NextAction;
+
+import parser.Parser;
+import TaskManager.LoopingDependencyException;
 import TaskManager.Project;
 import TaskManager.ProjectController;
 import TaskManager.Task;
+import TaskManager.TaskManClock;
 
 public class UiTaskMan {
 
 	private ProjectController projectController;
 	private Scanner scan;
 
+	private TaskManClock askCurrentTime() {
+		while (true) {
+			System.out.println("Give the current time: 'yyyy-mm-ddThh:mm:ss'\n"
+					+ "(press enter to set 09/02/2015, 08:00:00)");
+			String dateInput = scan.nextLine();
+			if (dateInput.equals(""))
+				return new TaskManClock(LocalDateTime.of(2015, 2, 9, 8, 0));
+			try {
+				return new TaskManClock(LocalDateTime.parse(dateInput));
+			} catch (java.time.format.DateTimeParseException e) {
+				System.out.println("Invalid Local date time input.");
+			}
+		}
+	}
+
+	private void askInitialState() {
+		while (true) {
+			System.out
+					.println("Give a file for initialisation of the system:\n"
+							+ "(press enter to use ./input.tman)\n"
+							+ "(give '0' to initilise as empty)");
+			String dateInput = scan.nextLine();
+			if (dateInput.equals("0")) {
+				System.out.println("Starting with an empty system");
+				return;
+			}
+			if (dateInput.equals(""))
+				dateInput = "./input.tman";
+			try {
+				Parser parser = new Parser();
+				parser.parse(dateInput, projectController);
+				System.out.println("Starting with system initialised from "
+						+ dateInput);
+				return;
+			} catch (FileNotFoundException | RuntimeException
+					| LoopingDependencyException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
 	UiTaskMan() {
 		scan = new Scanner(System.in);
-		Clock clock = new Clock(LocalDateTime.of(2015, 2, 9, 8, 0));
-		System.out.println("Current time initialized on:\n" + clock.getTime());
+		TaskManClock clock = askCurrentTime();
+		System.out.println("Current time initialized on:\n" + clock.getTime()
+				+ "\n");
 		projectController = new ProjectController(clock);
+		askInitialState();
 	}
 
 	private void printProjects() {
@@ -30,15 +79,23 @@ public class UiTaskMan {
 	}
 
 	private Project selectProject() {
-		List<Project> projects = projectController.getAllProjects();
-		System.out.println("select a project:");
-		int projectIndex = scan.nextInt();
-		scan.nextLine();
-		return projects.get(projectIndex);
+		while (true) {
+			System.out.println("select a project:");
+			printProjects();
+			try {
+				int projectIndex = scan.nextInt();
+				scan.nextLine();
+				return projectController.getAllProjects().get(projectIndex);
+			} catch (java.lang.IndexOutOfBoundsException
+					| InputMismatchException e) {
+				System.out.println(e.getMessage());
+				scan.nextLine();
+			}
+		}
 	}
 
 	private void printProject(Project project) {
-		System.out.println("name: " + project.getName());
+		System.out.println("project name: " + project.getName());
 		System.out.println("description: " + project.getDescription());
 		System.out.println("creation time: "
 				+ project.getCreationTime().toString());
@@ -63,7 +120,6 @@ public class UiTaskMan {
 	}
 
 	private void showProjects() {
-		printProjects();
 		Project project = selectProject();
 		printProject(project);
 		Task task = selectTask(project);
@@ -95,8 +151,8 @@ public class UiTaskMan {
 			System.out.println("Project creation aborted.");
 			return;
 		}
-		projectController.addProject(new Project(name, description,
-				projectController.getClock().getTime(), dueTime));
+		projectController.createProject(name, description,
+				projectController.getTime(), dueTime);
 	}
 
 	private Duration getDurationFromUser(String querry) {
@@ -134,15 +190,10 @@ public class UiTaskMan {
 		System.out.println("TODO UC: advance time!");
 	}
 
-	private void parseFile() {
-		System.out.println("TODO UC: parse file!");
-	}
-
 	private void printMenu() {
 		System.out.println("Main menu:\n" + "1: Show projects\n"
 				+ "2: Create project\n" + "3: Create task\n"
-				+ "4: Update task status\n" + "5: Advance time\n"
-				+ "6: Parse file");
+				+ "4: Update task status\n" + "5: Advance time\n");
 	}
 
 	public void menu() {
@@ -167,9 +218,6 @@ public class UiTaskMan {
 				break;
 			case "5":
 				advanceTime();
-				break;
-			case "6":
-				parseFile();
 				break;
 			default:
 				System.out.println("Invalid choice, try again. (0 to exit)");
