@@ -1,4 +1,4 @@
-package Test;
+package test.unitTests;
 
 import static org.junit.Assert.*;
 
@@ -182,6 +182,7 @@ public class ProjectTester {
 	public void testProjectWithNoTasksIsOngoing(){
 		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
 	}
+	
 	
 	
 
