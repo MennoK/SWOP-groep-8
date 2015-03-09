@@ -67,6 +67,7 @@ public class Task {
 					"Tried to add task1 as a dependency to task2,"
 							+ " but task2 is already dependent on task1.");
 		dependencies.add(dependency);
+		this.updateStatus();
 	}
 
 	public List<Task> getDependencies() {
@@ -119,6 +120,7 @@ public class Task {
 
 	public void setFailed(boolean failed) {
 		this.failed = failed;
+		this.updateStatus();
 	}
 
 	//alternative tasks
