@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import TaskManager.TaskManClock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,14 +19,18 @@ public class ShowProjectTester {
 	private ProjectController dualProjectController;
 	private Project project21;
 	private Project project22;
+
+	private TaskManClock clock;
 	
 	@Before
 	public void setUp() {
-		emptyController = new ProjectController();
-		singleProjectController = new ProjectController();
+
+		clock = new TaskManClock();
+		emptyController = new ProjectController(clock);
+		singleProjectController = new ProjectController(clock);
 		project11 = new Project();
 		singleProjectController.addProject(project11);
-		dualProjectController = new ProjectController();
+		dualProjectController = new ProjectController(clock);
 		project21 = new Project();
 		project22 = new Project();
 		dualProjectController.addProject(project21);

@@ -3,6 +3,7 @@ bin/
 .metadata/
 
 Project/.settings
+.idea/
 
 UML/.vpprefdata/
 UML/*.vpp~*
@@ -11,3 +12,4 @@ UML/tmp/
 UML/.lock
 
 Personal/
+

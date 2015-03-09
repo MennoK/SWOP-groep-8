@@ -13,6 +13,7 @@ public class Task {
 	private Instant endTime;
 	private Instant startTime;
 	private boolean failed;
+	private TaskStatus status;
 
 	public Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
@@ -20,17 +21,11 @@ public class Task {
 		this.estimatedDuration = estimatedDuration;
 		this.acceptableDeviation = acceptableDeviation;
 		this.dependencies = new ArrayList<Task>();
+		this.updateStatus();
 	}
 
 	public TaskStatus getStatus() {
-		if (isFailed())
-			return TaskStatus.FAILED;
-		if (getEndTime() != null)
-			return TaskStatus.FINISHED;
-		for (Task dependency : getDependencies())
-			if (dependency.getStatus() != TaskStatus.FINISHED)
-				return TaskStatus.UNAVAILABLE;
-		return TaskStatus.AVAILABLE;
+		return this.status;
 	}
 
 	private Instant add(Instant instant, Duration duration) {
@@ -125,7 +120,7 @@ public class Task {
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 	}
-		
+
 	//alternative tasks
 	public void setAlternative(Task task){
 		this.alternativeTask = task;
@@ -136,4 +131,23 @@ public class Task {
 	}
 	
 	private Task alternativeTask;
+
+	public void updateStatus()
+	{
+		this.status = TaskStatus.AVAILABLE;
+		if (isFailed()) {
+			this.status =  TaskStatus.FAILED;
+		}
+		else if (getEndTime() != null) {
+			this.status = TaskStatus.FINISHED;
+		}
+		else {
+			for (Task dependency : getDependencies()) {
+				if (dependency.getStatus() != TaskStatus.FINISHED) {
+					this.status = TaskStatus.UNAVAILABLE;
+				}
+			}
+		}
+
+	}
 }

@@ -3,12 +3,12 @@ package TaskManager;
 import java.time.LocalDateTime;
 /**
  * 
- * The Clock class implements the internal clock of the system.
+ * The TaskManClock class implements the internal clock of the system.
  * 
  * @author Groep 8
  *
  */
-public class Clock {
+public class TaskManClock {
 
 	private LocalDateTime currentTime;
 
@@ -18,7 +18,7 @@ public class Clock {
 	 * 
 	 * @param startTime : the given time
 	 */
-	public Clock(LocalDateTime startTime){
+	public TaskManClock(LocalDateTime startTime){
 		this.currentTime = startTime;
 	}
 
@@ -29,9 +29,9 @@ public class Clock {
 	 * @param newTime : new time of the system
 	 * @throws IllegalArgumentException: thrown when the new time is not valid
 	 */
-	public void setTime(LocalDateTime newTime) throws IllegalArgumentException{
+	public void setTime(LocalDateTime newTime) throws InvalidTimeException{
 		if(!canHaveTime(newTime)){
-			throw new IllegalArgumentException("The given time is before the current time");
+			throw new InvalidTimeException("The given time is before the current time");
 		}
 		else {
 			this.currentTime = newTime;
