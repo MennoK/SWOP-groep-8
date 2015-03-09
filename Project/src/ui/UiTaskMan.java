@@ -74,22 +74,22 @@ public class UiTaskMan {
 	private void printProjects() {
 		List<Project> projects = projectController.getAllProjects();
 		for (int i = 0; i < projects.size(); i++)
-			System.out.println(i + ": project '" + projects.get(i).getName()
-					+ "' is " + projects.get(i).getStatus());
+			System.out.println((i + 1) + ": project '"
+					+ projects.get(i).getName() + "' is "
+					+ projects.get(i).getStatus());
 	}
 
 	private Project selectProject() {
 		while (true) {
-			System.out.println("select a project:");
+			System.out.println("select a project: (0 to return to the menu)");
 			printProjects();
 			try {
-				int projectIndex = scan.nextInt();
-				scan.nextLine();
-				return projectController.getAllProjects().get(projectIndex);
-			} catch (java.lang.IndexOutOfBoundsException
-					| InputMismatchException e) {
+				int projectIndex = Integer.parseInt(scan.nextLine());
+				return projectController.getAllProjects().get(projectIndex - 1);
+			} catch (java.lang.IndexOutOfBoundsException e) {
 				System.out.println(e.getMessage());
-				scan.nextLine();
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give an integer to select a project");
 			}
 		}
 	}
@@ -103,16 +103,23 @@ public class UiTaskMan {
 		System.out.println("status: " + project.getStatus());
 		List<Task> tasks = project.getAllTasks();
 		for (int i = 0; i < tasks.size(); i++)
-			System.out.println(i + ": task '" + tasks.get(i).getDescription()
-					+ "' is " + tasks.get(i).getStatus());
+			System.out.println((i + 1) + ": task '"
+					+ tasks.get(i).getDescription() + "' is "
+					+ tasks.get(i).getStatus());
 	}
 
 	private Task selectTask(Project project) {
-		List<Task> tasks = project.getAllTasks();
-		System.out.println("select a task:");
-		int projectIndex = scan.nextInt();
-		scan.nextLine();
-		return tasks.get(projectIndex);
+		while (true) {
+			System.out.println("select a task: (0 to return to the menu)");
+			try {
+				int taskIndex = Integer.parseInt(scan.nextLine());
+				return project.getAllTasks().get(taskIndex - 1);
+			} catch (java.lang.IndexOutOfBoundsException e) {
+				System.out.println(e.getMessage());
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give an integer to select a project");
+			}
+		}
 	}
 
 	private void printTask(Task task) {
