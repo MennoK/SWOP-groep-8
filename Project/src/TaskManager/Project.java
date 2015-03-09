@@ -3,6 +3,7 @@ package TaskManager;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class Project {
 	private ArrayList<Task> tasks;
 	private String name;
 	private String description;
-	private final LocalDate creationTime;
-	private LocalDate dueTime;
+	private final LocalDateTime creationTime;
+	private LocalDateTime dueTime;
 
 	/**
 	 * Constructor of the Project class:
@@ -34,7 +35,7 @@ public class Project {
 	 * @param dueTime : due time of the project (only the date needed)
 	 */
 	//TODO Welke parameters moeten final zijn?
-	public Project(String name,String description, LocalDate creationTime, LocalDate dueTime){
+	public Project(String name,String description, LocalDateTime creationTime, LocalDateTime dueTime){
 		setName(name);
 		setDescription(description);
 		this.creationTime = creationTime;
@@ -175,7 +176,7 @@ public class Project {
 	 * 
 	 * @return dueTime of a project
 	 */
-	public LocalDate getDueTime() {
+	public LocalDateTime getDueTime() {
 		return dueTime;
 	}
 	
@@ -185,7 +186,7 @@ public class Project {
 	 * @param dueTime: given due time of a project
 	 * @throws IllegalArgumentException: thrown when the given due time is not valid 
 	 */
-	public void setDueTime(LocalDate dueTime) throws IllegalArgumentException{
+	public void setDueTime(LocalDateTime dueTime) throws IllegalArgumentException{
 		if(!canHaveDueTime(dueTime)){
 			throw new IllegalArgumentException("The given due time is not valid.");
 		}
@@ -199,7 +200,7 @@ public class Project {
 	 *
 	 * @return true if and only if the due time is after the creation time or is equal to the creation time
 	 */
-	private boolean canHaveDueTime(LocalDate dueTime){
+	private boolean canHaveDueTime(LocalDateTime dueTime){
 		return dueTime.isAfter(getCreationTime()) || dueTime.isEqual(getCreationTime());
 	}
 
@@ -208,7 +209,7 @@ public class Project {
 	 * 
 	 * @return creationTime of a project
 	 */
-	public LocalDate getCreationTime() {
+	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
 	
