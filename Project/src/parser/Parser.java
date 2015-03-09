@@ -103,14 +103,14 @@ public class Parser {
 			Project projectOfTask = controller.getAllProjects().get(projectNumber);
 			projectOfTask.addTask(newTask);
 
-			//Sets alternative task if the task is an alternative of an other task
+		/*	//Sets alternative task if the task is an alternative of an other task
 			if(task.get("alternativeFor") != null){
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
 				//TODO simpele setter aangemaakt in task, was nog niet ge"implementeerd
-				newTask.setAlterternativeTask(alternativeTask);
+				newTask.setAlternativeFor(alternativeTask);
 			}
-
+*/
 			//if a task has prequisite tasks, add dependencies to the task
 			if(task.get("prerequisiteTasks") != null){
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");

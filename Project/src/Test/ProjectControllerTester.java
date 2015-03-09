@@ -41,11 +41,8 @@ public class ProjectControllerTester {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		projects.add(project1);
 		projects.add(project2);
-	
-	
 	}
-
-
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddProjectNullProject(){
 		Project project = null;

@@ -182,5 +182,7 @@ public class ProjectTester {
 	public void testProjectWithNoTasksIsOngoing(){
 		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
 	}
+	
+	
 
 }

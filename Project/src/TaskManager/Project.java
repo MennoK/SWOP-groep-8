@@ -56,6 +56,21 @@ public class Project {
 		Task task = new Task(description, estimatedDuration, acceptableDeviation);
 		this.addTask(task);
 	}
+	
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask){
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, alernativeTask);
+		this.addTask(task);
+	}
+	
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException{
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, dependencies);
+		this.addTask(task);
+	}
+	
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask, ArrayList<Task> dependencies) throws LoopingDependencyException{
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, alernativeTask, dependencies);
+		this.addTask(task);
+	}
 
 	/**
 	 * This method adds a given task to a project
