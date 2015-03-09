@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator.OfDouble;
 
 /**
  * The Project class describes a project in system. Every project has the
@@ -18,7 +19,7 @@ import java.util.List;
  */
 
 public class Project {
-	
+
 	private ArrayList<Task> tasks;
 	private String name;
 	private String description;
@@ -42,7 +43,7 @@ public class Project {
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
 	}
-	
+
 	/**
 	 * Creates a new task to the project and will add the task
 	 * to the tasklist of the project
@@ -53,6 +54,21 @@ public class Project {
 	 */
 	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation){
 		Task task = new Task(description, estimatedDuration, acceptableDeviation);
+		this.addTask(task);
+	}
+	
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask){
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, alernativeTask);
+		this.addTask(task);
+	}
+	
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException{
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, dependencies);
+		this.addTask(task);
+	}
+	
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask, ArrayList<Task> dependencies) throws LoopingDependencyException{
+		Task task = new Task(description, estimatedDuration, acceptableDeviation, alernativeTask, dependencies);
 		this.addTask(task);
 	}
 
@@ -70,7 +86,7 @@ public class Project {
 			this.getAllTasks().add(task);
 		}
 	}
-	
+
 
 	/**
 	 * This method checks if a project can have a given task. It returns
@@ -92,7 +108,7 @@ public class Project {
 	public List<Task> getAllTasks() {
 		return tasks;
 	}
-	
+
 	/**
 	 * Returns true if and only if all tasks of the project are finished. It returns
 	 * false if a task is unavailable or not yet available. 
@@ -101,15 +117,21 @@ public class Project {
 	 * 
 	 * @return true if and only if all tasks are finished
 	 */
+	//TODO commentaar
 	private boolean hasFinished(){
-		for(Task task: getAllTasks()){
-			if(task.getStatus() == TaskStatus.UNAVAILABLE || task.getStatus() == TaskStatus.AVAILABLE){
-				return false;
+		if(getAllTasks().size() != 0){
+			for(Task task: getAllTasks()){
+				if(task.getStatus() == TaskStatus.UNAVAILABLE || task.getStatus() == TaskStatus.AVAILABLE){
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
+		else {
+			return false;
+		}
 	}
-	
+
 	/**
 	 * Returns the status of a project
 	 * 
@@ -125,16 +147,35 @@ public class Project {
 		}
 	}
 
-	//TODO implementatie
-	public Instant getEstimatedFinishTime(Instant now) {
-		return null;
+	//TODO methode testen + documentatie
+	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
+		LocalDateTime estimatedFinishTime = LocalDateTime.of(0000, 01, 01, 00, 00, 00);
+		for(Task task: getAllTasks()){
+			if(task.getEstimatedFinishTime(now).isAfter(estimatedFinishTime)){
+				estimatedFinishTime = task.getEstimatedFinishTime(now);
+			}
+		}
+		return estimatedFinishTime;
 	}
 
-	//TODO implementatie
-	public Instant getTotalDelay(Instant now) {
-		return null;
+	//TODO methode testen + documentatie
+	public Duration getTotalDelay() {
+		LocalDateTime longestDelay = LocalDateTime.of(0000, 01, 01, 00, 00, 00);
+		for(Task task: getAllTasks()){
+			if(task.getStatus() == TaskStatus.FINISHED || task.getStatus() == TaskStatus.FAILED){
+				if(task.getEndTime().isAfter(this.getDueTime()) && task.getEndTime().isAfter(longestDelay)){
+					longestDelay = task.getEndTime();
+				}
+			}
+		}
+		if (longestDelay == LocalDateTime.of(0000, 01, 01, 00, 00, 00)) {
+			return null;
+		}
+		else{			
+			return Duration.between(getDueTime(), longestDelay);
+		}
 	}
-	
+
 	/**
 	 * Sets the name of a project
 	 * 
@@ -143,7 +184,7 @@ public class Project {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Returns the name of a project
 	 * 
@@ -152,7 +193,7 @@ public class Project {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * returns the description of a project
 	 * 
@@ -170,7 +211,7 @@ public class Project {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * returns the due time of project 
 	 * 
@@ -179,7 +220,7 @@ public class Project {
 	public LocalDateTime getDueTime() {
 		return dueTime;
 	}
-	
+
 	/**
 	 * This method sets the due time of project
 	 * 
@@ -192,7 +233,7 @@ public class Project {
 		}
 		this.dueTime = dueTime;
 	}
-	
+
 	/**
 	 * Determines if the given due time is valid. It returns true if and 
 	 * only if the given due time is after the creation time of the project
@@ -212,5 +253,5 @@ public class Project {
 	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
-	
+
 }

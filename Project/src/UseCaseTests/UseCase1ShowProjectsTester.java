@@ -45,9 +45,6 @@ public class UseCase1ShowProjectsTester {
 		task2 = new Task("Task 2", Duration.ofHours(2), 0.4);
 		task3 = new Task("Task 3", Duration.ofHours(3), 0.4);
 		
-		
-		
-		
 		project1.addTask(task1);
 		project2.addTask(task2);
 		project2.addTask(task3); 
@@ -77,7 +74,7 @@ public class UseCase1ShowProjectsTester {
 	@Test
 	public void testGetTotalDelayLargerThenZero() {
 		//Delay task 1 = 1h
-		task1.setStartTime(LocalDateTime.of(2015, 03, 03, 8,00));
+		task1.setStartTime(LocalDateTime.of(2015, 03, 03,8,00));
 		task1.setEndTime(LocalDateTime.of(2015, 03, 03,11,00));
 		assertEquals(1, project1.getTotalDelay());
 		
@@ -104,7 +101,7 @@ public class UseCase1ShowProjectsTester {
 	@Test
 	public void testGetTotalDelayEqualsZero() {
 		//Delay task 1 = 0h
-		task1.setStartTime(LocalDateTime.of(2015, 03, 03,08,00));
+		task1.setStartTime(LocalDateTime.of(2015, 03, 03,8,00));
 		task1.setEndTime(LocalDateTime.of(2015, 03, 03,10,00));
 		assertEquals(0, project1.getTotalDelay());
 		
@@ -165,7 +162,7 @@ public class UseCase1ShowProjectsTester {
 	}
 	@Test
 	public void testGetTaskStatusFinished() {
-		task1.updateStatus(TaskStatus.FINISHED);
+		task1.setEndTime(LocalDateTime.of(2019, 03, 03,00,00));
 		assertEquals(TaskStatus.FINISHED, task1.getStatus());
 	}
 }

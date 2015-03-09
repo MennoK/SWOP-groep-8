@@ -1,4 +1,4 @@
-package Test;
+package test.unitTests;
 
 import static org.junit.Assert.*;
 
@@ -86,7 +86,7 @@ public class ParserTester {
 		assertEquals(task1.getStatus(),TaskStatus.FINISHED);
 		assertEquals(task1.getStartTime(), LocalDateTime.parse(("2014-01-01 10:00"),dateTimeFormatter));
 		assertEquals(task1.getEndTime(), LocalDateTime.parse(("2014-01-02 17:00"),dateTimeFormatter));
-		assertNull(task1.getAlternative());
+		assertNull(task1.getAlternativeFor());
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class ParserTester {
 		assertEquals(task1.getAcceptableDeviation(), 50, 0.001);
 		assertEquals(task1.getDependencies().size(), 0);
 
-		assertNull(task1.getAlternative());
+		assertNull(task1.getAlternativeFor());
 		assertNull(task1.getStartTime());
 		assertNull(task1.getEndTime());
 		assertNotEquals(task1.getStatus(), TaskStatus.FAILED);
@@ -122,7 +122,7 @@ public class ParserTester {
 		assertEquals(task2.getAcceptableDeviation(), 10, 0.001);
 		assertEquals(task2.getDependencies().size(), 0);
 
-		assertNull(task2.getAlternative());
+		assertNull(task2.getAlternativeFor());
 		assertNull(task2.getStartTime());
 		assertNull(task2.getEndTime());
 		assertNotEquals(task2.getStatus(), TaskStatus.FAILED);
@@ -137,7 +137,7 @@ public class ParserTester {
 		assertEquals(task3.getDescription(), "description");
 		assertEquals(task3.getEstimatedDuration(), Duration.ofHours(50));
 		assertEquals(task3.getAcceptableDeviation(), 0, 0.001);
-		assertNull(task3.getAlternative());
+		assertNull(task3.getAlternativeFor());
 
 		assertEquals(task3.getDependencies().size(), 2);
 		assertEquals(task3.getStatus(),TaskStatus.FAILED);
@@ -154,7 +154,7 @@ public class ParserTester {
 		assertEquals(task4.getEstimatedDuration(), Duration.ofHours(50));
 		assertEquals(task4.getAcceptableDeviation(), 0, 0.001);
 		assertEquals(task4.getDependencies().size(), 2);
-		assertEquals(task4.getAlternative(), projectController.getAllProjects().get(1).getAllTasks().get(2));
+		assertEquals(task4.getAlternativeFor(), projectController.getAllProjects().get(1).getAllTasks().get(2));
 	
 		assertNull(task4.getStartTime());
 		assertNull(task4.getEndTime());
@@ -178,7 +178,7 @@ public class ParserTester {
 		assertEquals(task1.getAcceptableDeviation(), 50, 0.001);
 		assertEquals(task1.getDependencies().size(), 0);
 
-		assertNull(task1.getAlternative());
+		assertNull(task1.getAlternativeFor());
 		assertNull(task1.getStartTime());
 		assertNull(task1.getEndTime());
 		assertNotEquals(task1.getStatus(), TaskStatus.FAILED);
@@ -194,9 +194,9 @@ public class ParserTester {
 		assertEquals(task2.getEstimatedDuration(), Duration.ofHours(500));
 		assertEquals(task2.getAcceptableDeviation(), 50, 0.001);
 		assertEquals(task2.getDependencies().size(), 0);
-		assertNull(task2.getAlternative());
+		assertNull(task2.getAlternativeFor());
 
-		assertNull(task2.getAlternative());
+		assertNull(task2.getAlternativeFor());
 		assertNull(task2.getStartTime());
 		assertNull(task2.getEndTime());
 		assertNotEquals(task2.getStatus(), TaskStatus.FAILED);

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +31,10 @@ public class UseCase4UpdateTaskStatusTester {
 		controller.addProject(project1);
 		task1 = new Task("Task 1", Duration.ofHours(8), 0.4);
 		task2 = new Task("Task 2", Duration.ofHours(8), 0.4);
-		task3 = new Task("Task 3", Duration.ofHours(8), 0.4);
-		
-		task3.addDependency(task2);
+		ArrayList<Task> dependency = new ArrayList<>();
+		dependency.add(task2);
+		task3 = new Task("Task 3", Duration.ofHours(8), 0.4, dependency);
+
 		project1.addTask(task1);
 		project1.addTask(task2);
 		project1.addTask(task3); 
@@ -42,23 +44,23 @@ public class UseCase4UpdateTaskStatusTester {
 	public void testUpdateTaskStatusFinishedtestNoDependencies() {
 		//User has selected task1
 		
-		task1.updateStatus(TaskStatus.FINISHED);
+		task1.setEndTime(LocalDateTime.of(2017, 03, 01, 00 ,00));
 		assertEquals(TaskStatus.FINISHED, task1.getStatus());
 	}
 	@Test
 	public void testUpdateTaskStatusFinishedtestWithDependencies() {
 		//User has selected task1
-		assertEquals(TaskStatus.UNAVAILABLE, task3.getAcceptableDeviation());
-		task2.updateStatus(TaskStatus.FINISHED);
+		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
+		task2.setEndTime(LocalDateTime.of(2017, 03, 01, 00 ,00));
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task3.getAcceptableDeviation());
+		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
 	}
 	//TODO: implement
 	@Test
 	public void testUpdateTaskStatusFailedNoDependencies() {
 		//User has selected task1
 		
-		task1.updateStatus(TaskStatus.FAILED);
+		task1.setFailed(true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 	}
 	//TODO: implement
@@ -66,7 +68,7 @@ public class UseCase4UpdateTaskStatusTester {
 	public void testUpdateTaskStatusFailedWithDependencies() {
 		//User has selected task1
 		
-		task1.updateStatus(TaskStatus.FAILED);
+		task1.setFailed(true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 	}
 

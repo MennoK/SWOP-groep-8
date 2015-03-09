@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
-	private ArrayList<Task> dependencies;
+	private ArrayList<Task> dependencies = new ArrayList<>();
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
@@ -14,41 +14,43 @@ public class Task {
 	private LocalDateTime startTime;
 	private boolean failed;
 	private TaskStatus status;
-
+	private Task isAlternativeFor; 
+	
 	public Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
-		this.description = description;
-		this.estimatedDuration = estimatedDuration;
-		this.acceptableDeviation = acceptableDeviation;
-		this.dependencies = new ArrayList<Task>();
+		setDescription(description);
+		setEstimatedDuration(estimatedDuration);
+		setAcceptableDeviation(acceptableDeviation);
+		this.updateStatus();
+	}
+	public Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, Task isAlternativeFor) {
+		setDescription(description);
+		setEstimatedDuration(estimatedDuration);
+		setAcceptableDeviation(acceptableDeviation);
+		setAlterternativeTask(isAlternativeFor);
 		this.updateStatus();
 	}
 
-	public TaskStatus getStatus() {
-		return this.status;
+	public Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException {
+		setDescription(description);
+		setEstimatedDuration(estimatedDuration);
+		setAcceptableDeviation(acceptableDeviation);
+		addMultipleDependencies(dependencies);
+		this.updateStatus();
 	}
-
+	public Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, Task isAlternativeFor, ArrayList<Task> dependencies) throws LoopingDependencyException {
+		setDescription(description);
+		setEstimatedDuration(estimatedDuration);
+		setAcceptableDeviation(acceptableDeviation);
+		addMultipleDependencies(dependencies);
+		setAlterternativeTask(isAlternativeFor);
+		this.updateStatus();
+	}
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
-	}
-
-	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
-		if (getStartTime() != null)
-			return add(getStartTime(), getEstimatedDuration());
-
-		if (getDependencies().size() == 0)
-			return add(now, getEstimatedDuration());
-
-		LocalDateTime dependenceFinishTime = getDependencies().get(0)
-				.getEstimatedFinishTime(now);
-		for (Task dependency : getDependencies()) {
-			if (dependenceFinishTime.compareTo(dependency
-					.getEstimatedFinishTime(now)) < 0)
-				dependenceFinishTime = dependency.getEstimatedFinishTime(now);
-		}
-		if (dependenceFinishTime.compareTo(now) < 0)
-			return add(now, getEstimatedDuration());
-		return add(dependenceFinishTime, getEstimatedDuration());
 	}
 
 	private boolean hasDependency(Task task) {
@@ -60,6 +62,33 @@ public class Task {
 		return false;
 	}
 
+	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
+		if (getStartTime() != null)
+			return add(getStartTime(), getEstimatedDuration());
+	
+		if (getDependencies().size() == 0)
+			return add(now, getEstimatedDuration());
+	
+		LocalDateTime dependenceFinishTime = getDependencies().get(0)
+				.getEstimatedFinishTime(now);
+		for (Task dependency : getDependencies()) {
+			if (dependenceFinishTime.compareTo(dependency
+					.getEstimatedFinishTime(now)) < 0)
+				dependenceFinishTime = dependency.getEstimatedFinishTime(now);
+		}
+		if (dependenceFinishTime.compareTo(now) < 0)
+			return add(now, getEstimatedDuration());
+		return add(dependenceFinishTime, getEstimatedDuration());
+	}
+	public TaskStatus getStatus() {
+		this.updateStatus();
+		return this.status;
+	}
+	public void addMultipleDependencies(ArrayList<Task> dependencies) throws LoopingDependencyException{
+		for (Task dependency : dependencies) {
+			addDependency(dependency);
+		}
+	}
 	public void addDependency(Task dependency)
 			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
@@ -104,6 +133,7 @@ public class Task {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+		this.updateStatus();
 	}
 
 	public LocalDateTime getStartTime() {
@@ -116,24 +146,23 @@ public class Task {
 
 	public boolean isFailed() {
 		return failed;
+		
 	}
 
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 		this.updateStatus();
 	}
-
-	//alternative tasks
-	public void setAlternative(Task task){
-		this.alternativeTask = task;
+	public void setAlterternativeTask(Task isAlternativeFor) throws IllegalArgumentException{
+		if (isAlternativeFor.getStatus() != TaskStatus.FAILED){
+			throw new IllegalArgumentException("Task cannot be alternative to a task that has not failed");
+		}
+		this.isAlternativeFor = isAlternativeFor;
 	}
-	
-	public Task getAlternative(){
-		return alternativeTask;	
-	}
-	
-	private Task alternativeTask;
 
+	public Task getAlternativeFor(){
+		return this.isAlternativeFor;
+	}
 	public void updateStatus()
 	{
 		this.status = TaskStatus.AVAILABLE;
@@ -143,7 +172,7 @@ public class Task {
 		else if (getEndTime() != null) {
 			this.status = TaskStatus.FINISHED;
 		}
-		else {
+		else if (!getDependencies().isEmpty()){
 			for (Task dependency : getDependencies()) {
 				if (dependency.getStatus() != TaskStatus.FINISHED) {
 					this.status = TaskStatus.UNAVAILABLE;

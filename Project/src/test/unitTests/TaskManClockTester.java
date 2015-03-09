@@ -1,4 +1,4 @@
-package Test;
+package test.unitTests;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,7 @@ import TaskManager.TaskManClock;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ClockTester {
+public class TaskManClockTester {
 
 	private TaskManClock taskManClock;
 	
@@ -39,7 +39,7 @@ public class ClockTester {
 		assertEquals(taskManClock.getTime(), LocalDateTime.of(2015, 03, 07,01,00));
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=InvalidTimeException.class)
 	public void testSetTimeBeforeCurrentTime() throws InvalidTimeException{
 		taskManClock.setTime(LocalDateTime.of(2015, 03, 06,00,00));
 	}
