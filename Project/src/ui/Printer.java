@@ -1,6 +1,7 @@
 package ui;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import TaskManager.Project;
 import TaskManager.ProjectStatus;
@@ -16,6 +17,22 @@ public class Printer {
 		return "project '" + project.getName() + "' is " + project.getStatus();
 	}
 
+	static String listTasks(List<Task> tasks) {
+		String str = "";
+		for (int i = 0; i < tasks.size(); i++) {
+			str += "\n" + (i + 1) + ": " + oneLine(tasks.get(i));
+		}
+		return str;
+	}
+
+	static String listProjects(List<Project> projects) {
+		String str = "";
+		for (int i = 0; i < projects.size(); i++) {
+			str += "\n" + (i + 1) + ": " + oneLine(projects.get(i));
+		}
+		return str;
+	}
+
 	static String full(Task task) {
 		String str = "description: " + task.getDescription() + "\n";
 		str += "estimated duration: " + task.getEstimatedDuration() + "\n";
@@ -26,8 +43,7 @@ public class Printer {
 			str += "Alternative task is: " + task.getAlternativeFor() + "\n";
 		if (!task.getDependencies().isEmpty())
 			str += "dependencies:\n";
-		for (Task dep : task.getDependencies())
-			str += Printer.oneLine(dep) + "\n";
+		str += listTasks(task.getDependencies());
 		return str;
 	}
 
@@ -57,6 +73,8 @@ public class Printer {
 			 * project.isFinishedOnTime()
 			 */
 		}
+		str += "The project contains the following tasks:\n";
+		str += listTasks(project.getAllTasks());
 		return str;
 	}
 }

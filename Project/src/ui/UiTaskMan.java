@@ -3,8 +3,6 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 import parser.Parser;
 import TaskManager.InvalidTimeException;
@@ -18,26 +16,24 @@ public class UiTaskMan {
 
 	private ProjectController projectController;
 	private Reader reader;
-	private Scanner scan;
 
 	private void askInitialState() {
 		while (true) {
-			System.out
-					.println("Give a file for initialisation of the system:\n"
+			String fileName = reader
+					.getString("Give a file for initialisation of the system:\n"
 							+ "(press enter to use ./input.tman)\n"
 							+ "(give '0' to initilise as empty)");
-			String dateInput = scan.nextLine();
-			if (dateInput.equals("0")) {
+			if (fileName.equals("0")) {
 				System.out.println("Starting with an empty system");
 				return;
 			}
-			if (dateInput.equals(""))
-				dateInput = "./input.tman";
+			if (fileName.equals(""))
+				fileName = "./input.tman";
 			try {
 				Parser parser = new Parser();
-				parser.parse(dateInput, projectController);
+				parser.parse(fileName, projectController);
 				System.out.println("Starting with system initialised from "
-						+ dateInput);
+						+ fileName);
 				return;
 			} catch (FileNotFoundException | RuntimeException
 					| LoopingDependencyException e) {
@@ -47,8 +43,7 @@ public class UiTaskMan {
 	}
 
 	UiTaskMan() {
-		scan = new Scanner(System.in);
-		reader = new Reader(scan);
+		reader = new Reader();
 		TaskManClock clock = new TaskManClock(
 				reader.getDate("Give the current time:"));
 		System.out.println("Current time initialized on:\n" + clock.getTime()
@@ -57,56 +52,13 @@ public class UiTaskMan {
 		askInitialState();
 	}
 
-	private void printProjects() {
-		List<Project> projects = projectController.getAllProjects();
-		for (int i = 0; i < projects.size(); i++)
-			System.out.println((i + 1) + ": project '"
-					+ projects.get(i).getName() + "' is "
-					+ projects.get(i).getStatus());
-	}
-
-	private Project selectProject() {
-		while (true) {
-			System.out.println("select a project:");
-			printProjects();
-			try {
-				int projectIndex = Integer.parseInt(scan.nextLine());
-				return projectController.getAllProjects().get(projectIndex - 1);
-			} catch (java.lang.IndexOutOfBoundsException e) {
-				System.out.println(e.getMessage());
-			} catch (java.lang.NumberFormatException e) {
-				System.out.println("Give an integer");
-			}
-		}
-	}
-
-	private void printTasks(Project project) {
-		List<Task> tasks = project.getAllTasks();
-		for (int i = 0; i < tasks.size(); i++)
-			System.out.println((i + 1) + ": task '"
-					+ tasks.get(i).getDescription() + "' is "
-					+ tasks.get(i).getStatus());
-	}
-
-	private Task selectTask(Project project) {
-		while (true) {
-			System.out.println("select a task:");
-			printTasks(project);
-			try {
-				int taskIndex = Integer.parseInt(scan.nextLine());
-				return project.getAllTasks().get(taskIndex - 1);
-			} catch (java.lang.IndexOutOfBoundsException e) {
-				System.out.println(e.getMessage());
-			} catch (java.lang.NumberFormatException e) {
-				System.out.println("Give an integer");
-			}
-		}
-	}
-
 	private void showProjects() {
-		Project project = selectProject();
+		// TODO move listProjects to a generic list and move it inside select
+		System.out.println(Printer.listProjects(projectController
+				.getAllProjects()));
+		Project project = reader.select(projectController.getAllProjects());
 		System.out.println(Printer.full(project, projectController.getTime()));
-		Task task = selectTask(project);
+		Task task = reader.select(project.getAllTasks());
 		System.out.println(Printer.full(task));
 	}
 
@@ -127,10 +79,10 @@ public class UiTaskMan {
 	private void createTask() {
 		System.out.println("Creating a task\n"
 				+ "Please fill in the following form:");
-		Project project = selectProject();
+		Project project = reader.select(projectController.getAllProjects());
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		while (reader.getBoolean("Do you want to add a dependence?")) {
-			tasks.add(selectTask(project));
+			tasks.add(reader.select(project.getAllTasks()));
 		}
 		// TODO add dep to new Task
 		project.createTask(reader.getString("Give a description:"),
@@ -155,7 +107,7 @@ public class UiTaskMan {
 	}
 
 	private void printMenu() {
-		System.out.println("Main menu:\n" + "1: Show projects\n"
+		System.out.println("\nMain menu:\n" + "1: Show projects\n"
 				+ "2: Create project\n" + "3: Create task\n"
 				+ "4: Update task status\n" + "5: Advance time\n" + "0: Exit");
 	}
@@ -163,10 +115,10 @@ public class UiTaskMan {
 	void menu() {
 		while (true) {
 			printMenu();
-			String choice = scan.nextLine();
+			String choice = reader.getString("Select an option");
 			switch (choice) {
 			case "0":
-				scan.close();
+				reader.close();
 				return;
 			case "1":
 				showProjects();

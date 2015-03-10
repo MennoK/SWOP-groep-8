@@ -2,13 +2,31 @@ package ui;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class Reader {
 	private Scanner scan;
 
-	Reader(Scanner scan) {
-		this.setScan(scan);
+	Reader() {
+		setScan(new Scanner(System.in));
+	}
+
+	void close() {
+		scan.close();
+	}
+
+	<T> T select(List<T> options) {
+		while (true) {
+			System.out.println("select one:");
+			try {
+				return options.get(Integer.parseInt(scan.nextLine()) - 1);
+			} catch (java.lang.IndexOutOfBoundsException e) {
+				System.out.println(e.getMessage());
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give an integer");
+			}
+		}
 	}
 
 	String getString(String querry) {
@@ -61,7 +79,7 @@ public class Reader {
 
 	LocalDateTime getDate(String querry) {
 		while (true) {
-			System.out.println(querry + " (format: 'yyyy-mm-ddThh:mm:ss')\n"
+			System.out.println(querry + "\n(format: 'yyyy-mm-ddThh:mm:ss')\n"
 					+ "(type 0 for 09/02/2015, 08:00)");
 			try {
 				String answer = scan.nextLine();
