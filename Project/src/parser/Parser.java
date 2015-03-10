@@ -34,7 +34,7 @@ public class Parser {
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 	/**
-	 * This method parses the input file after it has checked if the given file
+	 * This method parses the input file (needs absolute path) after it has checked if the given file
 	 * is in valid format for TaskMan. 
 	 * 
 	 * @param pathToFile
@@ -76,8 +76,7 @@ public class Parser {
 			LocalDateTime dueTime = LocalDateTime.parse((CharSequence) project.get("dueTime"),dateTimeFormatter);
 
 			//create a new project object
-			Project newProject = new Project(name, description, creationTime, dueTime);
-			controller.addProject(newProject);
+			controller.createProject(name, description, creationTime, dueTime);
 		}
 	}
 
@@ -98,19 +97,21 @@ public class Parser {
 			Duration estimatedDuration = Duration.ofHours((long) (int) task.get("estimatedDuration"));
 			double acceptableDeviation = (double) ((int) (task.get("acceptableDeviation")));
 
-			//create a new task to the project
-			Task newTask = new Task(description, estimatedDuration, acceptableDeviation);
-			Project projectOfTask = controller.getAllProjects().get(projectNumber);
-			projectOfTask.addTask(newTask);
 
-		/*	//Sets alternative task if the task is an alternative of an other task
+			//create a new task to the project
+			Project projectOfTask = controller.getAllProjects().get(projectNumber);
+			projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
+			
+			Task newTask = projectOfTask.getAllTasks().get(projectOfTask.getAllTasks().size()-1);
+
+			/*	//Sets alternative task if the task is an alternative of an other task
 			if(task.get("alternativeFor") != null){
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
 				//TODO simpele setter aangemaakt in task, was nog niet ge"implementeerd
 				newTask.setAlternativeFor(alternativeTask);
 			}
-*/
+			 */
 			//if a task has prequisite tasks, add dependencies to the task
 			if(task.get("prerequisiteTasks") != null){
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
@@ -125,10 +126,14 @@ public class Parser {
 				LocalDateTime starTime = LocalDateTime.parse((CharSequence) task.get("startTime"), dateTimeFormatter);
 				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
 				//TODO implementatie status in task + instant moet nog veranderd worden
-
+				newTask.setStartTime(starTime);
+				newTask.setEndTime(endTime);
+				if(status.equals("failed")){
+					
+				}
+				
 				//newTask.setStatus(status);
-				//newTask.setStartTime(starTime);
-				//newTask.setEndTime(endTime);
+		
 
 			}
 		}
