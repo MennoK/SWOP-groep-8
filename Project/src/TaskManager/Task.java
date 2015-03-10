@@ -17,8 +17,8 @@ public class Task {
 	private TaskStatus status;
 	private Task isAlternativeFor;
 
-	// Thread safe integer sequence generator
-	private static AtomicInteger idCounter = new AtomicInteger();
+	// Thread safe integer sequence generator that starts at 1
+	private static AtomicInteger idCounter = new AtomicInteger(1);
 	private int id;
 
 	Task(String description, Duration estimatedDuration,
