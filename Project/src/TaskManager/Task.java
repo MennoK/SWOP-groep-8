@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 
+ * 
+ * 
+ * @author groep 8
+ *
+ */
 public class Task {
 	private ArrayList<Task> dependencies = new ArrayList<>();
 	private String description;
@@ -105,30 +112,70 @@ public class Task {
 		this.updateStatus();
 	}
 
+	/**
+	 * Returns the list with dependencies of the task
+	 * 
+	 * @return dependencies: list with dependencies
+	 */
 	public List<Task> getDependencies() {
 		return dependencies;
 	}
 
+	/**
+	 * Returns the description of task 
+	 * 
+	 * @return description: the description of a task
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * Sets the description of the task
+	 * 
+	 * @param description : the given description of task
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	/**
+	 * returns the estimated duration of a task
+	 * 
+	 * @return estimatedDuration: estimated duration of a task
+	 */
 	public Duration getEstimatedDuration() {
 		return estimatedDuration;
 	}
 
+	/**
+	 * Sets the estimated duration of a task by a given argument.
+	 * The estimated duration of task has to be strictly positive
+	 * 
+	 * @param estimatedDuration: the given estimated duration
+	 */
+	//TODO : estimated duration mag niet negatief zijn
 	public void setEstimatedDuration(Duration estimatedDuration) {
 		this.estimatedDuration = estimatedDuration;
 	}
 
+	/**
+	 * Returns the acceptable deviation of a task
+	 * 
+	 * @return acceptableDeviation: the acceptable deviation of a task
+	 * 
+	 */
 	public double getAcceptableDeviation() {
 		return acceptableDeviation;
 	}
 
+	/**
+	 * Sets the acceptable deviation of task and updates the task status.
+	 * The acceptable deviation is strictly positive
+	 * 
+	 * @param acceptableDeviation: the given acceptable deviation
+	 */
+	//TODO : acceptable deviation mag niet negatief zijn
 	public void setAcceptableDeviation(double acceptableDeviation) {
 		this.acceptableDeviation = acceptableDeviation;
 		this.updateStatus();
@@ -151,16 +198,31 @@ public class Task {
 		this.startTime = startTime;
 	}
 
+	
 	public boolean isFailed() {
 		return failed;
 
 	}
 
+	/**
+	 * Sets a failed boolean to true or false and
+	 * updates the task status
+	 * 
+	 * @param failed: true if failed
+	 */
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 		this.updateStatus();
 	}
 
+	
+	/**
+	 * Sets the alternative task if and only if the the current task
+	 * his status is failed
+	 * 
+	 * @param isAlternativeFor: alternative task
+	 * @throws IllegalArgumentException: thrown when the task is not failed
+	 */
 	public void setAlternativeTask(Task isAlternativeFor)
 			throws IllegalArgumentException {
 		if (isAlternativeFor.getStatus() != TaskStatus.FAILED) {
@@ -170,10 +232,20 @@ public class Task {
 		this.isAlternativeFor = isAlternativeFor;
 	}
 
+	/**
+	 * Returns the task which this task is alternative for
+	 * 
+	 * @return isAlternativeFor: the alternative task
+	 */
 	public Task getAlternativeFor() {
 		return this.isAlternativeFor;
 	}
 
+	/**
+	 * Returns the id of a task
+	 * 
+	 * @return id : id of the task
+	 */
 	public int getId() {
 		return this.id;
 	}
