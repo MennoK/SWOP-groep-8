@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.AtomicInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Task {
 	private ArrayList<Task> dependencies = new ArrayList<>();
@@ -15,38 +15,42 @@ public class Task {
 	private LocalDateTime startTime;
 	private boolean failed;
 	private TaskStatus status;
-	private Task isAlternativeFor; 
+	private Task isAlternativeFor;
 
-    // Thread safe integer sequence generator
-    private static AtomicInteger idCounter = new AtomicInteger();
-    private int id; 
-	
-    Task(String description, Duration estimatedDuration,
+	// Thread safe integer sequence generator
+	private static AtomicInteger idCounter = new AtomicInteger();
+	private int id;
+
+	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
 		setDescription(description);
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
-        this.id = idCounter.getAndIncrement();
+		this.id = idCounter.getAndIncrement();
 		this.updateStatus();
 	}
-    Task(String description, Duration estimatedDuration,
+
+	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor) {
-        this(description, estimatedDuration, acceptedDeviation);
+		this(description, estimatedDuration, acceptableDeviation);
 		setAlterternativeTask(isAlternativeFor);
 	}
 
-    Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException {
-        this(description, estimatedDuration, acceptedDeviation);
+	Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, ArrayList<Task> dependencies)
+			throws LoopingDependencyException {
+		this(description, estimatedDuration, acceptableDeviation);
 		addMultipleDependencies(dependencies);
 	}
 
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, Task isAlternativeFor, ArrayList<Task> dependencies) throws LoopingDependencyException {
-        this(description, estimatedDuration, acceptedDeviation);
+			double acceptableDeviation, Task isAlternativeFor,
+			ArrayList<Task> dependencies) throws LoopingDependencyException {
+		this(description, estimatedDuration, acceptableDeviation);
 		addMultipleDependencies(dependencies);
 		setAlterternativeTask(isAlternativeFor);
 	}
+
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
@@ -63,10 +67,10 @@ public class Task {
 	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
 		if (getStartTime() != null)
 			return add(getStartTime(), getEstimatedDuration());
-	
+
 		if (getDependencies().size() == 0)
 			return add(now, getEstimatedDuration());
-	
+
 		LocalDateTime dependenceFinishTime = getDependencies().get(0)
 				.getEstimatedFinishTime(now);
 		for (Task dependency : getDependencies()) {
@@ -78,15 +82,19 @@ public class Task {
 			return add(now, getEstimatedDuration());
 		return add(dependenceFinishTime, getEstimatedDuration());
 	}
+
 	public TaskStatus getStatus() {
 		this.updateStatus();
 		return this.status;
 	}
-	public void addMultipleDependencies(ArrayList<Task> dependencies) throws LoopingDependencyException{
+
+	public void addMultipleDependencies(ArrayList<Task> dependencies)
+			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
 			addDependency(dependency);
 		}
 	}
+
 	public void addDependency(Task dependency)
 			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
@@ -145,38 +153,38 @@ public class Task {
 
 	public boolean isFailed() {
 		return failed;
-		
+
 	}
 
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 		this.updateStatus();
 	}
-	public void setAlterternativeTask(Task isAlternativeFor) throws IllegalArgumentException{
-		if (isAlternativeFor.getStatus() != TaskStatus.FAILED){
-			throw new IllegalArgumentException("Task cannot be alternative to a task that has not failed");
+
+	public void setAlterternativeTask(Task isAlternativeFor)
+			throws IllegalArgumentException {
+		if (isAlternativeFor.getStatus() != TaskStatus.FAILED) {
+			throw new IllegalArgumentException(
+					"Task cannot be alternative to a task that has not failed");
 		}
 		this.isAlternativeFor = isAlternativeFor;
 	}
 
-	public Task getAlternativeFor(){
+	public Task getAlternativeFor() {
 		return this.isAlternativeFor;
 	}
 
-    public int getId()
-    {
-        return this.id;
-    }
-	public void updateStatus()
-	{
+	public int getId() {
+		return this.id;
+	}
+
+	public void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
 		if (isFailed()) {
-			this.status =  TaskStatus.FAILED;
-		}
-		else if (getEndTime() != null) {
+			this.status = TaskStatus.FAILED;
+		} else if (getEndTime() != null) {
 			this.status = TaskStatus.FINISHED;
-		}
-		else if (!getDependencies().isEmpty()){
+		} else if (!getDependencies().isEmpty()) {
 			for (Task dependency : getDependencies()) {
 				if (dependency.getStatus() != TaskStatus.FINISHED) {
 					this.status = TaskStatus.UNAVAILABLE;
