@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.AtomicInteger;
 
 public class Task {
 	private ArrayList<Task> dependencies = new ArrayList<>();
@@ -15,29 +16,34 @@ public class Task {
 	private boolean failed;
 	private TaskStatus status;
 	private Task isAlternativeFor; 
+
+    // Thread safe integer sequence generator
+    private static AtomicInteger idCounter = new AtomicInteger();
+    private int id; 
 	
     Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
 		setDescription(description);
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
+        this.id = idCounter.getAndIncrement();
 		this.updateStatus();
 	}
     Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor) {
-        super(description, estimatedDuration, acceptedDeviation);
+        this(description, estimatedDuration, acceptedDeviation);
 		setAlterternativeTask(isAlternativeFor);
 	}
 
     Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException {
-        super(description, estimatedDuration, acceptedDeviation);
+        this(description, estimatedDuration, acceptedDeviation);
 		addMultipleDependencies(dependencies);
 	}
 
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor, ArrayList<Task> dependencies) throws LoopingDependencyException {
-        super(description, estimatedDuration, acceptedDeviation);
+        this(description, estimatedDuration, acceptedDeviation);
 		addMultipleDependencies(dependencies);
 		setAlterternativeTask(isAlternativeFor);
 	}
@@ -156,6 +162,11 @@ public class Task {
 	public Task getAlternativeFor(){
 		return this.isAlternativeFor;
 	}
+
+    public int getId()
+    {
+        return this.id;
+    }
 	public void updateStatus()
 	{
 		this.status = TaskStatus.AVAILABLE;
