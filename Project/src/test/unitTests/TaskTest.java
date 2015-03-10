@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import TaskManager.TaskStatus;
 
 public class TaskTest {
 
-	Instant now;
+	LocalDateTime now;
 
 	Task baseTask;
 	Task dependentTask;
@@ -24,7 +25,7 @@ public class TaskTest {
 
 	@Before
 	public void setUp() throws Exception {
-		now = Instant.parse("2015-03-03T08:00:00Z");
+		now = LocalDateTime.of(2015, 03, 03, 8, 0);
 		baseTask = new Task("a task", Duration.ofHours(8), 0.2);
 		baseTask.setStartTime(now);
 
@@ -77,27 +78,27 @@ public class TaskTest {
 
 	@Test
 	public void getEstimatedFinishTimeAvaillableTask() {
-		assertEquals(Instant.parse("2015-03-04T08:00:00Z"),
+		assertEquals(LocalDateTime.of(2015, 03, 04, 8, 0),
 				baseTask.getEstimatedFinishTime(now));
 	}
 
 	@Test
 	public void getEstimatedFinishTimeUvaillableTask() {
-		assertEquals(Instant.parse("2015-03-05T08:00:00Z"),
+		assertEquals(LocalDateTime.of(2015, 03, 05, 8, 0),
 				dependentTask.getEstimatedFinishTime(now));
 	}
 
 	@Test
 	public void getEstimatedFinishTimeLevel2Task() {
-		assertEquals(Instant.parse("2015-03-06T08:00:00Z"),
+		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 0),
 				level2DependentTask.getEstimatedFinishTime(now));
 	}
 
 	@Test
 	public void getEstimatedFinishTimeUvaillableTaskOverDueDependence() {
-		assertEquals(Instant.parse("2015-03-06T08:00:00Z"),
-				dependentTask.getEstimatedFinishTime(Instant
-						.parse("2015-03-05T08:00:00Z")));
+		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 0),
+				dependentTask.getEstimatedFinishTime(LocalDateTime.of(2015, 03,
+						05, 8, 0)));
 	}
 
 	@Test(expected = LoopingDependencyException.class)
