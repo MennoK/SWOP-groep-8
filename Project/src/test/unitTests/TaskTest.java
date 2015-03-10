@@ -101,6 +101,15 @@ public class TaskTest {
 						05, 8, 0)));
 	}
 
+    @Test
+    public void getId()
+    {
+		newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2);
+		newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2);
+
+        assertEquals(newTask1.getId() + 1, newTask2.getId());
+    }
+
 	@Test(expected = LoopingDependencyException.class)
 	public void dependencyLoopTest() throws LoopingDependencyException {
 		baseTask.addDependency(dependentTask);

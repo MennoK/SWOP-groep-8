@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * 
  * The projectController class contains a list of all the projects
- * and the internal taskManClock of the system. The project controller
- * is allowed to create new projects.
+ * and the internal taskManClock of the system and is able to advance the time. 
+ * The project controller is allowed to create new projects.
  * 
  * @author Groep 8
  */
@@ -20,9 +20,7 @@ public class ProjectController {
 	private TaskManClock taskManClock;
 
 	/**
-	 * Default constructor : 
-	 * sets a new empty list of projects
-	 * sets a new taskManClock
+	 * The constructor of the projectController needs a TaskManClock. 
 	 */
 	public ProjectController(TaskManClock taskManClock){
 		projects = new ArrayList<Project>();
@@ -44,7 +42,8 @@ public class ProjectController {
 	}
 
 	/**
-	 * Adds a given project to the list of projects.
+	 * Adds a given project to the list of projects. An IllegalArgumentException
+	 * will be thrown when the given project is invalid
 	 * 
 	 * @param project: project to be added
 	 * @throws IllegalArgumentException : thrown when the given project is not valid
@@ -88,17 +87,21 @@ public class ProjectController {
 		return this.taskManClock.getTime();
 	}
 
-	public void advanceTime(LocalDateTime time) throws InvalidTimeException
-	{
-
+	/**
+	 * 
+	 * Advances the time of taskman. This will update the status of every
+	 * task in every project of the project controller
+	 *  
+	 * @param time : new time
+	 * @throws InvalidTimeException : thrown when the given time is invalid
+	 */
+	public void advanceTime(LocalDateTime time) throws InvalidTimeException{
 		this.taskManClock.setTime(time);
-
-		for(Project project : this.getAllProjects())
-		{
-			for(Task task: project.getAllTasks())
-			{
+		for(Project project : this.getAllProjects()){
+			for(Task task: project.getAllTasks()){
 				task.updateStatus();
 			}
 		}
 	}
+	
 }

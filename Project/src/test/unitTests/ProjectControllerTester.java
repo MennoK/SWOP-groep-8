@@ -11,9 +11,13 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import sun.util.resources.LocaleData;
+
+import TaskManager.InvalidTimeException;
 import TaskManager.TaskManClock;
 import TaskManager.Project;
 import TaskManager.ProjectController;
+import TaskManager.TaskStatus;
 
 public class ProjectControllerTester {
 
@@ -21,7 +25,7 @@ public class ProjectControllerTester {
 
 	@Before
 	public void setUp() {
-		TaskManClock taskManClock = new TaskManClock(LocalDateTime.now());
+		TaskManClock taskManClock = new TaskManClock(LocalDateTime.of(2000, 03, 05,00,00));
 		projectController = new ProjectController(taskManClock);
 	}
 
@@ -50,4 +54,19 @@ public class ProjectControllerTester {
 		
 	}
 	
+	@Test
+	public void testAdvanceTime() throws InvalidTimeException{
+		Project project1 = new Project("name1", "descr",  LocalDateTime.of(2015, 03, 05,00,00), LocalDateTime.of(2015, 03, 06, 00, 00));
+		projectController.addProject(project1);
+		project1.createTask("descr", Duration.ofHours(20), 100);
+		projectController.advanceTime(LocalDateTime.of(2001, 03, 05,00,00));
+		assertEquals(project1.getAllTasks().get(0).getStatus(), TaskStatus.AVAILABLE);
+		
+	}
+	
+	@Test(expected=InvalidTimeException.class)
+	public void testAdvanceTimeWithInvalidTime() throws InvalidTimeException{
+		LocalDateTime newTime = LocalDateTime.of(1999, 03, 05,00,00) ;
+		projectController.advanceTime(newTime);
+	}
 }
