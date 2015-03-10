@@ -16,38 +16,30 @@ public class Task {
 	private TaskStatus status;
 	private Task isAlternativeFor; 
 	
-	public Task(String description, Duration estimatedDuration,
+    Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
 		setDescription(description);
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
 		this.updateStatus();
 	}
-	public Task(String description, Duration estimatedDuration,
+    Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor) {
-		setDescription(description);
-		setEstimatedDuration(estimatedDuration);
-		setAcceptableDeviation(acceptableDeviation);
+        super(description, estimatedDuration, acceptedDeviation);
 		setAlterternativeTask(isAlternativeFor);
-		this.updateStatus();
 	}
 
-	public Task(String description, Duration estimatedDuration,
+    Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException {
-		setDescription(description);
-		setEstimatedDuration(estimatedDuration);
-		setAcceptableDeviation(acceptableDeviation);
+        super(description, estimatedDuration, acceptedDeviation);
 		addMultipleDependencies(dependencies);
-		this.updateStatus();
 	}
-	public Task(String description, Duration estimatedDuration,
+
+	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor, ArrayList<Task> dependencies) throws LoopingDependencyException {
-		setDescription(description);
-		setEstimatedDuration(estimatedDuration);
-		setAcceptableDeviation(acceptableDeviation);
+        super(description, estimatedDuration, acceptedDeviation);
 		addMultipleDependencies(dependencies);
 		setAlterternativeTask(isAlternativeFor);
-		this.updateStatus();
 	}
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
@@ -125,6 +117,7 @@ public class Task {
 
 	public void setAcceptableDeviation(double acceptableDeviation) {
 		this.acceptableDeviation = acceptableDeviation;
+		this.updateStatus();
 	}
 
 	public LocalDateTime getEndTime() {
