@@ -12,6 +12,10 @@ public class Reader {
 		setScan(new Scanner(System.in));
 	}
 
+	private void setScan(Scanner scan) {
+		this.scan = scan;
+	}
+
 	void close() {
 		scan.close();
 	}
@@ -91,13 +95,4 @@ public class Reader {
 			}
 		}
 	}
-
-	public Scanner getScan() {
-		return scan;
-	}
-
-	public void setScan(Scanner scan) {
-		this.scan = scan;
-	}
-
 }
