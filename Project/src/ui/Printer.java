@@ -17,20 +17,20 @@ public class Printer {
 		return "project '" + project.getName() + "' is " + project.getStatus();
 	}
 
-	static String listTasks(List<Task> tasks) {
+	static String listTasks(List<Task> options) {
 		String str = "";
-		for (int i = 0; i < tasks.size(); i++) {
-			str += "\n" + (i + 1) + ": " + oneLine(tasks.get(i));
+		for (int i = 0; i < options.size(); i++) {
+			str += (i + 1) + ": " + oneLine(options.get(i)) + "\n";
 		}
-		return str;
+		return str.trim();
 	}
 
-	static String listProjects(List<Project> projects) {
+	static String listProjects(List<Project> options) {
 		String str = "";
-		for (int i = 0; i < projects.size(); i++) {
-			str += "\n" + (i + 1) + ": " + oneLine(projects.get(i));
+		for (int i = 0; i < options.size(); i++) {
+			str += (i + 1) + ": " + oneLine(options.get(i)) + "\n";
 		}
-		return str;
+		return str.trim();
 	}
 
 	static String full(Task task) {
