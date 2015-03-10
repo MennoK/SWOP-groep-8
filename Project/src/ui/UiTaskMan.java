@@ -3,6 +3,7 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -10,11 +11,14 @@ import java.util.Scanner;
 import com.sun.xml.internal.ws.api.pipe.NextAction;
 
 import parser.Parser;
+import TaskManager.InvalidTimeException;
 import TaskManager.LoopingDependencyException;
 import TaskManager.Project;
 import TaskManager.ProjectController;
+import TaskManager.ProjectStatus;
 import TaskManager.Task;
 import TaskManager.TaskManClock;
+import TaskManager.TaskStatus;
 
 public class UiTaskMan {
 
@@ -81,7 +85,7 @@ public class UiTaskMan {
 
 	private Project selectProject() {
 		while (true) {
-			System.out.println("select a project: (0 to return to the menu)");
+			System.out.println("select a project:");
 			printProjects();
 			try {
 				int projectIndex = Integer.parseInt(scan.nextLine());
@@ -89,18 +93,12 @@ public class UiTaskMan {
 			} catch (java.lang.IndexOutOfBoundsException e) {
 				System.out.println(e.getMessage());
 			} catch (java.lang.NumberFormatException e) {
-				System.out.println("Give an integer to select a project");
+				System.out.println("Give an integer");
 			}
 		}
 	}
 
-	private void printProject(Project project) {
-		System.out.println("project name: " + project.getName());
-		System.out.println("description: " + project.getDescription());
-		System.out.println("creation time: "
-				+ project.getCreationTime().toString());
-		System.out.println("due time: " + project.getDueTime().toString());
-		System.out.println("status: " + project.getStatus());
+	private void printTasks(Project project) {
 		List<Task> tasks = project.getAllTasks();
 		for (int i = 0; i < tasks.size(); i++)
 			System.out.println((i + 1) + ": task '"
@@ -108,22 +106,63 @@ public class UiTaskMan {
 					+ tasks.get(i).getStatus());
 	}
 
+	private void printProject(Project project) {
+		System.out.println("project name: " + project.getName());
+		System.out.println("description: " + project.getDescription());
+		System.out.println("creation time: " + project.getCreationTime());
+		System.out.println("due time: " + project.getDueTime());
+		System.out.println("status: " + project.getStatus());
+		if (project.getStatus() == ProjectStatus.ONGOING) {
+			if (project.getEstimatedFinishTime(projectController.getTime())
+					.isAfter(project.getDueTime()))
+				System.out
+						.println("The project is estimated to finish over time");
+			else
+				System.out
+						.println("the project is estimated to finish on time");
+		}
+		if (project.getStatus() == ProjectStatus.FINISHED) {
+			System.out.println("The total delay was: "
+					+ project.getTotalDelay());
+			/*
+			 * TODO print whether the project finished early, on time or with
+			 * delay, this requires project.getFinishTime() or
+			 * project.isFinishedOnTime()
+			 */
+		}
+	}
+
 	private Task selectTask(Project project) {
 		while (true) {
-			System.out.println("select a task: (0 to return to the menu)");
+			System.out.println("select a task:");
+			printTasks(project);
 			try {
 				int taskIndex = Integer.parseInt(scan.nextLine());
 				return project.getAllTasks().get(taskIndex - 1);
 			} catch (java.lang.IndexOutOfBoundsException e) {
 				System.out.println(e.getMessage());
 			} catch (java.lang.NumberFormatException e) {
-				System.out.println("Give an integer to select a project");
+				System.out.println("Give an integer");
 			}
 		}
 	}
 
 	private void printTask(Task task) {
-		System.out.println("description:" + task.getDescription());
+		System.out.println("description: " + task.getDescription());
+		System.out
+				.println("estimated duration: " + task.getEstimatedDuration());
+		System.out.println("acceptable deviation: "
+				+ task.getAcceptableDeviation());
+		System.out.println("status: " + task.getStatus());
+		/* TODO display whether task was finished early, on time or with delay. */
+		if (task.getAlternativeFor() != null)
+			System.out.println("Alternative task is: "
+					+ task.getAlternativeFor());
+		if (!task.getDependencies().isEmpty())
+			System.out.println("dependencies:");
+		for (Task dep : task.getDependencies())
+			System.out.println("Task: '" + dep.getDescription() + "' which is "
+					+ dep.getStatus());
 	}
 
 	private void showProjects() {
@@ -139,12 +178,13 @@ public class UiTaskMan {
 	}
 
 	private LocalDateTime getDateFromUser(String querry) {
-		System.out.println(querry + ": (format: 'yyyy-mm-ddThh:mm:ss')");
-		try {
-			return LocalDateTime.parse(scan.nextLine());
-		} catch (java.time.format.DateTimeParseException e) {
-			System.out.println("The given date was invalid");
-			return null;
+		while (true) {
+			System.out.println(querry + ": (format: 'yyyy-mm-ddThh:mm:ss')");
+			try {
+				return LocalDateTime.parse(scan.nextLine());
+			} catch (java.time.format.DateTimeParseException e) {
+				System.out.println("The given date was invalid, try again.");
+			}
 		}
 	}
 
@@ -163,30 +203,60 @@ public class UiTaskMan {
 	}
 
 	private Duration getDurationFromUser(String querry) {
-		System.out.println("Give an " + querry + "in hours:");
-		int numHours = scan.nextInt();
-		scan.nextLine();
-		return Duration.ofHours(numHours);
+		while (true) {
+			System.out.println("Give an " + querry + " in hours:");
+			try {
+				return Duration.ofHours(Integer.parseInt(scan.nextLine()));
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give an integer");
+			}
+		}
 	}
 
 	private double getDoubleFromUser(String querry) {
-		System.out.println("Give an " + querry + " (double)");
-		double val = scan.nextDouble();
-		scan.nextLine();
-		return val;
+		while (true) {
+			System.out.println("Give an " + querry + " (double)");
+			try {
+				return Double.parseDouble(scan.nextLine());
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give a double");
+			}
+		}
+	}
+
+	private boolean getBooleanFromUser(String querry) {
+		while (true) {
+			System.out.println(querry + " (y/n)");
+			switch (scan.nextLine()) {
+			case "Y":
+			case "y":
+			case "yes":
+			case "Yes":
+				return true;
+			case "n":
+			case "N":
+			case "no":
+			case "No":
+				return false;
+			default:
+				System.out.println("Invalid answer, try again.");
+				break;
+			}
+		}
 	}
 
 	private void createTask() {
 		System.out.println("Creating a task\n"
 				+ "Please fill in the following form:");
-		System.out.println("select a project:");
-		printProjects();
 		Project project = selectProject();
-		Task task = new Task(getStringFromUser("description"),
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		while (getBooleanFromUser("Do you want to add a dependence?")) {
+			tasks.add(selectTask(project));
+		}
+		// TODO add dep to new Task
+		project.createTask(getStringFromUser("description"),
 				getDurationFromUser("estimated task duration"),
 				getDoubleFromUser("acceptable deviation"));
-		project.addTask(task);
-
 	}
 
 	private void updateTaskStatus() {
@@ -194,13 +264,21 @@ public class UiTaskMan {
 	}
 
 	private void advanceTime() {
-		System.out.println("TODO UC: advance time!");
+		while (true) {
+			try {
+				projectController
+						.advanceTime(getDateFromUser("Enter the new timestamp"));
+				return;
+			} catch (InvalidTimeException e) {
+				System.out.println(e.getMessage());
+			}
+		}
 	}
 
 	private void printMenu() {
 		System.out.println("Main menu:\n" + "1: Show projects\n"
 				+ "2: Create project\n" + "3: Create task\n"
-				+ "4: Update task status\n" + "5: Advance time\n");
+				+ "4: Update task status\n" + "5: Advance time\n" + "0: Exit");
 	}
 
 	public void menu() {
