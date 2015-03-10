@@ -1,7 +1,6 @@
 package ui;
 
 import java.io.FileNotFoundException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,22 +17,8 @@ import TaskManager.TaskManClock;
 public class UiTaskMan {
 
 	private ProjectController projectController;
+	private Reader reader;
 	private Scanner scan;
-
-	private TaskManClock askCurrentTime() {
-		while (true) {
-			System.out.println("Give the current time: 'yyyy-mm-ddThh:mm:ss'\n"
-					+ "(press enter to set 09/02/2015, 08:00:00)");
-			String dateInput = scan.nextLine();
-			if (dateInput.equals(""))
-				return new TaskManClock(LocalDateTime.of(2015, 2, 9, 8, 0));
-			try {
-				return new TaskManClock(LocalDateTime.parse(dateInput));
-			} catch (java.time.format.DateTimeParseException e) {
-				System.out.println("Invalid Local date time input.");
-			}
-		}
-	}
 
 	private void askInitialState() {
 		while (true) {
@@ -63,7 +48,9 @@ public class UiTaskMan {
 
 	UiTaskMan() {
 		scan = new Scanner(System.in);
-		TaskManClock clock = askCurrentTime();
+		reader = new Reader(scan);
+		TaskManClock clock = new TaskManClock(
+				reader.getDate("Give the current time:"));
 		System.out.println("Current time initialized on:\n" + clock.getTime()
 				+ "\n");
 		projectController = new ProjectController(clock);
@@ -123,28 +110,12 @@ public class UiTaskMan {
 		System.out.println(Printer.full(task));
 	}
 
-	private String getStringFromUser(String querry) {
-		System.out.println(querry + ":");
-		return scan.nextLine();
-	}
-
-	private LocalDateTime getDateFromUser(String querry) {
-		while (true) {
-			System.out.println(querry + ": (format: 'yyyy-mm-ddThh:mm:ss')");
-			try {
-				return LocalDateTime.parse(scan.nextLine());
-			} catch (java.time.format.DateTimeParseException e) {
-				System.out.println("The given date was invalid, try again.");
-			}
-		}
-	}
-
 	private void createProject() {
 		System.out.println("Creating a project\n"
 				+ "Please fill in the following form:");
-		String name = getStringFromUser("name");
-		String description = getStringFromUser("description");
-		LocalDateTime dueTime = getDateFromUser("due time");
+		String name = reader.getString("name");
+		String description = reader.getString("description");
+		LocalDateTime dueTime = reader.getDate("due time");
 		if (dueTime == null) {
 			System.out.println("Project creation aborted.");
 			return;
@@ -153,86 +124,29 @@ public class UiTaskMan {
 				projectController.getTime(), dueTime);
 	}
 
-	private Duration getDurationFromUser(String querry) {
-		while (true) {
-			System.out.println("Give an " + querry + " in hours:");
-			try {
-				return Duration.ofHours(Integer.parseInt(scan.nextLine()));
-			} catch (java.lang.NumberFormatException e) {
-				System.out.println("Give an integer");
-			}
-		}
-	}
-
-	private double getDoubleFromUser(String querry) {
-		while (true) {
-			System.out.println("Give an " + querry + " (double)");
-			try {
-				return Double.parseDouble(scan.nextLine());
-			} catch (java.lang.NumberFormatException e) {
-				System.out.println("Give a double");
-			}
-		}
-	}
-
-	private boolean getBooleanFromUser(String querry) {
-		while (true) {
-			System.out.println(querry + " (y/n)");
-			switch (scan.nextLine()) {
-			case "Y":
-			case "y":
-			case "yes":
-			case "Yes":
-				return true;
-			case "n":
-			case "N":
-			case "no":
-			case "No":
-				return false;
-			default:
-				System.out.println("Invalid answer, try again.");
-				break;
-			}
-		}
-	}
-
 	private void createTask() {
 		System.out.println("Creating a task\n"
 				+ "Please fill in the following form:");
 		Project project = selectProject();
 		ArrayList<Task> tasks = new ArrayList<Task>();
-		while (getBooleanFromUser("Do you want to add a dependence?")) {
+		while (reader.getBoolean("Do you want to add a dependence?")) {
 			tasks.add(selectTask(project));
 		}
 		// TODO add dep to new Task
-		project.createTask(getStringFromUser("description"),
-				getDurationFromUser("estimated task duration"),
-				getDoubleFromUser("acceptable deviation"));
-	}
-
-	private void printAllTasks() {
-		for (Project project : projectController.getAllProjects()) {
-			for (Task task : project.getAllTasks())
-				System.out.println(task.getId() + ": task from project "
-						+ project.getName());
-		}
+		project.createTask(reader.getString("Give a description:"),
+				reader.getDuration("Give an estimate for the task duration:"),
+				reader.getDouble("Give an acceptable deviation:"));
 	}
 
 	private void updateTaskStatus() {
-		while (true) {
-			try {
-
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
+		System.out.println("TODO");
 	}
 
 	private void advanceTime() {
 		while (true) {
 			try {
-				projectController
-						.advanceTime(getDateFromUser("Enter the new timestamp"));
+				projectController.advanceTime(reader
+						.getDate("Enter the new timestamp:"));
 				return;
 			} catch (InvalidTimeException e) {
 				System.out.println(e.getMessage());

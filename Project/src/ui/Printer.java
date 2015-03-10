@@ -25,9 +25,9 @@ public class Printer {
 		if (task.getAlternativeFor() != null)
 			str += "Alternative task is: " + task.getAlternativeFor() + "\n";
 		if (!task.getDependencies().isEmpty())
-			str += "dependencies:";
+			str += "dependencies:\n";
 		for (Task dep : task.getDependencies())
-			str += Printer.oneLine(dep);
+			str += Printer.oneLine(dep) + "\n";
 		return str;
 	}
 
