@@ -1,6 +1,7 @@
 package TaskManager;
 
 import java.time.LocalDateTime;
+
 /**
  * 
  * The TaskManClock class implements the internal clock of the system.
@@ -8,12 +9,13 @@ import java.time.LocalDateTime;
  * @author Groep 8
  *
  */
+
 public class TaskManClock {
 
 	private LocalDateTime currentTime;
 
 	/**
-	 * The constructor of the class clock
+	 * The constructor of the class TaskManClock
 	 * sets the current time to the given time
 	 * 
 	 * @param startTime : the given time
@@ -24,10 +26,11 @@ public class TaskManClock {
 
 	/**
 	 * Sets the new time of the system if and only if 
-	 * the given time is valid
+	 * the given time is valid. An invalidTimeException
+	 * will be thrown when the give time is invalid
 	 * 
 	 * @param newTime : new time of the system
-	 * @throws IllegalArgumentException: thrown when the new time is not valid
+	 * @throws InvalidTimeException: thrown when the new time is not valid
 	 */
 	public void setTime(LocalDateTime newTime) throws InvalidTimeException{
 		if(!canHaveTime(newTime)){
