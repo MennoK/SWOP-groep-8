@@ -104,14 +104,14 @@ public class Parser {
 			
 			Task newTask = projectOfTask.getAllTasks().get(projectOfTask.getAllTasks().size()-1);
 
-			/*	//Sets alternative task if the task is an alternative of an other task
+			//Sets alternative task if the task is an alternative of an other task
 			if(task.get("alternativeFor") != null){
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
 				//TODO simpele setter aangemaakt in task, was nog niet ge"implementeerd
-				newTask.setAlternativeFor(alternativeTask);
+				newTask.setAlternativeTask(alternativeTask);
 			}
-			 */
+			 
 			//if a task has prequisite tasks, add dependencies to the task
 			if(task.get("prerequisiteTasks") != null){
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
@@ -129,12 +129,9 @@ public class Parser {
 				newTask.setStartTime(starTime);
 				newTask.setEndTime(endTime);
 				if(status.equals("failed")){
-					
+					newTask.setFailed(true);
 				}
-				
-				//newTask.setStatus(status);
-		
-
+				newTask.updateStatus();
 			}
 		}
 	}

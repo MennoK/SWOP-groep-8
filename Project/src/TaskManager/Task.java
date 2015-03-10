@@ -33,7 +33,7 @@ public class Task {
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor) {
 		this(description, estimatedDuration, acceptableDeviation);
-		setAlterternativeTask(isAlternativeFor);
+		setAlternativeTask(isAlternativeFor);
 	}
 
 	Task(String description, Duration estimatedDuration,
@@ -48,7 +48,7 @@ public class Task {
 			ArrayList<Task> dependencies) throws LoopingDependencyException {
 		this(description, estimatedDuration, acceptableDeviation);
 		addMultipleDependencies(dependencies);
-		setAlterternativeTask(isAlternativeFor);
+		setAlternativeTask(isAlternativeFor);
 	}
 
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
@@ -161,7 +161,7 @@ public class Task {
 		this.updateStatus();
 	}
 
-	public void setAlterternativeTask(Task isAlternativeFor)
+	public void setAlternativeTask(Task isAlternativeFor)
 			throws IllegalArgumentException {
 		if (isAlternativeFor.getStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
