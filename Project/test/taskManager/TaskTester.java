@@ -126,18 +126,6 @@ public class TaskTester {
 		new Task("new task 2", Duration.ofHours(8), 0.2, dependencies);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddSameDependencyWithMultipleDependencies()
-			throws LoopingDependencyException {
-		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2);
-		Task newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2);
-		ArrayList<Task> dependencyList = new ArrayList<Task>();
-		dependencyList.add(newTask2);
-		dependencyList.add(newTask2);
-
-		newTask1.addMultipleDependencies(dependencyList);
-	}
-
 	@Test
 	public void testFinishedEarly() throws InvalidTimeException,
 			InvalidActivityException {
@@ -224,7 +212,7 @@ public class TaskTester {
 		newTask2.setAlternativeTask(newTask);
 
 	}
-	
-	//TODO Status testing
+
+	// TODO Status testing
 
 }

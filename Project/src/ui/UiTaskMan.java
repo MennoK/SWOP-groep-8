@@ -38,8 +38,8 @@ public class UiTaskMan {
 				System.out.println("Starting with system initialised from "
 						+ fileName);
 				return;
-			} catch (FileNotFoundException | RuntimeException
-					| LoopingDependencyException e) {
+			} catch (InvalidTimeException | FileNotFoundException
+					| RuntimeException | LoopingDependencyException e) {
 				System.out.println(e.getMessage());
 			}
 		}
