@@ -102,19 +102,19 @@ public class Parser {
 
 			//create a new task to the project
 			Project projectOfTask = controller.getAllProjects().get(projectNumber);
-			
-			
-			
+
+
+
 			if(task.get("alternativeFor") != null && task.get("prerequisiteTasks") != null){
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
 				ArrayList<Task> dependencyList = new ArrayList<Task>();
-				
+
 				for (Integer taskNr : prerequisiteTasks) {
 					dependencyList.add(projectOfTask.getAllTasks().get(taskNr-1));
 				}
-				
+
 				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation, alternativeTask, dependencyList);
 
 			}
@@ -125,18 +125,18 @@ public class Parser {
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
 				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation, alternativeTask);
 			}
-			 
+
 			//if a task has prequisite tasks, add dependencies to the task
 			else if(task.get("prerequisiteTasks") != null && task.get("alternativeFor") == null){
 
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
 				ArrayList<Task> dependencyList = new ArrayList<Task>();
-				
+
 				for (Integer taskNr : prerequisiteTasks) {
 					dependencyList.add(projectOfTask.getAllTasks().get(taskNr-1));
 				}
 				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation, dependencyList);
-				
+
 			}
 			else if(task.get("prerequisiteTasks") == null && task.get("alternativeFor") == null) {
 				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
@@ -150,14 +150,15 @@ public class Parser {
 				String status = (String) task.get("status");
 				LocalDateTime startTime = LocalDateTime.parse((CharSequence) task.get("startTime"), dateTimeFormatter);
 				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);		
+				newTask.setStartTime(startTime);
+				newTask.setEndTime(endTime);
 				if(status.equals("failed")){
-					newTask.updateStatus(startTime, endTime, true);
+					newTask.setFailed();
 				}
-				else {
-					newTask.updateStatus(startTime, endTime, false);
 
-				}
+				newTask.updateStatus();
 			}
 		}
 	}
 }
+
