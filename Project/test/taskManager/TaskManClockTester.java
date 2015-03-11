@@ -1,14 +1,14 @@
-package test.unitTests;
+package taskManager;
 
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
 
-
-import TaskManager.InvalidTimeException;
-import TaskManager.TaskManClock;
 import org.junit.Before;
 import org.junit.Test;
+
+import taskManager.TaskManClock;
+import taskManager.exception.InvalidTimeException;
 
 public class TaskManClockTester {
 

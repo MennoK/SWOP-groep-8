@@ -1,4 +1,4 @@
-package TaskManager;
+package taskManager;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PrimitiveIterator.OfDouble;
+
+import taskManager.exception.LoopingDependencyException;
 
 /**
  * The Project class describes a project in system. Every project has the
@@ -242,7 +244,7 @@ public class Project {
     void update(LocalDateTime time)
     {
         this.updateEstimatedFinishTime(time);
-        this.getAllTasks().forEach(TaskManager.Task::updateStatus);
+        this.getAllTasks().forEach(taskManager.Task::updateStatus);
     }
 
     void updateEstimatedFinishTime(LocalDateTime time)

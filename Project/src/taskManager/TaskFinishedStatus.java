@@ -1,4 +1,4 @@
-package TaskManager;
+package taskManager;
 
 /**
  * The TaskFinishedStatus class describes an enumerator class

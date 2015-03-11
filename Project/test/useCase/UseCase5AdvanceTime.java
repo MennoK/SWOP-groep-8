@@ -1,4 +1,4 @@
-package UseCaseTests;
+package useCase;
 
 import static org.junit.Assert.*;
 
@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.InvalidTimeException;
-import TaskManager.TaskManClock;
+import taskManager.TaskManClock;
+import taskManager.exception.InvalidTimeException;
 
 public class UseCase5AdvanceTime {
 	private TaskManClock clock;

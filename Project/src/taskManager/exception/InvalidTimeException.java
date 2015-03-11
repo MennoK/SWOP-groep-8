@@ -1,4 +1,4 @@
-package TaskManager;
+package taskManager.exception;
 
 
 public class InvalidTimeException extends Exception {

@@ -1,4 +1,4 @@
-package test.unitTests;
+package parser;
 
 import static org.junit.Assert.*;
 
@@ -11,13 +11,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import TaskManager.LoopingDependencyException;
-import TaskManager.Project;
-import TaskManager.ProjectController;
-import TaskManager.Task;
-import TaskManager.TaskStatus;
-
 import parser.Parser;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.Task;
+import taskManager.TaskStatus;
+import taskManager.exception.LoopingDependencyException;
 
 public class ParserTester {
 

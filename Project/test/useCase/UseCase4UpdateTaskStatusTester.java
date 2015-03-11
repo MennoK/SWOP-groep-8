@@ -1,4 +1,4 @@
-package UseCaseTests;
+package useCase;
 
 import static org.junit.Assert.*;
 
@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.TaskManClock;
-import TaskManager.LoopingDependencyException;
-import TaskManager.Project;
-import TaskManager.ProjectController;
-import TaskManager.Task;
-import TaskManager.TaskStatus;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.Task;
+import taskManager.TaskManClock;
+import taskManager.TaskStatus;
+import taskManager.exception.LoopingDependencyException;
 
 public class UseCase4UpdateTaskStatusTester {
 	private ProjectController controller;

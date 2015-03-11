@@ -1,4 +1,4 @@
-package TaskManager;
+package taskManager;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
+
+import taskManager.exception.InvalidTimeException;
+import taskManager.exception.LoopingDependencyException;
 
 /**
  * The Task class implements a task.

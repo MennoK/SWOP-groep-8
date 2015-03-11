@@ -1,4 +1,4 @@
-package UseCaseTests;
+package useCase;
 
 import static org.junit.Assert.*;
 
@@ -11,13 +11,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.LoopingDependencyException;
-import TaskManager.Project;
-import TaskManager.ProjectController;
-import TaskManager.ProjectStatus;
-import TaskManager.Task;
-import TaskManager.TaskManClock;
-import TaskManager.TaskStatus;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.ProjectStatus;
+import taskManager.Task;
+import taskManager.TaskManClock;
+import taskManager.TaskStatus;
+import taskManager.exception.LoopingDependencyException;
 
 public class UseCase1ShowProjectsTester {
 	

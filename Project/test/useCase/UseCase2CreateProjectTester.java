@@ -1,4 +1,4 @@
-package UseCaseTests;
+package useCase;
 
 import static org.junit.Assert.*;
 
@@ -10,9 +10,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import TaskManager.Project;
-import TaskManager.ProjectController;
-import TaskManager.TaskManClock;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.TaskManClock;
 
 public class UseCase2CreateProjectTester {
 

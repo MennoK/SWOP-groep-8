@@ -1,4 +1,4 @@
-package test.unitTests;
+package taskManager;
 
 import static org.junit.Assert.*;
 
@@ -12,13 +12,13 @@ import java.util.PrimitiveIterator.OfDouble;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+import taskManager.Project;
+import taskManager.ProjectStatus;
+import taskManager.Task;
+import taskManager.TaskStatus;
+import taskManager.exception.LoopingDependencyException;
 
-import TaskManager.LoopingDependencyException;
-import TaskManager.Project;
-import TaskManager.ProjectStatus;
-import TaskManager.Task;
-import TaskManager.TaskStatus;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class ProjectTester {
 

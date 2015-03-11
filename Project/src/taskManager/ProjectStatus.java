@@ -1,4 +1,4 @@
-package TaskManager;
+package taskManager;
 
 /**
  * The ProjectStatus class describes an enumerator class

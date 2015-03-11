@@ -1,4 +1,4 @@
-package TaskManager;
+package taskManager;
 
 /**
  * The TaskStatus class describes an enumerator class
