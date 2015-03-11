@@ -178,10 +178,10 @@ public class Project {
 		for (Task task : allTasks) {
 			if (task.getStatus() == TaskStatus.FINISHED
 					|| task.getStatus() == TaskStatus.FAILED) {
-
 			}
 
 		}
+		return null;
 	}
 
 	/**
