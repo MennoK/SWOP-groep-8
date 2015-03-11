@@ -19,7 +19,7 @@ import taskManager.TaskStatus;
 import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
 
-public class TaskTest {
+public class TaskTester {
 
 	LocalDateTime now;
 
