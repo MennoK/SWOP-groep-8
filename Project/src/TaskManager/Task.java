@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
 
-import com.sun.javafx.geom.Edge;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 /**
  * 
@@ -324,13 +322,17 @@ public class Task {
 	 * @throws InvalidTimeException : thrown when the given end time is invalid
 	 */
 	public void setEndTime(LocalDateTime endTime) throws InvalidTimeException {
-		if(endTime.isBefore(this.getStartTime())){
+		if(!isEndTimeAfterStartTime((this.getStartTime()),endTime)){
 			throw new InvalidTimeException("the given end time is before the start time");
 		}
 		else{
 			this.endTime = endTime;
 			this.updateStatus();
 		}
+	}
+	
+	public boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
+		return endTime.isAfter(startTime);
 	}
 
 	/**
@@ -416,7 +418,12 @@ public class Task {
 	}
 
 	/**
-	 * Updates the status 
+	 * Updates the status of task. There are four different statuses for a task:
+	 * Available, unavailable, finished or failed.
+	 * 
+	 * A task is failed when the boolean isFailed true
+	 * A task is finished when the task has an end time
+	 * The task availability is dependent on the dependencies of the task
 	 */
 	public void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
