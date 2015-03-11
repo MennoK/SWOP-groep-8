@@ -1,6 +1,5 @@
 package ui;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.activity.InvalidActivityException;
@@ -13,12 +12,11 @@ import taskManager.TaskFinishedStatus;
 public class Printer {
 
 	static String oneLine(Task task) {
-		return "task with description '" + task.getDescription() + "' is "
-				+ task.getStatus();
+		return "Task " + task.getId() + " " + task.getStatus();
 	}
 
 	static String oneLine(Project project) {
-		return "project '" + project.getName() + "' is " + project.getStatus();
+		return "project '" + project.getName() + "': " + project.getStatus();
 	}
 
 	static String listTasks(List<Task> options) {
@@ -33,6 +31,10 @@ public class Printer {
 		return str.trim();
 	}
 
+	static String listProjects(List<Project> options) {
+		return listProjects(options, 1);
+	}
+
 	static String listProjects(List<Project> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
@@ -42,45 +44,40 @@ public class Printer {
 	}
 
 	static String full(Task task) {
-		String str = "description: " + task.getDescription() + "\n";
-		str += "estimated duration: " + task.getEstimatedDuration() + "\n";
-		str += "acceptable deviation: " + task.getAcceptableDeviation() + "\n";
-		str += "status: " + task.getStatus() + "\n";
+		String str = oneLine(task) + ": ";
+		str += task.getDescription() + ", ";
+		str += task.getEstimatedDuration() + ", ";
+		str += task.getAcceptableDeviation() * 100 + "% margin";
+		if (!task.getDependencies().isEmpty()) {
+			str += ", depends on {";
+			for (Task dep : task.getDependencies())
+				str += " task " + dep.getId();
+			str += " }";
+		}
+		if (task.getAlternativeFor() != null)
+			str += ", alternative for task " + task.getAlternativeFor().getId();
 		try {
 			TaskFinishedStatus finishStatus = task.getFinishStatus();
-			str += "task was finished " + finishStatus;
+			str += ", started " + task.getStartTime();
+			str += ", finished " + task.getEndTime();
+			str += " (" + finishStatus + ")";
 		} catch (InvalidActivityException e) {
 			// If not finished
 		}
-		if (task.getAlternativeFor() != null)
-			str += "Alternative task is: " + task.getAlternativeFor() + "\n";
-		if (!task.getDependencies().isEmpty())
-			str += "dependencies:\n";
-		str += listTasks(task.getDependencies());
 		return str;
 	}
 
-	static String full(Project project, LocalDateTime now) {
-		String str = "project name: " + project.getName() + "\n";
-		str += "description: " + project.getDescription() + "\n";
-		str += "creation time: " + project.getCreationTime() + "\n";
-		str += "due time: " + project.getDueTime() + "\n";
-		str += "status: " + project.getStatus() + "\n";
-		if (project.getStatus() == ProjectStatus.ONGOING) {
-			if (project.willFinishOnTime())
-				str += "The project is estimated to finish over time\n";
-			else
-				str += "the project is estimated to finish on time\n";
-		}
+	static String full(Project project) {
+		String str = oneLine(project);
+		str += ", " + project.getDescription();
+		if (project.getStatus() == ProjectStatus.ONGOING)
+			str += ", " + project.willFinishOnTime();
 		if (project.getStatus() == ProjectStatus.FINISHED) {
-			str += "The total delay was: " + project.getTotalDelay() + "\n";
-			/*
-			 * TODO print whether the project finished early, on time or with
-			 * delay, this requires project.getFinishTime() or
-			 * project.isFinishedOnTime()
-			 */
+			str += ", " + project.finishedOnTime();
+			str += ", total delay " + project.getTotalDelay();
 		}
-		str += "The project contains the following tasks:\n";
+		str += " (Created " + project.getCreationTime();
+		str += ", Due " + project.getDueTime() + ")\n";
 		str += listTasks(project.getAllTasks());
 		return str;
 	}

@@ -38,8 +38,8 @@ public class UiTaskMan {
 				System.out.println("Starting with system initialised from "
 						+ fileName);
 				return;
-			} catch (FileNotFoundException | RuntimeException
-					| LoopingDependencyException e) {
+			} catch (InvalidTimeException | FileNotFoundException
+					| RuntimeException | LoopingDependencyException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -61,10 +61,10 @@ public class UiTaskMan {
 
 	private void showProjects() throws ExitUseCaseException {
 		// TODO move listProjects to a generic list and move it inside select
-		System.out.println(Printer.listProjects(
-				projectController.getAllProjects(), 1));
+		System.out.println(Printer.listProjects(projectController
+				.getAllProjects()));
 		Project project = reader.select(projectController.getAllProjects());
-		System.out.println(Printer.full(project, projectController.getTime()));
+		System.out.println(Printer.full(project));
 		Task task = reader.select(project.getAllTasks());
 		System.out.println(Printer.full(task));
 	}
@@ -98,8 +98,8 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			System.out.println(Printer.listProjects(
-					projectController.getAllProjects(), 1));
+			System.out.println(Printer.listProjects(projectController
+					.getAllProjects()));
 			Project project = reader.select(projectController.getAllProjects());
 			try {
 				if (reader
@@ -126,39 +126,26 @@ public class UiTaskMan {
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
-		while (true) {
-			System.out.println("Updating the status of a task\n"
-					+ "Please select a task:");
-			ArrayList<Task> allTasks = new ArrayList<Task>();
-			for (Project project : projectController.getAllProjects()) {
-				System.out.println(Printer.oneLine(project));
-				System.out.println(Printer.listTasks(project.getAllTasks(),
-						allTasks.size() + 1));
-				allTasks.addAll(project.getAllTasks());
-			}
-			Task task = reader.select(allTasks);
+		System.out.println("Updating the status of a task\n"
+				+ "Please select a task:");
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		for (Project project : projectController.getAllProjects()) {
+			System.out.println(Printer.oneLine(project));
+			System.out.println(Printer.listTasks(project.getAllTasks(),
+					allTasks.size() + 1));
+			allTasks.addAll(project.getAllTasks());
+		}
+		Task task = reader.select(allTasks);
 
-			System.out.println("What do you want to update?");
-			ArrayList<UpdateType> updateTypes = new ArrayList<UpdateType>();
-			updateTypes.add(UpdateType.START_TIME);
-			updateTypes.add(UpdateType.END_TIME);
-			updateTypes.add(UpdateType.SET_FAILED);
-			UpdateType selectedUpdate = reader.select(updateTypes);
-			if (selectedUpdate == UpdateType.START_TIME) {
-				task.setStartTime(reader.getDate("Give the start time"));
+		while (true) {
+			try {
+				task.updateStatus(
+						reader.getDate("When did you start this task?"),
+						reader.getDate("When did you finish this task?"),
+						reader.getBoolean("Was this task failed?"));
 				return;
-			}
-			if (selectedUpdate == UpdateType.END_TIME) {
-				try {
-					task.setEndTime(reader.getDate("Give the end time"));
-					return;
-				} catch (NullPointerException | InvalidTimeException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			if (selectedUpdate == UpdateType.SET_FAILED) {
-				task.setFailed();
-				return;
+			} catch (InvalidTimeException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
