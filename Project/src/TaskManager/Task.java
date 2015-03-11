@@ -122,7 +122,7 @@ public class Task {
 	}
 
 	/**
-	 * Returns the description of task 
+	 * Returns the description of task
 	 * 
 	 * @return description: the description of a task
 	 */
@@ -133,7 +133,8 @@ public class Task {
 	/**
 	 * Sets the description of the task
 	 * 
-	 * @param description : the given description of task
+	 * @param description
+	 *            : the given description of task
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -149,12 +150,13 @@ public class Task {
 	}
 
 	/**
-	 * Sets the estimated duration of a task by a given argument.
-	 * The estimated duration of task has to be strictly positive
+	 * Sets the estimated duration of a task by a given argument. The estimated
+	 * duration of task has to be strictly positive
 	 * 
-	 * @param estimatedDuration: the given estimated duration
+	 * @param estimatedDuration
+	 *            : the given estimated duration
 	 */
-	//TODO : estimated duration mag niet negatief zijn
+	// TODO : estimated duration mag niet negatief zijn
 	public void setEstimatedDuration(Duration estimatedDuration) {
 		this.estimatedDuration = estimatedDuration;
 	}
@@ -170,12 +172,13 @@ public class Task {
 	}
 
 	/**
-	 * Sets the acceptable deviation of task and updates the task status.
-	 * The acceptable deviation is strictly positive
+	 * Sets the acceptable deviation of task and updates the task status. The
+	 * acceptable deviation is strictly positive
 	 * 
-	 * @param acceptableDeviation: the given acceptable deviation
+	 * @param acceptableDeviation
+	 *            : the given acceptable deviation
 	 */
-	//TODO : acceptable deviation mag niet negatief zijn
+	// TODO : acceptable deviation mag niet negatief zijn
 	public void setAcceptableDeviation(double acceptableDeviation) {
 		this.acceptableDeviation = acceptableDeviation;
 		this.updateStatus();
@@ -198,30 +201,30 @@ public class Task {
 		this.startTime = startTime;
 	}
 
-	
 	public boolean isFailed() {
 		return failed;
 
 	}
 
 	/**
-	 * Sets a failed boolean to true or false and
-	 * updates the task status
+	 * Sets a failed boolean to true or false and updates the task status
 	 * 
-	 * @param failed: true if failed
+	 * @param failed
+	 *            : true if failed
 	 */
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 		this.updateStatus();
 	}
 
-	
 	/**
-	 * Sets the alternative task if and only if the the current task
-	 * his status is failed
+	 * Sets the alternative task if and only if the the current task his status
+	 * is failed
 	 * 
-	 * @param isAlternativeFor: alternative task
-	 * @throws IllegalArgumentException: thrown when the task is not failed
+	 * @param isAlternativeFor
+	 *            : alternative task
+	 * @throws IllegalArgumentException
+	 *             : thrown when the task is not failed
 	 */
 	public void setAlternativeTask(Task isAlternativeFor)
 			throws IllegalArgumentException {
@@ -248,6 +251,11 @@ public class Task {
 	 */
 	public int getId() {
 		return this.id;
+	}
+
+	public void updateStatus(LocalDateTime newStartTime,
+			LocalDateTime newEndTime, boolean setFailed) {
+		// TODO implement
 	}
 
 	public void updateStatus() {
