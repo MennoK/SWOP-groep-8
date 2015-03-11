@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.sun.javafx.geom.Edge;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
 /**
  * 
  * 
@@ -14,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  */
 public class Task {
+
 	private ArrayList<Task> dependencies = new ArrayList<>();
 	private String description;
 	private Duration estimatedDuration;
@@ -28,6 +32,14 @@ public class Task {
 	private static AtomicInteger idCounter = new AtomicInteger(1);
 	private int id;
 
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration
+	 * and acceptable deviation
+	 * 
+	 * @param description : given description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable duration of task
+	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
 		setDescription(description);
@@ -37,19 +49,49 @@ public class Task {
 		this.updateStatus();
 	}
 
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration
+	 * and acceptable deviation and a task which the task an alternative for
+	 * 
+	 * @param description : given description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable duration of task
+	 * @param isAlternativeFor : the alternative task which failed
+	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor) {
 		this(description, estimatedDuration, acceptableDeviation);
 		setAlternativeTask(isAlternativeFor);
 	}
 
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration
+	 * and acceptable deviation, and a list of dependencies
+	 * 
+	 * @param description : given description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable duration of task
+	 * @param dependencies : list with dependencies
+	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies)
-			throws LoopingDependencyException {
+					throws LoopingDependencyException {
 		this(description, estimatedDuration, acceptableDeviation);
 		addMultipleDependencies(dependencies);
 	}
 
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration
+	 * and acceptable deviation and and a task which the task an alternative for
+	 * and a list with dependencies
+	 * 
+	 * @param description : given description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable duration of task
+	 * @param isAlternativeFor : the alternative task which failed
+	 * @param dependencies : list with dependencies
+	 * 
+	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor,
 			ArrayList<Task> dependencies) throws LoopingDependencyException {
@@ -98,7 +140,13 @@ public class Task {
 	public void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
-			addDependency(dependency);
+			if(!isValidDependency(dependency)){
+				throw new IllegalArgumentException("The given dependency task is already dependent on this task");
+			}
+			else {
+				addDependency(dependency);
+
+			}
 		}
 	}
 
@@ -108,8 +156,49 @@ public class Task {
 			throw new LoopingDependencyException(
 					"Tried to add task1 as a dependency to task2,"
 							+ " but task2 is already dependent on task1.");
-		dependencies.add(dependency);
-		this.updateStatus();
+		if(!isValidDependency(dependency)){
+			throw new IllegalArgumentException("The given dependency task is already dependent on this task");
+		}
+		else{
+			dependencies.add(dependency);
+			this.updateStatus();
+		}
+	}
+
+	public TaskFinishedStatus getFinishTime(){
+		if(wasFinishedEarly()){
+			return TaskFinishedStatus.EARLY;
+		}
+		else if(wasFinishedWithADelay()){
+			return TaskFinishedStatus.WITH_A_DELAY;
+		}
+		else{
+			return TaskFinishedStatus.ON_TIME;
+		}
+	}
+
+	private boolean wasFinishedEarly(){
+		long hours = (long) ((int) getEstimatedDuration().toHours() - (int) getEstimatedDuration().toHours()*getAcceptableDeviation());
+		LocalDateTime earlyTime = getStartTime().plusHours(hours);
+		return getEndTime().isBefore(earlyTime);
+
+	}
+
+	private boolean wasFinishedWithADelay(){
+		long hours = (long) ((int) getEstimatedDuration().toHours() + (int) getEstimatedDuration().toHours()*getAcceptableDeviation());
+		LocalDateTime delayTime = getStartTime().plusHours(hours);
+		return getEndTime().isAfter(delayTime);
+	}
+
+	/**
+	 * This method returns true if and only if the given dependency
+	 * is not yet in the dependency list
+	 * 
+	 * @param dependency
+	 * @return true if and only if the given task dependency is valid
+	 */
+	public boolean isValidDependency(Task dependency){
+		return !this.getDependencies().contains(dependency);
 	}
 
 	/**
@@ -154,9 +243,14 @@ public class Task {
 	 * 
 	 * @param estimatedDuration: the given estimated duration
 	 */
-	//TODO : estimated duration mag niet negatief zijn
 	public void setEstimatedDuration(Duration estimatedDuration) {
-		this.estimatedDuration = estimatedDuration;
+		if(estimatedDuration.toHours() <= 0){
+			throw new IllegalArgumentException("The estimated duration must be strictly positive");
+		}
+		else{
+			this.estimatedDuration = estimatedDuration;
+
+		}
 	}
 
 	/**
@@ -171,37 +265,61 @@ public class Task {
 
 	/**
 	 * Sets the acceptable deviation of task and updates the task status.
-	 * The acceptable deviation is strictly positive
+	 * The acceptable deviation must be positive or zero
 	 * 
 	 * @param acceptableDeviation: the given acceptable deviation
 	 */
-	//TODO : acceptable deviation mag niet negatief zijn
 	public void setAcceptableDeviation(double acceptableDeviation) {
-		this.acceptableDeviation = acceptableDeviation;
-		this.updateStatus();
+		if(acceptableDeviation < 0){
+			throw new IllegalArgumentException("The acceptable deviation must be greater or equal then zero");
+		}
+		else{
+			this.acceptableDeviation = acceptableDeviation;
+			this.updateStatus();
+		}
 	}
 
+	/**
+	 * Returns the end time of a project
+	 * 
+	 * @return endTime : the endTime of a project
+	 */
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
 
+	/**
+	 * 
+	 * @param endTime
+	 */
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 		this.updateStatus();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
+	/**
+	 * 
+	 * @param startTime
+	 */
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
-	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isFailed() {
 		return failed;
-
 	}
 
 	/**
@@ -215,7 +333,7 @@ public class Task {
 		this.updateStatus();
 	}
 
-	
+
 	/**
 	 * Sets the alternative task if and only if the the current task
 	 * his status is failed
