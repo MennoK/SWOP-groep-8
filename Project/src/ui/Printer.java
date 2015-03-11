@@ -3,9 +3,12 @@ package ui;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.activity.InvalidActivityException;
+
 import TaskManager.Project;
 import TaskManager.ProjectStatus;
 import TaskManager.Task;
+import TaskManager.TaskFinishedStatus;
 
 public class Printer {
 
@@ -30,10 +33,10 @@ public class Printer {
 		return str.trim();
 	}
 
-	static String listProjects(List<Project> options) {
+	static String listProjects(List<Project> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
-			str += (i + 1) + ": " + oneLine(options.get(i)) + "\n";
+			str += (i + startingIndex) + ": " + oneLine(options.get(i)) + "\n";
 		}
 		return str.trim();
 	}
@@ -43,7 +46,12 @@ public class Printer {
 		str += "estimated duration: " + task.getEstimatedDuration() + "\n";
 		str += "acceptable deviation: " + task.getAcceptableDeviation() + "\n";
 		str += "status: " + task.getStatus() + "\n";
-		/* TODO display whether task was finished early, on time or with delay. */
+		try {
+			TaskFinishedStatus finishStatus = task.getFinishStatus();
+			str += "task was finished " + finishStatus;
+		} catch (InvalidActivityException e) {
+			// If not finished
+		}
 		if (task.getAlternativeFor() != null)
 			str += "Alternative task is: " + task.getAlternativeFor() + "\n";
 		if (!task.getDependencies().isEmpty())
