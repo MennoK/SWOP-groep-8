@@ -1,6 +1,5 @@
 package TaskManager;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class ProjectController {
 	 * The constructor of the projectController needs a TaskManClock. 
 	 */
 	public ProjectController(TaskManClock taskManClock){
-		projects = new ArrayList<Project>();
+		projects = new ArrayList<>();
 		this.taskManClock = taskManClock;
 	}
 
@@ -39,6 +38,19 @@ public class ProjectController {
 	public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime){
 		Project project = new Project(name, description, creationTime, dueTime);
 		this.addProject(project);
+	}
+
+	/**
+	 * Creates a new project with the given arguments and adds the project
+	 * to the list of projects
+	 * The creationTime is set to the current time
+	 *
+	 * @param name: name of the project
+	 * @param description: description of the project
+	 * @param dueTime: due time of the project (only the date needed)
+	 */
+	public void createProject(String name, String description, LocalDateTime dueTime){
+		this.createProject(name, description, this.getTime(), dueTime);
 	}
 
 	/**
