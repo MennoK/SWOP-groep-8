@@ -79,7 +79,7 @@ public class ParserTester {
 
 		assertEquals(task1.getDescription(), "task description");
 		assertEquals(task1.getEstimatedDuration(), Duration.ofHours(500));
-		assertEquals(task1.getAcceptableDeviation(), 50, 0.001);
+		assertEquals(task1.getAcceptableDeviation(), 0.50, 0.001);
 		assertEquals(task1.getDependencies().size(), 0);
 		assertEquals(task1.getStatus(),taskManager.TaskStatus.FINISHED);
 		assertEquals(task1.getStartTime(), LocalDateTime.parse(("2014-01-01 10:00"),dateTimeFormatter));
@@ -100,7 +100,7 @@ public class ParserTester {
 
 		assertEquals(task1.getDescription(), "another task description");
 		assertEquals(task1.getEstimatedDuration(), Duration.ofHours(500));
-		assertEquals(task1.getAcceptableDeviation(), 50, 0.001);
+		assertEquals(task1.getAcceptableDeviation(), 0.50, 0.001);
 		assertEquals(task1.getDependencies().size(), 0);
 
 		assertNull(task1.getAlternativeFor());
@@ -117,7 +117,7 @@ public class ParserTester {
 
 		assertEquals(task2.getDescription(), "yet another task description");
 		assertEquals(task2.getEstimatedDuration(), Duration.ofHours(100));
-		assertEquals(task2.getAcceptableDeviation(), 10, 0.001);
+		assertEquals(task2.getAcceptableDeviation(), 0.10, 0.001);
 		assertEquals(task2.getDependencies().size(), 0);
 
 		assertNull(task2.getAlternativeFor());
@@ -173,7 +173,7 @@ public class ParserTester {
 
 		assertEquals(task1.getDescription(), "description");
 		assertEquals(task1.getEstimatedDuration(), Duration.ofHours(500));
-		assertEquals(task1.getAcceptableDeviation(), 50, 0.001);
+		assertEquals(task1.getAcceptableDeviation(), 0.50, 0.001);
 		assertEquals(task1.getDependencies().size(), 0);
 
 		assertNull(task1.getAlternativeFor());
@@ -190,7 +190,7 @@ public class ParserTester {
 
 		assertEquals(task2.getDescription(), "description");
 		assertEquals(task2.getEstimatedDuration(), Duration.ofHours(500));
-		assertEquals(task2.getAcceptableDeviation(), 50, 0.001);
+		assertEquals(task2.getAcceptableDeviation(), 0.50, 0.001);
 		assertEquals(task2.getDependencies().size(), 0);
 		assertNull(task2.getAlternativeFor());
 
