@@ -15,11 +15,11 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
-import TaskManager.InvalidTimeException;
-import TaskManager.LoopingDependencyException;
-import TaskManager.Project;
-import TaskManager.ProjectController;
-import TaskManager.Task;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.Task;
+import taskManager.exception.InvalidTimeException;
+import taskManager.exception.LoopingDependencyException;
 
 /**
  * The Parser class implements a YAML parser for TaskMan

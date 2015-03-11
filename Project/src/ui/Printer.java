@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.activity.InvalidActivityException;
 
-import TaskManager.Project;
-import TaskManager.ProjectStatus;
-import TaskManager.Task;
-import TaskManager.TaskFinishedStatus;
+import taskManager.Project;
+import taskManager.ProjectStatus;
+import taskManager.Task;
+import taskManager.TaskFinishedStatus;
 
 public class Printer {
 
