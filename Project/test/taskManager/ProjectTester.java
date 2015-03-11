@@ -8,16 +8,12 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-<<<<<<< HEAD
-
 import taskManager.*;
 import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
-=======
 import taskManager.Project;
 import taskManager.ProjectStatus;
 import taskManager.Task;
->>>>>>> b432fc1dc5e5cc4a8c17445e80496036b9813a15
 
 import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;

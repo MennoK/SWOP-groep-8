@@ -11,7 +11,6 @@ import javax.activity.InvalidActivityException;
 import org.junit.Before;
 import org.junit.Test;
 
-import parser.TaskStatus;
 
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
