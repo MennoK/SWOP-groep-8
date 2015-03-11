@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.activity.InvalidActivityException;
+
 import com.sun.javafx.geom.Edge;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
@@ -165,25 +167,49 @@ public class Task {
 		}
 	}
 
-	public TaskFinishedStatus getFinishTime(){
-		if(wasFinishedEarly()){
-			return TaskFinishedStatus.EARLY;
-		}
-		else if(wasFinishedWithADelay()){
-			return TaskFinishedStatus.WITH_A_DELAY;
+	/**
+	 * Returns the TaskFinishedStatus of a task
+	 * 
+	 * @return taskFinishStatus : status of a finished task
+	 * @throws InvalidActivityException : thrown when the task is not finished yet
+	 */
+	public TaskFinishedStatus getFinishTime() throws InvalidActivityException{
+		if(this.getStatus() != TaskStatus.FINISHED){
+			throw new InvalidActivityException("The task is not finished yet");
 		}
 		else{
-			return TaskFinishedStatus.ON_TIME;
+			if(wasFinishedEarly()){
+				return TaskFinishedStatus.EARLY;
+			}
+			else if(wasFinishedWithADelay()){
+				return TaskFinishedStatus.WITH_A_DELAY;
+			}
+			else{
+				return TaskFinishedStatus.ON_TIME;
+			}
 		}
 	}
 
+	/**
+	 * Checks whether the task has finished early or not. This occurs
+	 * only if the end time of the task is before the esimated duration
+	 * minus the acceptable deviation
+	 * 
+	 * @return true if and only if the task was finished early
+	 */
 	private boolean wasFinishedEarly(){
 		long hours = (long) ((int) getEstimatedDuration().toHours() - (int) getEstimatedDuration().toHours()*getAcceptableDeviation());
 		LocalDateTime earlyTime = getStartTime().plusHours(hours);
 		return getEndTime().isBefore(earlyTime);
-
 	}
 
+	/**
+	 * Checks whether the task has finished with a delay or not. This occurs
+	 * only if the end time of the task is past the estimated duration plus
+	 * the acceptable deviation
+	 * 
+	 * @return true if and only if the task was finished on a delay
+	 */
 	private boolean wasFinishedWithADelay(){
 		long hours = (long) ((int) getEstimatedDuration().toHours() + (int) getEstimatedDuration().toHours()*getAcceptableDeviation());
 		LocalDateTime delayTime = getStartTime().plusHours(hours);
@@ -242,6 +268,7 @@ public class Task {
 	 * The estimated duration of task has to be strictly positive
 	 * 
 	 * @param estimatedDuration: the given estimated duration
+	 * @throws IllegalArgumentException : thrown when the given estimated duration is not valid
 	 */
 	public void setEstimatedDuration(Duration estimatedDuration) {
 		if(estimatedDuration.toHours() <= 0){
@@ -249,7 +276,6 @@ public class Task {
 		}
 		else{
 			this.estimatedDuration = estimatedDuration;
-
 		}
 	}
 
@@ -268,6 +294,7 @@ public class Task {
 	 * The acceptable deviation must be positive or zero
 	 * 
 	 * @param acceptableDeviation: the given acceptable deviation
+	 * @throws IllegalArgumentException : thrown when the given acceptableDeviation is not valid
 	 */
 	public void setAcceptableDeviation(double acceptableDeviation) {
 		if(acceptableDeviation < 0){
@@ -289,34 +316,46 @@ public class Task {
 	}
 
 	/**
+	 * Sets the end time if and only if the given end time is after
+	 * the start time of a project
 	 * 
-	 * @param endTime
+	 * @param endTime : the end time of task
+	 * @throws InvalidTimeException : thrown when the given end time is invalid
 	 */
-	public void setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
-		this.updateStatus();
+	public void setEndTime(LocalDateTime endTime) throws InvalidTimeException {
+		if(endTime.isBefore(this.getStartTime())){
+			throw new InvalidTimeException("the given end time is before the start time");
+		}
+		else{
+			this.endTime = endTime;
+			this.updateStatus();
+		}
 	}
 
 	/**
+	 * Returns the start time of task
 	 * 
-	 * @return
+	 * @return startTime : the start time of a task
 	 */
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
 	/**
+	 * Sets the start time of a task
 	 * 
-	 * @param startTime
+	 * @param startTime : the given start time of a task
 	 */
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
-
 	/**
+	 * Returns a boolean
+	 * true if the task is failed
+	 * false if the task is not failed
 	 * 
-	 * @return
+	 * @return true if and only if the task is failed
 	 */
 	public boolean isFailed() {
 		return failed;
@@ -368,6 +407,9 @@ public class Task {
 		return this.id;
 	}
 
+	/**
+	 * Updates the status 
+	 */
 	public void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
 		if (isFailed()) {
