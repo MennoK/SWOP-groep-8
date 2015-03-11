@@ -33,8 +33,10 @@ public class TaskTester {
 		baseTask = new Task("a task", Duration.ofHours(8), 0.2);
 		baseTask.setStartTime(now);
 
-		dependentTask = new Task("a dependent task", Duration.ofHours(8), 0.2);
-		dependentTask.addDependency(baseTask);
+		ArrayList<Task> dependencies = new ArrayList<Task>();
+		dependencies.add(baseTask);
+		dependentTask = new Task("a dependent task", Duration.ofHours(8), 0.2,
+				dependencies);
 
 		finishedTask = new Task("a finished task", Duration.ofHours(8), 0.2);
 		finishedTask.setStartTime(now);
@@ -43,11 +45,12 @@ public class TaskTester {
 		failedTask = new Task("a failed task", Duration.ofHours(8), 0.2);
 		failedTask.setFailed();
 
+		ArrayList<Task> level2dependencies = new ArrayList<Task>();
+		level2dependencies.add(finishedTask);
+		level2dependencies.add(failedTask);
+		level2dependencies.add(dependentTask);
 		level2DependentTask = new Task("a task dependent on all kind of tasks",
-				Duration.ofHours(8), 0.2);
-		level2DependentTask.addDependency(finishedTask);
-		level2DependentTask.addDependency(failedTask);
-		level2DependentTask.addDependency(dependentTask);
+				Duration.ofHours(8), 0.2, level2dependencies);
 	}
 
 	@Test
@@ -114,24 +117,12 @@ public class TaskTester {
 		assertEquals(newTask1.getId() + 1, newTask2.getId());
 	}
 
-	@Test(expected = LoopingDependencyException.class)
-	public void dependencyLoopTest() throws LoopingDependencyException {
-		baseTask.addDependency(dependentTask);
-	}
-
-	@Test(expected = LoopingDependencyException.class)
-	public void level2dependencyLoopTest() throws LoopingDependencyException {
-		baseTask.addDependency(level2DependentTask);
-	}
-
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddSameDependency() throws LoopingDependencyException {
-		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2);
-		Task newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2);
-
-		newTask1.addDependency(newTask2);
-		newTask1.addDependency(newTask2);
-
+	public void testGiveDoubleDependency() {
+		ArrayList<Task> dependencies = new ArrayList<Task>();
+		dependencies.add(baseTask);
+		dependencies.add(baseTask);
+		new Task("new task 2", Duration.ofHours(8), 0.2, dependencies);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

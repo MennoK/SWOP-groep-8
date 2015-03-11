@@ -86,10 +86,13 @@ public class Task {
 	 *            : list with dependencies
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, ArrayList<Task> dependencies)
-			throws LoopingDependencyException {
+			double acceptableDeviation, ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation);
-		addMultipleDependencies(dependencies);
+		try {
+			addMultipleDependencies(dependencies);
+		} catch (LoopingDependencyException e) {
+			// This can never occur in the constructor
+		}
 	}
 
 	/**
@@ -118,6 +121,7 @@ public class Task {
 	}
 
 	// TODO naam niet goed, moet nog beter ge"implementeerd worden
+	// TODO create seperate class wrapper for this
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
@@ -183,7 +187,7 @@ public class Task {
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	void addMultipleDependencies(ArrayList<Task> dependencies)
+	private void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
 			if (!isValidDependency(dependency)) {
@@ -204,7 +208,8 @@ public class Task {
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	void addDependency(Task dependency) throws LoopingDependencyException {
+	private void addDependency(Task dependency)
+			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
 			throw new LoopingDependencyException(
 					"Tried to add task1 as a dependency to task2,"
@@ -442,7 +447,7 @@ public class Task {
 	 * Sets a failed boolean to false and updates the task status
 	 */
 	public void setFailed() {
-		this.failed = false;
+		this.failed = true;
 		this.updateStatus();
 	}
 
@@ -455,7 +460,7 @@ public class Task {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the task is not failed
 	 */
-	void setAlternativeTask(Task isAlternativeFor)
+	private void setAlternativeTask(Task isAlternativeFor)
 			throws IllegalArgumentException {
 		if (isAlternativeFor.getStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
