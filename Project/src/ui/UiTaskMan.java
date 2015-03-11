@@ -61,8 +61,8 @@ public class UiTaskMan {
 
 	private void showProjects() throws ExitUseCaseException {
 		// TODO move listProjects to a generic list and move it inside select
-		System.out.println(Printer.listProjects(
-				projectController.getAllProjects(), 1));
+		System.out.println(Printer.listProjects(projectController
+				.getAllProjects()));
 		Project project = reader.select(projectController.getAllProjects());
 		System.out.println(Printer.full(project, projectController.getTime()));
 		Task task = reader.select(project.getAllTasks());
@@ -98,8 +98,8 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			System.out.println(Printer.listProjects(
-					projectController.getAllProjects(), 1));
+			System.out.println(Printer.listProjects(projectController
+					.getAllProjects()));
 			Project project = reader.select(projectController.getAllProjects());
 			try {
 				if (reader

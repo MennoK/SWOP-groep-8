@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import taskManager.exception.LoopingDependencyException;
 
 /**
@@ -237,8 +236,7 @@ public class Project {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given due time is not valid
 	 */
-	void setDueTime(LocalDateTime dueTime)
-			throws IllegalArgumentException {
+	void setDueTime(LocalDateTime dueTime) throws IllegalArgumentException {
 		if (!canHaveDueTime(dueTime)) {
 			throw new IllegalArgumentException(
 					"The given due time is not valid.");
@@ -259,14 +257,15 @@ public class Project {
 				|| dueTime.isEqual(getCreationTime());
 	}
 
-	public boolean willFinishOnTime() {
-		return this.getEstimatedFinishTime().isBefore(this.getDueTime());
+	public ProjectFinishingStatus willFinishOnTime() {
+		if (this.getEstimatedFinishTime().isBefore(this.getDueTime()))
+			return ProjectFinishingStatus.ON_TIME;
+		return ProjectFinishingStatus.OVER_TIME;
 	}
 
 	void update(LocalDateTime time) {
 		this.updateEstimatedFinishTime(time);
-		for(Task task : this.getAllTasks())
-		{
+		for (Task task : this.getAllTasks()) {
 			task.updateStatus();
 		}
 	}

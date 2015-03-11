@@ -33,6 +33,10 @@ public class Printer {
 		return str.trim();
 	}
 
+	static String listProjects(List<Project> options) {
+		return listProjects(options, 1);
+	}
+
 	static String listProjects(List<Project> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
@@ -67,10 +71,8 @@ public class Printer {
 		str += "due time: " + project.getDueTime() + "\n";
 		str += "status: " + project.getStatus() + "\n";
 		if (project.getStatus() == ProjectStatus.ONGOING) {
-			if (project.willFinishOnTime())
-				str += "The project is estimated to finish over time\n";
-			else
-				str += "the project is estimated to finish on time\n";
+			str += "The project is estimated to finish "
+					+ project.willFinishOnTime() + "\n";
 		}
 		if (project.getStatus() == ProjectStatus.FINISHED) {
 			str += "The total delay was: " + project.getTotalDelay() + "\n";
