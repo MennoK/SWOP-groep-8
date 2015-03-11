@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.activity.InvalidActivityException;
 
 /**
- * 
+ * The Task class implements a task.
  * 
  * @author groep 8
  *
@@ -97,16 +97,16 @@ public class Task {
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
-
+//TODO naam niet goed, moet nog beter ge"implementeerd worden
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
 
 	/**
+	 * Checks whether a task has a dependency tasks
 	 * 
-	 * 
-	 * @param task
-	 * @return true
+	 * @param task : dependent task
+	 * @return true if the task has the given task as dependency
 	 */
 	private boolean hasDependency(Task task) {
 		if (getDependencies().contains(task))
@@ -151,6 +151,13 @@ public class Task {
 		return this.status;
 	}
 
+	/**
+	 * Adds a list of dependencies to task. The dependent tasks may not be
+	 * already in the dependency list of the task
+	 * 
+	 * @param dependencies : list with dependency task
+	 * @throws LoopingDependencyException : thrown when a loop occurs
+	 */
 	public void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
@@ -164,6 +171,12 @@ public class Task {
 		}
 	}
 
+	/**
+	 * Adds a given task to the dependency list of the task
+	 * 
+	 * @param dependency: task
+	 * @throws LoopingDependencyException : thrown when a loop occurs
+	 */
 	public void addDependency(Task dependency)
 			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
