@@ -4,22 +4,16 @@ import static org.junit.Assert.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.PrimitiveIterator.OfDouble;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import parser.TaskStatus;
 
 import taskManager.Project;
 import taskManager.ProjectStatus;
 import taskManager.Task;
-import taskManager.exception.LoopingDependencyException;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+import taskManager.exception.InvalidTimeException;
+import taskManager.exception.LoopingDependencyException;
 
 public class ProjectTester {
 
@@ -82,7 +76,7 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testProjectStatusIsFinishedNoDependencies(){
+	public void testProjectStatusIsFinishedNoDependencies() throws NullPointerException, InvalidTimeException{
 		// 0 task
 		assertEquals(project.getStatus(), ProjectStatus.FINISHED);
 
@@ -100,7 +94,7 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testProjectStatusIsFinishedDependencies() throws LoopingDependencyException{
+	public void testProjectStatusIsFinishedDependencies() throws LoopingDependencyException, NullPointerException, InvalidTimeException{
 		// 1(finished) -> 2(finished)
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50);
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50);
@@ -114,7 +108,7 @@ public class ProjectTester {
 		assertEquals(project.getStatus(), ProjectStatus.FINISHED);	
 
 		// 1(failed) -> 2(finished)
-		task1.setFailed(true);
+		task1.setFailed();
 		assertEquals(task1.getStatus(), TaskStatus.FAILED);	
 		assertEquals(task2.getStatus(), TaskStatus.FINISHED);	
 		assertEquals(project.getStatus(), ProjectStatus.FINISHED);	
@@ -153,7 +147,7 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testProjectStatusIsOngoingDependencies() throws LoopingDependencyException{
+	public void testProjectStatusIsOngoingDependencies() throws LoopingDependencyException, NullPointerException, InvalidTimeException{
 		//1(available)-> 2(unavailable)
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50);
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50);
@@ -173,7 +167,7 @@ public class ProjectTester {
 		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
 
 		// 1(failed)-> 2(unavailable)
-		task1.setFailed(true);
+		task1.setFailed();
 		assertEquals(task1.getStatus(), TaskStatus.FAILED);
 		assertEquals(task2.getStatus(), TaskStatus.UNAVAILABLE);
 		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
