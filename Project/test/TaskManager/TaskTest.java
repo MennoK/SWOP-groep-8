@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -117,5 +118,62 @@ public class TaskTest {
 	public void level2dependencyLoopTest() throws LoopingDependencyException {
 		baseTask.addDependency(level2DependentTask);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddSameDependency() throws LoopingDependencyException{
+		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2);
+		Task newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2);
 
+		newTask1.addDependency(newTask2);
+		newTask1.addDependency(newTask2);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddSameDependencyWithMultipleDependencies() throws LoopingDependencyException{
+		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2);
+		Task newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2);
+		ArrayList<Task> dependencyList = new ArrayList<Task>();
+		dependencyList.add(newTask2);
+		dependencyList.add(newTask2);
+		
+		newTask1.addMultipleDependencies(dependencyList);
+	}
+	
+	@Test
+	public void testFinishedEarly(){
+		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5);
+		newTask1.setStartTime(LocalDateTime.of(2015,1,1,13,00));
+		newTask1.setEndTime(LocalDateTime.of(2015,1,1,14,00));
+		
+		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.EARLY);
+
+	}
+	
+	@Test
+	public void testFinishedWithADelay(){
+		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5);
+		newTask1.setStartTime(LocalDateTime.of(2015,1,1,13,00));
+		newTask1.setEndTime(LocalDateTime.of(2015,1,2,03,00));
+		
+		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.WITH_A_DELAY);
+
+	}
+	
+	@Test
+	public void testFinishedOnTime(){
+		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5);
+		newTask1.setStartTime(LocalDateTime.of(2015,1,1,13,00));
+		
+		newTask1.setEndTime(LocalDateTime.of(2015,1,1,17,00));
+		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.ON_TIME);
+		
+		newTask1.setEndTime(LocalDateTime.of(2015,1,2,01,00));
+		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.ON_TIME);
+
+		newTask1.setEndTime(LocalDateTime.of(2015,1,1,18,00));
+		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.ON_TIME);
+
+		
+	}
 }
