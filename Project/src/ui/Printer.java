@@ -10,7 +10,8 @@ import TaskManager.Task;
 public class Printer {
 
 	static String oneLine(Task task) {
-		return "task '" + task.getId() + "' is " + task.getStatus();
+		return "task with description '" + task.getDescription() + "' is "
+				+ task.getStatus();
 	}
 
 	static String oneLine(Project project) {

@@ -25,6 +25,7 @@ public class Project {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
+    private LocalDateTime estimatedFinishTime;
 
 	/**
 	 * Constructor of the Project class:
@@ -42,6 +43,7 @@ public class Project {
 		this.creationTime = creationTime;
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
+        this.estimatedFinishTime = this.creationTime;
 	}
 
 	/**
@@ -148,14 +150,8 @@ public class Project {
 	}
 
 	//TODO methode testen + documentatie
-	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
-		LocalDateTime estimatedFinishTime = LocalDateTime.of(0000, 01, 01, 00, 00, 00);
-		for(Task task: getAllTasks()){
-			if(task.getEstimatedFinishTime(now).isAfter(estimatedFinishTime)){
-				estimatedFinishTime = task.getEstimatedFinishTime(now);
-			}
-		}
-		return estimatedFinishTime;
+	public LocalDateTime getEstimatedFinishTime() {
+		return this.estimatedFinishTime;
 	}
 
 	//TODO methode testen + documentatie
@@ -244,6 +240,28 @@ public class Project {
 	private boolean canHaveDueTime(LocalDateTime dueTime){
 		return dueTime.isAfter(getCreationTime()) || dueTime.isEqual(getCreationTime());
 	}
+
+    public boolean willFinishOnTime()
+    {
+        return this.getEstimatedFinishTime().isBefore(this.getDueTime());
+    }
+
+    void update(LocalDateTime time)
+    {
+        this.updateEstimatedFinishTime(time);
+        this.getAllTasks().forEach(TaskManager.Task::updateStatus);
+    }
+
+    private void updateEstimatedFinishTime(LocalDateTime time)
+    {
+        LocalDateTime estimatedFinishTime = time;
+        for(Task task: getAllTasks()){
+            if(task.getEstimatedFinishTime(time).isAfter(estimatedFinishTime)){
+                estimatedFinishTime = task.getEstimatedFinishTime(time);
+            }
+        }
+        this.estimatedFinishTime = estimatedFinishTime;
+    }
 
 	/**
 	 * returns the creation time of a project
