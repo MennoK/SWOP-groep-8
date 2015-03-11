@@ -97,10 +97,9 @@ public class ProjectController {
 	 */
 	public void advanceTime(LocalDateTime time) throws InvalidTimeException{
 		this.taskManClock.setTime(time);
+
 		for(Project project : this.getAllProjects()){
-			for(Task task: project.getAllTasks()){
-				task.updateStatus();
-			}
+			project.update(time);
 		}
 	}
 	
