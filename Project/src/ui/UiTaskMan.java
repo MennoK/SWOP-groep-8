@@ -64,7 +64,7 @@ public class UiTaskMan {
 		System.out.println(Printer.listProjects(projectController
 				.getAllProjects()));
 		Project project = reader.select(projectController.getAllProjects());
-		System.out.println(Printer.full(project, projectController.getTime()));
+		System.out.println(Printer.full(project));
 		Task task = reader.select(project.getAllTasks());
 		System.out.println(Printer.full(task));
 	}

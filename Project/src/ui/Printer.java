@@ -1,6 +1,5 @@
 package ui;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.activity.InvalidActivityException;
@@ -68,20 +67,17 @@ public class Printer {
 		return str;
 	}
 
-	static String full(Project project, LocalDateTime now) {
-		String str = "project name: " + project.getName() + "\n";
-		str += "description: " + project.getDescription() + "\n";
-		str += "creation time: " + project.getCreationTime() + "\n";
-		str += "due time: " + project.getDueTime() + "\n";
-		str += "status: " + project.getStatus() + "\n";
+	static String full(Project project) {
+		String str = oneLine(project);
+		str += ", " + project.getDescription();
 		if (project.getStatus() == ProjectStatus.ONGOING)
-			str += "The project is estimated to finish "
-					+ project.willFinishOnTime() + "\n";
+			str += ", " + project.willFinishOnTime();
 		if (project.getStatus() == ProjectStatus.FINISHED) {
-			str += "The total delay was: " + project.getTotalDelay() + "\n";
-			str += "The project finished " + project.finishedOnTime() + "\n";
+			str += ", " + project.finishedOnTime();
+			str += ", total delay " + project.getTotalDelay();
 		}
-		str += "The project contains the following tasks:\n";
+		str += " (Created " + project.getCreationTime();
+		str += ", Due " + project.getDueTime() + ")\n";
 		str += listTasks(project.getAllTasks());
 		return str;
 	}
