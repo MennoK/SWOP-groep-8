@@ -3,7 +3,6 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import parser.Parser;
 import taskManager.Project;
