@@ -3,6 +3,7 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import parser.Parser;
 import taskManager.Project;
@@ -137,13 +138,27 @@ public class UiTaskMan {
 			}
 			Task task = reader.select(allTasks);
 
-			try {
-				task.updateStatus(reader.getDate("Give a start time"), reader
-						.getDate("Give an end time"), reader
-						.getBoolean("Do you want to set the task to failed?"));
+			System.out.println("What do you want to update?");
+			ArrayList<UpdateType> updateTypes = new ArrayList<UpdateType>();
+			updateTypes.add(UpdateType.START_TIME);
+			updateTypes.add(UpdateType.END_TIME);
+			updateTypes.add(UpdateType.SET_FAILED);
+			UpdateType selectedUpdate = reader.select(updateTypes);
+			if (selectedUpdate == UpdateType.START_TIME) {
+				task.setStartTime(reader.getDate("Give the start time"));
 				return;
-			} catch (InvalidTimeException e) {
-				System.out.println(e.getMessage());
+			}
+			if (selectedUpdate == UpdateType.END_TIME) {
+				try {
+					task.setEndTime(reader.getDate("Give the end time"));
+					return;
+				} catch (NullPointerException | InvalidTimeException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			if (selectedUpdate == UpdateType.SET_FAILED) {
+				task.setFailed();
+				return;
 			}
 		}
 	}

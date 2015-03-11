@@ -117,7 +117,7 @@ public class Task {
 		setAlternativeTask(isAlternativeFor);
 	}
 
-	//TODO naam niet goed, moet nog beter ge"implementeerd worden
+	// TODO naam niet goed, moet nog beter ge"implementeerd worden
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
@@ -125,7 +125,8 @@ public class Task {
 	/**
 	 * Checks whether a task has a dependency tasks
 	 * 
-	 * @param task : dependent task
+	 * @param task
+	 *            : dependent task
 	 * @return true if the task has the given task as dependency
 	 */
 	private boolean hasDependency(Task task) {
@@ -140,6 +141,7 @@ public class Task {
 	/**
 	 * 
 	 * TODO doc
+	 * 
 	 * @param now
 	 * @return
 	 */
@@ -176,8 +178,10 @@ public class Task {
 	 * Adds a list of dependencies to task. The dependent tasks may not be
 	 * already in the dependency list of the task
 	 * 
-	 * @param dependencies : list with dependency task
-	 * @throws LoopingDependencyException : thrown when a loop occurs
+	 * @param dependencies
+	 *            : list with dependency task
+	 * @throws LoopingDependencyException
+	 *             : thrown when a loop occurs
 	 */
 	void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
@@ -195,11 +199,12 @@ public class Task {
 	/**
 	 * Adds a given task to the dependency list of the task
 	 * 
-	 * @param dependency: task
-	 * @throws LoopingDependencyException : thrown when a loop occurs
+	 * @param dependency
+	 *            : task
+	 * @throws LoopingDependencyException
+	 *             : thrown when a loop occurs
 	 */
-	void addDependency(Task dependency)
-			throws LoopingDependencyException {
+	void addDependency(Task dependency) throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
 			throw new LoopingDependencyException(
 					"Tried to add task1 as a dependency to task2,"
@@ -269,7 +274,7 @@ public class Task {
 	 * @param dependency
 	 * @return true if and only if the given task dependency is valid
 	 */
-	private boolean isValidDependency(Task dependency){
+	private boolean isValidDependency(Task dependency) {
 		return !this.getDependencies().contains(dependency);
 	}
 
@@ -366,17 +371,20 @@ public class Task {
 
 	/**
 	 * Sets the end time if and only if the given end time is after the start
-	 * the start time of a project. The start time must be set before 
-	 * the end time
+	 * the start time of a project. The start time must be set before the end
+	 * time
 	 * 
 	 * @param endTime
 	 *            : the end time of task
-	 * @throws NullPointerException: thrown when the start time is not set yet
+	 * @throws NullPointerException
+	 *             : thrown when the start time is not set yet
 	 * 
 	 */
-	void setEndTime(LocalDateTime endTime) throws InvalidTimeException, NullPointerException {
-		if(this.getStartTime() == null){
-			throw new NullPointerException("There is not start time, set the starttime first.");
+	public void setEndTime(LocalDateTime endTime) throws InvalidTimeException,
+			NullPointerException {
+		if (this.getStartTime() == null) {
+			throw new NullPointerException(
+					"There is no start time, set the start time first.");
 		}
 		if (!isEndTimeAfterStartTime((this.getStartTime()), endTime)) {
 			throw new InvalidTimeException(
@@ -387,17 +395,19 @@ public class Task {
 		}
 	}
 
-/**
+	/**
 	 * Checks whether the endtime is after the start time
 	 * 
-	 * @param startTime : the startTime of a task 
-	 * @param endTime : the endTime of a task
+	 * @param startTime
+	 *            : the startTime of a task
+	 * @param endTime
+	 *            : the endTime of a task
 	 * @return true if and only if the start time is before the endtime
 	 */
-	private boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
+	private boolean isEndTimeAfterStartTime(LocalDateTime startTime,
+			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
-
 
 	/**
 	 * Returns the start time of task
@@ -414,7 +424,7 @@ public class Task {
 	 * @param startTime
 	 *            : the given start time of a task
 	 */
-	void setStartTime(LocalDateTime startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -429,13 +439,10 @@ public class Task {
 	}
 
 	/**
-	 * Sets a failed boolean to true or false and updates the task status
-	 * 
-	 * @param failed
-	 *            : true if failed
+	 * Sets a failed boolean to false and updates the task status
 	 */
-	void setFailed(boolean failed) {
-		this.failed = failed;
+	public void setFailed() {
+		this.failed = false;
 		this.updateStatus();
 	}
 
@@ -475,27 +482,13 @@ public class Task {
 		return this.id;
 	}
 
-	public void updateStatus(LocalDateTime newStartTime,
-			LocalDateTime newEndTime, boolean setFailed) throws InvalidTimeException {
-		if(newStartTime.isBefore(newEndTime)){
-
-			this.setStartTime(newStartTime);
-			this.setEndTime(newEndTime);
-			this.setFailed(setFailed);
-			this.updateStatus();	
-		}
-		else {
-			throw new InvalidTimeException("the given end time is before the start time");
-		}
-	}
-
-        /**
+	/**
 	 * Updates the status of task. There are four different statuses for a task:
 	 * Available, unavailable, finished or failed.
 	 * 
-	 * A task is failed when the boolean isFailed is true
-         * A task is finished when the task has an end time
-	 * The task availability is dependent on the dependencies of the task
+	 * A task is failed when the boolean isFailed is true A task is finished
+	 * when the task has an end time The task availability is dependent on the
+	 * dependencies of the task
 	 */
 	void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
@@ -512,6 +505,5 @@ public class Task {
 		}
 
 	}
-
 
 }
