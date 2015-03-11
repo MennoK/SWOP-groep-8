@@ -114,20 +114,27 @@ public class UiTaskMan {
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
-		System.out.println("Updating the status of a task\n"
-				+ "Please select a task:");
-		ArrayList<Task> allTasks = new ArrayList<Task>();
-		for (Project project : projectController.getAllProjects()) {
-			System.out.println(Printer.oneLine(project));
-			System.out.println(Printer.listTasks(project.getAllTasks(),
-					allTasks.size() + 1));
-			allTasks.addAll(project.getAllTasks());
-		}
-		Task task = reader.select(allTasks);
+		while (true) {
+			System.out.println("Updating the status of a task\n"
+					+ "Please select a task:");
+			ArrayList<Task> allTasks = new ArrayList<Task>();
+			for (Project project : projectController.getAllProjects()) {
+				System.out.println(Printer.oneLine(project));
+				System.out.println(Printer.listTasks(project.getAllTasks(),
+						allTasks.size() + 1));
+				allTasks.addAll(project.getAllTasks());
+			}
+			Task task = reader.select(allTasks);
 
-		task.updateStatus(reader.getDate("Give a start time"),
-				reader.getDate("Give an end time"),
-				reader.getBoolean("Do you want to set the task to failed?"));
+			try {
+				task.updateStatus(reader.getDate("Give a start time"), reader
+						.getDate("Give an end time"), reader
+						.getBoolean("Do you want to set the task to failed?"));
+				return;
+			} catch (InvalidTimeException e) {
+				System.out.println(e.getMessage());
+			}
+		}
 	}
 
 	private void advanceTime() throws ExitUseCaseException {
