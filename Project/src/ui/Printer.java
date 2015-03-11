@@ -13,12 +13,11 @@ import taskManager.TaskFinishedStatus;
 public class Printer {
 
 	static String oneLine(Task task) {
-		return "task with description '" + task.getDescription() + "' is "
-				+ task.getStatus();
+		return "Task " + task.getId() + " " + task.getStatus();
 	}
 
 	static String oneLine(Project project) {
-		return "project '" + project.getName() + "' is " + project.getStatus();
+		return "project '" + project.getName() + "': " + project.getStatus();
 	}
 
 	static String listTasks(List<Task> options) {
@@ -46,22 +45,26 @@ public class Printer {
 	}
 
 	static String full(Task task) {
-		String str = "description: " + task.getDescription() + "\n";
-		str += "estimated duration: " + task.getEstimatedDuration() + "\n";
-		str += "acceptable deviation: " + task.getAcceptableDeviation() + "\n";
-		str += "status: " + task.getStatus() + "\n";
+		String str = oneLine(task) + ": ";
+		str += task.getDescription() + ", ";
+		str += task.getEstimatedDuration() + ", ";
+		str += task.getAcceptableDeviation() * 100 + "% margin";
+		if (!task.getDependencies().isEmpty()) {
+			str += ", depends on {";
+			for (Task dep : task.getDependencies())
+				str += " task " + dep.getId();
+			str += " }";
+		}
+		if (task.getAlternativeFor() != null)
+			str += ", alternative for task " + task.getAlternativeFor().getId();
 		try {
 			TaskFinishedStatus finishStatus = task.getFinishStatus();
-			str += "task was finished " + finishStatus;
+			str += ", started " + task.getStartTime();
+			str += ", finished " + task.getEndTime();
+			str += " (" + finishStatus + ")";
 		} catch (InvalidActivityException e) {
 			// If not finished
 		}
-		if (task.getAlternativeFor() != null)
-			str += "Is an alternative for: "
-					+ Printer.oneLine(task.getAlternativeFor()) + "\n";
-		if (!task.getDependencies().isEmpty())
-			str += "dependencies:\n";
-		str += listTasks(task.getDependencies());
 		return str;
 	}
 
@@ -76,7 +79,7 @@ public class Printer {
 					+ project.willFinishOnTime() + "\n";
 		if (project.getStatus() == ProjectStatus.FINISHED) {
 			str += "The total delay was: " + project.getTotalDelay() + "\n";
-			str += "The project finished " + project.finishedOnTime();
+			str += "The project finished " + project.finishedOnTime() + "\n";
 		}
 		str += "The project contains the following tasks:\n";
 		str += listTasks(project.getAllTasks());
