@@ -52,12 +52,6 @@ public class Printer {
 		return str;
 	}
 
-	// TODO replace by to be written method in Project
-	static boolean willFinishOnTime(Project project, LocalDateTime now) {
-		return project.getEstimatedFinishTime(now)
-				.isAfter(project.getDueTime());
-	}
-
 	static String full(Project project, LocalDateTime now) {
 		String str = "project name: " + project.getName() + "\n";
 		str += "description: " + project.getDescription() + "\n";
@@ -65,7 +59,7 @@ public class Printer {
 		str += "due time: " + project.getDueTime() + "\n";
 		str += "status: " + project.getStatus() + "\n";
 		if (project.getStatus() == ProjectStatus.ONGOING) {
-			if (willFinishOnTime(project, now))
+			if (project.willFinishOnTime())
 				str += "The project is estimated to finish over time\n";
 			else
 				str += "the project is estimated to finish on time\n";

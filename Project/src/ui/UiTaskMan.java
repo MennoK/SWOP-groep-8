@@ -12,7 +12,6 @@ import TaskManager.Project;
 import TaskManager.ProjectController;
 import TaskManager.Task;
 import TaskManager.TaskManClock;
-import TaskManager.TaskStatus;
 
 public class UiTaskMan {
 
