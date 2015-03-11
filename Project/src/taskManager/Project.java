@@ -1,12 +1,9 @@
 package taskManager;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PrimitiveIterator.OfDouble;
 
 
 import taskManager.exception.LoopingDependencyException;
@@ -179,10 +176,10 @@ public class Project {
 		for (Task task : allTasks) {
 			if (task.getStatus() == TaskStatus.FINISHED
 					|| task.getStatus() == TaskStatus.FAILED) {
-
 			}
 
 		}
+		return null;
 	}
 
 	/**
@@ -268,7 +265,10 @@ public class Project {
 
 	void update(LocalDateTime time) {
 		this.updateEstimatedFinishTime(time);
-		this.getAllTasks().forEach(taskManager.Task::updateStatus);
+		for(Task task : this.getAllTasks())
+		{
+			task.updateStatus();
+		}
 	}
 
 	void updateEstimatedFinishTime(LocalDateTime time) {

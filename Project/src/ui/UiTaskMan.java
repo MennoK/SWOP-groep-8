@@ -102,11 +102,22 @@ public class UiTaskMan {
 					projectController.getAllProjects(), 1));
 			Project project = reader.select(projectController.getAllProjects());
 			try {
-				project.createTask(
-						reader.getString("Give a description:"),
-						reader.getDuration("Give an estimate for the task duration:"),
-						reader.getDouble("Give an acceptable deviation:"),
-						askDependence(project));
+				if (reader
+						.getBoolean("Is this an alternative to a failled task?")) {
+					System.out
+							.println(Printer.listTasks(project.getAllTasks()));
+					project.createTask(
+							reader.getString("Give a description:"),
+							reader.getDuration("Give an estimate for the task duration:"),
+							reader.getDouble("Give an acceptable deviation:"),
+							reader.select(project.getAllTasks()),
+							askDependence(project));
+				} else
+					project.createTask(
+							reader.getString("Give a description:"),
+							reader.getDuration("Give an estimate for the task duration:"),
+							reader.getDouble("Give an acceptable deviation:"),
+							askDependence(project));
 				return;
 			} catch (LoopingDependencyException e) {
 				System.out.println(e.getMessage());
@@ -115,20 +126,41 @@ public class UiTaskMan {
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
-		System.out.println("Updating the status of a task\n"
-				+ "Please select a task:");
-		ArrayList<Task> allTasks = new ArrayList<Task>();
-		for (Project project : projectController.getAllProjects()) {
-			System.out.println(Printer.oneLine(project));
-			System.out.println(Printer.listTasks(project.getAllTasks(),
-					allTasks.size() + 1));
-			allTasks.addAll(project.getAllTasks());
-		}
-		Task task = reader.select(allTasks);
+		while (true) {
+			System.out.println("Updating the status of a task\n"
+					+ "Please select a task:");
+			ArrayList<Task> allTasks = new ArrayList<Task>();
+			for (Project project : projectController.getAllProjects()) {
+				System.out.println(Printer.oneLine(project));
+				System.out.println(Printer.listTasks(project.getAllTasks(),
+						allTasks.size() + 1));
+				allTasks.addAll(project.getAllTasks());
+			}
+			Task task = reader.select(allTasks);
 
-		task.updateStatus(reader.getDate("Give a start time"),
-				reader.getDate("Give an end time"),
-				reader.getBoolean("Do you want to set the task to failed?"));
+			System.out.println("What do you want to update?");
+			ArrayList<UpdateType> updateTypes = new ArrayList<UpdateType>();
+			updateTypes.add(UpdateType.START_TIME);
+			updateTypes.add(UpdateType.END_TIME);
+			updateTypes.add(UpdateType.SET_FAILED);
+			UpdateType selectedUpdate = reader.select(updateTypes);
+			if (selectedUpdate == UpdateType.START_TIME) {
+				task.setStartTime(reader.getDate("Give the start time"));
+				return;
+			}
+			if (selectedUpdate == UpdateType.END_TIME) {
+				try {
+					task.setEndTime(reader.getDate("Give the end time"));
+					return;
+				} catch (NullPointerException | InvalidTimeException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			if (selectedUpdate == UpdateType.SET_FAILED) {
+				task.setFailed();
+				return;
+			}
+		}
 	}
 
 	private void advanceTime() throws ExitUseCaseException {
