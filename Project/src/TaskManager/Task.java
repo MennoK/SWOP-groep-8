@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
 
-
 /**
  * 
  * 
@@ -33,12 +32,15 @@ public class Task {
 	private int id;
 
 	/**
-	 * Constructor of task with arguments: description, estimatedDuration
-	 * and acceptable deviation
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation
 	 * 
-	 * @param description : given description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable duration of task
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
@@ -50,13 +52,17 @@ public class Task {
 	}
 
 	/**
-	 * Constructor of task with arguments: description, estimatedDuration
-	 * and acceptable deviation and a task which the task an alternative for
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation and a task which the task an alternative for
 	 * 
-	 * @param description : given description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable duration of task
-	 * @param isAlternativeFor : the alternative task which failed
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 * @param isAlternativeFor
+	 *            : the alternative task which failed
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeFor) {
@@ -65,31 +71,40 @@ public class Task {
 	}
 
 	/**
-	 * Constructor of task with arguments: description, estimatedDuration
-	 * and acceptable deviation, and a list of dependencies
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation, and a list of dependencies
 	 * 
-	 * @param description : given description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable duration of task
-	 * @param dependencies : list with dependencies
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 * @param dependencies
+	 *            : list with dependencies
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies)
-					throws LoopingDependencyException {
+			throws LoopingDependencyException {
 		this(description, estimatedDuration, acceptableDeviation);
 		addMultipleDependencies(dependencies);
 	}
 
 	/**
-	 * Constructor of task with arguments: description, estimatedDuration
-	 * and acceptable deviation and and a task which the task an alternative for
-	 * and a list with dependencies
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation and and a task which the task an alternative for and
+	 * a list with dependencies
 	 * 
-	 * @param description : given description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable duration of task
-	 * @param isAlternativeFor : the alternative task which failed
-	 * @param dependencies : list with dependencies
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 * @param isAlternativeFor
+	 *            : the alternative task which failed
+	 * @param dependencies
+	 *            : list with dependencies
 	 * 
 	 */
 	Task(String description, Duration estimatedDuration,
@@ -140,10 +155,10 @@ public class Task {
 	public void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
-			if(!isValidDependency(dependency)){
-				throw new IllegalArgumentException("The given dependency task is already dependent on this task");
-			}
-			else {
+			if (!isValidDependency(dependency)) {
+				throw new IllegalArgumentException(
+						"The given dependency task is already dependent on this task");
+			} else {
 				addDependency(dependency);
 
 			}
@@ -156,10 +171,10 @@ public class Task {
 			throw new LoopingDependencyException(
 					"Tried to add task1 as a dependency to task2,"
 							+ " but task2 is already dependent on task1.");
-		if(!isValidDependency(dependency)){
-			throw new IllegalArgumentException("The given dependency task is already dependent on this task");
-		}
-		else{
+		if (!isValidDependency(dependency)) {
+			throw new IllegalArgumentException(
+					"The given dependency task is already dependent on this task");
+		} else {
 			dependencies.add(dependency);
 			this.updateStatus();
 		}
@@ -169,59 +184,59 @@ public class Task {
 	 * Returns the TaskFinishedStatus of a task
 	 * 
 	 * @return taskFinishStatus : status of a finished task
-	 * @throws InvalidActivityException : thrown when the task is not finished yet
+	 * @throws InvalidActivityException
+	 *             : thrown when the task is not finished yet
 	 */
-	public TaskFinishedStatus getFinishTime() throws InvalidActivityException{
-		if(this.getStatus() != TaskStatus.FINISHED){
+	public TaskFinishedStatus getFinishStatus() throws InvalidActivityException {
+		if (this.getStatus() != TaskStatus.FINISHED) {
 			throw new InvalidActivityException("The task is not finished yet");
-		}
-		else{
-			if(wasFinishedEarly()){
+		} else {
+			if (wasFinishedEarly()) {
 				return TaskFinishedStatus.EARLY;
-			}
-			else if(wasFinishedWithADelay()){
+			} else if (wasFinishedWithADelay()) {
 				return TaskFinishedStatus.WITH_A_DELAY;
-			}
-			else{
+			} else {
 				return TaskFinishedStatus.ON_TIME;
 			}
 		}
 	}
 
 	/**
-	 * Checks whether the task has finished early or not. This occurs
-	 * only if the end time of the task is before the esimated duration
-	 * minus the acceptable deviation
+	 * Checks whether the task has finished early or not. This occurs only if
+	 * the end time of the task is before the esimated duration minus the
+	 * acceptable deviation
 	 * 
 	 * @return true if and only if the task was finished early
 	 */
-	private boolean wasFinishedEarly(){
-		long hours = (long) ((int) getEstimatedDuration().toHours() - (int) getEstimatedDuration().toHours()*getAcceptableDeviation());
+	private boolean wasFinishedEarly() {
+		long hours = (long) ((int) getEstimatedDuration().toHours() - (int) getEstimatedDuration()
+				.toHours() * getAcceptableDeviation());
 		LocalDateTime earlyTime = getStartTime().plusHours(hours);
 		return getEndTime().isBefore(earlyTime);
 	}
 
 	/**
 	 * Checks whether the task has finished with a delay or not. This occurs
-	 * only if the end time of the task is past the estimated duration plus
-	 * the acceptable deviation
+	 * only if the end time of the task is past the estimated duration plus the
+	 * acceptable deviation
 	 * 
 	 * @return true if and only if the task was finished on a delay
 	 */
-	private boolean wasFinishedWithADelay(){
-		long hours = (long) ((int) getEstimatedDuration().toHours() + (int) getEstimatedDuration().toHours()*getAcceptableDeviation());
+	private boolean wasFinishedWithADelay() {
+		long hours = (long) ((int) getEstimatedDuration().toHours() + (int) getEstimatedDuration()
+				.toHours() * getAcceptableDeviation());
 		LocalDateTime delayTime = getStartTime().plusHours(hours);
 		return getEndTime().isAfter(delayTime);
 	}
 
 	/**
-	 * This method returns true if and only if the given dependency
-	 * is not yet in the dependency list
+	 * This method returns true if and only if the given dependency is not yet
+	 * in the dependency list
 	 * 
 	 * @param dependency
 	 * @return true if and only if the given task dependency is valid
 	 */
-	public boolean isValidDependency(Task dependency){
+	public boolean isValidDependency(Task dependency) {
 		return !this.getDependencies().contains(dependency);
 	}
 
@@ -267,13 +282,14 @@ public class Task {
 	 * duration of task has to be strictly positive
 	 * 
 	 * @param estimatedDuration
-	 * @throws IllegalArgumentException : thrown when the given estimated duration is not valid
+	 * @throws IllegalArgumentException
+	 *             : thrown when the given estimated duration is not valid
 	 */
 	public void setEstimatedDuration(Duration estimatedDuration) {
-		if(estimatedDuration.toHours() <= 0){
-			throw new IllegalArgumentException("The estimated duration must be strictly positive");
-		}
-		else{
+		if (estimatedDuration.toHours() <= 0) {
+			throw new IllegalArgumentException(
+					"The estimated duration must be strictly positive");
+		} else {
 			this.estimatedDuration = estimatedDuration;
 		}
 	}
@@ -293,13 +309,14 @@ public class Task {
 	 * The acceptable deviation must be positive or zero
 	 * 
 	 * @param acceptableDeviation
-	 * @throws IllegalArgumentException : thrown when the given acceptableDeviation is not valid
+	 * @throws IllegalArgumentException
+	 *             : thrown when the given acceptableDeviation is not valid
 	 */
 	public void setAcceptableDeviation(double acceptableDeviation) {
-		if(acceptableDeviation < 0){
-			throw new IllegalArgumentException("The acceptable deviation must be greater or equal then zero");
-		}
-		else{
+		if (acceptableDeviation < 0) {
+			throw new IllegalArgumentException(
+					"The acceptable deviation must be greater or equal then zero");
+		} else {
 			this.acceptableDeviation = acceptableDeviation;
 			this.updateStatus();
 		}
@@ -315,23 +332,26 @@ public class Task {
 	}
 
 	/**
-	 * Sets the end time if and only if the given end time is after
-	 * the start time of a project
+	 * Sets the end time if and only if the given end time is after the start
+	 * time of a project
 	 * 
-	 * @param endTime : the end time of task
-	 * @throws InvalidTimeException : thrown when the given end time is invalid
+	 * @param endTime
+	 *            : the end time of task
+	 * @throws InvalidTimeException
+	 *             : thrown when the given end time is invalid
 	 */
 	public void setEndTime(LocalDateTime endTime) throws InvalidTimeException {
-		if(!isEndTimeAfterStartTime((this.getStartTime()),endTime)){
-			throw new InvalidTimeException("the given end time is before the start time");
-		}
-		else{
+		if (!isEndTimeAfterStartTime((this.getStartTime()), endTime)) {
+			throw new InvalidTimeException(
+					"the given end time is before the start time");
+		} else {
 			this.endTime = endTime;
 			this.updateStatus();
 		}
 	}
-	
-	public boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
+
+	public boolean isEndTimeAfterStartTime(LocalDateTime startTime,
+			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
 
@@ -347,16 +367,16 @@ public class Task {
 	/**
 	 * Sets the start time of a task
 	 * 
-	 * @param startTime : the given start time of a task
+	 * @param startTime
+	 *            : the given start time of a task
 	 */
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
 	/**
-	 * Returns a boolean
-	 * true if the task is failed
-	 * false if the task is not failed
+	 * Returns a boolean true if the task is failed false if the task is not
+	 * failed
 	 * 
 	 * @return true if and only if the task is failed
 	 */
@@ -374,7 +394,6 @@ public class Task {
 		this.failed = failed;
 		this.updateStatus();
 	}
-
 
 	/**
 	 * Sets the alternative task if and only if the the current task his status
@@ -421,9 +440,9 @@ public class Task {
 	 * Updates the status of task. There are four different statuses for a task:
 	 * Available, unavailable, finished or failed.
 	 * 
-	 * A task is failed when the boolean isFailed true
-	 * A task is finished when the task has an end time
-	 * The task availability is dependent on the dependencies of the task
+	 * A task is failed when the boolean isFailed true A task is finished when
+	 * the task has an end time The task availability is dependent on the
+	 * dependencies of the task
 	 */
 	public void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
