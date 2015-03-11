@@ -26,7 +26,7 @@ public class Task {
 	private double acceptableDeviation;
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
-	private boolean failed;
+	private boolean failed = false;
 	private TaskStatus status;
 	private Task isAlternativeFor;
 
@@ -443,7 +443,7 @@ public class Task {
 	 * Sets a failed boolean to false and updates the task status
 	 */
 	public void setFailed() {
-		this.failed = false;
+		this.failed = true;
 		this.updateStatus();
 	}
 

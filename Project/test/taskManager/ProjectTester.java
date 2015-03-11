@@ -12,16 +12,9 @@ import java.util.PrimitiveIterator.OfDouble;
 import org.junit.Before;
 import org.junit.Test;
 
-import parser.TaskStatus;
 
-import taskManager.Project;
-import taskManager.ProjectStatus;
-import taskManager.Task;
-<<<<<<< HEAD
-import taskManager.TaskStatus;
+import taskManager.*;
 import taskManager.exception.InvalidTimeException;
-=======
->>>>>>> cdbc4b9ad191bc418a87ef8508e1f466a6bf126b
 import taskManager.exception.LoopingDependencyException;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
@@ -89,16 +82,18 @@ public class ProjectTester {
 	@Test
 	public void testProjectStatusIsFinishedNoDependencies() throws NullPointerException, InvalidTimeException{
 		// 0 task
-		assertEquals(ProjectStatus.FINISHED, project.getStatus());
+		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// 1 task
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50);
+		task1.setStartTime(LocalDateTime.of(2015, 03, 05,00,00));
 		task1.setEndTime(LocalDateTime.now());
 		project.addTask(task1);
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 
 		// 2 tasks
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50);
+		task2.setStartTime(LocalDateTime.of(2015, 03, 05,00,00));
 		task2.setEndTime(LocalDateTime.now());
 		project.addTask(task2);
 		assertEquals( ProjectStatus.FINISHED,project.getStatus());		
@@ -109,6 +104,8 @@ public class ProjectTester {
 		// 1(finished) -> 2(finished)
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50);
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50);
+		task1.setStartTime(LocalDateTime.of(2015, 03, 05,00,00));
+		task2.setStartTime(LocalDateTime.of(2015, 03, 05,00,00));
 		task1.setEndTime(LocalDateTime.now());
 		task2.setEndTime(LocalDateTime.now());
 		task2.addDependency(task1);
@@ -126,6 +123,7 @@ public class ProjectTester {
 
 		// 1(failed) -x-> 2(finished) <- 3(finished)
 		Task task3 = new Task("testdescriptionTask3", Duration.ofHours(8), 50);
+		task3.setStartTime(LocalDateTime.of(2015, 03, 05,00,00));
 		task3.setEndTime(LocalDateTime.now());
 		task2.addDependency(task3);
 		assertEquals( TaskStatus.FAILED, task1.getStatus());	
