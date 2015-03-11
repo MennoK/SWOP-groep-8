@@ -13,9 +13,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import parser.TaskStatus;
+
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
-import taskManager.TaskStatus;
 import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PrimitiveIterator.OfDouble;
 
+
 import taskManager.exception.LoopingDependencyException;
 
 /**
@@ -60,14 +61,14 @@ public class Project {
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
 	 */
-	void createTask(String description, Duration estimatedDuration,
+	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation);
 		this.addTask(task);
 	}
 
-	void createTask(String description, Duration estimatedDuration,
+	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, alernativeTask);
@@ -82,7 +83,7 @@ public class Project {
 		this.addTask(task);
 	}
 
-	void createTask(String description, Duration estimatedDuration,
+	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask,
 			ArrayList<Task> dependencies) throws LoopingDependencyException {
 		Task task = new Task(description, estimatedDuration,
