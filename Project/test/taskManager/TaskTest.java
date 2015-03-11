@@ -153,7 +153,7 @@ public class TaskTest {
 		newTask1.setStartTime(LocalDateTime.of(2015,1,1,13,00));
 		newTask1.setEndTime(LocalDateTime.of(2015,1,1,14,00));
 		
-		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.EARLY);
+		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.EARLY);
 
 	}
 	
@@ -163,7 +163,7 @@ public class TaskTest {
 		newTask1.setStartTime(LocalDateTime.of(2015,1,1,13,00));
 		newTask1.setEndTime(LocalDateTime.of(2015,1,2,03,00));
 		
-		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.WITH_A_DELAY);
+		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.WITH_A_DELAY);
 	}
 	
 	@Test
@@ -172,20 +172,20 @@ public class TaskTest {
 		newTask1.setStartTime(LocalDateTime.of(2015,1,1,13,00));
 		
 		newTask1.setEndTime(LocalDateTime.of(2015,1,1,17,00));
-		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.ON_TIME);
+		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 		
 		newTask1.setEndTime(LocalDateTime.of(2015,1,2,01,00));
-		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.ON_TIME);
+		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 
 		newTask1.setEndTime(LocalDateTime.of(2015,1,1,18,00));
-		assertEquals(newTask1.getFinishTime(), TaskFinishedStatus.ON_TIME);
+		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	
 	}
 	
 	@Test(expected=InvalidActivityException.class)
 	public void testTaskIsNotFinishedYet() throws InvalidActivityException{
 		Task newTask = new Task("desc", Duration.ofHours(2), 2);
-		newTask.getFinishTime();
+		newTask.getFinishStatus();
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
