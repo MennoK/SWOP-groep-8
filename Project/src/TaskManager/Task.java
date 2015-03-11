@@ -9,8 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.activity.InvalidActivityException;
 
 /**
- * 
- * 
+ * The Task class implements a task.
  * 
  * @author groep 8
  *
@@ -114,11 +113,17 @@ public class Task {
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
-
+//TODO naam niet goed, moet nog beter ge"implementeerd worden
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
 
+	/**
+	 * Checks whether a task has a dependency tasks
+	 * 
+	 * @param task : dependent task
+	 * @return true if the task has the given task as dependency
+	 */
 	private boolean hasDependency(Task task) {
 		if (getDependencies().contains(task))
 			return true;
@@ -128,6 +133,11 @@ public class Task {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param now
+	 * @return
+	 */
 	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
 		if (getStartTime() != null)
 			return add(getStartTime(), getEstimatedDuration());
@@ -147,11 +157,23 @@ public class Task {
 		return add(dependenceFinishTime, getEstimatedDuration());
 	}
 
+	/**
+	 * Returns the status of a task
+	 * 
+	 * @return status of task
+	 */
 	public TaskStatus getStatus() {
 		this.updateStatus();
 		return this.status;
 	}
 
+	/**
+	 * Adds a list of dependencies to task. The dependent tasks may not be
+	 * already in the dependency list of the task
+	 * 
+	 * @param dependencies : list with dependency task
+	 * @throws LoopingDependencyException : thrown when a loop occurs
+	 */
 	public void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
@@ -165,6 +187,12 @@ public class Task {
 		}
 	}
 
+	/**
+	 * Adds a given task to the dependency list of the task
+	 * 
+	 * @param dependency: task
+	 * @throws LoopingDependencyException : thrown when a loop occurs
+	 */
 	public void addDependency(Task dependency)
 			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
@@ -350,10 +378,18 @@ public class Task {
 		}
 	}
 
-	public boolean isEndTimeAfterStartTime(LocalDateTime startTime,
+/**
+	 * Checks whether the endtime is after the start time
+	 * 
+	 * @param startTime : the startTime of a task 
+	 * @param endTime : the endTime of a task
+	 * @return true if and only if the start time is before the endtime
+	 */
+public boolean isEndTimeAfterStartTime(LocalDateTime startTime,
 			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
+
 
 	/**
 	 * Returns the start time of task
@@ -436,15 +472,15 @@ public class Task {
 		// TODO implement
 	}
 
-	/**
+        /**
 	 * Updates the status of task. There are four different statuses for a task:
 	 * Available, unavailable, finished or failed.
 	 * 
-	 * A task is failed when the boolean isFailed true A task is finished when
-	 * the task has an end time The task availability is dependent on the
-	 * dependencies of the task
+	 * A task is failed when the boolean isFailed is true
+         * A task is finished when the task has an end time
+	 * The task availability is dependent on the dependencies of the task
 	 */
-	public void updateStatus() {
+public void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
 		if (isFailed()) {
 			this.status = TaskStatus.FAILED;
