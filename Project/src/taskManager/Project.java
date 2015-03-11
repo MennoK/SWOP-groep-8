@@ -82,7 +82,7 @@ public class Project {
 		this.addTask(task);
 	}
 
-	void createTask(String description, Duration estimatedDuration,
+	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask,
 			ArrayList<Task> dependencies) throws LoopingDependencyException {
 		Task task = new Task(description, estimatedDuration,

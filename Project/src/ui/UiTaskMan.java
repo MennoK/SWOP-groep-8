@@ -101,11 +101,22 @@ public class UiTaskMan {
 					projectController.getAllProjects(), 1));
 			Project project = reader.select(projectController.getAllProjects());
 			try {
-				project.createTask(
-						reader.getString("Give a description:"),
-						reader.getDuration("Give an estimate for the task duration:"),
-						reader.getDouble("Give an acceptable deviation:"),
-						askDependence(project));
+				if (reader
+						.getBoolean("Is this an alternative to a failled task?")) {
+					System.out
+							.println(Printer.listTasks(project.getAllTasks()));
+					project.createTask(
+							reader.getString("Give a description:"),
+							reader.getDuration("Give an estimate for the task duration:"),
+							reader.getDouble("Give an acceptable deviation:"),
+							reader.select(project.getAllTasks()),
+							askDependence(project));
+				} else
+					project.createTask(
+							reader.getString("Give a description:"),
+							reader.getDuration("Give an estimate for the task duration:"),
+							reader.getDouble("Give an acceptable deviation:"),
+							askDependence(project));
 				return;
 			} catch (LoopingDependencyException e) {
 				System.out.println(e.getMessage());
