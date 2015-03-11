@@ -12,10 +12,11 @@ import java.util.PrimitiveIterator.OfDouble;
 import org.junit.Before;
 import org.junit.Test;
 
+import parser.TaskStatus;
+
 import taskManager.Project;
 import taskManager.ProjectStatus;
 import taskManager.Task;
-import taskManager.TaskStatus;
 import taskManager.exception.LoopingDependencyException;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;

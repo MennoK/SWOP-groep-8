@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import parser.TaskStatus;
+
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.TaskManClock;
-import taskManager.TaskStatus;
 import taskManager.exception.InvalidTimeException;
 
 public class ProjectControllerTester {

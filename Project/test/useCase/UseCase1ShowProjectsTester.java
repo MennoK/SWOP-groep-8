@@ -11,12 +11,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import parser.TaskStatus;
+
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.ProjectStatus;
 import taskManager.Task;
 import taskManager.TaskManClock;
-import taskManager.TaskStatus;
 import taskManager.exception.LoopingDependencyException;
 
 public class UseCase1ShowProjectsTester {
