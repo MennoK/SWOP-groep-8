@@ -97,7 +97,8 @@ public class Task {
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
-//TODO naam niet goed, moet nog beter ge"implementeerd worden
+
+	//TODO naam niet goed, moet nog beter ge"implementeerd worden
 	private LocalDateTime add(LocalDateTime instant, Duration duration) {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
@@ -119,6 +120,7 @@ public class Task {
 
 	/**
 	 * 
+	 * TODO doc
 	 * @param now
 	 * @return
 	 */
@@ -158,7 +160,7 @@ public class Task {
 	 * @param dependencies : list with dependency task
 	 * @throws LoopingDependencyException : thrown when a loop occurs
 	 */
-	public void addMultipleDependencies(ArrayList<Task> dependencies)
+	void addMultipleDependencies(ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		for (Task dependency : dependencies) {
 			if(!isValidDependency(dependency)){
@@ -177,7 +179,7 @@ public class Task {
 	 * @param dependency: task
 	 * @throws LoopingDependencyException : thrown when a loop occurs
 	 */
-	public void addDependency(Task dependency)
+	void addDependency(Task dependency)
 			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
 			throw new LoopingDependencyException(
@@ -248,7 +250,7 @@ public class Task {
 	 * @param dependency
 	 * @return true if and only if the given task dependency is valid
 	 */
-	public boolean isValidDependency(Task dependency){
+	private boolean isValidDependency(Task dependency){
 		return !this.getDependencies().contains(dependency);
 	}
 
@@ -276,7 +278,7 @@ public class Task {
 	 * @param description
 	 *            : the given description of task
 	 */
-	public void setDescription(String description) {
+	private void setDescription(String description) {
 		this.description = description;
 	}
 
@@ -296,7 +298,7 @@ public class Task {
 	 * @param estimatedDuration
 	 * @throws IllegalArgumentException : thrown when the given estimated duration is not valid
 	 */
-	public void setEstimatedDuration(Duration estimatedDuration) {
+	void setEstimatedDuration(Duration estimatedDuration) {
 		if(estimatedDuration.toHours() <= 0){
 			throw new IllegalArgumentException("The estimated duration must be strictly positive");
 		}
@@ -322,7 +324,7 @@ public class Task {
 	 * @param acceptableDeviation
 	 * @throws IllegalArgumentException : thrown when the given acceptableDeviation is not valid
 	 */
-	public void setAcceptableDeviation(double acceptableDeviation) {
+	void setAcceptableDeviation(double acceptableDeviation) {
 		if(acceptableDeviation < 0){
 			throw new IllegalArgumentException("The acceptable deviation must be greater or equal then zero");
 		}
@@ -343,12 +345,18 @@ public class Task {
 
 	/**
 	 * Sets the end time if and only if the given end time is after
-	 * the start time of a project
+	 * the start time of a project. The start time must be set before 
+	 * the end time
 	 * 
 	 * @param endTime : the end time of task
 	 * @throws InvalidTimeException : thrown when the given end time is invalid
+	 * @throws NullPointerException: thrown when the start time is not set yet
+	 * 
 	 */
-	public void setEndTime(LocalDateTime endTime) throws InvalidTimeException {
+	void setEndTime(LocalDateTime endTime) throws InvalidTimeException, NullPointerException {
+		if(this.getStartTime() == null){
+			throw new NullPointerException("There is not start time, set the starttime first.");
+		}
 		if(!isEndTimeAfterStartTime((this.getStartTime()),endTime)){
 			throw new InvalidTimeException("the given end time is before the start time");
 		}
@@ -357,7 +365,7 @@ public class Task {
 			this.updateStatus();
 		}
 	}
-	
+
 	/**
 	 * Checks whether the endtime is after the start time
 	 * 
@@ -365,7 +373,7 @@ public class Task {
 	 * @param endTime : the endTime of a task
 	 * @return true if and only if the start time is before the endtime
 	 */
-	public boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
+	private boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
 		return endTime.isAfter(startTime);
 	}
 
@@ -383,7 +391,7 @@ public class Task {
 	 * 
 	 * @param startTime : the given start time of a task
 	 */
-	public void setStartTime(LocalDateTime startTime) {
+	void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -404,7 +412,7 @@ public class Task {
 	 * @param failed
 	 *            : true if failed
 	 */
-	public void setFailed(boolean failed) {
+	void setFailed(boolean failed) {
 		this.failed = failed;
 		this.updateStatus();
 	}
@@ -419,7 +427,7 @@ public class Task {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the task is not failed
 	 */
-	public void setAlternativeTask(Task isAlternativeFor)
+	void setAlternativeTask(Task isAlternativeFor)
 			throws IllegalArgumentException {
 		if (isAlternativeFor.getStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
@@ -459,7 +467,7 @@ public class Task {
 	 * A task is finished when the task has an end time
 	 * The task availability is dependent on the dependencies of the task
 	 */
-	public void updateStatus() {
+	void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
 		if (isFailed()) {
 			this.status = TaskStatus.FAILED;
