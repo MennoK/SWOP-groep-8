@@ -236,7 +236,7 @@ public class Project {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given due time is not valid
 	 */
-	private void setDueTime(LocalDateTime dueTime)
+	void setDueTime(LocalDateTime dueTime)
 			throws IllegalArgumentException {
 		if (!canHaveDueTime(dueTime)) {
 			throw new IllegalArgumentException(
