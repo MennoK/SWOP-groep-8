@@ -264,7 +264,10 @@ public class Project {
 
 	void update(LocalDateTime time) {
 		this.updateEstimatedFinishTime(time);
-		this.getAllTasks().forEach(taskManager.Task::updateStatus);
+		for(Task task : this.getAllTasks())
+		{
+			task.updateStatus();
+		}
 	}
 
 	void updateEstimatedFinishTime(LocalDateTime time) {
