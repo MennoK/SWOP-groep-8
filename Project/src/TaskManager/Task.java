@@ -392,7 +392,6 @@ public class Task {
 	 * @return true if and only if the start time is before the endtime
 	 */
 	private boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
-			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
 
