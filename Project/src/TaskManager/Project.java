@@ -54,22 +54,22 @@ public class Project {
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
 	 */
-	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation){
+	void createTask(String description, Duration estimatedDuration, double acceptableDeviation){
 		Task task = new Task(description, estimatedDuration, acceptableDeviation);
 		this.addTask(task);
 	}
 	
-	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask){
+	void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask){
 		Task task = new Task(description, estimatedDuration, acceptableDeviation, alernativeTask);
 		this.addTask(task);
 	}
 	
-	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException{
+	void createTask(String description, Duration estimatedDuration, double acceptableDeviation, ArrayList<Task> dependencies) throws LoopingDependencyException{
 		Task task = new Task(description, estimatedDuration, acceptableDeviation, dependencies);
 		this.addTask(task);
 	}
 	
-	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask, ArrayList<Task> dependencies) throws LoopingDependencyException{
+	void createTask(String description, Duration estimatedDuration, double acceptableDeviation, Task alernativeTask, ArrayList<Task> dependencies) throws LoopingDependencyException{
 		Task task = new Task(description, estimatedDuration, acceptableDeviation, alernativeTask, dependencies);
 		this.addTask(task);
 	}
@@ -80,7 +80,7 @@ public class Project {
 	 * @param task : task to add to project
 	 * @throws IllegalArgumentException : thrown when the given task is not valid
 	 */
-	public void addTask(Task task) throws IllegalArgumentException {
+	void addTask(Task task) throws IllegalArgumentException {
 		if(!canHaveTask(task)){
 			throw new IllegalArgumentException("The given task is already in this project.");
 		}
@@ -156,19 +156,12 @@ public class Project {
 
 	//TODO methode testen + documentatie
 	public Duration getTotalDelay() {
-		LocalDateTime longestDelay = LocalDateTime.of(0000, 01, 01, 00, 00, 00);
-		for(Task task: getAllTasks()){
-			if(task.getStatus() == TaskStatus.FINISHED || task.getStatus() == TaskStatus.FAILED){
-				if(task.getEndTime().isAfter(this.getDueTime()) && task.getEndTime().isAfter(longestDelay)){
-					longestDelay = task.getEndTime();
-				}
+		List<Task> allTasks = this.getAllTasks();
+		for (Task task : allTasks) {
+			if(task.getStatus() == TaskStatus.FINISHED ||task.getStatus() == TaskStatus.FAILED ){
+				
 			}
-		}
-		if (longestDelay == LocalDateTime.of(0000, 01, 01, 00, 00, 00)) {
-			return null;
-		}
-		else{			
-			return Duration.between(getDueTime(), longestDelay);
+				
 		}
 	}
 
@@ -177,7 +170,7 @@ public class Project {
 	 * 
 	 * @param name : the given name of a project
 	 */
-	public void setName(String name) {
+	private void setName(String name) {
 		this.name = name;
 	}
 
@@ -186,7 +179,7 @@ public class Project {
 	 * 
 	 * @return name of a project
 	 */
-	public String getName() {
+	String getName() {
 		return name;
 	}
 
@@ -195,7 +188,7 @@ public class Project {
 	 * 
 	 * @return description of a project
 	 */
-	public String getDescription() {
+	String getDescription() {
 		return description;
 	}
 
@@ -204,7 +197,7 @@ public class Project {
 	 * 
 	 * @param description : the given description
 	 */
-	public void setDescription(String description) {
+	private void setDescription(String description) {
 		this.description = description;
 	}
 
@@ -223,7 +216,7 @@ public class Project {
 	 * @param dueTime: given due time of a project
 	 * @throws IllegalArgumentException: thrown when the given due time is not valid 
 	 */
-	public void setDueTime(LocalDateTime dueTime) throws IllegalArgumentException{
+	private void setDueTime(LocalDateTime dueTime) throws IllegalArgumentException{
 		if(!canHaveDueTime(dueTime)){
 			throw new IllegalArgumentException("The given due time is not valid.");
 		}
@@ -252,7 +245,7 @@ public class Project {
         this.getAllTasks().forEach(TaskManager.Task::updateStatus);
     }
 
-    private void updateEstimatedFinishTime(LocalDateTime time)
+    void updateEstimatedFinishTime(LocalDateTime time)
     {
         LocalDateTime estimatedFinishTime = time;
         for(Task task: getAllTasks()){

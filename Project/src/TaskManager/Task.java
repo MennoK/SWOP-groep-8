@@ -447,8 +447,17 @@ public class Task {
 	}
 
 	public void updateStatus(LocalDateTime newStartTime,
-			LocalDateTime newEndTime, boolean setFailed) {
-		// TODO implement
+			LocalDateTime newEndTime, boolean setFailed) throws InvalidTimeException {
+		if(newStartTime.isBefore(newEndTime)){
+
+			this.setStartTime(newStartTime);
+			this.setEndTime(newEndTime);
+			this.setFailed(setFailed);
+			this.updateStatus();	
+		}
+		else {
+			throw new InvalidTimeException("the given end time is before the start time");
+		}
 	}
 
 	/**
