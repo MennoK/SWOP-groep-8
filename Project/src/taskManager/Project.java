@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import taskManager.exception.LoopingDependencyException;
 
 /**
@@ -57,14 +58,14 @@ public class Project {
 	 * @param estimatedDuration
 	 * @param acceptableDeviation
 	 */
-	void createTask(String description, Duration estimatedDuration,
+	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation);
 		this.addTask(task);
 	}
 
-	void createTask(String description, Duration estimatedDuration,
+	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, alernativeTask);
@@ -264,7 +265,10 @@ public class Project {
 
 	void update(LocalDateTime time) {
 		this.updateEstimatedFinishTime(time);
-		this.getAllTasks().forEach(taskManager.Task::updateStatus);
+		for(Task task : this.getAllTasks())
+		{
+			task.updateStatus();
+		}
 	}
 
 	void updateEstimatedFinishTime(LocalDateTime time) {

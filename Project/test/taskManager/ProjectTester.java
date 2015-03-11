@@ -12,11 +12,16 @@ import java.util.PrimitiveIterator.OfDouble;
 import org.junit.Before;
 import org.junit.Test;
 
+import parser.TaskStatus;
+
 import taskManager.Project;
 import taskManager.ProjectStatus;
 import taskManager.Task;
+<<<<<<< HEAD
 import taskManager.TaskStatus;
 import taskManager.exception.InvalidTimeException;
+=======
+>>>>>>> cdbc4b9ad191bc418a87ef8508e1f466a6bf126b
 import taskManager.exception.LoopingDependencyException;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;

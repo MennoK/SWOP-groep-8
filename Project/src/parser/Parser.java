@@ -15,9 +15,8 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
-import taskManager.Project;
-import taskManager.ProjectController;
-import taskManager.Task;
+
+import taskManager.*;
 import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
 
@@ -43,9 +42,10 @@ public class Parser {
 	 * @throws FileNotFoundException
 	 * @throws RuntimeException
 	 * @throws LoopingDependencyException 
+	 * @throws InvalidTimeException 
 	 */
 	@SuppressWarnings("unchecked")
-	public void parse(String pathToFile, ProjectController projectController) throws FileNotFoundException, RuntimeException, LoopingDependencyException{
+	public void parse(String pathToFile, ProjectController projectController) throws FileNotFoundException, RuntimeException, LoopingDependencyException, InvalidTimeException{
 		//check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(new FileReader(pathToFile));
 		checker.checkFile();
@@ -59,11 +59,7 @@ public class Parser {
 		constructProjects((List<LinkedHashMap<String, Object>>) objects.get("projects"), projectController);		
 
 		//create all tasks given by the input file
-		try {
-			constructTasks((List<LinkedHashMap<String, Object>>) objects.get("tasks"), projectController);
-		} catch (InvalidTimeException e) {
-			e.printStackTrace();
-		}
+		constructTasks((List<LinkedHashMap<String, Object>>) objects.get("tasks"), projectController);
 	}
 
 	/**
@@ -106,36 +102,61 @@ public class Parser {
 
 			//create a new task to the project
 			Project projectOfTask = controller.getAllProjects().get(projectNumber);
-			projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
 			
-			Task newTask = projectOfTask.getAllTasks().get(projectOfTask.getAllTasks().size()-1);
-
-			//Sets alternative task if the task is an alternative of an other task
-			if(task.get("alternativeFor") != null){
+			
+			
+			if(task.get("alternativeFor") != null && task.get("prerequisiteTasks") != null){
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
-				newTask.setAlternativeTask(alternativeTask);
+				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
+				ArrayList<Task> dependencyList = new ArrayList<Task>();
+				
+				for (Integer taskNr : prerequisiteTasks) {
+					dependencyList.add(projectOfTask.getAllTasks().get(taskNr-1));
+				}
+				
+				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation, alternativeTask, dependencyList);
+
+			}
+			//Sets alternative task if the task is an alternative of an other task
+			if(task.get("alternativeFor") != null && task.get("prerequisiteTasks") == null){
+
+				int alternativeTaskNr = (int) task.get("alternativeFor");
+				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
+				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation, alternativeTask);
 			}
 			 
 			//if a task has prequisite tasks, add dependencies to the task
-			if(task.get("prerequisiteTasks") != null){
+			else if(task.get("prerequisiteTasks") != null && task.get("alternativeFor") == null){
+
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
+				ArrayList<Task> dependencyList = new ArrayList<Task>();
+				
 				for (Integer taskNr : prerequisiteTasks) {
-					newTask.addDependency(projectOfTask.getAllTasks().get(taskNr-1));
+					dependencyList.add(projectOfTask.getAllTasks().get(taskNr-1));
 				}
+				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation, dependencyList);
+				
 			}
+			else if(task.get("prerequisiteTasks") == null && task.get("alternativeFor") == null) {
+				projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
+
+			}
+
+			Task newTask = projectOfTask.getAllTasks().get(projectOfTask.getAllTasks().size()-1);
 
 			//if status is failed or finished, update the status and set start en end time
 			if(task.get("status") != null){
 				String status = (String) task.get("status");
-				LocalDateTime starTime = LocalDateTime.parse((CharSequence) task.get("startTime"), dateTimeFormatter);
-				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
-				newTask.setStartTime(starTime);
-				newTask.setEndTime(endTime);
+				LocalDateTime startTime = LocalDateTime.parse((CharSequence) task.get("startTime"), dateTimeFormatter);
+				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);		
 				if(status.equals("failed")){
-					newTask.setFailed(true);
+					newTask.updateStatus(startTime, endTime, true);
 				}
-				newTask.updateStatus();
+				else {
+					newTask.updateStatus(startTime, endTime, false);
+
+				}
 			}
 		}
 	}
