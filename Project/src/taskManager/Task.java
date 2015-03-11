@@ -379,7 +379,7 @@ public class Task {
 	 * @throws NullPointerException: thrown when the start time is not set yet
 	 * 
 	 */
-	void setEndTime(LocalDateTime endTime) throws InvalidTimeException, NullPointerException {
+	public void setEndTime(LocalDateTime endTime) throws InvalidTimeException, NullPointerException {
 		if(this.getStartTime() == null){
 			throw new NullPointerException("There is not start time, set the starttime first.");
 		}
@@ -419,7 +419,7 @@ public class Task {
 	 * @param startTime
 	 *            : the given start time of a task
 	 */
-	void setStartTime(LocalDateTime startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -439,7 +439,7 @@ public class Task {
 	 * @param failed
 	 *            : true if failed
 	 */
-	void setFailed(boolean failed) {
+	public void setFailed() {
 		this.failed = true;
 		this.updateStatus();
 	}
@@ -486,7 +486,7 @@ public class Task {
 
 			this.setStartTime(newStartTime);
 			this.setEndTime(newEndTime);
-			this.setFailed(setFailed);
+			this.setFailed();
 			this.updateStatus();	
 		}
 		else {
@@ -502,7 +502,7 @@ public class Task {
          * A task is finished when the task has an end time
 	 * The task availability is dependent on the dependencies of the task
 	 */
-	void updateStatus() {
+	public void updateStatus() {
 		this.status = TaskStatus.AVAILABLE;
 		if (isFailed()) {
 			this.status = TaskStatus.FAILED;
