@@ -237,7 +237,7 @@ public class Task {
 	}
 
 	/**
-	 * Returns the description of task 
+	 * Returns the description of task
 	 * 
 	 * @return description: the description of a task
 	 */
@@ -248,7 +248,8 @@ public class Task {
 	/**
 	 * Sets the description of the task
 	 * 
-	 * @param description : the given description of task
+	 * @param description
+	 *            : the given description of task
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -264,10 +265,10 @@ public class Task {
 	}
 
 	/**
-	 * Sets the estimated duration of a task by a given argument.
-	 * The estimated duration of task has to be strictly positive
+	 * Sets the estimated duration of a task by a given argument. The estimated
+	 * duration of task has to be strictly positive
 	 * 
-	 * @param estimatedDuration: the given estimated duration
+	 * @param estimatedDuration
 	 * @throws IllegalArgumentException : thrown when the given estimated duration is not valid
 	 */
 	public void setEstimatedDuration(Duration estimatedDuration) {
@@ -290,10 +291,10 @@ public class Task {
 	}
 
 	/**
-	 * Sets the acceptable deviation of task and updates the task status.
+	 * Sets the acceptable deviation of task and updates the task status. The
 	 * The acceptable deviation must be positive or zero
 	 * 
-	 * @param acceptableDeviation: the given acceptable deviation
+	 * @param acceptableDeviation
 	 * @throws IllegalArgumentException : thrown when the given acceptableDeviation is not valid
 	 */
 	public void setAcceptableDeviation(double acceptableDeviation) {
@@ -362,10 +363,10 @@ public class Task {
 	}
 
 	/**
-	 * Sets a failed boolean to true or false and
-	 * updates the task status
+	 * Sets a failed boolean to true or false and updates the task status
 	 * 
-	 * @param failed: true if failed
+	 * @param failed
+	 *            : true if failed
 	 */
 	public void setFailed(boolean failed) {
 		this.failed = failed;
@@ -374,11 +375,13 @@ public class Task {
 
 
 	/**
-	 * Sets the alternative task if and only if the the current task
-	 * his status is failed
+	 * Sets the alternative task if and only if the the current task his status
+	 * is failed
 	 * 
-	 * @param isAlternativeFor: alternative task
-	 * @throws IllegalArgumentException: thrown when the task is not failed
+	 * @param isAlternativeFor
+	 *            : alternative task
+	 * @throws IllegalArgumentException
+	 *             : thrown when the task is not failed
 	 */
 	public void setAlternativeTask(Task isAlternativeFor)
 			throws IllegalArgumentException {
@@ -405,6 +408,11 @@ public class Task {
 	 */
 	public int getId() {
 		return this.id;
+	}
+
+	public void updateStatus(LocalDateTime newStartTime,
+			LocalDateTime newEndTime, boolean setFailed) {
+		// TODO implement
 	}
 
 	/**

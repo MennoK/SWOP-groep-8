@@ -19,9 +19,13 @@ public class Printer {
 	}
 
 	static String listTasks(List<Task> options) {
+		return listTasks(options, 1);
+	}
+
+	static String listTasks(List<Task> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
-			str += (i + 1) + ": " + oneLine(options.get(i)) + "\n";
+			str += (i + startingIndex) + ": " + oneLine(options.get(i)) + "\n";
 		}
 		return str.trim();
 	}
