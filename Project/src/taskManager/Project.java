@@ -263,6 +263,17 @@ public class Project {
 		return ProjectFinishingStatus.OVER_TIME;
 	}
 
+	/**
+	 * Returns whether the project finished on time or not.
+	 * 
+	 * @return ON_TIME or OVER_TIME depending whether the project finished on
+	 *         time or not.
+	 */
+	public ProjectFinishingStatus finishedOnTime() {
+		// TODO implement
+		return null;
+	}
+
 	void update(LocalDateTime time) {
 		this.updateEstimatedFinishTime(time);
 		for (Task task : this.getAllTasks()) {
