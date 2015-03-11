@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
+import TaskManager.InvalidTimeException;
 import TaskManager.LoopingDependencyException;
 import TaskManager.Project;
 import TaskManager.ProjectController;
@@ -58,7 +59,11 @@ public class Parser {
 		constructProjects((List<LinkedHashMap<String, Object>>) objects.get("projects"), projectController);		
 
 		//create all tasks given by the input file
-		constructTasks((List<LinkedHashMap<String, Object>>) objects.get("tasks"), projectController);
+		try {
+			constructTasks((List<LinkedHashMap<String, Object>>) objects.get("tasks"), projectController);
+		} catch (InvalidTimeException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -86,8 +91,9 @@ public class Parser {
 	 * @param tasks : list of all projects
 	 * @param controller: the projectController
 	 * @throws LoopingDependencyException 
+	 * @throws InvalidTimeException 
 	 */
-	private void constructTasks(List<LinkedHashMap<String, Object>> tasks, ProjectController controller) throws LoopingDependencyException{
+	private void constructTasks(List<LinkedHashMap<String, Object>> tasks, ProjectController controller) throws LoopingDependencyException, InvalidTimeException{
 
 		for(LinkedHashMap<String, Object> task: tasks){
 
@@ -108,7 +114,6 @@ public class Parser {
 			if(task.get("alternativeFor") != null){
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(alternativeTaskNr-1);
-				//TODO simpele setter aangemaakt in task, was nog niet ge"implementeerd
 				newTask.setAlternativeTask(alternativeTask);
 			}
 			 
@@ -125,7 +130,6 @@ public class Parser {
 				String status = (String) task.get("status");
 				LocalDateTime starTime = LocalDateTime.parse((CharSequence) task.get("startTime"), dateTimeFormatter);
 				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
-				//TODO implementatie status in task + instant moet nog veranderd worden
 				newTask.setStartTime(starTime);
 				newTask.setEndTime(endTime);
 				if(status.equals("failed")){

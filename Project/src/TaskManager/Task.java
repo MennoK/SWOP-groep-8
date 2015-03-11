@@ -8,9 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
 
-
 /**
- * 
  * 
  * 
  * @author groep 8
@@ -104,6 +102,12 @@ public class Task {
 		return instant.plus(Duration.ofDays(duration.toHours() / 8));
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param task
+	 * @return true
+	 */
 	private boolean hasDependency(Task task) {
 		if (getDependencies().contains(task))
 			return true;
@@ -113,6 +117,11 @@ public class Task {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param now
+	 * @return
+	 */
 	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
 		if (getStartTime() != null)
 			return add(getStartTime(), getEstimatedDuration());
@@ -132,6 +141,11 @@ public class Task {
 		return add(dependenceFinishTime, getEstimatedDuration());
 	}
 
+	/**
+	 * Returns the status of a task
+	 * 
+	 * @return status of task
+	 */
 	public TaskStatus getStatus() {
 		this.updateStatus();
 		return this.status;
@@ -331,6 +345,13 @@ public class Task {
 		}
 	}
 	
+	/**
+	 * Checks whether the endtime is after the start time
+	 * 
+	 * @param startTime : the startTime of a task 
+	 * @param endTime : the endTime of a task
+	 * @return true if and only if the start time is before the endtime
+	 */
 	public boolean isEndTimeAfterStartTime(LocalDateTime startTime, LocalDateTime endTime){
 		return endTime.isAfter(startTime);
 	}
@@ -421,7 +442,7 @@ public class Task {
 	 * Updates the status of task. There are four different statuses for a task:
 	 * Available, unavailable, finished or failed.
 	 * 
-	 * A task is failed when the boolean isFailed true
+	 * A task is failed when the boolean isFailed is true
 	 * A task is finished when the task has an end time
 	 * The task availability is dependent on the dependencies of the task
 	 */
