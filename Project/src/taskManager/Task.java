@@ -440,7 +440,10 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-		this.failed = true;
+		if(this.getStatus() != TaskStatus.FINISHED)
+			this.failed = true;
+		else 
+			throw new IllegalStateException();
 	}
 
 	/**

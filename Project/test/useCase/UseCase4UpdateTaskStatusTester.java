@@ -43,21 +43,41 @@ public class UseCase4UpdateTaskStatusTester {
 		
 		ArrayList<Task> dependency = new ArrayList<>();
 		dependency.add(task2);
-		
+		//task 3 has dependency on task2
 		project1.createTask("Task 3", Duration.ofHours(8), 0.4, dependency);
 		task3 = project1.getAllTasks().get(2);
 			
 	}
 	
 	@Test
-	public void updateTaskStatus() throws InvalidTimeException{
+	public void updateTaskStatusSuccess() throws InvalidTimeException{
+		//initial status
+		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
+		
 		//task 1 failed
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 		
-		//TODO
+		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
+		assertEquals(TaskStatus.FAILED, task1.getStatus());
+		
+		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
+		assertEquals(TaskStatus.FINISHED, task2.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
+		
 	}
 	
+	@Test(expected=IllegalStateException.class)
+	public void updateTaskStatusExceptionExpected() throws InvalidTimeException{
+		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
+		assertEquals(TaskStatus.FINISHED, task2.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
+		
+		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), true);
+		assertEquals(TaskStatus.FINISHED, task2.getStatus());
+	}
 /*	
 	@Test
 	public void testUpdateTaskStatusFinishedtestNoDependencies() {
