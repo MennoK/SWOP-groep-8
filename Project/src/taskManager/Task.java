@@ -381,28 +381,13 @@ public class Task {
 	}
 
 	/**
-	 * Sets the end time if and only if the given end time is after the start
-	 * the start time of a project. The start time must be set before the end
-	 * time
+	 * Sets the end time.
 	 * 
 	 * @param endTime
 	 *            : the end time of task
-	 * @throws NullPointerException
-	 *             : thrown when the start time is not set yet
-	 * 
 	 */
-	void setEndTime(LocalDateTime endTime) throws InvalidTimeException,
-			NullPointerException {
-		if (this.getStartTime() == null) {
-			throw new NullPointerException(
-					"There is not start time, set the starttime first.");
-		}
-		if (!isEndTimeAfterStartTime((this.getStartTime()), endTime)) {
-			throw new InvalidTimeException(
-					"the given end time is before the start time");
-		} else {
-			this.endTime = endTime;
-		}
+	private void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
 	/**
@@ -414,7 +399,7 @@ public class Task {
 	 *            : the endTime of a task
 	 * @return true if and only if the start time is before the endtime
 	 */
-	private boolean isEndTimeAfterStartTime(LocalDateTime startTime,
+	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
 			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
@@ -434,7 +419,7 @@ public class Task {
 	 * @param startTime
 	 *            : the given start time of a task
 	 */
-	void setStartTime(LocalDateTime startTime) {
+	private void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -454,7 +439,7 @@ public class Task {
 	 * @param failed
 	 *            : true if failed
 	 */
-	void setFailed() {
+	private void setFailed() {
 		this.failed = true;
 	}
 
@@ -509,7 +494,7 @@ public class Task {
 	 */
 	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
 			boolean setToFail) throws InvalidTimeException {
-		if (startTime.isAfter(endTime))
+		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
 		this.setStartTime(startTime);
