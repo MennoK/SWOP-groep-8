@@ -23,9 +23,9 @@ public class ProjectController {
 	/**
 	 * The constructor of the projectController needs a TaskManClock. 
 	 */
-	public ProjectController(TaskManClock taskManClock){
+	public ProjectController(LocalDateTime now){
 		projects = new ArrayList<>();
-		this.taskManClock = taskManClock;
+		this.taskManClock = new TaskManClock(now);
 	}
 
 	/**

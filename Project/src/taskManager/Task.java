@@ -491,14 +491,16 @@ public class Task {
 	}
 
 	public void updateStatus(LocalDateTime newStartTime,
-			LocalDateTime newEndTime, boolean setFailed)
+			LocalDateTime newEndTime, boolean setToFail)
 			throws InvalidTimeException {
 		if (newStartTime.isAfter(newEndTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
 		this.setStartTime(newStartTime);
 		this.setEndTime(newEndTime);
-		this.setFailed();
+		if (setToFail) {
+			this.setFailed();
+		}
 		this.updateStatus();
 	}
 

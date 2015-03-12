@@ -120,8 +120,8 @@ public class Parser {
 					.get("estimatedDuration"));
 			double acceptableDeviation = (double) ((int) (task
 					.get("acceptableDeviation")));
+			acceptableDeviation /= 100;
 
-			// create a new task to the project
 			Project projectOfTask = controller.getAllProjects().get(
 					projectNumber);
 
@@ -143,8 +143,7 @@ public class Parser {
 						acceptableDeviation, alternativeTask, dependencyList);
 
 			}
-			// Sets alternative task if the task is an alternative of an other
-			// task
+
 			if (task.get("alternativeFor") != null
 					&& task.get("prerequisiteTasks") == null) {
 
@@ -155,7 +154,6 @@ public class Parser {
 						acceptableDeviation, alternativeTask);
 			}
 
-			// if a task has prequisite tasks, add dependencies to the task
 			else if (task.get("prerequisiteTasks") != null
 					&& task.get("alternativeFor") == null) {
 
@@ -190,8 +188,13 @@ public class Parser {
 				LocalDateTime endTime = LocalDateTime.parse(
 						(CharSequence) task.get("endTime"), dateTimeFormatter);
 
-				newTask.updateStatus(startTime, endTime,
-						status.equals("failed"));
+				if(status.equals("failed")){
+					newTask.updateStatus(startTime, endTime, true);
+				}
+				else{
+					newTask.updateStatus(startTime, endTime, false);
+				}
+
 			}
 		}
 	}
