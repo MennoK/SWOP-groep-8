@@ -51,17 +51,24 @@ public class Project {
 	 * Creates a new task to the project and will add the task to the tasklist
 	 * of the project
 	 * 
-	 * @param description
-	 * @param estimatedDuration
-	 * @param acceptableDeviation
+	 * @param description : description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable deviation of a task
 	 */
-	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now) {
+	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, now);
+				acceptableDeviation, this.lastUpdateTime);
 		this.addTask(task);
 	}
 
+	/**
+	 * Creates a new task to the project and will add the task to the tasklist
+	 * of the project
+	 * 
+	 * @param description : description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable deviation of a task
+	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask) {
 		Task task = new Task(description, estimatedDuration,
@@ -69,6 +76,14 @@ public class Project {
 		this.addTask(task);
 	}
 
+	/**
+	 * Creates a new task to the project and will add the task to the tasklist
+	 * of the project
+	 * 
+	 * @param description : description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable deviation of a task
+	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
@@ -76,6 +91,15 @@ public class Project {
 		this.addTask(task);
 	}
 
+	/**
+	 * Creates a new task to the project and will add the task to the tasklist
+	 * of the project
+	 * 
+	 * @param description : description of a task
+	 * @param estimatedDuration : estimated duration of task
+	 * @param acceptableDeviation : acceptable deviation of a task
+	 * @param alternativeTa
+	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask,
 			ArrayList<Task> dependencies) {
@@ -314,13 +338,6 @@ public class Project {
 	 */
 	public LocalDateTime getCreationTime() {
 		return creationTime;
-	}
-
-	public void createTask(String description2, Duration estimatedDuration,
-			double acceptableDeviation) {
-		this.createTask(description2, estimatedDuration, acceptableDeviation,
-				this.lastUpdateTime);
-
 	}
 	
 	public LocalDateTime getLastUpdateTime(){

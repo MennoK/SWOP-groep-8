@@ -17,13 +17,13 @@ import taskManager.exception.InvalidTimeException;
 
 public class TaskTester {
 
-	LocalDateTime now;
+	private LocalDateTime now;
 
-	Task baseTask;
-	Task dependentTask;
-	Task finishedTask;
-	Task failedTask;
-	Task level2DependentTask;
+	private Task baseTask;
+	private Task dependentTask;
+	private Task finishedTask;
+	private Task failedTask;
+	private Task level2DependentTask;
 
 	@Before
 	public void setUp() throws Exception {
