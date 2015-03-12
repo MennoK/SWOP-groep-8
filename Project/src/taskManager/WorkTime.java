@@ -3,6 +3,7 @@ package taskManager;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 
 public class WorkTime {
@@ -24,6 +25,10 @@ public class WorkTime {
 		this.current = baseTime;
 
 	}
+	
+	public WorkTime(LocalDateTime firstTime, LocalDateTime secondTime) {
+		
+	}
 
 	public LocalDateTime getFinishTime() {
 		if(current.getHour() < this.startHour)
@@ -36,7 +41,8 @@ public class WorkTime {
 			if (isWorkDay()) {
 				workUntilEndOfDayOrMinutesRunOut();
 			}
-			setToNextDayStart();
+			if(minutesToWork > 0)
+				setToNextDayStart();
 		}
 
 		return this.current;
@@ -70,14 +76,18 @@ public class WorkTime {
 		if(!first.isBefore(second)) {
 			throw new IllegalArgumentException("first day is after the second");
 		}
-		LocalDateTime result = first;
-		long minutes = 0;
-		while(result.isBefore(second)) {
-			minutes++;
-			result = new WorkTime(first, Duration.ofMinutes(minutes)).getFinishTime();
+		
+		
+		
+		Duration minutes = Duration.ofMinutes(0);
+		LocalDateTime working = new WorkTime(first, minutes).getFinishTime();
+		while(working.isBefore(second))
+		{
+			minutes = minutes.plusMinutes(60);
+			working = new WorkTime(first, minutes).getFinishTime();
 		}
 		
-		return Duration.ofMinutes(minutes-1);
+		return minutes;
 	}
 
 }
