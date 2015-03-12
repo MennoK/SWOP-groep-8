@@ -543,8 +543,4 @@ public class Task {
 	LocalDateTime getLastUpdateTime() {
 		return lastUpdateTime;
 	}
-	
-	public LocalDateTime getLastUpdateTime(){
-		return lastUpdateTime;
-	}
 }
