@@ -251,11 +251,15 @@ public class ProjectTester {
 		dep.add(task1);
 		project.createTask("task2 (dep task1)", Duration.ofHours(5), 0.5, dep);
 		Task task2 = project.getAllTasks().get(1);
+		project.createTask("task4 (dep task1)", Duration.ofHours(5), 0.5, dep);
+		Task task4 = project.getAllTasks().get(1);
 		task1.updateStatus(now, now.plusHours(4), true);
 		project.createTask("task3", Duration.ofHours(1), 0.5, task1);
 		Task task3 = project.getAllTasks().get(2);
 		assertFalse(task2.hasDependency(task1));
 		assertTrue(task2.hasDependency(task3));
+		assertFalse(task4.hasDependency(task1));
+		assertTrue(task4.hasDependency(task3));
 	}
 
 }
