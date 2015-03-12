@@ -30,10 +30,10 @@ public class ProjectControllerTester {
 		assertEquals(1, projectController.getAllProjects().size());
 		
 		projectController.createProject("name2", "description",
-				LocalDateTime.of(2015, 03, 05, 00, 00),
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 		
 		assertEquals( 2,projectController.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController.getAllProjects().get(1).getCreationTime());
 	}
 	
 	@Test
