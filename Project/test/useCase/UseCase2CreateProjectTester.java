@@ -39,7 +39,7 @@ public class UseCase2CreateProjectTester {
 		assertEquals( LocalDateTime.of(2015, 03, 10, 00,00), projects.get(0).getDueTime());
 	
 		//create second project
-		controller.createProject("name2", "descr2",  LocalDateTime.of(2015, 03, 06,00,00), LocalDateTime.of(2015, 03, 07,00,00));
+		controller.createProject("name2", "descr2", LocalDateTime.of(2015, 03, 07,05,00));
 
 		//check if both are projects are made
 		assertEquals(controller.getAllProjects().size(),2);
@@ -51,7 +51,7 @@ public class UseCase2CreateProjectTester {
 	
 		assertEquals("name2", projects.get(1).getName());
 		assertEquals("descr2", projects.get(1).getDescription());
-		assertEquals( LocalDateTime.of(2015, 03, 06,00,00), projects.get(1).getCreationTime());
-		assertEquals( LocalDateTime.of(2015, 03, 07,00,00), projects.get(1).getDueTime());
+		assertEquals( LocalDateTime.of(2015, 03, 07,01,00), projects.get(1).getCreationTime());
+		assertEquals( LocalDateTime.of(2015, 03, 07,05,00), projects.get(1).getDueTime());
 	}
 }

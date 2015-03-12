@@ -37,8 +37,7 @@ public class Project {
 	 * @param dueTime
 	 *            : due time of the project (only the date needed)
 	 */
-	// TODO Welke parameters moeten final zijn?
-	public Project(String name, String description, LocalDateTime creationTime,
+	 Project(String name, String description, LocalDateTime creationTime,
 			LocalDateTime dueTime) {
 		setName(name);
 		setDescription(description);
@@ -130,11 +129,10 @@ public class Project {
 	 * Returns true if and only if all tasks of the project are finished. It
 	 * returns false if a task is unavailable or not yet available.
 	 * 
-	 * If a project does not have any tasks, the project has finished as well.
+	 * If a project does not have any tasks, the project is not finished.
 	 * 
 	 * @return true if and only if all tasks are finished
 	 */
-	// TODO commentaar
 	private boolean hasFinished() {
 		if (getAllTasks().size() != 0) {
 			for (Task task : getAllTasks()) {
@@ -252,8 +250,9 @@ public class Project {
 	}
 
 	public ProjectFinishingStatus willFinishOnTime() {
-		if (this.getEstimatedFinishTime().isBefore(this.getDueTime()))
+		if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
 			return ProjectFinishingStatus.ON_TIME;
+		}
 		return ProjectFinishingStatus.OVER_TIME;
 	}
 
@@ -279,6 +278,7 @@ public class Project {
 
 	/**
 	 * Updates the state of the object and it's tasks
+	 * with state = lastupdatetime
 	 * 
 	 * @param time
 	 *            the current time
@@ -290,10 +290,17 @@ public class Project {
 		this.lastUpdateTime = time;
 	}
 
+	/**
+	 * Estimates the finish time.
+	 * 
+	 * 
+	 * @return
+	 */
 	LocalDateTime getEstimatedFinishTime() {
 		LocalDateTime estimatedFinishTime = this.lastUpdateTime;
 		for (Task task : getAllTasks()) {
-			if (task.getEstimatedFinishTime().isAfter(estimatedFinishTime)) {
+			LocalDateTime taskFinishTime = task.getEstimatedFinishTime();
+			if (taskFinishTime.isAfter(estimatedFinishTime)) {
 				estimatedFinishTime = task.getEstimatedFinishTime();
 			}
 		}
@@ -315,5 +322,8 @@ public class Project {
 				this.lastUpdateTime);
 
 	}
-
+	
+	public LocalDateTime getLastUpdateTime(){
+		return lastUpdateTime;
+	}
 }

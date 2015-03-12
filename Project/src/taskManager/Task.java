@@ -163,22 +163,27 @@ public class Task {
 	 * @return
 	 */
 	public LocalDateTime getEstimatedFinishTime() {
-		if (getStartTime() != null)
-			return add(getStartTime(), getEstimatedDuration());
-
-		if (getDependencies().size() == 0)
-			return add(this.lastUpdateTime, getEstimatedDuration());
-
-		LocalDateTime dependenceFinishTime = getDependencies().get(0)
-				.getEstimatedFinishTime();
-		for (Task dependency : getDependencies()) {
-			if (dependenceFinishTime.compareTo(dependency
-					.getEstimatedFinishTime()) < 0)
-				dependenceFinishTime = dependency.getEstimatedFinishTime();
+		
+		if(this.getEndTime() != null) {
+			return this.getEndTime();
+		} else {
+			
+			if(this.getDependencies().isEmpty()) {
+				return this.lastUpdateTime.plus(this.estimatedDuration);
+			} else {
+				//Find last estimated time of the dependencies
+				LocalDateTime estimatedTime = this.lastUpdateTime;
+				for(Task t : this.getDependencies()) {
+					if(t.getEstimatedFinishTime().isAfter(estimatedTime)) {
+						estimatedTime = t.getEstimatedFinishTime();
+					}
+				}
+				return estimatedTime;
+			}
+			
 		}
-		if (dependenceFinishTime.compareTo(this.lastUpdateTime) < 0)
-			return add(this.lastUpdateTime, getEstimatedDuration());
-		return add(dependenceFinishTime, getEstimatedDuration());
+		
+
 	}
 
 	/**
