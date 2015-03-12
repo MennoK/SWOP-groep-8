@@ -30,6 +30,7 @@ public class UseCase1ShowProjectsTester {
 	
 	@Before
 	public void setUp() throws LoopingDependencyException, InvalidTimeException{
+		
 		//create a controller, 3 projects and 3 tasks:
 		//project0 has 0 tasks
 		//project1 has 1 task (finished)
@@ -69,6 +70,23 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(project2, allProjectsActuals.get(1));
 		assertEquals(project0, allProjectsActuals.get(2));
 		
+		//show projects name description, creation time and due time
+		assertEquals("Project 1", project1.getName());
+		assertEquals("Description 1", project1.getDescription());
+		assertEquals(LocalDateTime.of(2015, 03, 03,00,00), project1.getCreationTime());
+		assertEquals(LocalDateTime.of(2015, 03, 10,00,00), project1.getDueTime());
+
+		assertEquals("Project 2", project2.getName());
+		assertEquals("Description 1", project2.getDescription());
+		assertEquals(LocalDateTime.of(2015, 03, 03,00,00), project2.getCreationTime());
+		assertEquals(LocalDateTime.of(2015, 03, 10,00,00), project2.getDueTime());
+		
+		assertEquals("Project 0", project0.getName());
+		assertEquals("Description 3", project1.getDescription());
+		assertEquals(LocalDateTime.of(2015, 03, 03,00,00), project0.getCreationTime());
+		assertEquals(LocalDateTime.of(2015, 03, 10,00,00), project0.getDueTime());
+		
+		
 		//Show their status: project with zero tasks in ongoing
 		assertEquals(ProjectStatus.ONGOING, project0.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project1.getStatus());
@@ -91,7 +109,6 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(TaskStatus.FINISHED, task1.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
-
 	}
 
 	/*//TODO: 
