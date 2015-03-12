@@ -6,10 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Project class describes a project in system. Every project has the same
- * details: name, description, creation time and a due time. A project contains
- * a list of his tasks and is allowed to create new tasks. Projects can be
- * finished or ongoing.
+ *a project consists of multiple tasks required to complete the project.
+ *A project has a name, a description, a creation time, and a due time by
+ *which it should be finished. The system should help the user to manage
+ *8his projects, meaning that a project should be marked as either ongoing
+ *or finished. A project can only be finished if it has at least one task, and
+ *all its tasks are finished (or each failed task has a finished alternative).
+ *Additionally, for ongoing projects, the system should indicate whether the
+ *project is estimated to finish on time or over time (based on the time spans
+ *of the finished tasks, the estimated duration of the unfinished tasks ignoring
+ *the acceptable deviation and parallelizing as mush as possible, and using a
+ *Monday to Friday working week with 8 hours a day). For finished projects,
+ *the system should indicate the total delay that occurred within the tasks of
+ *the project, and whether the project finished on time or not (based on the
+ *time spans of the tasks within the project).
  * 
  * @author groep 8
  * 
@@ -37,7 +47,7 @@ public class Project {
 	 * @param dueTime
 	 *            : due time of the project (only the date needed)
 	 */
-	 Project(String name, String description, LocalDateTime creationTime,
+	Project(String name, String description, LocalDateTime creationTime,
 			LocalDateTime dueTime) {
 		setName(name);
 		setDescription(description);
@@ -48,8 +58,8 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task to the project and will add the task to the tasklist
-	 * of the project
+	 * Creates a new task no dependencies or alternative task to the project 
+	 * and will add the task to the tasklist of the project. 
 	 * 
 	 * @param description : description of a task
 	 * @param estimatedDuration : estimated duration of task
@@ -62,12 +72,13 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task to the project and will add the task to the tasklist
-	 * of the project
+	 * Creates a new task with alternative task to the project and will add the task
+	 * to the tasklist of the project.
 	 * 
 	 * @param description : description of a task
 	 * @param estimatedDuration : estimated duration of task
 	 * @param acceptableDeviation : acceptable deviation of a task
+	 * @param alternativeTask : The alternative task
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask) {
@@ -77,12 +88,13 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task to the project and will add the task to the tasklist
+	 * Creates a new task with dependencies to the project and will add the task to the tasklist
 	 * of the project
 	 * 
 	 * @param description : description of a task
 	 * @param estimatedDuration : estimated duration of task
 	 * @param acceptableDeviation : acceptable deviation of a task
+	 * @param dependencies : list with dependencies
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies) {
@@ -92,13 +104,14 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task to the project and will add the task to the tasklist
-	 * of the project
+	 * Creates a new task with alternative task and dependencies
+	 * to the project and will add the task to the tasklist of the project
 	 * 
 	 * @param description : description of a task
 	 * @param estimatedDuration : estimated duration of task
 	 * @param acceptableDeviation : acceptable deviation of a task
-	 * @param alternativeTa
+	 * @param alternativeTask : The alternative task
+	 * @param dependencies : list with dependencies
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask,
@@ -158,10 +171,9 @@ public class Project {
 	 * @return true if and only if all tasks are finished
 	 */
 	private boolean hasFinished() {
-		if (getAllTasks().size() != 0) {
-			for (Task task : getAllTasks()) {
-				if (task.getStatus() == TaskStatus.UNAVAILABLE
-						|| task.getStatus() == TaskStatus.AVAILABLE) {
+		if (this.getAllTasks().size() != 0) {
+			for (Task task : this.getAllTasks()) {
+				if (task.getStatus() == TaskStatus.UNAVAILABLE || task.getStatus() == TaskStatus.AVAILABLE) {
 					return false;
 				}
 			}
@@ -192,7 +204,6 @@ public class Project {
 			if (task.getStatus() == TaskStatus.FINISHED
 					|| task.getStatus() == TaskStatus.FAILED) {
 			}
-
 		}
 		return null;
 	}
@@ -273,6 +284,13 @@ public class Project {
 				|| dueTime.isEqual(getCreationTime());
 	}
 
+	/**
+	 * Determines if the project will finish on time or over time.
+	 * A project has finished on time if the estimated finish time
+	 * before the due time of the project, otherwise its over time
+	 * 
+	 * @return
+	 */
 	public ProjectFinishingStatus willFinishOnTime() {
 		if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
 			return ProjectFinishingStatus.ON_TIME;
@@ -315,10 +333,11 @@ public class Project {
 	}
 
 	/**
-	 * Estimates the finish time.
+	 * Estimates the finish time by calculating the estimated finished
+	 * time of each task
 	 * 
+	 * @return estimatedFinishTime : the estimated finish time
 	 * 
-	 * @return
 	 */
 	LocalDateTime getEstimatedFinishTime() {
 		LocalDateTime estimatedFinishTime = this.lastUpdateTime;
@@ -339,7 +358,12 @@ public class Project {
 	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
-	
+
+	/**
+	 *  Returns the latest update time
+	 *  
+	 * @return lastUpdateTime: latest update time
+	 */
 	public LocalDateTime getLastUpdateTime(){
 		return lastUpdateTime;
 	}
