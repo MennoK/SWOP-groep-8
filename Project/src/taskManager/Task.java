@@ -129,6 +129,10 @@ public class Task {
 			double acceptableDeviation, LocalDateTime now,
 			Task isAlternativeFor, ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
+		if (dependencies.contains(isAlternativeFor))
+			throw new IllegalArgumentException(
+					"Can not create an alternative task which is dependent"
+							+ " on the task it is an alternative for");
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
@@ -167,8 +171,8 @@ public class Task {
 		if (this.getEndTime() != null) {
 			return this.getEndTime();
 		} else {
-			
-			if(this.getDependencies().isEmpty()) {
+
+			if (this.getDependencies().isEmpty()) {
 				return add(this.lastUpdateTime, this.estimatedDuration);
 			} else {
 				// Find last estimated time of the dependencies
@@ -436,11 +440,7 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-<<<<<<< HEAD
-		if(this.getStatus() == TaskStatus.FINISHED || TaskStatus.AVAILABLE)
-=======
 		if (this.getStatus() != TaskStatus.FINISHED)
->>>>>>> 72ebb67a5a9902a2bffd72da2d202ce52776e23a
 			this.failed = true;
 		else
 			throw new IllegalStateException();
@@ -505,10 +505,6 @@ public class Task {
 		}
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);
-<<<<<<< HEAD
-		
-=======
->>>>>>> 72ebb67a5a9902a2bffd72da2d202ce52776e23a
 	}
 
 	/**
