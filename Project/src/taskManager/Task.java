@@ -133,6 +133,11 @@ public class Task {
 			throw new IllegalArgumentException(
 					"Can not create an alternative task which is dependent"
 							+ " on the task it is an alternative for");
+		for (Task dep : dependencies)
+			if (dep.hasDependency(isAlternativeFor))
+				throw new IllegalArgumentException(
+						"Can not create an alternative task which is indirectly dependent"
+								+ " on the task it is an alternative for");
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
