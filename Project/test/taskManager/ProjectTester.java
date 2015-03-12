@@ -7,15 +7,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
-import taskManager.*;
 import taskManager.exception.InvalidTimeException;
 import taskManager.Project;
 import taskManager.ProjectStatus;
 import taskManager.Task;
-
-import taskManager.exception.InvalidTimeException;
 
 public class ProjectTester {
 
@@ -56,17 +52,21 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testCreateTaskStandardWithAlternative() throws InvalidTimeException {
+	public void testCreateTaskStandardWithAlternative()
+			throws InvalidTimeException {
 		project.createTask("desc2", Duration.ofHours(5), 20);
-		project.getAllTasks().get(0).updateStatus(now, LocalDateTime.now(), true);
-		project.createTask("desc", Duration.ofHours(5), 20, project.getAllTasks().get(0));
+		project.getAllTasks().get(0)
+				.updateStatus(now, LocalDateTime.now(), true);
+		project.createTask("desc", Duration.ofHours(5), 20, project
+				.getAllTasks().get(0));
 
 		assertEquals(2, project.getAllTasks().size());
-		assertEquals(project.getAllTasks().get(0), project.getAllTasks().get(1).getAlternativeFor());
+		assertEquals(project.getAllTasks().get(0), project.getAllTasks().get(1)
+				.getAlternativeFor());
 		assertEquals(0, project.getAllTasks().get(0).getDependencies().size());
 
 	}
-	
+
 	@Test
 	public void testCreateTaskStandardWithdependencies() {
 		project.createTask("desc", Duration.ofHours(5), 20);
@@ -76,9 +76,9 @@ public class ProjectTester {
 
 		assertEquals(2, project.getAllTasks().size());
 		assertEquals(null, project.getAllTasks().get(1).getAlternativeFor());
-		assertEquals(1, project.getAllTasks().get(1).getDependencies().size());	
+		assertEquals(1, project.getAllTasks().get(1).getDependencies().size());
 	}
-	
+
 	@Test
 	public void testAddTaskValidTasks() {
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50,
@@ -150,7 +150,8 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testProjectStatusIsOngoingDependenciesOneTaskFailedOtherFinished() throws InvalidTimeException{
+	public void testProjectStatusIsOngoingDependenciesOneTaskFailedOtherFinished()
+			throws InvalidTimeException {
 		// 1(finished) -> 2(finished)
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50,
 				now);
@@ -164,27 +165,24 @@ public class ProjectTester {
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 	}
-	
-	
-	/*	// 1(failed) -x-> 2(finished) <- 3(finished)
-		Task task3 = new Task("testdescriptionTask3", Duration.ofHours(8), 50,
-				now);
-		task3.setStartTime(now);
-		task3.setEndTime(LocalDateTime.now());
-		task2.addDependency(task3);
-		assertEquals(TaskStatus.FAILED, task1.getStatus());
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
-		assertEquals(TaskStatus.FINISHED, task3.getStatus());
-		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 
-		// 1(failed) 2(failed) 3(finished)
-		assertEquals(ProjectStatus.FINISHED, project.getStatus());
-
-		// [1(failed) 3(failed) 4(finished)]-> 2(finished)
-		Task task4 = new Task("testdescriptionTask4", Duration.ofHours(8), 50,
-				now);
-
-	}*/
+	/*
+	 * // 1(failed) -x-> 2(finished) <- 3(finished) Task task3 = new
+	 * Task("testdescriptionTask3", Duration.ofHours(8), 50, now);
+	 * task3.setStartTime(now); task3.setEndTime(LocalDateTime.now());
+	 * task2.addDependency(task3); assertEquals(TaskStatus.FAILED,
+	 * task1.getStatus()); assertEquals(TaskStatus.FINISHED, task2.getStatus());
+	 * assertEquals(TaskStatus.FINISHED, task3.getStatus());
+	 * assertEquals(ProjectStatus.FINISHED, project.getStatus());
+	 * 
+	 * // 1(failed) 2(failed) 3(finished) assertEquals(ProjectStatus.FINISHED,
+	 * project.getStatus());
+	 * 
+	 * // [1(failed) 3(failed) 4(finished)]-> 2(finished) Task task4 = new
+	 * Task("testdescriptionTask4", Duration.ofHours(8), 50, now);
+	 * 
+	 * }
+	 */
 
 	@Test
 	public void testProjectStatusIsOngoingNoDependencies() {
@@ -203,53 +201,61 @@ public class ProjectTester {
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 	}
 
-/*	@Test
-	public void testProjectStatusIsOngoingDependencies()
-			throws NullPointerException, InvalidTimeException {
-		// 1(available)-> 2(unavailable)
-		ArrayList<Task> dependencies = new ArrayList<>();
-
-		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50,
-				now);
-		dependencies.add(task1);
-		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50,
-				now, dependencies);
-		Task task3 = new Task("testdescriptionTask3", Duration.ofHours(8), 50,
-				now);
-		dependencies.remove(0);
-		dependencies.add(task3);
-		Task task4 = new Task("testdescriptionTask4", Duration.ofHours(8), 50,
-				now, dependencies);
-		task1.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
-		task2.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
-		task3.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
-		task4.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
-		project.addTask(task1);
-		project.addTask(task2);
-
-		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task2.getStatus());
-		assertEquals(ProjectStatus.ONGOING, project.getStatus());
-
-		// 1(finished)->2(available)
-
-		task1.setEndTime(LocalDateTime.now());
-
-		assertEquals(TaskStatus.FINISHED, task1.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
-		assertEquals(ProjectStatus.ONGOING, project.getStatus());
-
-		// 3(failed)-> 4(unavailable)
-		task3.setFailed();
-		assertEquals(TaskStatus.FAILED, task3.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task4.getStatus());
-		assertEquals(ProjectStatus.ONGOING, project.getStatus());
-
-	}
-*/
+	/*
+	 * @Test public void testProjectStatusIsOngoingDependencies() throws
+	 * NullPointerException, InvalidTimeException { // 1(available)->
+	 * 2(unavailable) ArrayList<Task> dependencies = new ArrayList<>();
+	 * 
+	 * Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50,
+	 * now); dependencies.add(task1); Task task2 = new
+	 * Task("testdescriptionTask2", Duration.ofHours(8), 50, now, dependencies);
+	 * Task task3 = new Task("testdescriptionTask3", Duration.ofHours(8), 50,
+	 * now); dependencies.remove(0); dependencies.add(task3); Task task4 = new
+	 * Task("testdescriptionTask4", Duration.ofHours(8), 50, now, dependencies);
+	 * task1.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
+	 * task2.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
+	 * task3.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
+	 * task4.setStartTime(LocalDateTime.of(2015, 03, 07, 00, 00));
+	 * project.addTask(task1); project.addTask(task2);
+	 * 
+	 * assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
+	 * assertEquals(TaskStatus.UNAVAILABLE, task2.getStatus());
+	 * assertEquals(ProjectStatus.ONGOING, project.getStatus());
+	 * 
+	 * // 1(finished)->2(available)
+	 * 
+	 * task1.setEndTime(LocalDateTime.now());
+	 * 
+	 * assertEquals(TaskStatus.FINISHED, task1.getStatus());
+	 * assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+	 * assertEquals(ProjectStatus.ONGOING, project.getStatus());
+	 * 
+	 * // 3(failed)-> 4(unavailable) task3.setFailed();
+	 * assertEquals(TaskStatus.FAILED, task3.getStatus());
+	 * assertEquals(TaskStatus.UNAVAILABLE, task4.getStatus());
+	 * assertEquals(ProjectStatus.ONGOING, project.getStatus());
+	 * 
+	 * }
+	 */
 	@Test
 	public void testProjectWithNoTasksIsOngoing() {
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
+	}
+
+	@Test
+	public void testDepRedirectedAfterCreateAlternativeTask()
+			throws InvalidTimeException {
+		project.createTask("task1", Duration.ofHours(3), 0.5);
+		Task task1 = project.getAllTasks().get(0);
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(task1);
+		project.createTask("task2 (dep task1)", Duration.ofHours(5), 0.5, dep);
+		Task task2 = project.getAllTasks().get(1);
+		task1.updateStatus(now, now.plusHours(4), true);
+		project.createTask("task3", Duration.ofHours(1), 0.5, task1);
+		Task task3 = project.getAllTasks().get(2);
+		assertFalse(task2.hasDependency(task1));
+		assertTrue(task2.hasDependency(task3));
 	}
 
 }

@@ -34,7 +34,11 @@ public class UseCase3CreateTaskTester {
 		Project project1 = controller.getAllProjects().get(0);
 
 		// create a simple task
+<<<<<<< HEAD
 		project1.createTask("simple descr", Duration.ofHours(20), 50); 
+=======
+		project1.createTask("simple descr", Duration.ofHours(20), 50);
+>>>>>>> 0a1122f95e4c45337e7360b93ac75d6b3aa6c6ec
 		assertEquals(1, project1.getAllTasks().size());
 		assertEquals("simple descr", project1.getAllTasks().get(0)
 				.getDescription());

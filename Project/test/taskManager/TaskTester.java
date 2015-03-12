@@ -163,53 +163,48 @@ public class TaskTester {
 
 	@Test(expected = InvalidActivityException.class)
 	public void taskIsNotFinishedYet() throws InvalidActivityException {
-		Task newTask = new Task("desc", Duration.ofHours(2), 2, now);
-		newTask.getFinishStatus();
+		baseTask.getFinishStatus();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void invalidDuration() throws IllegalArgumentException {
+	public void negativeDuration() {
 		new Task("desc", Duration.ofHours(-2), 2, now);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void zeroDuration() {
 		new Task("desc", Duration.ofHours(0), 2, now);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void invalidDeviation() throws IllegalArgumentException {
+	public void invalidDeviation() {
 		new Task("desc", Duration.ofHours(3), -2, now);
 	}
 
 	@Test(expected = InvalidTimeException.class)
-	public void setEndTimeBeforeStartTime() throws NullPointerException,
-			InvalidTimeException {
-		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
-		newTask.updateStatus(now, now.minusDays(2), false);
+	public void setEndTimeBeforeStartTime() throws InvalidTimeException {
+		baseTask.updateStatus(now, now.minusDays(2), false);
 	}
 
 	@Test
-	public void createAlternativeTask() throws InvalidTimeException {
-		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
-		newTask.updateStatus(now, now.plusDays(2), true);
-		new Task("desc2", Duration.ofHours(3), 2, now, newTask);
+	public void createAlternativeTask() {
+		new Task("desc2", Duration.ofHours(3), 2, now, failedTask);
 		// TODO write asserts
 	}
 
 	@Test
-	public void createAlternativeTaskWithDep() throws InvalidTimeException {
-		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
-		newTask.updateStatus(now, now.plusDays(2), true);
+	public void createAlternativeTaskWithDep() {
 		ArrayList<Task> dep = new ArrayList<Task>();
 		dep.add(baseTask);
-		new Task("desc2", Duration.ofHours(3), 2, now, newTask, dep);
+		new Task("desc2", Duration.ofHours(3), 2, now, failedTask, dep);
 		// TODO write asserts
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createAlternativeTaskWithAutoDep() throws InvalidTimeException {
-		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
-		newTask.updateStatus(now, now.plusDays(2), true);
 		ArrayList<Task> dep = new ArrayList<Task>();
-		dep.add(newTask);
-		new Task("desc2", Duration.ofHours(3), 2, now, newTask, dep);
+		dep.add(failedTask);
+		new Task("desc2", Duration.ofHours(3), 2, now, failedTask, dep);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
