@@ -14,7 +14,7 @@ import taskManager.exception.LoopingDependencyException;
  * finished or ongoing.
  * 
  * @author groep 8
- *
+ * 
  */
 
 public class Project {
@@ -25,6 +25,7 @@ public class Project {
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
 	private LocalDateTime estimatedFinishTime;
+	private LocalDateTime lastUpdateTime;
 
 	/**
 	 * Constructor of the Project class: Sets a new list of tasks
@@ -46,7 +47,7 @@ public class Project {
 		this.creationTime = creationTime;
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
-		this.estimatedFinishTime = this.creationTime;
+		this.update(creationTime);
 	}
 
 	/**
@@ -102,6 +103,7 @@ public class Project {
 		} else {
 			this.getAllTasks().add(task);
 		}
+		this.update();
 	}
 
 	/**
@@ -248,7 +250,7 @@ public class Project {
 	 * Determines if the given due time is valid. It returns true if and only if
 	 * the given due time is after the creation time of the project or is equal
 	 * to the creation time
-	 *
+	 * 
 	 * @return true if and only if the due time is after the creation time or is
 	 *         equal to the creation time
 	 */
@@ -268,17 +270,48 @@ public class Project {
 	 * 
 	 * @return ON_TIME or OVER_TIME depending whether the project finished on
 	 *         time or not.
+	 * @throws IllegalStateException if the project is not yet finished
 	 */
-	public ProjectFinishingStatus finishedOnTime() {
-		// TODO implement
-		return null;
+	public ProjectFinishingStatus finishedOnTime() throws IllegalStateException {
+		if(!this.hasFinished())
+		{
+			throw new IllegalStateException("Project not yet finished!");
+		}
+		else
+		{
+			if(this.getEstimatedFinishTime().isAfter(this.getDueTime()))
+			{
+				return ProjectFinishingStatus.OVER_TIME;
+			}
+			else
+			{
+				return ProjectFinishingStatus.ON_TIME;
+			}
+		}
 	}
 
+	/**
+	 * see update(LocalDateTime time)
+	 * 
+	 * Uses the last time at which the object was updated
+	 * Required after adding a task (or changing other important variables)
+	 */
+	private void update()
+	{
+		this.update(this.lastUpdateTime);
+	}
+	
+	/**
+	 * Updates the state of the object and it's tasks
+	 * 
+	 * @param time the current time
+	 */
 	void update(LocalDateTime time) {
 		this.updateEstimatedFinishTime(time);
 		for (Task task : this.getAllTasks()) {
 			task.updateStatus();
 		}
+		this.lastUpdateTime = time;
 	}
 
 	void updateEstimatedFinishTime(LocalDateTime time) {

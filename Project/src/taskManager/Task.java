@@ -208,7 +208,7 @@ public class Task {
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	private void addDependency(Task dependency)
+	void addDependency(Task dependency)
 			throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
 			throw new LoopingDependencyException(
@@ -385,7 +385,7 @@ public class Task {
 	 *             : thrown when the start time is not set yet
 	 * 
 	 */
-	private void setEndTime(LocalDateTime endTime) throws InvalidTimeException,
+	void setEndTime(LocalDateTime endTime) throws InvalidTimeException,
 			NullPointerException {
 		if (this.getStartTime() == null) {
 			throw new NullPointerException(
@@ -429,7 +429,7 @@ public class Task {
 	 * @param startTime
 	 *            : the given start time of a task
 	 */
-	private void setStartTime(LocalDateTime startTime) {
+	void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -449,7 +449,7 @@ public class Task {
 	 * @param failed
 	 *            : true if failed
 	 */
-	private void setFailed() {
+	void setFailed() {
 		this.failed = true;
 		this.updateStatus();
 	}
