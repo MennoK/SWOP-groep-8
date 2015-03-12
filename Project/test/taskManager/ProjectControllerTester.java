@@ -21,9 +21,8 @@ public class ProjectControllerTester {
 
 	@Before
 	public void setUp() {
-		TaskManClock taskManClock = new TaskManClock(LocalDateTime.of(2000, 03,
+		projectController = new ProjectController(LocalDateTime.of(2000, 03,
 				05, 00, 00));
-		projectController = new ProjectController(taskManClock);
 	}
 
 	@Test

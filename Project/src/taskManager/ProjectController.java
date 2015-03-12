@@ -62,7 +62,7 @@ public class ProjectController {
 	 * @param project: project to be added
 	 * @throws IllegalArgumentException : thrown when the given project is not valid
 	 */
-	public void addProject(Project project) throws IllegalArgumentException {
+	private void addProject(Project project) throws IllegalArgumentException {
 		if(!canHaveProject(project)){
 			throw new IllegalArgumentException("The given project is already in this project.");		
 		}

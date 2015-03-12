@@ -39,8 +39,7 @@ public class Project {
 	 * @param dueTime
 	 *            : due time of the project (only the date needed)
 	 */
-	// TODO Welke parameters moeten final zijn?
-	public Project(String name, String description, LocalDateTime creationTime,
+	 Project(String name, String description, LocalDateTime creationTime,
 			LocalDateTime dueTime) {
 		setName(name);
 		setDescription(description);
