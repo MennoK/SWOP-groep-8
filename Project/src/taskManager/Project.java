@@ -70,9 +70,11 @@ public class Project {
 	 * @param acceptableDeviation : acceptable deviation of a task
 	 */
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, Task alernativeTask) {
+			double acceptableDeviation, Task isAlternativeForTask) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, alernativeTask);
+				acceptableDeviation, this.lastUpdateTime, isAlternativeForTask);
+
+		updateDependencies(task, isAlternativeForTask);
 		this.addTask(task);
 	}
 
@@ -112,8 +114,9 @@ public class Project {
 
 	private void updateDependencies(Task alternativeTask, Task isAlternativeForTask) {
 	    List<Task> taskList = this.getAllTasks();
-		List<Task> dependecyList = new ArrayList<Task>();
+		List<Task> dependecyList ;
 		for (Task task : taskList) {
+			dependecyList = task.getDependencies();
 			for (Task dependency : dependecyList) {
 				if (dependency == isAlternativeForTask){
 					task.addDependency(alternativeTask);
