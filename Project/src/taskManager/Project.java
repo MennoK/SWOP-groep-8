@@ -6,20 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *a project consists of multiple tasks required to complete the project.
- *A project has a name, a description, a creation time, and a due time by
- *which it should be finished. The system should help the user to manage
- *8his projects, meaning that a project should be marked as either ongoing
- *or finished. A project can only be finished if it has at least one task, and
- *all its tasks are finished (or each failed task has a finished alternative).
- *Additionally, for ongoing projects, the system should indicate whether the
- *project is estimated to finish on time or over time (based on the time spans
- *of the finished tasks, the estimated duration of the unfinished tasks ignoring
- *the acceptable deviation and parallelizing as mush as possible, and using a
- *Monday to Friday working week with 8 hours a day). For finished projects,
- *the system should indicate the total delay that occurred within the tasks of
- *the project, and whether the project finished on time or not (based on the
- *time spans of the tasks within the project).
+ * a project consists of multiple tasks required to complete the project. A
+ * project has a name, a description, a creation time, and a due time by which
+ * it should be finished. The system should help the user to manage 8his
+ * projects, meaning that a project should be marked as either ongoing or
+ * finished. A project can only be finished if it has at least one task, and all
+ * its tasks are finished (or each failed task has a finished alternative).
+ * Additionally, for ongoing projects, the system should indicate whether the
+ * project is estimated to finish on time or over time (based on the time spans
+ * of the finished tasks, the estimated duration of the unfinished tasks
+ * ignoring the acceptable deviation and parallelizing as mush as possible, and
+ * using a Monday to Friday working week with 8 hours a day). For finished
+ * projects, the system should indicate the total delay that occurred within the
+ * tasks of the project, and whether the project finished on time or not (based
+ * on the time spans of the tasks within the project).
  * 
  * @author groep 8
  * 
@@ -58,27 +58,35 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task no dependencies or alternative task to the project 
-	 * and will add the task to the tasklist of the project. 
+	 * Creates a new task no dependencies or alternative task to the project and
+	 * will add the task to the tasklist of the project.
 	 * 
-	 * @param description : description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable deviation of a task
+	 * @param description
+	 *            : description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable deviation of a task
 	 */
-	public void createTask(String description, Duration estimatedDuration, double acceptableDeviation) {
+	public void createTask(String description, Duration estimatedDuration,
+			double acceptableDeviation) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, this.lastUpdateTime);
 		this.addTask(task);
 	}
 
 	/**
-	 * Creates a new task with alternative task to the project and will add the task
-	 * to the tasklist of the project.
+	 * Creates a new task with alternative task to the project and will add the
+	 * task to the tasklist of the project.
 	 * 
-	 * @param description : description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable deviation of a task
-	 * @param alternativeTask : The alternative task
+	 * @param description
+	 *            : description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable deviation of a task
+	 * @param alternativeTask
+	 *            : The alternative task
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeForTask) {
@@ -90,13 +98,17 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task with dependencies to the project and will add the task to the tasklist
-	 * of the project
+	 * Creates a new task with dependencies to the project and will add the task
+	 * to the tasklist of the project
 	 * 
-	 * @param description : description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable deviation of a task
-	 * @param dependencies : list with dependencies
+	 * @param description
+	 *            : description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable deviation of a task
+	 * @param dependencies
+	 *            : list with dependencies
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, ArrayList<Task> dependencies) {
@@ -106,14 +118,19 @@ public class Project {
 	}
 
 	/**
-	 * Creates a new task with alternative task and dependencies
-	 * to the project and will add the task to the tasklist of the project
+	 * Creates a new task with alternative task and dependencies to the project
+	 * and will add the task to the tasklist of the project
 	 * 
-	 * @param description : description of a task
-	 * @param estimatedDuration : estimated duration of task
-	 * @param acceptableDeviation : acceptable deviation of a task
-	 * @param alternativeTask : The alternative task
-	 * @param dependencies : list with dependencies
+	 * @param description
+	 *            : description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable deviation of a task
+	 * @param alternativeTask
+	 *            : The alternative task
+	 * @param dependencies
+	 *            : list with dependencies
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeForTask,
@@ -126,23 +143,26 @@ public class Project {
 	}
 
 	/**
-	 * checks all the dependencies of all the tasks and replaces the old, failed task with a new one.
+	 * checks all the dependencies of all the tasks and replaces the old, failed
+	 * task with a new one.
+	 * 
 	 * @param alternativeTask
 	 * @param isAlternativeForTask
 	 */
-	private void updateDependencies(Task alternativeTask, Task isAlternativeForTask) {
-	    List<Task> taskList = this.getAllTasks();
-		List<Task> dependecyList ;
+	private void updateDependencies(Task alternativeTask,
+			Task isAlternativeForTask) {
+		List<Task> taskList = this.getAllTasks();
+		List<Task> dependecyList;
 		for (Task task : taskList) {
 			dependecyList = task.getDependencies();
 			for (Task dependency : dependecyList) {
-				if (dependency == isAlternativeForTask){
+				if (dependency == isAlternativeForTask) {
 					task.addDependency(alternativeTask);
 					dependecyList.remove(dependency);
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -196,7 +216,8 @@ public class Project {
 	private boolean hasFinished() {
 		if (this.getAllTasks().size() != 0) {
 			for (Task task : this.getAllTasks()) {
-				if (task.getStatus() == TaskStatus.UNAVAILABLE || task.getStatus() == TaskStatus.AVAILABLE) {
+				if (task.getStatus() == TaskStatus.UNAVAILABLE
+						|| task.getStatus() == TaskStatus.AVAILABLE) {
 					return false;
 				}
 			}
@@ -308,9 +329,9 @@ public class Project {
 	}
 
 	/**
-	 * Determines if the project will finish on time or over time.
-	 * A project has finished on time if the estimated finish time
-	 * before the due time of the project, otherwise its over time
+	 * Determines if the project will finish on time or over time. A project has
+	 * finished on time if the estimated finish time before the due time of the
+	 * project, otherwise its over time
 	 * 
 	 * @return
 	 */
@@ -342,8 +363,8 @@ public class Project {
 	}
 
 	/**
-	 * Updates the state of the object and it's tasks
-	 * with state = lastupdatetime
+	 * Updates the state of the object and it's tasks with state =
+	 * lastupdatetime
 	 * 
 	 * @param time
 	 *            the current time
@@ -356,8 +377,8 @@ public class Project {
 	}
 
 	/**
-	 * Estimates the finish time by calculating the estimated finished
-	 * time of each task
+	 * Estimates the finish time by calculating the estimated finished time of
+	 * each task
 	 * 
 	 * @return estimatedFinishTime : the estimated finish time
 	 * 
@@ -383,11 +404,36 @@ public class Project {
 	}
 
 	/**
-	 *  Returns the latest update time
-	 *  
+	 * Returns the latest update time
+	 * 
 	 * @return lastUpdateTime: latest update time
 	 */
-	public LocalDateTime getLastUpdateTime(){
+	public LocalDateTime getLastUpdateTime() {
 		return lastUpdateTime;
+	}
+
+	/**
+	 * Returns the currently expected delay of the project
+	 * 
+	 * @return the number of hours of delay expected
+	 * 
+	 * @throws IllegalStateException
+	 *             if the project is finished or scheduled to finish on time
+	 */
+	public Duration getCurrentDelay() {
+		if (getStatus() == ProjectStatus.FINISHED)
+			throw new IllegalStateException(
+					"no current delay for finished projects");
+		if (willFinishOnTime() == ProjectFinishingStatus.ON_TIME)
+			throw new IllegalStateException(
+					"Can not ask the current delay of a task which is expected to finish on time");
+		Duration currentDelay = Duration.ofHours(0);
+		for (Task task : getAllTasks()) {
+			if (task.getEstimatedFinishTime().isAfter(getDueTime())) {
+				WorkTime.durationBetween(getDueTime(),
+						task.getEstimatedFinishTime());
+			}
+		}
+		return currentDelay;
 	}
 }
