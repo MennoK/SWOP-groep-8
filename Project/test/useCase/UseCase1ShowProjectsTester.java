@@ -77,15 +77,14 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(LocalDateTime.of(2015, 03, 10,00,00), project1.getDueTime());
 
 		assertEquals("Project 2", project2.getName());
-		assertEquals("Description 1", project2.getDescription());
+		assertEquals("Description 2", project2.getDescription());
 		assertEquals(LocalDateTime.of(2015, 03, 03,00,00), project2.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10,00,00), project2.getDueTime());
+		assertEquals(LocalDateTime.of(2015, 03, 11,00,00), project2.getDueTime());
 		
 		assertEquals("Project 0", project0.getName());
-		assertEquals("Description 3", project1.getDescription());
+		assertEquals("Description 3", project0.getDescription());
 		assertEquals(LocalDateTime.of(2015, 03, 03,00,00), project0.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10,00,00), project0.getDueTime());
-		
+		assertEquals(LocalDateTime.of(2015, 03, 12,00,00), project0.getDueTime());
 		
 		//Show their status: project with zero tasks in ongoing
 		assertEquals(ProjectStatus.ONGOING, project0.getStatus());
@@ -94,7 +93,6 @@ public class UseCase1ShowProjectsTester {
 		
 		//show details of the projects: delay and estimated finished time
 		//TODO
-		
 		
 		//show tasks of each project
 		assertEquals(0, project0.getAllTasks().size());
@@ -105,6 +103,9 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(task2, project2.getAllTasks().get(0));
 		assertEquals(task3, project2.getAllTasks().get(1));
 		
+		//show tasks details: description, duration, deviation, alternativefor and dependency list
+		
+				
 		//show task status
 		assertEquals(TaskStatus.FINISHED, task1.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
