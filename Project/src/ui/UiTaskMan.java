@@ -47,15 +47,15 @@ public class UiTaskMan {
 
 	UiTaskMan() {
 		reader = new Reader();
-		TaskManClock clock;
+		LocalDateTime now = LocalDateTime.of(2015, 2, 9, 8, 0);
 		try {
-			clock = new TaskManClock(reader.getDate("Give the current time:"));
+			now = reader.getDate("Give the current time:");
 		} catch (ExitUseCaseException e) {
-			clock = new TaskManClock(LocalDateTime.of(2015, 2, 9, 8, 0));
 		}
-		System.out.println("Current time initialized on:\n" + clock.getTime()
+		
+		System.out.println("Current time initialized on:\n" + now
 				+ "\n");
-		projectController = new ProjectController(clock);
+		projectController = new ProjectController(now);
 		askInitialState();
 	}
 
