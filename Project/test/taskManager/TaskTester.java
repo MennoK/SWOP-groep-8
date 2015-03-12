@@ -151,13 +151,23 @@ public class TaskTester {
 	}
 
 	@Test
-	public void finishedOnTime() throws InvalidTimeException,
+	public void finishedOnTimeEarly() throws InvalidTimeException,
 			InvalidActivityException {
 		baseTask.updateStatus(now, now.plusHours(7), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
+	}
+
+	@Test
+	public void finishedOnTimeExact() throws InvalidTimeException,
+			InvalidActivityException {
 		baseTask.updateStatus(now, now.plusHours(8), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
-		baseTask.updateStatus(now, now.plusHours(24 + 1), false);
+	}
+
+	@Test
+	public void finishedOnTimeLate() throws InvalidTimeException,
+			InvalidActivityException {
+		baseTask.updateStatus(now, now.plusHours(8), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
 
