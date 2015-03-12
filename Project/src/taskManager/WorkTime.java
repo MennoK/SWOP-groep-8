@@ -25,9 +25,6 @@ public class WorkTime {
 
 	}
 	
-	public WorkTime(LocalDateTime firstTime, LocalDateTime secondTime) {
-		
-	}
 
 	public LocalDateTime getFinishTime() {
 		if(current.getHour() < this.startHour)
@@ -70,8 +67,7 @@ public class WorkTime {
 
 	}
 	
-	public static Duration durationBetween(LocalDateTime first, LocalDateTime second)
-	{
+	public static Duration durationBetween(LocalDateTime first, LocalDateTime second) {
 		if(!first.isBefore(second)) {
 			throw new IllegalArgumentException("first day is after the second");
 		}
