@@ -224,8 +224,7 @@ public class Task {
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	void addDependency(Task dependency)
-			throws LoopingDependencyException {
+	void addDependency(Task dependency) throws LoopingDependencyException {
 		if (dependency.hasDependency(this))
 			throw new LoopingDependencyException(
 					"Tried to add task1 as a dependency to task2,"
@@ -506,14 +505,26 @@ public class Task {
 		return this.id;
 	}
 
-	public void updateStatus(LocalDateTime newStartTime,
-			LocalDateTime newEndTime, boolean setToFail)
-			throws InvalidTimeException {
-		if (newStartTime.isAfter(newEndTime))
+	/**
+	 * Allows the user to update the status of a Task to finished or failed
+	 * 
+	 * @param startTime
+	 *            : the time at which the user started working on the task.
+	 * @param endTime
+	 *            : the time at which the user stopped working on the task.
+	 * @param setToFail
+	 *            : true if the task failed, false if the task was successfully
+	 *            finished.
+	 * @throws InvalidTimeException
+	 *             : if the startTime was after the endTime.
+	 */
+	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
+			boolean setToFail) throws InvalidTimeException {
+		if (startTime.isAfter(endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
-		this.setStartTime(newStartTime);
-		this.setEndTime(newEndTime);
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
 		if (setToFail) {
 			this.setFailed();
 		}

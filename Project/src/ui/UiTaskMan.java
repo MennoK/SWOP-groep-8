@@ -9,7 +9,6 @@ import parser.Parser;
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.Task;
-import taskManager.TaskManClock;
 import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
 import ui.exception.ExitUseCaseException;
@@ -52,9 +51,8 @@ public class UiTaskMan {
 			now = reader.getDate("Give the current time:");
 		} catch (ExitUseCaseException e) {
 		}
-		
-		System.out.println("Current time initialized on:\n" + now
-				+ "\n");
+
+		System.out.println("Current time initialized on:\n" + now + "\n");
 		projectController = new ProjectController(now);
 		askInitialState();
 	}
