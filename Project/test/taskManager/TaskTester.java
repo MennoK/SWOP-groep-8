@@ -14,6 +14,7 @@ import org.junit.Test;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
 import taskManager.exception.InvalidTimeException;
+import taskManager.exception.LoopingDependencyException;
 
 public class TaskTester {
 
@@ -32,10 +33,11 @@ public class TaskTester {
 
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(baseTask);
-		dependentTask = new Task("a dependent task", Duration.ofHours(8), 0.2, now,
-				dependencies);
+		dependentTask = new Task("a dependent task", Duration.ofHours(8), 0.2,
+				now, dependencies);
 
-		finishedTask = new Task("a finished task", Duration.ofHours(8), 0.2, now);
+		finishedTask = new Task("a finished task", Duration.ofHours(8), 0.2,
+				now);
 		finishedTask.updateStatus(now, now.plusHours(2), false);
 
 		failedTask = new Task("a failed task", Duration.ofHours(8), 0.2, now);
@@ -107,11 +109,32 @@ public class TaskTester {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testGiveDoubleDependency() {
+	public void testCreateTaskWithDoubleDependency() {
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(baseTask);
 		dependencies.add(baseTask);
 		new Task("new task 2", Duration.ofHours(8), 0.2, now, dependencies);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddAlreadyPresentDependency()
+			throws LoopingDependencyException {
+		dependentTask.addDependency(baseTask);
+	}
+
+	@Test(expected = LoopingDependencyException.class)
+	public void testAddLoopingDependency() throws LoopingDependencyException {
+		baseTask.addDependency(dependentTask);
+	}
+
+	@Test
+	public void testHasDirectDependency() {
+		assertTrue(dependentTask.hasDependency(baseTask));
+	}
+
+	@Test
+	public void testHasIndirectDependency() {
+		assertTrue(level2DependentTask.hasDependency(baseTask));
 	}
 
 	@Test

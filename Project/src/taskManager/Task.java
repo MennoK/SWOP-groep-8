@@ -43,7 +43,7 @@ public class Task {
 	private LocalDateTime startTime;
 	private boolean failed = false;
 	private Task isAlternativeFor;
-	
+
 	private LocalDateTime lastUpdateTime;
 
 	// Thread safe integer sequence generator that starts at 1
@@ -103,7 +103,8 @@ public class Task {
 	 *            : list with dependencies
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now, ArrayList<Task> dependencies) {
+			double acceptableDeviation, LocalDateTime now,
+			ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		try {
 			addMultipleDependencies(dependencies);
@@ -130,8 +131,9 @@ public class Task {
 	 * 
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now, Task isAlternativeFor,
-			ArrayList<Task> dependencies) throws LoopingDependencyException {
+			double acceptableDeviation, LocalDateTime now,
+			Task isAlternativeFor, ArrayList<Task> dependencies)
+			throws LoopingDependencyException {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
@@ -150,7 +152,7 @@ public class Task {
 	 *            : dependent task
 	 * @return true if the task has the given task as dependency
 	 */
-	private boolean hasDependency(Task task) {
+	boolean hasDependency(Task task) {
 		if (getDependencies().contains(task))
 			return true;
 		for (Task dependency : getDependencies())
@@ -353,8 +355,8 @@ public class Task {
 	}
 
 	/**
-	 * Sets the acceptable deviation of task. The
-	 * The acceptable deviation must be positive or zero
+	 * Sets the acceptable deviation of task. The The acceptable deviation must
+	 * be positive or zero
 	 * 
 	 * @param acceptableDeviation
 	 * @throws IllegalArgumentException
@@ -379,28 +381,13 @@ public class Task {
 	}
 
 	/**
-	 * Sets the end time if and only if the given end time is after the start
-	 * the start time of a project. The start time must be set before the end
-	 * time
+	 * Sets the end time.
 	 * 
 	 * @param endTime
 	 *            : the end time of task
-	 * @throws NullPointerException
-	 *             : thrown when the start time is not set yet
-	 * 
 	 */
-	void setEndTime(LocalDateTime endTime) throws InvalidTimeException,
-			NullPointerException {
-		if (this.getStartTime() == null) {
-			throw new NullPointerException(
-					"There is not start time, set the starttime first.");
-		}
-		if (!isEndTimeAfterStartTime((this.getStartTime()), endTime)) {
-			throw new InvalidTimeException(
-					"the given end time is before the start time");
-		} else {
-			this.endTime = endTime;
-		}
+	private void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
 	/**
@@ -412,7 +399,7 @@ public class Task {
 	 *            : the endTime of a task
 	 * @return true if and only if the start time is before the endtime
 	 */
-	private boolean isEndTimeAfterStartTime(LocalDateTime startTime,
+	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
 			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
@@ -432,7 +419,7 @@ public class Task {
 	 * @param startTime
 	 *            : the given start time of a task
 	 */
-	void setStartTime(LocalDateTime startTime) {
+	private void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -452,7 +439,7 @@ public class Task {
 	 * @param failed
 	 *            : true if failed
 	 */
-	void setFailed() {
+	private void setFailed() {
 		this.failed = true;
 	}
 
@@ -507,7 +494,7 @@ public class Task {
 	 */
 	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
 			boolean setToFail) throws InvalidTimeException {
-		if (startTime.isAfter(endTime))
+		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
 		this.setStartTime(startTime);
