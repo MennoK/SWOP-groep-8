@@ -163,26 +163,25 @@ public class Task {
 	 * @return
 	 */
 	public LocalDateTime getEstimatedFinishTime() {
-		
-		if(this.getEndTime() != null) {
+
+		if (this.getEndTime() != null) {
 			return this.getEndTime();
 		} else {
-			
-			if(this.getDependencies().isEmpty()) {
+
+			if (this.getDependencies().isEmpty()) {
 				return this.lastUpdateTime.plus(this.estimatedDuration);
 			} else {
-				//Find last estimated time of the dependencies
+				// Find last estimated time of the dependencies
 				LocalDateTime estimatedTime = this.lastUpdateTime;
-				for(Task t : this.getDependencies()) {
-					if(t.getEstimatedFinishTime().isAfter(estimatedTime)) {
+				for (Task t : this.getDependencies()) {
+					if (t.getEstimatedFinishTime().isAfter(estimatedTime)) {
 						estimatedTime = t.getEstimatedFinishTime();
 					}
 				}
 				return estimatedTime;
 			}
-			
+
 		}
-		
 
 	}
 
@@ -437,9 +436,9 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-		if(this.getStatus() != TaskStatus.FINISHED)
+		if (this.getStatus() != TaskStatus.FINISHED)
 			this.failed = true;
-		else 
+		else
 			throw new IllegalStateException();
 	}
 
@@ -497,11 +496,11 @@ public class Task {
 		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
 		if (setToFail) {
 			this.setFailed();
 		}
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
 	}
 
 	/**
