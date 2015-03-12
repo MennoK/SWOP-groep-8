@@ -24,7 +24,7 @@ public class Project {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
-	
+
 	private LocalDateTime lastUpdateTime;
 
 	/**
@@ -39,8 +39,7 @@ public class Project {
 	 * @param dueTime
 	 *            : due time of the project (only the date needed)
 	 */
-	// TODO Welke parameters moeten final zijn?
-	public Project(String name, String description, LocalDateTime creationTime,
+	 Project(String name, String description, LocalDateTime creationTime,
 			LocalDateTime dueTime) {
 		setName(name);
 		setDescription(description);
@@ -84,7 +83,8 @@ public class Project {
 			double acceptableDeviation, Task alernativeTask,
 			ArrayList<Task> dependencies) throws LoopingDependencyException {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, alernativeTask, dependencies);
+				acceptableDeviation, this.lastUpdateTime, alernativeTask,
+				dependencies);
 		this.addTask(task);
 	}
 
@@ -132,11 +132,10 @@ public class Project {
 	 * Returns true if and only if all tasks of the project are finished. It
 	 * returns false if a task is unavailable or not yet available.
 	 * 
-	 * If a project does not have any tasks, the project has finished as well.
+	 * If a project does not have any tasks, the project is not finished.
 	 * 
 	 * @return true if and only if all tasks are finished
 	 */
-	// TODO commentaar
 	private boolean hasFinished() {
 		if (getAllTasks().size() != 0) {
 			for (Task task : getAllTasks()) {
@@ -254,8 +253,9 @@ public class Project {
 	}
 
 	public ProjectFinishingStatus willFinishOnTime() {
-		if (this.getEstimatedFinishTime().isBefore(this.getDueTime()))
+		if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
 			return ProjectFinishingStatus.ON_TIME;
+		}
 		return ProjectFinishingStatus.OVER_TIME;
 	}
 
@@ -264,30 +264,27 @@ public class Project {
 	 * 
 	 * @return ON_TIME or OVER_TIME depending whether the project finished on
 	 *         time or not.
-	 * @throws IllegalStateException if the project is not yet finished
+	 * @throws IllegalStateException
+	 *             if the project is not yet finished
 	 */
 	public ProjectFinishingStatus finishedOnTime() throws IllegalStateException {
-		if(!this.hasFinished())
-		{
+		if (!this.hasFinished()) {
 			throw new IllegalStateException("Project not yet finished!");
-		}
-		else
-		{
-			if(this.getEstimatedFinishTime().isAfter(this.getDueTime()))
-			{
+		} else {
+			if (this.getEstimatedFinishTime().isAfter(this.getDueTime())) {
 				return ProjectFinishingStatus.OVER_TIME;
-			}
-			else
-			{
+			} else {
 				return ProjectFinishingStatus.ON_TIME;
 			}
 		}
 	}
-	
+
 	/**
 	 * Updates the state of the object and it's tasks
+	 * with state = lastupdatetime
 	 * 
-	 * @param time the current time
+	 * @param time
+	 *            the current time
 	 */
 	void update(LocalDateTime time) {
 		for (Task task : this.getAllTasks()) {
@@ -296,10 +293,17 @@ public class Project {
 		this.lastUpdateTime = time;
 	}
 
+	/**
+	 * Estimates the finish time.
+	 * 
+	 * 
+	 * @return
+	 */
 	LocalDateTime getEstimatedFinishTime() {
 		LocalDateTime estimatedFinishTime = this.lastUpdateTime;
 		for (Task task : getAllTasks()) {
-			if (task.getEstimatedFinishTime().isAfter(estimatedFinishTime)) {
+			LocalDateTime taskFinishTime = task.getEstimatedFinishTime();
+			if (taskFinishTime.isAfter(estimatedFinishTime)) {
 				estimatedFinishTime = task.getEstimatedFinishTime();
 			}
 		}
@@ -317,8 +321,12 @@ public class Project {
 
 	public void createTask(String description2, Duration estimatedDuration,
 			double acceptableDeviation) {
-		this.createTask(description2, estimatedDuration, acceptableDeviation, this.lastUpdateTime);
-		
-	}
+		this.createTask(description2, estimatedDuration, acceptableDeviation,
+				this.lastUpdateTime);
 
+	}
+	
+	public LocalDateTime getLastUpdateTime(){
+		return lastUpdateTime;
+	}
 }

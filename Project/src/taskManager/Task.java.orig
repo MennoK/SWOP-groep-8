@@ -169,27 +169,22 @@ public class Task {
 	 * @return
 	 */
 	public LocalDateTime getEstimatedFinishTime() {
-		
-		if(this.getEndTime() != null) {
-			return this.getEndTime();
-		} else {
-			
-			if(this.getDependencies().isEmpty()) {
-				return this.lastUpdateTime.plus(this.estimatedDuration);
-			} else {
-				//Find last estimated time of the dependencies
-				LocalDateTime estimatedTime = this.lastUpdateTime;
-				for(Task t : this.getDependencies()) {
-					if(t.getEstimatedFinishTime().isAfter(estimatedTime)) {
-						estimatedTime = t.getEstimatedFinishTime();
-					}
-				}
-				return estimatedTime;
-			}
-			
-		}
-		
+		if (getStartTime() != null)
+			return add(getStartTime(), getEstimatedDuration());
 
+		if (getDependencies().size() == 0)
+			return add(this.lastUpdateTime, getEstimatedDuration());
+
+		LocalDateTime dependenceFinishTime = getDependencies().get(0)
+				.getEstimatedFinishTime();
+		for (Task dependency : getDependencies()) {
+			if (dependenceFinishTime.compareTo(dependency
+					.getEstimatedFinishTime()) < 0)
+				dependenceFinishTime = dependency.getEstimatedFinishTime();
+		}
+		if (dependenceFinishTime.compareTo(this.lastUpdateTime) < 0)
+			return add(this.lastUpdateTime, getEstimatedDuration());
+		return add(dependenceFinishTime, getEstimatedDuration());
 	}
 
 	/**
@@ -445,10 +440,7 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-		if(this.getStatus() != TaskStatus.FINISHED)
-			this.failed = true;
-		else 
-			throw new IllegalStateException();
+		this.failed = true;
 	}
 
 	/**
@@ -544,11 +536,16 @@ public class Task {
 	void update(LocalDateTime time) {
 		this.lastUpdateTime = time;
 	}
+<<<<<<< HEAD
+	
+	public LocalDateTime getLastUpdateTime(){
+=======
 
 	/**
 	 * Getter for lastUpdateTime
 	 */
 	LocalDateTime getLastUpdateTime() {
+>>>>>>> 1a369e5558bd776296913fc968cb644fa9d544a0
 		return lastUpdateTime;
 	}
 }

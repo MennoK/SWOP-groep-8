@@ -4,15 +4,11 @@ import static org.junit.Assert.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
-
-import taskManager.Project;
 import taskManager.ProjectController;
-import taskManager.TaskManClock;
 import taskManager.exception.InvalidTimeException;
 
 public class ProjectControllerTester {
@@ -26,45 +22,48 @@ public class ProjectControllerTester {
 	}
 
 	@Test
-	public void testCreateProject() {
+	public void testCreateProjects() {
 		projectController.createProject("name", "description",
 				LocalDateTime.of(2015, 03, 05, 00, 00),
 				LocalDateTime.of(2015, 03, 06, 00, 00));
-		assertEquals(projectController.getAllProjects().size(), 1);
+		
+		assertEquals(1, projectController.getAllProjects().size());
+		
+		projectController.createProject("name2", "description",
+				LocalDateTime.of(2015, 03, 06, 00, 00));
+		
+		assertEquals( 2,projectController.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController.getAllProjects().get(1).getCreationTime());
 	}
-
+	
 	@Test
-	public void testAddProjectValidProjects() {
-		Project project1 = new Project("name1", "descr", LocalDateTime.of(2015,
-				03, 05, 00, 00), LocalDateTime.of(2015, 03, 06, 00, 00));
-		Project project2 = new Project("name2", "descr", LocalDateTime.of(2015,
-				03, 06, 00, 00), LocalDateTime.of(2015, 03, 07, 00, 00));
-		projectController.addProject(project1);
-		projectController.addProject(project2);
-
-		ArrayList<Project> projects = new ArrayList<Project>();
-		projects.add(project1);
-		projects.add(project2);
+	public void testCannotHaveNullProject(){
+		assertFalse(projectController.canHaveProject(null));
 	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddProjectNullProject() {
-		Project project = null;
-		projectController.addProject(project);
-
+	
+	@Test
+	public void testCannotHaveSameProject(){
+		projectController.createProject("name", "description",
+				LocalDateTime.of(2015, 03, 05, 00, 00),
+				LocalDateTime.of(2015, 03, 06, 00, 00));
+		assertFalse(projectController.canHaveProject(projectController.getAllProjects().get(0)));
 	}
-
+	
 	@Test
 	public void testAdvanceTime() throws InvalidTimeException {
-		Project project1 = new Project("name1", "descr", LocalDateTime.of(2015,
-				03, 05, 00, 00), LocalDateTime.of(2015, 03, 06, 00, 00));
-		projectController.addProject(project1);
-		project1.createTask("descr", Duration.ofHours(20), 100, LocalDateTime.of(2015,
-				03, 05, 00, 00));
-		projectController.advanceTime(LocalDateTime.of(2001, 03, 05, 00, 00));
-		assertEquals(project1.getAllTasks().get(0).getStatus(),
-				TaskStatus.AVAILABLE);
-
+		projectController.createProject("name", "description",
+				LocalDateTime.of(2015, 03, 05, 00, 00),
+				LocalDateTime.of(2015, 03, 06, 00, 00));
+		
+		Project project1 = projectController.getAllProjects().get(0);
+		project1.createTask("descr", Duration.ofHours(20), 20);
+		
+		projectController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
+		
+		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00), projectController.getTime());
+		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00), project1.getLastUpdateTime());
+		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00), project1.getAllTasks().get(0).getLastUpdateTime());
+		
 	}
 
 	@Test(expected = InvalidTimeException.class)
