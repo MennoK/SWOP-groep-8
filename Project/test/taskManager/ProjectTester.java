@@ -296,6 +296,13 @@ public class ProjectTester {
 		project.createTask("task2 (dep task1)", Duration.ofHours(20), 0.5);
 		project.getAllTasks().get(1).updateStatus(now, now.plusDays(10), false);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+		assertEquals(ProjectStatus.FINISHED, project.getStatus());
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testGetCurrentDelayOnTime() {
+		project.createTask("bla", Duration.ofHours(8), 0.5);
+		project.getCurrentDelay();
 	}
 
 	@Test

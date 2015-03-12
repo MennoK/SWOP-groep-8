@@ -414,10 +414,6 @@ public class Project {
 	 */
 	public Duration getCurrentDelay() {
 
-		if (getStatus() == ProjectStatus.FINISHED)
-			throw new IllegalStateException(
-					"no current delay for finished projects");
-
 		if (finishedOnTime() == ProjectFinishingStatus.ON_TIME)
 			throw new IllegalStateException(
 					"Can not ask the current delay of a task which is expected to finish on time");
