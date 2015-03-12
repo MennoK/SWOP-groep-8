@@ -43,7 +43,7 @@ public class Task {
 	private LocalDateTime startTime;
 	private boolean failed = false;
 	private Task isAlternativeFor;
-	
+
 	private LocalDateTime lastUpdateTime;
 
 	// Thread safe integer sequence generator that starts at 1
@@ -103,7 +103,8 @@ public class Task {
 	 *            : list with dependencies
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now, ArrayList<Task> dependencies) {
+			double acceptableDeviation, LocalDateTime now,
+			ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		try {
 			addMultipleDependencies(dependencies);
@@ -130,8 +131,9 @@ public class Task {
 	 * 
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now, Task isAlternativeFor,
-			ArrayList<Task> dependencies) throws LoopingDependencyException {
+			double acceptableDeviation, LocalDateTime now,
+			Task isAlternativeFor, ArrayList<Task> dependencies)
+			throws LoopingDependencyException {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
@@ -150,7 +152,7 @@ public class Task {
 	 *            : dependent task
 	 * @return true if the task has the given task as dependency
 	 */
-	private boolean hasDependency(Task task) {
+	boolean hasDependency(Task task) {
 		if (getDependencies().contains(task))
 			return true;
 		for (Task dependency : getDependencies())
@@ -353,8 +355,8 @@ public class Task {
 	}
 
 	/**
-	 * Sets the acceptable deviation of task. The
-	 * The acceptable deviation must be positive or zero
+	 * Sets the acceptable deviation of task. The The acceptable deviation must
+	 * be positive or zero
 	 * 
 	 * @param acceptableDeviation
 	 * @throws IllegalArgumentException
