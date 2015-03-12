@@ -201,6 +201,35 @@ public class TaskTester {
 		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
 		newTask.updateStatus(now, now.plusDays(2), true);
 		new Task("desc2", Duration.ofHours(3), 2, now, newTask);
+		// TODO write asserts
+	}
+
+	@Test
+	public void createAlternativeTaskWithDep() throws InvalidTimeException {
+		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
+		newTask.updateStatus(now, now.plusDays(2), true);
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(baseTask);
+		new Task("desc2", Duration.ofHours(3), 2, now, newTask, dep);
+		// TODO write asserts
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createAlternativeTaskWithAutoDep() throws InvalidTimeException {
+		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
+		newTask.updateStatus(now, now.plusDays(2), true);
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(newTask);
+		new Task("desc2", Duration.ofHours(3), 2, now, newTask, dep);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createAlternativeTaskWithIndirectAutoDep()
+			throws InvalidTimeException {
+		baseTask.updateStatus(now, now.plusDays(2), true);
+		ArrayList<Task> dep = new ArrayList<Task>();
+		dep.add(dependentTask);
+		new Task("desc2", Duration.ofHours(3), 2, now, baseTask, dep);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
