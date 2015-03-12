@@ -116,15 +116,9 @@ public class ProjectTester {
 
 		// 1(failed) -> 2(finished)
 		task1.setFailed();
-<<<<<<< HEAD
 		assertEquals(TaskStatus.FAILED, task1.getStatus());	
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());	
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());	
-=======
-		assertEquals(task1.getStatus(), TaskStatus.FAILED);	
-		assertEquals(task2.getStatus(), TaskStatus.FINISHED);	
-		assertEquals(project.getStatus(), ProjectStatus.FINISHED);	
->>>>>>> b432fc1dc5e5cc4a8c17445e80496036b9813a15
 
 		// 1(failed) -x-> 2(finished) <- 3(finished)
 		Task task3 = new Task("testdescriptionTask3", Duration.ofHours(8), 50);
@@ -187,7 +181,7 @@ public class ProjectTester {
 		// 1(finished)->2(available)
 
 		task1.setEndTime(LocalDateTime.now());
-<<<<<<< HEAD
+
 		assertEquals(TaskStatus.FINISHED,task1.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(ProjectStatus.ONGOING,project.getStatus());
@@ -197,17 +191,7 @@ public class ProjectTester {
 		assertEquals(TaskStatus.FAILED, task3.getStatus());
 		assertEquals(TaskStatus.UNAVAILABLE, task4.getStatus() );
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
-=======
-		assertEquals(task1.getStatus(), TaskStatus.FINISHED);
-		assertEquals(task2.getStatus(), TaskStatus.AVAILABLE);
-		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
 
-		// 1(failed)-> 2(unavailable)
-		task1.setFailed();
-		assertEquals(task1.getStatus(), TaskStatus.FAILED);
-		assertEquals(task2.getStatus(), TaskStatus.UNAVAILABLE);
-		assertEquals(project.getStatus(), ProjectStatus.ONGOING);
->>>>>>> b432fc1dc5e5cc4a8c17445e80496036b9813a15
 	}
 	
 	@Test
