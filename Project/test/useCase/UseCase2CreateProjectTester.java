@@ -21,8 +21,7 @@ public class UseCase2CreateProjectTester {
 	@Before
 	public void setUp(){
 		//create a project controller
-		TaskManClock clock = new TaskManClock(LocalDateTime.of(2015, 03, 07,01,00));
-		controller = new ProjectController(clock);;
+		controller = new ProjectController(LocalDateTime.of(2015, 03, 07,01,00));;
 	}
 	
 	@Test
