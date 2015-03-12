@@ -210,6 +210,9 @@ public class TaskTester {
 		new Task("desc2", Duration.ofHours(3), 2, now, newTask);
 	}
 
-	// TODO Status testing
-
+	@Test
+	public void update() {
+		baseTask.update(now.plusDays(5));
+		assertEquals(now.plusDays(5), baseTask.getLastUpdateTime());
+	}
 }
