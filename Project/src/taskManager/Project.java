@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import taskManager.exception.LoopingDependencyException;
-
 /**
  * The Project class describes a project in system. Every project has the same
  * details: name, description, creation time and a due time. A project contains
@@ -24,7 +22,7 @@ public class Project {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
-	
+
 	private LocalDateTime lastUpdateTime;
 
 	/**
@@ -73,8 +71,7 @@ public class Project {
 	}
 
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, ArrayList<Task> dependencies)
-			throws LoopingDependencyException {
+			double acceptableDeviation, ArrayList<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, this.lastUpdateTime, dependencies);
 		this.addTask(task);
@@ -82,9 +79,10 @@ public class Project {
 
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask,
-			ArrayList<Task> dependencies) throws LoopingDependencyException {
+			ArrayList<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, alernativeTask, dependencies);
+				acceptableDeviation, this.lastUpdateTime, alernativeTask,
+				dependencies);
 		this.addTask(task);
 	}
 
@@ -96,7 +94,7 @@ public class Project {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given task is not valid
 	 */
-	void addTask(Task task) throws IllegalArgumentException {
+	void addTask(Task task) {
 		if (!canHaveTask(task)) {
 			throw new IllegalArgumentException(
 					"The given task is already in this project.");
@@ -264,30 +262,26 @@ public class Project {
 	 * 
 	 * @return ON_TIME or OVER_TIME depending whether the project finished on
 	 *         time or not.
-	 * @throws IllegalStateException if the project is not yet finished
+	 * @throws IllegalStateException
+	 *             if the project is not yet finished
 	 */
 	public ProjectFinishingStatus finishedOnTime() throws IllegalStateException {
-		if(!this.hasFinished())
-		{
+		if (!this.hasFinished()) {
 			throw new IllegalStateException("Project not yet finished!");
-		}
-		else
-		{
-			if(this.getEstimatedFinishTime().isAfter(this.getDueTime()))
-			{
+		} else {
+			if (this.getEstimatedFinishTime().isAfter(this.getDueTime())) {
 				return ProjectFinishingStatus.OVER_TIME;
-			}
-			else
-			{
+			} else {
 				return ProjectFinishingStatus.ON_TIME;
 			}
 		}
 	}
-	
+
 	/**
 	 * Updates the state of the object and it's tasks
 	 * 
-	 * @param time the current time
+	 * @param time
+	 *            the current time
 	 */
 	void update(LocalDateTime time) {
 		for (Task task : this.getAllTasks()) {
@@ -317,8 +311,9 @@ public class Project {
 
 	public void createTask(String description2, Duration estimatedDuration,
 			double acceptableDeviation) {
-		this.createTask(description2, estimatedDuration, acceptableDeviation, this.lastUpdateTime);
-		
+		this.createTask(description2, estimatedDuration, acceptableDeviation,
+				this.lastUpdateTime);
+
 	}
 
 }

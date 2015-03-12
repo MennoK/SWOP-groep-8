@@ -10,7 +10,6 @@ import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.Task;
 import taskManager.exception.InvalidTimeException;
-import taskManager.exception.LoopingDependencyException;
 import ui.exception.ExitUseCaseException;
 
 public class UiTaskMan {
@@ -38,7 +37,7 @@ public class UiTaskMan {
 						+ fileName);
 				return;
 			} catch (InvalidTimeException | FileNotFoundException
-					| RuntimeException | LoopingDependencyException e) {
+					| RuntimeException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -99,27 +98,21 @@ public class UiTaskMan {
 			System.out.println(Printer.listProjects(projectController
 					.getAllProjects()));
 			Project project = reader.select(projectController.getAllProjects());
-			try {
-				if (reader
-						.getBoolean("Is this an alternative to a failled task?")) {
-					System.out
-							.println(Printer.listTasks(project.getAllTasks()));
-					project.createTask(
-							reader.getString("Give a description:"),
-							reader.getDuration("Give an estimate for the task duration:"),
-							reader.getDouble("Give an acceptable deviation:"),
-							reader.select(project.getAllTasks()),
-							askDependence(project));
-				} else
-					project.createTask(
-							reader.getString("Give a description:"),
-							reader.getDuration("Give an estimate for the task duration:"),
-							reader.getDouble("Give an acceptable deviation:"),
-							askDependence(project));
-				return;
-			} catch (LoopingDependencyException e) {
-				System.out.println(e.getMessage());
-			}
+			if (reader.getBoolean("Is this an alternative to a failled task?")) {
+				System.out.println(Printer.listTasks(project.getAllTasks()));
+				project.createTask(
+						reader.getString("Give a description:"),
+						reader.getDuration("Give an estimate for the task duration:"),
+						reader.getDouble("Give an acceptable deviation:"),
+						reader.select(project.getAllTasks()),
+						askDependence(project));
+			} else
+				project.createTask(
+						reader.getString("Give a description:"),
+						reader.getDuration("Give an estimate for the task duration:"),
+						reader.getDouble("Give an acceptable deviation:"),
+						askDependence(project));
+			return;
 		}
 	}
 

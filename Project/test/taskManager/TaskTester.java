@@ -14,7 +14,6 @@ import org.junit.Test;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
 import taskManager.exception.InvalidTimeException;
-import taskManager.exception.LoopingDependencyException;
 
 public class TaskTester {
 
@@ -117,12 +116,12 @@ public class TaskTester {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void addAlreadyPresentDependency() throws LoopingDependencyException {
+	public void addAlreadyPresentDependency() {
 		dependentTask.addDependency(baseTask);
 	}
 
-	@Test(expected = LoopingDependencyException.class)
-	public void addLoopingDependency() throws LoopingDependencyException {
+	@Test(expected = IllegalArgumentException.class)
+	public void addLoopingDependency() {
 		baseTask.addDependency(dependentTask);
 	}
 
