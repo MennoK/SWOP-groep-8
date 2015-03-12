@@ -112,6 +112,11 @@ public class Project {
 		this.addTask(task);
 	}
 
+	/**
+	 * checks all the dependencies of all the tasks and replaces the old, failed task with a new one.
+	 * @param alternativeTask
+	 * @param isAlternativeForTask
+	 */
 	private void updateDependencies(Task alternativeTask, Task isAlternativeForTask) {
 	    List<Task> taskList = this.getAllTasks();
 		List<Task> dependecyList ;
