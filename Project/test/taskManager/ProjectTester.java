@@ -301,8 +301,8 @@ public class ProjectTester {
 		project.createTask("task1", Duration.ofHours(3), 0.5);
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.willFinishOnTime());
 
-		project.createTask("task2 (dep task1)", Duration.ofHours(10), 0.5);
-		project.createTask("task4 (dep task1)", Duration.ofHours(10), 0.5);
+		project.createTask("task2 (dep task1)", Duration.ofHours(20), 0.5);
+		project.createTask("task4 (dep task1)", Duration.ofHours(20), 0.5);
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME,
 				project.willFinishOnTime());

@@ -421,16 +421,20 @@ public class Project {
 	 *             if the project is finished or scheduled to finish on time
 	 */
 	public Duration getCurrentDelay() {
+		
 		if (getStatus() == ProjectStatus.FINISHED)
 			throw new IllegalStateException(
 					"no current delay for finished projects");
+		
 		if (willFinishOnTime() == ProjectFinishingStatus.ON_TIME)
 			throw new IllegalStateException(
 					"Can not ask the current delay of a task which is expected to finish on time");
+		
 		Duration currentDelay = Duration.ofHours(0);
+		
 		for (Task task : getAllTasks()) {
 			if (task.getEstimatedFinishTime().isAfter(getDueTime())) {
-				WorkTime.durationBetween(getDueTime(),
+				currentDelay = WorkTime.durationBetween(getDueTime(),
 						task.getEstimatedFinishTime());
 			}
 		}
