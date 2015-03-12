@@ -31,13 +31,14 @@ public class UseCase1ShowProjectsTester {
 		// project0 has 0 tasks
 		// project1 has 1 task (finished)
 		// project2 has 2 tasks (1 task is dependent on the other)
+		
 
-		now = LocalDateTime.of(2015, 03, 07, 01, 00);
+		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
 		controller = new ProjectController(now);
 		controller.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 03, 00, 00),
-				LocalDateTime.of(2015, 03, 10, 00, 00));
+				LocalDateTime.of(2015, 03, 10, 11, 00));
 		controller.createProject("Project 2", "Description 2",
 				LocalDateTime.of(2015, 03, 03, 00, 00),
 				LocalDateTime.of(2015, 03, 11, 00, 00));
@@ -77,7 +78,7 @@ public class UseCase1ShowProjectsTester {
 		assertEquals("Description 1", project1.getDescription());
 		assertEquals(LocalDateTime.of(2015, 03, 03, 00, 00),
 				project1.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 00, 00),
+		assertEquals(	LocalDateTime.of(2015, 03, 10, 11, 00),
 				project1.getDueTime());
 
 		assertEquals("Project 2", project2.getName());
@@ -99,9 +100,11 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(ProjectStatus.FINISHED, project1.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project2.getStatus());
 
-		// show details of the projects: delay and estimated finished time
+		// show details of the projects: over_time/on_time and hours short
+		
 		// TODO
-
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project0.finishedOnTime());
+		
 		// show tasks of each project
 		assertEquals(0, project0.getAllTasks().size());
 		assertEquals(1, project1.getAllTasks().size());

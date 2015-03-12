@@ -328,19 +328,19 @@ public class Project {
 				|| dueTime.isEqual(getCreationTime());
 	}
 
-	/**
+/*	*//**
 	 * Determines if the project will finish on time or over time. A project has
 	 * finished on time if the estimated finish time before the due time of the
 	 * project, otherwise its over time
 	 * 
 	 * @return
-	 */
+	 *//*
 	public ProjectFinishingStatus willFinishOnTime() {
 		if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
 			return ProjectFinishingStatus.ON_TIME;
 		}
 		return ProjectFinishingStatus.OVER_TIME;
-	}
+	}*/
 
 	/**
 	 * Returns whether the project finished on time or not.
@@ -352,7 +352,10 @@ public class Project {
 	 */
 	public ProjectFinishingStatus finishedOnTime() throws IllegalStateException {
 		if (!this.hasFinished()) {
-			throw new IllegalStateException("Project not yet finished!");
+			if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
+				return ProjectFinishingStatus.ON_TIME;
+			}
+			return ProjectFinishingStatus.OVER_TIME;
 		} else {
 			if (this.getEstimatedFinishTime().isAfter(this.getDueTime())) {
 				return ProjectFinishingStatus.OVER_TIME;
