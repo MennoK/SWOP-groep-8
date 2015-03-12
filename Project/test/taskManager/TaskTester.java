@@ -109,7 +109,7 @@ public class TaskTester {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testCreateTaskWithDoubleDependency() {
+	public void createTaskWithDoubleDependency() {
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(baseTask);
 		dependencies.add(baseTask);
@@ -117,28 +117,27 @@ public class TaskTester {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddAlreadyPresentDependency()
-			throws LoopingDependencyException {
+	public void addAlreadyPresentDependency() throws LoopingDependencyException {
 		dependentTask.addDependency(baseTask);
 	}
 
 	@Test(expected = LoopingDependencyException.class)
-	public void testAddLoopingDependency() throws LoopingDependencyException {
+	public void addLoopingDependency() throws LoopingDependencyException {
 		baseTask.addDependency(dependentTask);
 	}
 
 	@Test
-	public void testHasDirectDependency() {
+	public void hasDirectDependency() {
 		assertTrue(dependentTask.hasDependency(baseTask));
 	}
 
 	@Test
-	public void testHasIndirectDependency() {
+	public void hasIndirectDependency() {
 		assertTrue(level2DependentTask.hasDependency(baseTask));
 	}
 
 	@Test
-	public void testFinishedEarly() throws InvalidTimeException,
+	public void finishedEarly() throws InvalidTimeException,
 			InvalidActivityException {
 		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5, now);
 		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 00),
@@ -149,7 +148,7 @@ public class TaskTester {
 	}
 
 	@Test
-	public void testFinishedWithADelay() throws InvalidTimeException,
+	public void finishedWithADelay() throws InvalidTimeException,
 			InvalidActivityException {
 		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5, now);
 		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 0),
@@ -160,7 +159,7 @@ public class TaskTester {
 	}
 
 	@Test
-	public void testFinishedOnTime() throws InvalidTimeException,
+	public void finishedOnTime() throws InvalidTimeException,
 			InvalidActivityException {
 		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5, now);
 		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 0),
@@ -175,24 +174,24 @@ public class TaskTester {
 	}
 
 	@Test(expected = InvalidActivityException.class)
-	public void testTaskIsNotFinishedYet() throws InvalidActivityException {
+	public void taskIsNotFinishedYet() throws InvalidActivityException {
 		Task newTask = new Task("desc", Duration.ofHours(2), 2, now);
 		newTask.getFinishStatus();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidDuration() throws IllegalArgumentException {
+	public void invalidDuration() throws IllegalArgumentException {
 		new Task("desc", Duration.ofHours(-2), 2, now);
 		new Task("desc", Duration.ofHours(0), 2, now);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidDeviation() throws IllegalArgumentException {
+	public void invalidDeviation() throws IllegalArgumentException {
 		new Task("desc", Duration.ofHours(3), -2, now);
 	}
 
 	@Test(expected = InvalidTimeException.class)
-	public void testSetEndTimeBeforeStartTime() throws NullPointerException,
+	public void setEndTimeBeforeStartTime() throws NullPointerException,
 			InvalidTimeException {
 		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
 		newTask.updateStatus(now, now.minusDays(2), false);
