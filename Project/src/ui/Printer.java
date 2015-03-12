@@ -47,7 +47,7 @@ public class Printer {
 	static String full(Task task) {
 		String str = oneLine(task) + ": ";
 		str += task.getDescription() + ", ";
-		str += task.getEstimatedDuration() + ", ";
+		str += task.getEstimatedDuration().toHours() + " hours, ";
 		str += task.getAcceptableDeviation() * 100 + "% margin";
 		if (!task.getDependencies().isEmpty()) {
 			str += ", depends on {";
@@ -79,7 +79,8 @@ public class Printer {
 		str += " (Created " + project.getCreationTime();
 		str += ", Due " + project.getDueTime();
 		if (project.willFinishOnTime() == ProjectFinishingStatus.OVER_TIME)
-			str += "(" + project.getCurrentDelay() + " working hours short)";
+			str += "(" + project.getCurrentDelay().toHours()
+					+ " working hours short)";
 		str += ")\n";
 		str += listTasks(project.getAllTasks());
 		return str;
