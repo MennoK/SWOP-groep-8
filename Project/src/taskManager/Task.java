@@ -167,9 +167,9 @@ public class Task {
 		if (this.getEndTime() != null) {
 			return this.getEndTime();
 		} else {
-
-			if (this.getDependencies().isEmpty()) {
-				return this.lastUpdateTime.plus(this.estimatedDuration);
+			
+			if(this.getDependencies().isEmpty()) {
+				return add(this.lastUpdateTime, this.estimatedDuration);
 			} else {
 				// Find last estimated time of the dependencies
 				LocalDateTime estimatedTime = this.lastUpdateTime;
@@ -178,7 +178,7 @@ public class Task {
 						estimatedTime = t.getEstimatedFinishTime();
 					}
 				}
-				return estimatedTime;
+				return add(estimatedTime, this.estimatedDuration);
 			}
 
 		}
