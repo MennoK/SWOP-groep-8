@@ -55,12 +55,13 @@ public class UseCase3CreateTaskTester {
 				project1.getAllTasks().get(1).getDependencies().get(0));
 
 		// create an alternative task for a failed task
-		// first we let the dependent task fail
+		// first we let the simple task fail
 		project1.getAllTasks()
 				.get(0)
 				.updateStatus(LocalDateTime.of(2015, 03, 07, 02, 00),
 						LocalDateTime.of(2015, 03, 07, 05, 00), true);
 		
+		// we create an alternative task for the simple task
 		project1.createTask("alternative task", Duration.ofHours(20), 50,
 				project1.getAllTasks().get(0));
 
@@ -68,7 +69,7 @@ public class UseCase3CreateTaskTester {
 		assertEquals("alternative task", project1.getAllTasks().get(2)
 				.getDescription());
 		
-		//alternative task has dependency simple task
+		//task with dependency is now dependent on alternative task
 		assertEquals(project1.getAllTasks().get(2), project1.getAllTasks().get(1).getDependencies().get(0));
 				
 	}
