@@ -437,7 +437,7 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-		if(this.getStatus() != TaskStatus.FINISHED)
+		if(this.getStatus() == TaskStatus.FINISHED || TaskStatus.AVAILABLE)
 			this.failed = true;
 		else 
 			throw new IllegalStateException();
@@ -497,11 +497,12 @@ public class Task {
 		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
 		if (setToFail) {
 			this.setFailed();
 		}
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
+		
 	}
 
 	/**

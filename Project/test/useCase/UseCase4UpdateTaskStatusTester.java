@@ -60,6 +60,7 @@ public class UseCase4UpdateTaskStatusTester {
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 
+		//task 1 still on failed when you to revert change
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 		
