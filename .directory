@@ -1,6 +1,6 @@
 [Dolphin]
-HeaderColumnWidths=137,84,145,148
-Timestamp=2015,3,11,13,37,37
+HeaderColumnWidths=145,84,145,148
+Timestamp=2015,3,11,16,14,9
 Version=3
 ViewMode=1
 VisibleRoles=Details_text,Details_size,Details_date,Details_type,CustomizedDetails

@@ -23,7 +23,8 @@ public class ProjectControllerTester {
 	public void setUp() {
 		TaskManClock taskManClock = new TaskManClock(LocalDateTime.of(2000, 03,
 				05, 00, 00));
-		projectController = new ProjectController(taskManClock);
+		projectController = new ProjectController(LocalDateTime.of(2000, 03,
+				05, 00, 00));
 	}
 
 	@Test
