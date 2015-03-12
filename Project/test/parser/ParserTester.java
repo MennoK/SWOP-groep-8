@@ -141,15 +141,17 @@ public class ParserTester {
 
 		assertEquals("description", task3.getDescription());
 		assertEquals(Duration.ofHours(50), task3.getEstimatedDuration());
-		assertEquals(task3.getAcceptableDeviation(), 0, 0.001);
+		assertEquals(0, task3.getAcceptableDeviation(), 0.001);
 		assertNull(task3.getAlternativeFor());
 
 		assertEquals(2, task3.getDependencies().size());
 		assertEquals(taskManager.TaskStatus.FAILED, task3.getStatus());
-		assertEquals(task3.getStartTime(),
-				LocalDateTime.parse(("2015-01-01 09:00"), dateTimeFormatter));
-		assertEquals(task3.getEndTime(),
-				LocalDateTime.parse(("2015-01-30 18:00"), dateTimeFormatter));
+		assertEquals(
+				LocalDateTime.parse(("2015-01-01 09:00"), dateTimeFormatter),
+				task3.getStartTime());
+		assertEquals(
+				LocalDateTime.parse(("2015-01-30 18:00"), dateTimeFormatter),
+				task3.getEndTime());
 	}
 
 	@Test
