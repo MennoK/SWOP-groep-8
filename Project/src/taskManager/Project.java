@@ -317,19 +317,19 @@ public class Project {
 				|| dueTime.isEqual(getCreationTime());
 	}
 
-/*	*//**
-	 * Determines if the project will finish on time or over time. A project has
-	 * finished on time if the estimated finish time before the due time of the
-	 * project, otherwise its over time
+	/*	*//**
+	 * Determines if the project will finish on time or over time. A
+	 * project has finished on time if the estimated finish time before the due
+	 * time of the project, otherwise its over time
 	 * 
 	 * @return
-	 *//*
-	public ProjectFinishingStatus willFinishOnTime() {
-		if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
-			return ProjectFinishingStatus.ON_TIME;
-		}
-		return ProjectFinishingStatus.OVER_TIME;
-	}*/
+	 */
+	/*
+	 * public ProjectFinishingStatus willFinishOnTime() { if
+	 * (this.getEstimatedFinishTime().isBefore(this.getDueTime())) { return
+	 * ProjectFinishingStatus.ON_TIME; } return
+	 * ProjectFinishingStatus.OVER_TIME; }
+	 */
 
 	/**
 	 * Returns whether the project finished on time or not.
@@ -418,7 +418,7 @@ public class Project {
 			throw new IllegalStateException(
 					"no current delay for finished projects");
 
-		if (willFinishOnTime() == ProjectFinishingStatus.ON_TIME)
+		if (finishedOnTime() == ProjectFinishingStatus.ON_TIME)
 			throw new IllegalStateException(
 					"Can not ask the current delay of a task which is expected to finish on time");
 

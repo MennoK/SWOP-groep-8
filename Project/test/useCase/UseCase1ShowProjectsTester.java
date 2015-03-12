@@ -103,7 +103,7 @@ public class UseCase1ShowProjectsTester {
 		// show details of the projects: over_time/on_time and hours short
 		
 		// TODO
-		assertEquals(ProjectFinishingStatus.OVER_TIME, project0.finishedOnTime());
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project1.finishedOnTime());
 		
 		// show tasks of each project
 		assertEquals(0, project0.getAllTasks().size());

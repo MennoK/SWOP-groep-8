@@ -299,18 +299,17 @@ public class ProjectTester {
 	@Test
 	public void willFinishOnTime() {
 		project.createTask("task1", Duration.ofHours(3), 0.5);
-		assertEquals(ProjectFinishingStatus.ON_TIME, project.willFinishOnTime());
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		project.createTask("task2 (dep task1)", Duration.ofHours(20), 0.5);
 		project.createTask("task4 (dep task1)", Duration.ofHours(20), 0.5);
 
-		assertEquals(ProjectFinishingStatus.OVER_TIME,
-				project.willFinishOnTime());
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 	}
 
 	@Test
 	public void testGetCurrentDelayToLongTask() {
-		project.createTask("bla", Duration.ofHours(5 * 8), 0.5);
+		project.createTask("bla", Duration.ofHours(3 * 8), 0.5);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
 
@@ -323,11 +322,5 @@ public class ProjectTester {
 		project.createTask("bla", Duration.ofHours(2 * 8), 0.5, dep);
 		task1.updateStatus(now, now.plusHours(4 * 8), false);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void projectFinishedOnTime() {
-		project.createTask("bla", Duration.ofHours(4), 0.5);
-		project.finishedOnTime();
 	}
 }
