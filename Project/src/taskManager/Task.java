@@ -12,10 +12,26 @@ import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
 
 /**
- * The Task class implements a task.
+ * A task is a unit of work that can be performed by a user of the system. A
+ * task is assigned to an unfinished project upon creation. Each task has a
+ * description, an estimated duration expressed in hours and minutes (e.g. 4h
+ * 30m), and an acceptable deviation, expressed as a percentage (e.g. 10%). The
+ * estimated duration represents the estimated time it should take to complete
+ * the task, and the acceptable deviation the time period within which the task
+ * can be finished on time. A task can be finished early (even before the
+ * earliest acceptable deviation from the estimated duration), on time (within
+ * the acceptable deviation) or with a delay (even later than the latest
+ * acceptable deviation). A task can depend on other tasks, meaning that they
+ * have to be finished before the execution of the dependent task can start.
+ * Naturally, no loops are allowed in the dependency graph. Additionally, when a
+ * task fails (see Status), an alternative task can be created to replace the
+ * current task. For example, if the task to deploy apache is marked as failed,
+ * the user may create an alternative task deploy nginx . This alternative task
+ * replaces the failed task with respect to dependency management or determining
+ * the project status (ongoing or finished). The time spent on the failed task
+ * is however counted for the total execution time of the project.
  * 
  * @author groep 8
- *
  */
 public class Task {
 
