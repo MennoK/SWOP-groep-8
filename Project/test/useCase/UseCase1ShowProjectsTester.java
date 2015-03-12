@@ -26,6 +26,8 @@ public class UseCase1ShowProjectsTester {
 	private Task task2;
 	private Task task3;
 	
+	private LocalDateTime now;
+	
 	@Before
 	public void setUp() throws LoopingDependencyException, InvalidTimeException{
 		//create a controller, 3 projects and 3 tasks:
@@ -33,7 +35,9 @@ public class UseCase1ShowProjectsTester {
 		//project1 has 1 task (finished)
 		//project2 has 2 tasks (1 task is dependent on the other)
 		
-		controller = new ProjectController(LocalDateTime.of(2015, 03, 07,01,00));
+		now = LocalDateTime.of(2015, 03, 07,01,00);
+		
+		controller = new ProjectController(now);
 		controller.createProject("Project 1", "Description 1", LocalDateTime.of(2015, 03, 03,00,00), LocalDateTime.of(2015, 03, 10,00,00));
 		controller.createProject("Project 2", "Description 2", LocalDateTime.of(2015, 03, 03,00,00), LocalDateTime.of(2015, 03, 11,00,00));
 		controller.createProject("Project 0", "Description 3", LocalDateTime.of(2015, 03, 03,00,00), LocalDateTime.of(2015, 03, 12,00,00));
@@ -42,8 +46,8 @@ public class UseCase1ShowProjectsTester {
 		project1 = controller.getAllProjects().get(0);
 		project2 = controller.getAllProjects().get(1);
 
-		project1.createTask("Task 1", Duration.ofHours(2), 0.4);
-		project2.createTask("Task 2", Duration.ofHours(2), 0.4);
+		project1.createTask("Task 1", Duration.ofHours(2), 0.4, now);
+		project2.createTask("Task 2", Duration.ofHours(2), 0.4, now);
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(project2.getAllTasks().get(0));
 		project2.createTask("Task 3", Duration.ofHours(3), 0.4,dependencies);

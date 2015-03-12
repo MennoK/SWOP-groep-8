@@ -110,6 +110,7 @@ public class ProjectController {
 	 * @throws InvalidTimeException : thrown when the given time is invalid
 	 */
 	public void advanceTime(LocalDateTime time) throws InvalidTimeException{
+		
 		this.taskManClock.setTime(time);
 
 		for(Project project : this.getAllProjects()){
