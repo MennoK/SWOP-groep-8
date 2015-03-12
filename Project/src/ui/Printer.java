@@ -5,6 +5,7 @@ import java.util.List;
 import javax.activity.InvalidActivityException;
 
 import taskManager.Project;
+import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
@@ -74,10 +75,12 @@ public class Printer {
 			str += ", " + project.willFinishOnTime();
 		if (project.getStatus() == ProjectStatus.FINISHED) {
 			str += ", " + project.finishedOnTime();
-			str += ", total delay " + project.getTotalDelay();
 		}
 		str += " (Created " + project.getCreationTime();
-		str += ", Due " + project.getDueTime() + ")\n";
+		str += ", Due " + project.getDueTime();
+		if (project.willFinishOnTime() == ProjectFinishingStatus.OVER_TIME)
+			str += "(" + project.getCurrentDelay() + " working hours short)";
+		str += ")\n";
 		str += listTasks(project.getAllTasks());
 		return str;
 	}
