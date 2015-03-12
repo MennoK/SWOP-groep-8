@@ -331,4 +331,10 @@ public class ProjectTester {
 		task1.updateStatus(now, now.plusHours(6), false);
 		assertEquals(Duration.ofHours(2), project.getCurrentDelay());
 	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void projectFinishedOnTime() {
+		project.createTask("bla", Duration.ofHours(4), 0.5);
+		project.finishedOnTime();
+	}
 }
