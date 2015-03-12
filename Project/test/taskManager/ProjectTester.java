@@ -252,10 +252,9 @@ public class ProjectTester {
 	public void testUpdate() {
 		project.createTask("descr", Duration.ofHours(20), 20);
 
-		project.update(LocalDateTime.now());
-		assertEquals(LocalDateTime.now(), project.getLastUpdateTime());
-		assertEquals(LocalDateTime.now(), project.getAllTasks().get(0)
-				.getLastUpdateTime());
+		project.update(now);
+		assertEquals(now, project.getLastUpdateTime());
+		assertEquals(now, project.getAllTasks().get(0).getLastUpdateTime());
 	}
 
 	@Test
@@ -296,18 +295,18 @@ public class ProjectTester {
 		assertFalse(task4.hasDependency(task1));
 		assertTrue(task4.hasDependency(task3));
 	}
-	
+
 	@Test
-	public void willFinishOnTime(){
+	public void willFinishOnTime() {
 		project.createTask("task1", Duration.ofHours(3), 0.5);
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.willFinishOnTime());
-		
+
 		project.createTask("task2 (dep task1)", Duration.ofHours(10), 0.5);
 		project.createTask("task4 (dep task1)", Duration.ofHours(10), 0.5);
-		
-		assertEquals(ProjectFinishingStatus.OVER_TIME, project.willFinishOnTime());
-	}
 
+		assertEquals(ProjectFinishingStatus.OVER_TIME,
+				project.willFinishOnTime());
+	}
 
 	@Test
 	public void testGetCurrentDelayToLongTask() {
@@ -325,7 +324,7 @@ public class ProjectTester {
 		task1.updateStatus(now, now.plusHours(4 * 8), false);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
 	public void projectFinishedOnTime() {
 		project.createTask("bla", Duration.ofHours(4), 0.5);
