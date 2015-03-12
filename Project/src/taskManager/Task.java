@@ -1,10 +1,8 @@
 package taskManager;
 
-import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -148,12 +146,8 @@ public class Task {
 
 		WorkTime worktime = new WorkTime(baseTime, duration);
 		return worktime.getFinishTime();
-		
-	}
-	
 
-	
-	
+	}
 
 	/**
 	 * Checks whether a task has a dependency tasks
@@ -514,6 +508,8 @@ public class Task {
 				&& (this.getStatus() == TaskStatus.AVAILABLE || this
 						.getStatus() == TaskStatus.UNAVAILABLE)) {
 			this.setFailed();
+			this.setStartTime(startTime);
+			this.setEndTime(endTime);
 		} else if (this.getStatus() == TaskStatus.AVAILABLE) {
 			this.setStartTime(startTime);
 			this.setEndTime(endTime);
