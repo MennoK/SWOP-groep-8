@@ -20,9 +20,9 @@ public class ProjectTester {
 
 	@Before
 	public void setUp() {
-		this.now = LocalDateTime.of(2015, 03, 05, 00, 00);
+		this.now = LocalDateTime.of(2015, 03, 06, 8, 00);
 		project = new Project("testname", "testdescription", now,
-				LocalDateTime.of(2015, 03, 06, 00, 00));
+				LocalDateTime.of(2015, 03, 10, 8, 00));
 	}
 
 	@Test
@@ -296,6 +296,18 @@ public class ProjectTester {
 		assertFalse(task4.hasDependency(task1));
 		assertTrue(task4.hasDependency(task3));
 	}
+	
+	@Test
+	public void willFinishOnTime(){
+		project.createTask("task1", Duration.ofHours(3), 0.5);
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.willFinishOnTime());
+		
+		project.createTask("task2 (dep task1)", Duration.ofHours(10), 0.5);
+		project.createTask("task4 (dep task1)", Duration.ofHours(10), 0.5);
+		
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.willFinishOnTime());
+	}
+
 
 
 }
