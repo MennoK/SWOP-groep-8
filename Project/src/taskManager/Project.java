@@ -254,8 +254,9 @@ public class Project {
 	}
 
 	public ProjectFinishingStatus willFinishOnTime() {
-		if (this.getEstimatedFinishTime().isBefore(this.getDueTime()))
+		if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
 			return ProjectFinishingStatus.ON_TIME;
+		}
 		return ProjectFinishingStatus.OVER_TIME;
 	}
 
@@ -281,6 +282,7 @@ public class Project {
 
 	/**
 	 * Updates the state of the object and it's tasks
+	 * with state = lastupdatetime
 	 * 
 	 * @param time
 	 *            the current time
@@ -292,10 +294,17 @@ public class Project {
 		this.lastUpdateTime = time;
 	}
 
+	/**
+	 * Estimates the finish time.
+	 * 
+	 * 
+	 * @return
+	 */
 	LocalDateTime getEstimatedFinishTime() {
 		LocalDateTime estimatedFinishTime = this.lastUpdateTime;
 		for (Task task : getAllTasks()) {
-			if (task.getEstimatedFinishTime().isAfter(estimatedFinishTime)) {
+			LocalDateTime taskFinishTime = task.getEstimatedFinishTime();
+			if (taskFinishTime.isAfter(estimatedFinishTime)) {
 				estimatedFinishTime = task.getEstimatedFinishTime();
 			}
 		}
