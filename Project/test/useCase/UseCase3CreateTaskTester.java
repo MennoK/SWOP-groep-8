@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.*;
-import taskManager.exception.InvalidTimeException;
 
 public class UseCase3CreateTaskTester {
 
@@ -26,8 +25,8 @@ public class UseCase3CreateTaskTester {
 	}
 
 	@Test
-	public void createTask() throws InvalidTimeException {
-		
+	public void createTask() {
+
 		// create a project
 		controller.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
@@ -60,7 +59,7 @@ public class UseCase3CreateTaskTester {
 				.get(0)
 				.updateStatus(LocalDateTime.of(2015, 03, 07, 02, 00),
 						LocalDateTime.of(2015, 03, 07, 05, 00), true);
-		
+
 		// we create an alternative task for the simple task
 		project1.createTask("alternative task", Duration.ofHours(20), 50,
 				project1.getAllTasks().get(0));
@@ -68,9 +67,10 @@ public class UseCase3CreateTaskTester {
 		assertEquals(3, project1.getAllTasks().size());
 		assertEquals("alternative task", project1.getAllTasks().get(2)
 				.getDescription());
-		
-		//task with dependency is now dependent on alternative task
-		assertEquals(project1.getAllTasks().get(2), project1.getAllTasks().get(1).getDependencies().get(0));
-				
+
+		// task with dependency is now dependent on alternative task
+		assertEquals(project1.getAllTasks().get(2),
+				project1.getAllTasks().get(1).getDependencies().get(0));
+
 	}
 }

@@ -14,7 +14,6 @@ import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
 import taskManager.TaskManClock;
-import taskManager.exception.InvalidTimeException;
 
 public class UseCase5AdvanceTime {
 
@@ -26,11 +25,10 @@ public class UseCase5AdvanceTime {
 	private Task task2;
 	private Task task3;
 
-
 	@Before
-	public void setUp(){
-		//create controller, 2 projects with 3 tasks in total
-		now = LocalDateTime.of(2015, 03,05, 00 ,00);
+	public void setUp() {
+		// create controller, 2 projects with 3 tasks in total
+		now = LocalDateTime.of(2015, 03, 05, 00, 00);
 		controller = new ProjectController(now);
 		controller.createProject("project1", "description", now.plusDays(5));
 		controller.createProject("project2", "description", now.plusDays(3));
@@ -51,7 +49,7 @@ public class UseCase5AdvanceTime {
 	@Test
 	public void advanceTime() {
 		controller.advanceTime(now.plusHours(10));
-		
+
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		
 	}

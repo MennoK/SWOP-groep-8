@@ -9,7 +9,6 @@ import parser.Parser;
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.Task;
-import taskManager.exception.InvalidTimeException;
 import ui.exception.ExitUseCaseException;
 
 public class UiTaskMan {
@@ -36,8 +35,7 @@ public class UiTaskMan {
 				System.out.println("Starting with system initialised from "
 						+ fileName);
 				return;
-			} catch (InvalidTimeException | FileNotFoundException
-					| RuntimeException e) {
+			} catch (IllegalArgumentException | FileNotFoundException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -135,7 +133,7 @@ public class UiTaskMan {
 						reader.getDate("When did you finish this task?"),
 						reader.getBoolean("Was this task failed?"));
 				return;
-			} catch (InvalidTimeException e) {
+			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -147,7 +145,7 @@ public class UiTaskMan {
 				projectController.advanceTime(reader
 						.getDate("Enter the new timestamp:"));
 				return;
-			} catch (InvalidTimeException e) {
+			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());
 			}
 		}

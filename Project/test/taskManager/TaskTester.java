@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
-import taskManager.exception.InvalidTimeException;
 
 public class TaskTester {
 
@@ -56,7 +55,7 @@ public class TaskTester {
 	}
 
 	@Test
-	public void getStatusAvailableDependentTask() throws InvalidTimeException {
+	public void getStatusAvailableDependentTask() {
 		baseTask.updateStatus(now.minusDays(1), now, false);
 		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
 	}
@@ -136,37 +135,32 @@ public class TaskTester {
 	}
 
 	@Test
-	public void finishedEarly() throws InvalidTimeException,
-			InvalidActivityException {
+	public void finishedEarly() throws InvalidActivityException {
 		baseTask.updateStatus(now, now.plusHours(2), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.EARLY);
 	}
 
 	@Test
-	public void finishedWithADelay() throws InvalidTimeException,
-			InvalidActivityException {
+	public void finishedWithADelay() throws InvalidActivityException {
 		baseTask.updateStatus(now, now.plusDays(3), false);
 		assertEquals(baseTask.getFinishStatus(),
 				TaskFinishedStatus.WITH_A_DELAY);
 	}
 
 	@Test
-	public void finishedOnTimeEarly() throws InvalidTimeException,
-			InvalidActivityException {
+	public void finishedOnTimeEarly() throws InvalidActivityException {
 		baseTask.updateStatus(now, now.plusHours(7), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
 
 	@Test
-	public void finishedOnTimeExact() throws InvalidTimeException,
-			InvalidActivityException {
+	public void finishedOnTimeExact() throws InvalidActivityException {
 		baseTask.updateStatus(now, now.plusHours(8), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
 
 	@Test
-	public void finishedOnTimeLate() throws InvalidTimeException,
-			InvalidActivityException {
+	public void finishedOnTimeLate() throws InvalidActivityException {
 		baseTask.updateStatus(now, now.plusHours(8), false);
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
@@ -191,8 +185,8 @@ public class TaskTester {
 		new Task("desc", Duration.ofHours(3), -2, now);
 	}
 
-	@Test(expected = InvalidTimeException.class)
-	public void setEndTimeBeforeStartTime() throws InvalidTimeException {
+	@Test(expected = IllegalArgumentException.class)
+	public void setEndTimeBeforeStartTime() {
 		baseTask.updateStatus(now, now.minusDays(2), false);
 	}
 
@@ -211,15 +205,14 @@ public class TaskTester {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void createAlternativeTaskWithAutoDep() throws InvalidTimeException {
+	public void createAlternativeTaskWithAutoDep() {
 		ArrayList<Task> dep = new ArrayList<Task>();
 		dep.add(failedTask);
 		new Task("desc2", Duration.ofHours(3), 2, now, failedTask, dep);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void createAlternativeTaskWithIndirectAutoDep()
-			throws InvalidTimeException {
+	public void createAlternativeTaskWithIndirectAutoDep() {
 		baseTask.updateStatus(now, now.plusDays(2), true);
 		ArrayList<Task> dep = new ArrayList<Task>();
 		dep.add(dependentTask);
