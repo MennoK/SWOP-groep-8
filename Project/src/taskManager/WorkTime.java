@@ -9,6 +9,10 @@ public class WorkTime {
 
 	int startHour = 8;
 	int endHour = 16;
+	
+	static DayOfWeek[] workdays = new DayOfWeek[] { DayOfWeek.MONDAY,
+			DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+			DayOfWeek.FRIDAY };
 
 	long minutesToWork;
 
@@ -45,9 +49,7 @@ public class WorkTime {
 	}
 
 	private boolean isWorkDay() {
-		DayOfWeek[] workdays = new DayOfWeek[] { DayOfWeek.MONDAY,
-				DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
-				DayOfWeek.FRIDAY };
+		
 
 		if (Arrays.asList(workdays).contains(current.getDayOfWeek())) {
 			return true;
@@ -61,6 +63,21 @@ public class WorkTime {
 			minutesToWork--;
 		}
 
+	}
+	
+	public static Duration durationBetween(LocalDateTime first, LocalDateTime second)
+	{
+		if(!first.isBefore(second)) {
+			throw new IllegalArgumentException("first day is after the second");
+		}
+		LocalDateTime result = first;
+		long minutes = 0;
+		while(result.isBefore(second)) {
+			minutes++;
+			result = new WorkTime(first, Duration.ofMinutes(minutes)).getFinishTime();
+		}
+		
+		return Duration.ofMinutes(minutes-1);
 	}
 
 }
