@@ -10,37 +10,52 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import parser.TaskStatus;
 
-import taskManager.Project;
-import taskManager.ProjectController;
-import taskManager.Task;
-import taskManager.TaskManClock;
+import taskManager.*;
+import taskManager.exception.InvalidTimeException;
 import taskManager.exception.LoopingDependencyException;
 
 public class UseCase4UpdateTaskStatusTester {
+	
 	private ProjectController controller;
 	private Project project1;
 	private Task task1;
 	private Task task2;
 	private Task task3;
+	
 	@Before
 	public void setUp() throws LoopingDependencyException{
-		TaskManClock clock = new TaskManClock(LocalDateTime.of(2015, 03, 07,01,00));
-		controller = new ProjectController(clock);
-		project1 = new Project("Project 1", "Description 1", LocalDateTime.of(2015, 03, 01, 00 ,00), LocalDateTime.of(2015, 03, 10,00,00));
-		controller.addProject(project1);
-		task1 = new Task("Task 1", Duration.ofHours(8), 0.4);
-		task2 = new Task("Task 2", Duration.ofHours(8), 0.4);
+		//create a contoller and a project with 3 tasks
+		//task 3 is dependent on task 1
+		
+		controller = new ProjectController(LocalDateTime.of(2015, 03, 07,01,00));
+		controller.createProject("Project 1", "Description 1", LocalDateTime.of(2015, 03, 01, 00 ,00), LocalDateTime.of(2015, 03, 10,00,00));
+		
+		project1 = controller.getAllProjects().get(0);
+		
+		project1.createTask("Task 1", Duration.ofHours(8), 0.4);
+		project1.createTask("Task 2", Duration.ofHours(8), 0.4);
+		task1 = project1.getAllTasks().get(0);
+		task2 = project1.getAllTasks().get(1);
+		
 		ArrayList<Task> dependency = new ArrayList<>();
 		dependency.add(task2);
-		task3 = new Task("Task 3", Duration.ofHours(8), 0.4, dependency);
-
-		project1.addTask(task1);
-		project1.addTask(task2);
-		project1.addTask(task3); 
 		
+		project1.createTask("Task 3", Duration.ofHours(8), 0.4, dependency);
+		task3 = project1.getAllTasks().get(2);
+			
 	}
+	
+	@Test
+	public void updateTaskStatus() throws InvalidTimeException{
+		//task 1 failed
+		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), true);
+		assertEquals(TaskStatus.FAILED, task1.getStatus());
+		
+		//TODO
+	}
+	
+/*	
 	@Test
 	public void testUpdateTaskStatusFinishedtestNoDependencies() {
 		//User has selected task1
@@ -72,6 +87,6 @@ public class UseCase4UpdateTaskStatusTester {
 		task1.setFailed(true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 	}
-
+*/
 	
 }
