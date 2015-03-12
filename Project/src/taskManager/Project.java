@@ -81,9 +81,11 @@ public class Project {
 	 * @param alternativeTask : The alternative task
 	 */
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, Task alernativeTask) {
+			double acceptableDeviation, Task isAlternativeForTask) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, alernativeTask);
+				acceptableDeviation, this.lastUpdateTime, isAlternativeForTask);
+
+		updateDependencies(task, isAlternativeForTask);
 		this.addTask(task);
 	}
 
@@ -114,12 +116,33 @@ public class Project {
 	 * @param dependencies : list with dependencies
 	 */
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, Task alernativeTask,
+			double acceptableDeviation, Task isAlternativeForTask,
 			ArrayList<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, alernativeTask,
+				acceptableDeviation, this.lastUpdateTime, isAlternativeForTask,
 				dependencies);
+		updateDependencies(task, isAlternativeForTask);
 		this.addTask(task);
+	}
+
+	/**
+	 * checks all the dependencies of all the tasks and replaces the old, failed task with a new one.
+	 * @param alternativeTask
+	 * @param isAlternativeForTask
+	 */
+	private void updateDependencies(Task alternativeTask, Task isAlternativeForTask) {
+	    List<Task> taskList = this.getAllTasks();
+		List<Task> dependecyList ;
+		for (Task task : taskList) {
+			dependecyList = task.getDependencies();
+			for (Task dependency : dependecyList) {
+				if (dependency == isAlternativeForTask){
+					task.addDependency(alternativeTask);
+					dependecyList.remove(dependency);
+				}
+			}
+		}
+		
 	}
 
 	/**

@@ -1,8 +1,10 @@
 package taskManager;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -129,15 +131,29 @@ public class Task {
 			double acceptableDeviation, LocalDateTime now,
 			Task isAlternativeFor, ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
+		if (dependencies.contains(isAlternativeFor))
+			throw new IllegalArgumentException(
+					"Can not create an alternative task which is dependent"
+							+ " on the task it is an alternative for");
+		for (Task dep : dependencies)
+			if (dep.hasDependency(isAlternativeFor))
+				throw new IllegalArgumentException(
+						"Can not create an alternative task which is indirectly dependent"
+								+ " on the task it is an alternative for");
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
 
-	// TODO naam niet goed, moet nog beter ge"implementeerd worden
-	// TODO create seperate class wrapper for this
-	private LocalDateTime add(LocalDateTime instant, Duration duration) {
-		return instant.plus(Duration.ofDays(duration.toHours() / 8));
+	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
+
+		WorkTime worktime = new WorkTime(baseTime, duration);
+		return worktime.getFinishTime();
+		
 	}
+	
+
+	
+	
 
 	/**
 	 * Checks whether a task has a dependency tasks
@@ -167,8 +183,8 @@ public class Task {
 		if (this.getEndTime() != null) {
 			return this.getEndTime();
 		} else {
-			
-			if(this.getDependencies().isEmpty()) {
+
+			if (this.getDependencies().isEmpty()) {
 				return add(this.lastUpdateTime, this.estimatedDuration);
 			} else {
 				// Find last estimated time of the dependencies
@@ -436,10 +452,7 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-		if (this.getStatus() != TaskStatus.FINISHED)
-			this.failed = true;
-		else
-			throw new IllegalStateException();
+		this.failed = true;
 	}
 
 	/**
@@ -496,11 +509,16 @@ public class Task {
 		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
-		if (setToFail) {
+
+		if (setToFail
+				&& (this.getStatus() == TaskStatus.AVAILABLE || this
+						.getStatus() == TaskStatus.UNAVAILABLE)) {
 			this.setFailed();
-		}
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
+		} else if (this.getStatus() == TaskStatus.AVAILABLE) {
+			this.setStartTime(startTime);
+			this.setEndTime(endTime);
+		} else
+			throw new IllegalStateException();
 	}
 
 	/**
