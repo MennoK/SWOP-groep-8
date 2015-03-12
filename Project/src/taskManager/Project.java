@@ -241,17 +241,6 @@ public class Project {
 		}
 	}
 
-	// TODO methode testen + documentatie
-	public Duration getTotalDelay() {
-		List<Task> allTasks = this.getAllTasks();
-		for (Task task : allTasks) {
-			if (task.getStatus() == TaskStatus.FINISHED
-					|| task.getStatus() == TaskStatus.FAILED) {
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * Sets the name of a project
 	 * 
