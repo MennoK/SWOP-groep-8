@@ -1,8 +1,10 @@
 package taskManager;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -142,11 +144,16 @@ public class Task {
 		setAlternativeTask(isAlternativeFor);
 	}
 
-	// TODO naam niet goed, moet nog beter ge"implementeerd worden
-	// TODO create seperate class wrapper for this
-	private LocalDateTime add(LocalDateTime instant, Duration duration) {
-		return instant.plus(Duration.ofDays(duration.toHours() / 8));
+	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
+
+		WorkTime worktime = new WorkTime(baseTime, duration);
+		return worktime.getFinishTime();
+		
 	}
+	
+
+	
+	
 
 	/**
 	 * Checks whether a task has a dependency tasks
