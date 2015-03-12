@@ -85,7 +85,7 @@ public class ProjectController {
 
 	/**
 	 * 
-	 * Advances the time of taskman. This will update the status of every
+	 * Advances the time of TaskMan. This will update the status of every
 	 * task in every project of the project controller
 	 *  
 	 * @param time : new time
