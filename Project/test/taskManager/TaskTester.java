@@ -138,38 +138,27 @@ public class TaskTester {
 	@Test
 	public void finishedEarly() throws InvalidTimeException,
 			InvalidActivityException {
-		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5, now);
-		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 00),
-				LocalDateTime.of(2015, 1, 1, 14, 00), false);
-
-		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.EARLY);
-
+		baseTask.updateStatus(now, now.plusHours(2), false);
+		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.EARLY);
 	}
 
 	@Test
 	public void finishedWithADelay() throws InvalidTimeException,
 			InvalidActivityException {
-		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5, now);
-		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 0),
-				LocalDateTime.of(2015, 1, 2, 03, 0), false);
-
-		assertEquals(newTask1.getFinishStatus(),
+		baseTask.updateStatus(now, now.plusDays(3), false);
+		assertEquals(baseTask.getFinishStatus(),
 				TaskFinishedStatus.WITH_A_DELAY);
 	}
 
 	@Test
 	public void finishedOnTime() throws InvalidTimeException,
 			InvalidActivityException {
-		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.5, now);
-		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 0),
-				LocalDateTime.of(2015, 1, 1, 17, 0), false);
-		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.ON_TIME);
-		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 0),
-				LocalDateTime.of(2015, 1, 2, 1, 0), false);
-		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.ON_TIME);
-		newTask1.updateStatus(LocalDateTime.of(2015, 1, 1, 13, 0),
-				LocalDateTime.of(2015, 1, 1, 18, 0), false);
-		assertEquals(newTask1.getFinishStatus(), TaskFinishedStatus.ON_TIME);
+		baseTask.updateStatus(now, now.plusHours(7), false);
+		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
+		baseTask.updateStatus(now, now.plusHours(8), false);
+		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
+		baseTask.updateStatus(now, now.plusHours(24 + 1), false);
+		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
 
 	@Test(expected = InvalidActivityException.class)
