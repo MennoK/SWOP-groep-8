@@ -19,9 +19,10 @@ public class ProjectTester {
 
 	@Before
 	public void setUp() {
-		this.now = LocalDateTime.of(2015, 03, 05, 00, 00);
+		this.now = LocalDateTime.of(2015, 03, 06, 8, 00);
 		project = new Project("testname", "testdescription", now,
-				now.plusDays(1));
+				now.plusDays(4));
+
 	}
 
 	@Test
@@ -295,6 +296,18 @@ public class ProjectTester {
 		assertFalse(task4.hasDependency(task1));
 		assertTrue(task4.hasDependency(task3));
 	}
+	
+	@Test
+	public void willFinishOnTime(){
+		project.createTask("task1", Duration.ofHours(3), 0.5);
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.willFinishOnTime());
+		
+		project.createTask("task2 (dep task1)", Duration.ofHours(10), 0.5);
+		project.createTask("task4 (dep task1)", Duration.ofHours(10), 0.5);
+		
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.willFinishOnTime());
+	}
+
 
 	@Test
 	public void testGetCurrentDelayToLongTask() {
@@ -311,5 +324,11 @@ public class ProjectTester {
 		project.createTask("bla", Duration.ofHours(2 * 8), 0.5, dep);
 		task1.updateStatus(now, now.plusHours(4 * 8), false);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void projectFinishedOnTime() {
+		project.createTask("bla", Duration.ofHours(4), 0.5);
+		project.finishedOnTime();
 	}
 }

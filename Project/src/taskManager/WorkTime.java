@@ -22,6 +22,12 @@ public class WorkTime {
 	}
 
 	public LocalDateTime getFinishTime() {
+		if(current.getHour() < this.startHour)
+		{
+			current = current.plusHours(this.startHour - current.getHour());
+			current = current.minusMinutes(current.getMinute());
+		}
+		
 		while (minutesToWork > 0) {
 			if (isWorkDay()) {
 				workUntilEndOfDayOrMinutesRunOut();
