@@ -23,18 +23,21 @@ public class UseCase4UpdateTaskStatusTester {
 	private Task task2;
 	private Task task3;
 	
+	private LocalDateTime now;
+	
 	@Before
 	public void setUp() throws LoopingDependencyException{
 		//create a contoller and a project with 3 tasks
 		//task 3 is dependent on task 1
 		
-		controller = new ProjectController(LocalDateTime.of(2015, 03, 07,01,00));
+		now = LocalDateTime.of(2015, 03, 07,01,00);
+		controller = new ProjectController(now);
 		controller.createProject("Project 1", "Description 1", LocalDateTime.of(2015, 03, 01, 00 ,00), LocalDateTime.of(2015, 03, 10,00,00));
 		
 		project1 = controller.getAllProjects().get(0);
 		
-		project1.createTask("Task 1", Duration.ofHours(8), 0.4);
-		project1.createTask("Task 2", Duration.ofHours(8), 0.4);
+		project1.createTask("Task 1", Duration.ofHours(8), 0.4, now);
+		project1.createTask("Task 2", Duration.ofHours(8), 0.4, now);
 		task1 = project1.getAllTasks().get(0);
 		task2 = project1.getAllTasks().get(1);
 		
