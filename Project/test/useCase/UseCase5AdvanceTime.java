@@ -21,7 +21,7 @@ public class UseCase5AdvanceTime {
 		clock.setTime(LocalDateTime.of(2016, 06, 06,06,06));
 		assertEquals(LocalDateTime.of(2016, 06, 06,06,06), clock.getTime());
 	}
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected=InvalidTimeException.class)
 	public void testAdvanceTimePastSimpleTest() throws InvalidTimeException {
 		clock.setTime(LocalDateTime.of(2012, 06, 06,06,06));
 	}

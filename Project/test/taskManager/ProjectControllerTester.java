@@ -21,9 +21,8 @@ public class ProjectControllerTester {
 
 	@Before
 	public void setUp() {
-		TaskManClock taskManClock = new TaskManClock(LocalDateTime.of(2000, 03,
+		projectController = new ProjectController(LocalDateTime.of(2000, 03,
 				05, 00, 00));
-		projectController = new ProjectController(taskManClock);
 	}
 
 	@Test
@@ -60,7 +59,8 @@ public class ProjectControllerTester {
 		Project project1 = new Project("name1", "descr", LocalDateTime.of(2015,
 				03, 05, 00, 00), LocalDateTime.of(2015, 03, 06, 00, 00));
 		projectController.addProject(project1);
-		project1.createTask("descr", Duration.ofHours(20), 100);
+		project1.createTask("descr", Duration.ofHours(20), 100, LocalDateTime.of(2015,
+				03, 05, 00, 00));
 		projectController.advanceTime(LocalDateTime.of(2001, 03, 05, 00, 00));
 		assertEquals(project1.getAllTasks().get(0).getStatus(),
 				TaskStatus.AVAILABLE);

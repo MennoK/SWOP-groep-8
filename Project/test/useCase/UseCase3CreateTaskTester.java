@@ -20,11 +20,13 @@ import taskManager.exception.LoopingDependencyException;
 public class UseCase3CreateTaskTester {
 	
 	private ProjectController controller;
+	private LocalDateTime now;
 
 	@Before
 	public void setUp(){
 		//create a controller
-		controller = new ProjectController(LocalDateTime.of(2015, 03, 07,01,00));
+		now = LocalDateTime.of(2015, 03, 07,01,00);
+		controller = new ProjectController(now);
 		
 	}
 	
@@ -35,7 +37,7 @@ public class UseCase3CreateTaskTester {
 		Project project1 = controller.getAllProjects().get(0);
 		
 		//create a simple task
-		project1.createTask("simple descr", Duration.ofHours(20), 50);
+		project1.createTask("simple descr", Duration.ofHours(20), 50, now);
 		assertEquals(1, project1.getAllTasks().size());
 		assertEquals("simple descr", project1.getAllTasks().get(0).getDescription());
 		assertEquals(Duration.ofHours(20), project1.getAllTasks().get(0).getEstimatedDuration());
