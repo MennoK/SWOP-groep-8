@@ -167,8 +167,8 @@ public class Task {
 		if (this.getEndTime() != null) {
 			return this.getEndTime();
 		} else {
-			
-			if(this.getDependencies().isEmpty()) {
+
+			if (this.getDependencies().isEmpty()) {
 				return add(this.lastUpdateTime, this.estimatedDuration);
 			} else {
 				// Find last estimated time of the dependencies
@@ -436,14 +436,7 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-<<<<<<< HEAD
-		if(this.getStatus() == TaskStatus.FINISHED || TaskStatus.AVAILABLE)
-=======
-		if (this.getStatus() != TaskStatus.FINISHED)
->>>>>>> 72ebb67a5a9902a2bffd72da2d202ce52776e23a
-			this.failed = true;
-		else
-			throw new IllegalStateException();
+		this.failed = true;
 	}
 
 	/**
@@ -500,15 +493,16 @@ public class Task {
 		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
-		if (setToFail) {
+
+		if (setToFail
+				&& (this.getStatus() == TaskStatus.AVAILABLE || this
+						.getStatus() == TaskStatus.UNAVAILABLE)) {
 			this.setFailed();
-		}
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
-<<<<<<< HEAD
-		
-=======
->>>>>>> 72ebb67a5a9902a2bffd72da2d202ce52776e23a
+		}else if (this.getStatus() == TaskStatus.AVAILABLE) {
+			this.setStartTime(startTime);
+			this.setEndTime(endTime);
+		} else
+			throw new IllegalStateException();
 	}
 
 	/**

@@ -3,17 +3,13 @@ package useCase;
 import static org.junit.Assert.*;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Project;
-import taskManager.ProjectController;
-import taskManager.Task;
-import taskManager.TaskManClock;
+import taskManager.*;
 import taskManager.exception.InvalidTimeException;
 
 public class UseCase3CreateTaskTester {
@@ -38,7 +34,7 @@ public class UseCase3CreateTaskTester {
 		Project project1 = controller.getAllProjects().get(0);
 
 		// create a simple task
-		project1.createTask("simple descr", Duration.ofHours(20), 50, now);
+		project1.createTask("simple descr", Duration.ofHours(20), 50); 
 		assertEquals(1, project1.getAllTasks().size());
 		assertEquals("simple descr", project1.getAllTasks().get(0)
 				.getDescription());

@@ -50,8 +50,8 @@ public class UseCase1ShowProjectsTester {
 		project1 = controller.getAllProjects().get(0);
 		project2 = controller.getAllProjects().get(1);
 
-		project1.createTask("Task 1", Duration.ofHours(1), 0.4, now);
-		project2.createTask("Task 2", Duration.ofHours(2), 0.4, now);
+		project1.createTask("Task 1", Duration.ofHours(1), 0.4);
+		project2.createTask("Task 2", Duration.ofHours(2), 0.4);
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(project2.getAllTasks().get(0));
 		project2.createTask("Task 3", Duration.ofHours(3), 0.4, dependencies);
