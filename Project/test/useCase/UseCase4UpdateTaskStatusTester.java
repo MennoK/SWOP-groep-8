@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.*;
-import taskManager.exception.InvalidTimeException;
 
 public class UseCase4UpdateTaskStatusTester {
 
@@ -52,7 +51,7 @@ public class UseCase4UpdateTaskStatusTester {
 	}
 
 	@Test
-	public void updateTaskStatusSuccess() throws InvalidTimeException {
+	public void updateTaskStatusSuccess() {
 		// initial status
 		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
@@ -76,8 +75,7 @@ public class UseCase4UpdateTaskStatusTester {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void updateTaskStatusUnavailableToFinished()
-			throws InvalidTimeException {
+	public void updateTaskStatusUnavailableToFinished() {
 		// unavailable -> Finished throws illegalState
 		task3.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);
@@ -85,7 +83,7 @@ public class UseCase4UpdateTaskStatusTester {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void updateTaskStatusFailedToUnfailed() throws InvalidTimeException {
+	public void updateTaskStatusFailedToUnfailed() {
 		// task 1 failed
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
@@ -97,7 +95,7 @@ public class UseCase4UpdateTaskStatusTester {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void updateTaskStatusFinishedToFailed() throws InvalidTimeException {
+	public void updateTaskStatusFinishedToFailed() {
 		// task 2 finished
 		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);

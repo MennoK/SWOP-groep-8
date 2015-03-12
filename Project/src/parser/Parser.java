@@ -16,7 +16,6 @@ import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
 
 import taskManager.*;
-import taskManager.exception.InvalidTimeException;
 
 /**
  * The Parser class implements a YAML parser for TaskMan
@@ -40,13 +39,10 @@ public class Parser {
 	 * @param projectController
 	 * @throws FileNotFoundException
 	 * @throws RuntimeException
-	 * @throws LoopingDependencyException
-	 * @throws InvalidTimeException
 	 */
 	@SuppressWarnings("unchecked")
 	public void parse(String pathToFile, ProjectController projectController)
-			throws FileNotFoundException, RuntimeException,
-			InvalidTimeException {
+			throws FileNotFoundException, RuntimeException {
 		// check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(
 				new FileReader(pathToFile));
@@ -102,11 +98,9 @@ public class Parser {
 	 *            : list of all projects
 	 * @param controller
 	 *            : the projectController
-	 * @throws LoopingDependencyException
-	 * @throws InvalidTimeException
 	 */
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
-			ProjectController controller) throws InvalidTimeException {
+			ProjectController controller) {
 
 		for (LinkedHashMap<String, Object> task : tasks) {
 

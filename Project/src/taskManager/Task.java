@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
 
-import taskManager.exception.InvalidTimeException;
-
 /**
  * A task is a unit of work that can be performed by a user of the system. A
  * task is assigned to an unfinished project upon creation. Each task has a
@@ -495,13 +493,13 @@ public class Task {
 	 * @param setToFail
 	 *            : true if the task failed, false if the task was successfully
 	 *            finished.
-	 * @throws InvalidTimeException
+	 * @throws IllegalArgumentException
 	 *             : if the startTime was after the endTime.
 	 */
 	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
-			boolean setToFail) throws InvalidTimeException {
+			boolean setToFail) {
 		if (!isValidStartTimeAndEndTime(startTime, endTime))
-			throw new InvalidTimeException(
+			throw new IllegalArgumentException(
 					"the given end time is before the start time");
 
 		if (setToFail

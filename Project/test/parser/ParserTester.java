@@ -13,7 +13,6 @@ import org.junit.Test;
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.Task;
-import taskManager.exception.InvalidTimeException;
 
 public class ParserTester {
 
@@ -23,7 +22,7 @@ public class ParserTester {
 
 	// run setup only once
 	@BeforeClass
-	public static void setUp() throws InvalidTimeException {
+	public static void setUp() {
 		projectController = new ProjectController(null);
 		try {
 			new Parser().parse("./input.tman", projectController);

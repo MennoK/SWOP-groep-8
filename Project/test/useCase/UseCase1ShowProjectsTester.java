@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.*;
-import taskManager.exception.InvalidTimeException;
 
 public class UseCase1ShowProjectsTester {
 
@@ -26,7 +25,7 @@ public class UseCase1ShowProjectsTester {
 	private LocalDateTime now;
 
 	@Before
-	public void setUp() throws InvalidTimeException {
+	public void setUp() {
 
 		// create a controller, 3 projects and 3 tasks:
 		// project0 has 0 tasks
