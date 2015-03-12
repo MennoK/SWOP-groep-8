@@ -445,14 +445,7 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-<<<<<<< HEAD
 		this.failed = true;
-=======
-		if (this.getStatus() != TaskStatus.FINISHED)
-			this.failed = true;
-		else
-			throw new IllegalStateException();
->>>>>>> 0a1122f95e4c45337e7360b93ac75d6b3aa6c6ec
 	}
 
 	/**
@@ -514,17 +507,11 @@ public class Task {
 				&& (this.getStatus() == TaskStatus.AVAILABLE || this
 						.getStatus() == TaskStatus.UNAVAILABLE)) {
 			this.setFailed();
-<<<<<<< HEAD
-		}else if (this.getStatus() == TaskStatus.AVAILABLE) {
+		} else if (this.getStatus() == TaskStatus.AVAILABLE) {
 			this.setStartTime(startTime);
 			this.setEndTime(endTime);
 		} else
 			throw new IllegalStateException();
-=======
-		}
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
->>>>>>> 0a1122f95e4c45337e7360b93ac75d6b3aa6c6ec
 	}
 
 	/**

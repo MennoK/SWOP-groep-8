@@ -37,18 +37,14 @@ public class UseCase4UpdateTaskStatusTester {
 
 		project1.createTask("Task 1", Duration.ofHours(8), 0.4);
 		project1.createTask("Task 2", Duration.ofHours(8), 0.4);
-<<<<<<< HEAD
-		
-=======
->>>>>>> 0a1122f95e4c45337e7360b93ac75d6b3aa6c6ec
 		task1 = project1.getAllTasks().get(0);
 		task2 = project1.getAllTasks().get(1);
-		
+
 		ArrayList<Task> dependency = new ArrayList<>();
 		dependency.add(task2);
 		// task 3 has dependency on task2
 		project1.createTask("Task 3", Duration.ofHours(8), 0.4, dependency);
-		//task 4 had depndency on task 2
+		// task 4 had depndency on task 2
 		project1.createTask("Task 4", Duration.ofHours(8), 0.4, dependency);
 		task3 = project1.getAllTasks().get(2);
 		task4 = project1.getAllTasks().get(3);
@@ -61,10 +57,9 @@ public class UseCase4UpdateTaskStatusTester {
 		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
-<<<<<<< HEAD
 		assertEquals(TaskStatus.UNAVAILABLE, task4.getStatus());
-		
-		//Unavailable -> failed
+
+		// Unavailable -> failed
 		task4.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 		assertEquals(TaskStatus.FAILED, task4.getStatus());
@@ -72,20 +67,7 @@ public class UseCase4UpdateTaskStatusTester {
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
-		//Available -> Finished && Unavailable -> Available
-=======
-
-		// task 1 failed
-		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
-				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FAILED, task1.getStatus());
-
-		// task 1 still on failed when you to revert change
-		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
-				LocalDateTime.of(2015, 03, 02, 11, 00), false);
-		assertEquals(TaskStatus.FAILED, task1.getStatus());
-
->>>>>>> 0a1122f95e4c45337e7360b93ac75d6b3aa6c6ec
+		// Available -> Finished && Unavailable -> Available
 		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());
@@ -94,14 +76,14 @@ public class UseCase4UpdateTaskStatusTester {
 	}
 
 	@Test(expected = IllegalStateException.class)
-<<<<<<< HEAD
-	public void updateTaskStatusUnavailableToFinished() throws InvalidTimeException {
+	public void updateTaskStatusUnavailableToFinished()
+			throws InvalidTimeException {
 		// unavailable -> Finished throws illegalState
 		task3.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);
 
-	
 	}
+
 	@Test(expected = IllegalStateException.class)
 	public void updateTaskStatusFailedToUnfailed() throws InvalidTimeException {
 		// task 1 failed
@@ -111,8 +93,9 @@ public class UseCase4UpdateTaskStatusTester {
 		// task 1 failed -> unfailed throws illegalState
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);
-		
+
 	}
+
 	@Test(expected = IllegalStateException.class)
 	public void updateTaskStatusFinishedToFailed() throws InvalidTimeException {
 		// task 2 finished
@@ -121,18 +104,6 @@ public class UseCase4UpdateTaskStatusTester {
 		// task 2 finished -> failed throws illegalState
 		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-
-=======
-	public void updateTaskStatusExceptionExpected() throws InvalidTimeException {
-		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
-				LocalDateTime.of(2015, 03, 02, 11, 00), false);
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
-
-		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
-				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
->>>>>>> 0a1122f95e4c45337e7360b93ac75d6b3aa6c6ec
 	}
 	/*
 	 * @Test public void testUpdateTaskStatusFinishedtestNoDependencies() {
