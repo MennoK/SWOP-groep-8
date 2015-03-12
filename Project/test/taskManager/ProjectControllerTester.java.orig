@@ -23,6 +23,11 @@ public class ProjectControllerTester {
 	public void setUp() {
 		projectController = new ProjectController(LocalDateTime.of(2000, 03,
 				05, 00, 00));
+<<<<<<< HEAD
+		projectController = new ProjectController(LocalDateTime.of(2000, 03,
+				05, 00, 00));
+=======
+>>>>>>> 390024cc09913202f0ad6022aac51a2b3703ff83
 	}
 
 	@Test

@@ -24,7 +24,7 @@ public class Project {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
-	private LocalDateTime estimatedFinishTime;
+	
 	private LocalDateTime lastUpdateTime;
 
 	/**
@@ -59,16 +59,16 @@ public class Project {
 	 * @param acceptableDeviation
 	 */
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation) {
+			double acceptableDeviation, LocalDateTime now) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation);
+				acceptableDeviation, now);
 		this.addTask(task);
 	}
 
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask) {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, alernativeTask);
+				acceptableDeviation, this.lastUpdateTime, alernativeTask);
 		this.addTask(task);
 	}
 
@@ -76,7 +76,7 @@ public class Project {
 			double acceptableDeviation, ArrayList<Task> dependencies)
 			throws LoopingDependencyException {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, dependencies);
+				acceptableDeviation, this.lastUpdateTime, dependencies);
 		this.addTask(task);
 	}
 
@@ -84,7 +84,7 @@ public class Project {
 			double acceptableDeviation, Task alernativeTask,
 			ArrayList<Task> dependencies) throws LoopingDependencyException {
 		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, alernativeTask, dependencies);
+				acceptableDeviation, this.lastUpdateTime, alernativeTask, dependencies);
 		this.addTask(task);
 	}
 
@@ -103,7 +103,6 @@ public class Project {
 		} else {
 			this.getAllTasks().add(task);
 		}
-		this.update();
 	}
 
 	/**
@@ -164,11 +163,6 @@ public class Project {
 		} else {
 			return ProjectStatus.ONGOING;
 		}
-	}
-
-	// TODO methode testen + documentatie
-	public LocalDateTime getEstimatedFinishTime() {
-		return this.estimatedFinishTime;
 	}
 
 	// TODO methode testen + documentatie
@@ -289,17 +283,6 @@ public class Project {
 			}
 		}
 	}
-
-	/**
-	 * see update(LocalDateTime time)
-	 * 
-	 * Uses the last time at which the object was updated
-	 * Required after adding a task (or changing other important variables)
-	 */
-	private void update()
-	{
-		this.update(this.lastUpdateTime);
-	}
 	
 	/**
 	 * Updates the state of the object and it's tasks
@@ -307,21 +290,20 @@ public class Project {
 	 * @param time the current time
 	 */
 	void update(LocalDateTime time) {
-		this.updateEstimatedFinishTime(time);
 		for (Task task : this.getAllTasks()) {
-			task.updateStatus();
+			task.update(time);
 		}
 		this.lastUpdateTime = time;
 	}
 
-	void updateEstimatedFinishTime(LocalDateTime time) {
-		LocalDateTime estimatedFinishTime = time;
+	LocalDateTime getEstimatedFinishTime() {
+		LocalDateTime estimatedFinishTime = this.lastUpdateTime;
 		for (Task task : getAllTasks()) {
-			if (task.getEstimatedFinishTime(time).isAfter(estimatedFinishTime)) {
-				estimatedFinishTime = task.getEstimatedFinishTime(time);
+			if (task.getEstimatedFinishTime().isAfter(estimatedFinishTime)) {
+				estimatedFinishTime = task.getEstimatedFinishTime();
 			}
 		}
-		this.estimatedFinishTime = estimatedFinishTime;
+		return estimatedFinishTime;
 	}
 
 	/**
@@ -331,6 +313,12 @@ public class Project {
 	 */
 	public LocalDateTime getCreationTime() {
 		return creationTime;
+	}
+
+	public void createTask(String description2, Duration estimatedDuration,
+			double acceptableDeviation) {
+		this.createTask(description2, estimatedDuration, acceptableDeviation, this.lastUpdateTime);
+		
 	}
 
 }

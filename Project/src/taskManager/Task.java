@@ -26,7 +26,7 @@ import taskManager.exception.LoopingDependencyException;
  * Naturally, no loops are allowed in the dependency graph. Additionally, when a
  * task fails (see Status), an alternative task can be created to replace the
  * current task. For example, if the task to deploy apache is marked as failed,
- * the user may create an alternative task deploy nginx . This alternative task
+ * the user may create an alternative task deploy nginx. This alternative task
  * replaces the failed task with respect to dependency management or determining
  * the project status (ongoing or finished). The time spent on the failed task
  * is however counted for the total execution time of the project.
@@ -42,8 +42,9 @@ public class Task {
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
 	private boolean failed = false;
-	private TaskStatus status;
 	private Task isAlternativeFor;
+
+	private LocalDateTime lastUpdateTime;
 
 	// Thread safe integer sequence generator that starts at 1
 	private static AtomicInteger idCounter = new AtomicInteger(1);
@@ -61,12 +62,12 @@ public class Task {
 	 *            : acceptable duration of task
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation) {
+			double acceptableDeviation, LocalDateTime now) {
 		setDescription(description);
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
 		this.id = idCounter.getAndIncrement();
-		this.updateStatus();
+		this.lastUpdateTime = now;
 	}
 
 	/**
@@ -83,8 +84,8 @@ public class Task {
 	 *            : the alternative task which failed
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, Task isAlternativeFor) {
-		this(description, estimatedDuration, acceptableDeviation);
+			double acceptableDeviation, LocalDateTime now, Task isAlternativeFor) {
+		this(description, estimatedDuration, acceptableDeviation, now);
 		setAlternativeTask(isAlternativeFor);
 	}
 
@@ -102,8 +103,9 @@ public class Task {
 	 *            : list with dependencies
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, ArrayList<Task> dependencies) {
-		this(description, estimatedDuration, acceptableDeviation);
+			double acceptableDeviation, LocalDateTime now,
+			ArrayList<Task> dependencies) {
+		this(description, estimatedDuration, acceptableDeviation, now);
 		try {
 			addMultipleDependencies(dependencies);
 		} catch (LoopingDependencyException e) {
@@ -129,9 +131,10 @@ public class Task {
 	 * 
 	 */
 	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, Task isAlternativeFor,
-			ArrayList<Task> dependencies) throws LoopingDependencyException {
-		this(description, estimatedDuration, acceptableDeviation);
+			double acceptableDeviation, LocalDateTime now,
+			Task isAlternativeFor, ArrayList<Task> dependencies)
+			throws LoopingDependencyException {
+		this(description, estimatedDuration, acceptableDeviation, now);
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
 	}
@@ -149,7 +152,7 @@ public class Task {
 	 *            : dependent task
 	 * @return true if the task has the given task as dependency
 	 */
-	private boolean hasDependency(Task task) {
+	boolean hasDependency(Task task) {
 		if (getDependencies().contains(task))
 			return true;
 		for (Task dependency : getDependencies())
@@ -165,33 +168,23 @@ public class Task {
 	 * @param now
 	 * @return
 	 */
-	public LocalDateTime getEstimatedFinishTime(LocalDateTime now) {
+	public LocalDateTime getEstimatedFinishTime() {
 		if (getStartTime() != null)
 			return add(getStartTime(), getEstimatedDuration());
 
 		if (getDependencies().size() == 0)
-			return add(now, getEstimatedDuration());
+			return add(this.lastUpdateTime, getEstimatedDuration());
 
 		LocalDateTime dependenceFinishTime = getDependencies().get(0)
-				.getEstimatedFinishTime(now);
+				.getEstimatedFinishTime();
 		for (Task dependency : getDependencies()) {
 			if (dependenceFinishTime.compareTo(dependency
-					.getEstimatedFinishTime(now)) < 0)
-				dependenceFinishTime = dependency.getEstimatedFinishTime(now);
+					.getEstimatedFinishTime()) < 0)
+				dependenceFinishTime = dependency.getEstimatedFinishTime();
 		}
-		if (dependenceFinishTime.compareTo(now) < 0)
-			return add(now, getEstimatedDuration());
+		if (dependenceFinishTime.compareTo(this.lastUpdateTime) < 0)
+			return add(this.lastUpdateTime, getEstimatedDuration());
 		return add(dependenceFinishTime, getEstimatedDuration());
-	}
-
-	/**
-	 * Returns the status of a task
-	 * 
-	 * @return status of task
-	 */
-	public TaskStatus getStatus() {
-		this.updateStatus();
-		return this.status;
 	}
 
 	/**
@@ -234,7 +227,6 @@ public class Task {
 					"The given dependency task is already dependent on this task");
 		} else {
 			dependencies.add(dependency);
-			this.updateStatus();
 		}
 	}
 
@@ -363,8 +355,8 @@ public class Task {
 	}
 
 	/**
-	 * Sets the acceptable deviation of task and updates the task status. The
-	 * The acceptable deviation must be positive or zero
+	 * Sets the acceptable deviation of task. The The acceptable deviation must
+	 * be positive or zero
 	 * 
 	 * @param acceptableDeviation
 	 * @throws IllegalArgumentException
@@ -376,7 +368,6 @@ public class Task {
 					"The acceptable deviation must be greater or equal then zero");
 		} else {
 			this.acceptableDeviation = acceptableDeviation;
-			this.updateStatus();
 		}
 	}
 
@@ -390,29 +381,13 @@ public class Task {
 	}
 
 	/**
-	 * Sets the end time if and only if the given end time is after the start
-	 * the start time of a project. The start time must be set before the end
-	 * time
+	 * Sets the end time.
 	 * 
 	 * @param endTime
 	 *            : the end time of task
-	 * @throws NullPointerException
-	 *             : thrown when the start time is not set yet
-	 * 
 	 */
-	void setEndTime(LocalDateTime endTime) throws InvalidTimeException,
-			NullPointerException {
-		if (this.getStartTime() == null) {
-			throw new NullPointerException(
-					"There is not start time, set the starttime first.");
-		}
-		if (!isEndTimeAfterStartTime((this.getStartTime()), endTime)) {
-			throw new InvalidTimeException(
-					"the given end time is before the start time");
-		} else {
-			this.endTime = endTime;
-			this.updateStatus();
-		}
+	private void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
 	}
 
 	/**
@@ -424,7 +399,7 @@ public class Task {
 	 *            : the endTime of a task
 	 * @return true if and only if the start time is before the endtime
 	 */
-	private boolean isEndTimeAfterStartTime(LocalDateTime startTime,
+	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
 			LocalDateTime endTime) {
 		return endTime.isAfter(startTime);
 	}
@@ -444,7 +419,7 @@ public class Task {
 	 * @param startTime
 	 *            : the given start time of a task
 	 */
-	void setStartTime(LocalDateTime startTime) {
+	private void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -459,14 +434,13 @@ public class Task {
 	}
 
 	/**
-	 * Sets a failed boolean to true or false and updates the task status
+	 * Sets a failed boolean to true or false
 	 * 
 	 * @param failed
 	 *            : true if failed
 	 */
-	void setFailed() {
+	private void setFailed() {
 		this.failed = true;
-		this.updateStatus();
 	}
 
 	/**
@@ -520,7 +494,7 @@ public class Task {
 	 */
 	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
 			boolean setToFail) throws InvalidTimeException {
-		if (startTime.isAfter(endTime))
+		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new InvalidTimeException(
 					"the given end time is before the start time");
 		this.setStartTime(startTime);
@@ -528,30 +502,32 @@ public class Task {
 		if (setToFail) {
 			this.setFailed();
 		}
-		this.updateStatus();
 	}
 
 	/**
-	 * Updates the status of task. There are four different statuses for a task:
+	 * Gets the status of task. There are four different statuses for a task:
 	 * Available, unavailable, finished or failed.
 	 * 
 	 * A task is failed when the boolean isFailed is true A task is finished
 	 * when the task has an end time The task availability is dependent on the
 	 * dependencies of the task
 	 */
-	public void updateStatus() {
-		this.status = TaskStatus.AVAILABLE;
+	public TaskStatus getStatus() {
 		if (isFailed()) {
-			this.status = TaskStatus.FAILED;
+			return TaskStatus.FAILED;
 		} else if (getEndTime() != null) {
-			this.status = TaskStatus.FINISHED;
+			return TaskStatus.FINISHED;
 		} else if (!getDependencies().isEmpty()) {
 			for (Task dependency : getDependencies()) {
 				if (dependency.getStatus() != TaskStatus.FINISHED) {
-					this.status = TaskStatus.UNAVAILABLE;
+					return TaskStatus.UNAVAILABLE;
 				}
 			}
 		}
+		return TaskStatus.AVAILABLE;
+	}
 
+	public void update(LocalDateTime time) {
+		this.lastUpdateTime = time;
 	}
 }
