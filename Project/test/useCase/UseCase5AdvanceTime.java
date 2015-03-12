@@ -12,6 +12,7 @@ import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.ProjectFinishingStatus;
 import taskManager.Task;
+import taskManager.TaskFinishedStatus;
 
 public class UseCase5AdvanceTime {
 
@@ -48,7 +49,5 @@ public class UseCase5AdvanceTime {
 	public void advanceTime() {
 		controller.advanceTime(now.plusHours(10));
 
-		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
-		
 	}
 }
