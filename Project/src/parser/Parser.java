@@ -17,7 +17,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import taskManager.*;
 import taskManager.exception.InvalidTimeException;
-import taskManager.exception.LoopingDependencyException;
 
 /**
  * The Parser class implements a YAML parser for TaskMan
@@ -47,7 +46,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	public void parse(String pathToFile, ProjectController projectController)
 			throws FileNotFoundException, RuntimeException,
-			LoopingDependencyException, InvalidTimeException {
+			InvalidTimeException {
 		// check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(
 				new FileReader(pathToFile));
@@ -107,8 +106,7 @@ public class Parser {
 	 * @throws InvalidTimeException
 	 */
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
-			ProjectController controller) throws LoopingDependencyException,
-			InvalidTimeException {
+			ProjectController controller) throws InvalidTimeException {
 
 		for (LinkedHashMap<String, Object> task : tasks) {
 
@@ -188,10 +186,9 @@ public class Parser {
 				LocalDateTime endTime = LocalDateTime.parse(
 						(CharSequence) task.get("endTime"), dateTimeFormatter);
 
-				if(status.equals("failed")){
+				if (status.equals("failed")) {
 					newTask.updateStatus(startTime, endTime, true);
-				}
-				else{
+				} else {
 					newTask.updateStatus(startTime, endTime, false);
 				}
 

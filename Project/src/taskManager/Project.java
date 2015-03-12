@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import taskManager.exception.LoopingDependencyException;
-
 /**
  * The Project class describes a project in system. Every project has the same
  * details: name, description, creation time and a due time. A project contains
@@ -72,8 +70,7 @@ public class Project {
 	}
 
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, ArrayList<Task> dependencies)
-			throws LoopingDependencyException {
+			double acceptableDeviation, ArrayList<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, this.lastUpdateTime, dependencies);
 		this.addTask(task);
@@ -81,7 +78,7 @@ public class Project {
 
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task alernativeTask,
-			ArrayList<Task> dependencies) throws LoopingDependencyException {
+			ArrayList<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, this.lastUpdateTime, alernativeTask,
 				dependencies);
@@ -96,7 +93,7 @@ public class Project {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given task is not valid
 	 */
-	void addTask(Task task) throws IllegalArgumentException {
+	void addTask(Task task) {
 		if (!canHaveTask(task)) {
 			throw new IllegalArgumentException(
 					"The given task is already in this project.");

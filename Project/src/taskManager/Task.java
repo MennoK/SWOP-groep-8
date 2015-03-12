@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.activity.InvalidActivityException;
 
 import taskManager.exception.InvalidTimeException;
-import taskManager.exception.LoopingDependencyException;
 
 /**
  * A task is a unit of work that can be performed by a user of the system. A
@@ -106,11 +105,7 @@ public class Task {
 			double acceptableDeviation, LocalDateTime now,
 			ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
-		try {
-			addMultipleDependencies(dependencies);
-		} catch (LoopingDependencyException e) {
-			// This can never occur in the constructor
-		}
+		addMultipleDependencies(dependencies);
 	}
 
 	/**
@@ -132,8 +127,7 @@ public class Task {
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now,
-			Task isAlternativeFor, ArrayList<Task> dependencies)
-			throws LoopingDependencyException {
+			Task isAlternativeFor, ArrayList<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		addMultipleDependencies(dependencies);
 		setAlternativeTask(isAlternativeFor);
@@ -201,8 +195,7 @@ public class Task {
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	private void addMultipleDependencies(ArrayList<Task> dependencies)
-			throws LoopingDependencyException {
+	private void addMultipleDependencies(ArrayList<Task> dependencies) {
 		for (Task dependency : dependencies) {
 			if (!isValidDependency(dependency)) {
 				throw new IllegalArgumentException(
@@ -222,11 +215,10 @@ public class Task {
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	void addDependency(Task dependency) throws LoopingDependencyException {
+	void addDependency(Task dependency) {
 		if (dependency.hasDependency(this))
-			throw new LoopingDependencyException(
-					"Tried to add task1 as a dependency to task2,"
-							+ " but task2 is already dependent on task1.");
+			throw new IllegalArgumentException(
+					"Tried to create a dependency loop.");
 		if (!isValidDependency(dependency)) {
 			throw new IllegalArgumentException(
 					"The given dependency task is already dependent on this task");
@@ -445,7 +437,10 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
-		this.failed = true;
+		if(this.getStatus() != TaskStatus.FINISHED)
+			this.failed = true;
+		else 
+			throw new IllegalStateException();
 	}
 
 	/**
