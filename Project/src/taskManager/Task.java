@@ -67,7 +67,7 @@ public class Task {
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
 		this.id = idCounter.getAndIncrement();
-		this.lastUpdateTime = now;
+		update(now);
 	}
 
 	/**
@@ -527,8 +527,21 @@ public class Task {
 		return TaskStatus.AVAILABLE;
 	}
 
-	public void update(LocalDateTime time) {
+	/**
+	 * Pore mans observer pattern
+	 * 
+	 * @param time
+	 *            : the new time of the clock
+	 */
+	void update(LocalDateTime time) {
 		this.lastUpdateTime = time;
+	}
+
+	/**
+	 * Getter for lastUpdateTime
+	 */
+	LocalDateTime getLastUpdateTime() {
+		return lastUpdateTime;
 	}
 	
 	public LocalDateTime getLastUpdateTime(){
