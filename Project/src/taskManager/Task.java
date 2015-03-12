@@ -530,4 +530,8 @@ public class Task {
 	public void update(LocalDateTime time) {
 		this.lastUpdateTime = time;
 	}
+	
+	public LocalDateTime getLastUpdateTime(){
+		return lastUpdateTime;
+	}
 }

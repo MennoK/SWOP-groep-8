@@ -79,26 +79,8 @@ public class ProjectController {
 	 * @param project: given project to be added
 	 * @return true if and only if the project controller does not contain the project yet and the project is not null
 	 */
-	private boolean canHaveProject(Project project){
+	boolean canHaveProject(Project project){
 		return (!getAllProjects().contains(project) && project != null);
-	}
-
-	/**
-	 * Returns a list of the projects
-	 * 
-	 * @return projects: list of projects
-	 */
-	public List<Project> getAllProjects() {
-		return projects;
-	}
-	
-	/**
-	 * Returns the time
-	 * 
-	 * @return LocalDateTime : time
-	 */
-	public LocalDateTime getTime() {
-		return this.taskManClock.getTime();
 	}
 
 	/**
@@ -110,12 +92,29 @@ public class ProjectController {
 	 * @throws InvalidTimeException : thrown when the given time is invalid
 	 */
 	public void advanceTime(LocalDateTime time) throws InvalidTimeException{
-		
+
 		this.taskManClock.setTime(time);
 
 		for(Project project : this.getAllProjects()){
 			project.update(time);
 		}
 	}
-	
+
+	/**
+	 * Returns a list of the projects
+	 * 
+	 * @return projects: list of projects
+	 */
+	public List<Project> getAllProjects() {
+		return projects;
+	}
+
+	/**
+	 * Returns the time
+	 * 
+	 * @return LocalDateTime : time
+	 */
+	public LocalDateTime getTime() {
+		return this.taskManClock.getTime();
+	}
 }

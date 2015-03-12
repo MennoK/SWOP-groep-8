@@ -319,5 +319,8 @@ public class Project {
 		this.createTask(description2, estimatedDuration, acceptableDeviation, this.lastUpdateTime);
 		
 	}
-
+	
+	public LocalDateTime getLastUpdateTime(){
+		return lastUpdateTime;
+	}
 }
