@@ -92,16 +92,14 @@ public class ProjectTester {
 		// 1 task
 		Task task1 = new Task("testdescriptionTask1", Duration.ofHours(8), 50,
 				now);
-		task1.setStartTime(now);
-		task1.setEndTime(LocalDateTime.now());
+		task1.updateStatus(now, LocalDateTime.now(), false);
 		project.addTask(task1);
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 
 		// 2 tasks
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50,
 				now);
-		task2.setStartTime(now);
-		task2.setEndTime(LocalDateTime.now());
+		task1.updateStatus(now, LocalDateTime.now(), false);
 		project.addTask(task2);
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 	}
@@ -114,6 +112,8 @@ public class ProjectTester {
 				now);
 		Task task2 = new Task("testdescriptionTask2", Duration.ofHours(8), 50,
 				now);
+		task1.updateStatus(now, LocalDateTime.now(), false);
+		task2.
 		task1.setStartTime(now);
 		task2.setStartTime(now);
 		task1.setEndTime(LocalDateTime.now());
