@@ -3,7 +3,6 @@ package taskManager;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 
 public class WorkTime {
@@ -76,8 +75,6 @@ public class WorkTime {
 		if(!first.isBefore(second)) {
 			throw new IllegalArgumentException("first day is after the second");
 		}
-		
-		
 		
 		Duration minutes = Duration.ofMinutes(0);
 		LocalDateTime working = new WorkTime(first, minutes).getFinishTime();

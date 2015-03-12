@@ -252,30 +252,9 @@ public class ProjectTester {
 	public void testUpdate() {
 		project.createTask("descr", Duration.ofHours(20), 20);
 
-		project.update(LocalDateTime.now());
-		assertEquals(LocalDateTime.now(), project.getLastUpdateTime());
-		assertEquals(LocalDateTime.now(), project.getAllTasks().get(0)
-				.getLastUpdateTime());
-	}
-
-	@Test
-	public void testWillFinishOnTime() {
-
-	}
-
-	@Test
-	public void testWillFinishOverTime() {
-
-	}
-
-	@Test
-	public void testGetEstimatedFinishTime() {
-
-	}
-
-	@Test
-	public void testGetTotalDelay() {
-
+		project.update(now);
+		assertEquals(now, project.getLastUpdateTime());
+		assertEquals(now, project.getAllTasks().get(0).getLastUpdateTime());
 	}
 
 	@Test
@@ -296,22 +275,32 @@ public class ProjectTester {
 		assertFalse(task4.hasDependency(task1));
 		assertTrue(task4.hasDependency(task3));
 	}
-	
+
 	@Test
-	public void willFinishOnTime(){
+	public void willFinishOnTime() {
 		project.createTask("task1", Duration.ofHours(3), 0.5);
-		assertEquals(ProjectFinishingStatus.ON_TIME, project.willFinishOnTime());
-		
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+
 		project.createTask("task2 (dep task1)", Duration.ofHours(20), 0.5);
 		project.createTask("task4 (dep task1)", Duration.ofHours(20), 0.5);
-		
-		assertEquals(ProjectFinishingStatus.OVER_TIME, project.willFinishOnTime());
+
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 	}
 
+	@Test
+	public void isFinishOnTime() {
+		project.createTask("task1", Duration.ofHours(3), 0.5);
+		project.getAllTasks().get(0).updateStatus(now, now.plusHours(3), false);
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+
+		project.createTask("task2 (dep task1)", Duration.ofHours(20), 0.5);
+		project.getAllTasks().get(1).updateStatus(now, now.plusDays(10), false);
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+	}
 
 	@Test
 	public void testGetCurrentDelayToLongTask() {
-		project.createTask("bla", Duration.ofHours(5 * 8), 0.5);
+		project.createTask("bla", Duration.ofHours(3 * 8), 0.5);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
 
@@ -324,11 +313,5 @@ public class ProjectTester {
 		project.createTask("bla", Duration.ofHours(2 * 8), 0.5, dep);
 		task1.updateStatus(now, now.plusHours(4 * 8), false);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
-	}
-	
-	@Test(expected = IllegalStateException.class)
-	public void projectFinishedOnTime() {
-		project.createTask("bla", Duration.ofHours(4), 0.5);
-		project.finishedOnTime();
 	}
 }
