@@ -35,48 +35,52 @@ public class UseCase4UpdateTaskStatusTester {
 
 		project1 = controller.getAllProjects().get(0);
 
-		project1.createTask("Task 1", Duration.ofHours(8), 0.4, now);
-		project1.createTask("Task 2", Duration.ofHours(8), 0.4, now);
+		project1.createTask("Task 1", Duration.ofHours(8), 0.4);
+		project1.createTask("Task 2", Duration.ofHours(8), 0.4);
 		task1 = project1.getAllTasks().get(0);
 		task2 = project1.getAllTasks().get(1);
 
 		ArrayList<Task> dependency = new ArrayList<>();
 		dependency.add(task2);
-		//task 3 has dependency on task2
+		// task 3 has dependency on task2
 		project1.createTask("Task 3", Duration.ofHours(8), 0.4, dependency);
 		task3 = project1.getAllTasks().get(2);
 
 	}
 
 	@Test
-	public void updateTaskStatusSuccess() throws InvalidTimeException{
-		//initial status
+	public void updateTaskStatusSuccess() throws InvalidTimeException {
+		// initial status
 		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
-		
+
 		// task 1 failed
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
 
-		//task 1 still on failed when you to revert change
-		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
+		// task 1 still on failed when you to revert change
+		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
+				LocalDateTime.of(2015, 03, 02, 11, 00), false);
 		assertEquals(TaskStatus.FAILED, task1.getStatus());
-		
-		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
+
+		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
+				LocalDateTime.of(2015, 03, 02, 11, 00), false);
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
-		
+
 	}
 
-	@Test(expected=IllegalStateException.class)
-	public void updateTaskStatusExceptionExpected() throws InvalidTimeException{
-		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), false);
+	@Test(expected = IllegalStateException.class)
+	public void updateTaskStatusExceptionExpected() throws InvalidTimeException {
+		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
+				LocalDateTime.of(2015, 03, 02, 11, 00), false);
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
-		
-		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00 ,00), LocalDateTime.of(2015, 03, 02, 11 ,00), true);
+
+		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
+				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 		assertEquals(TaskStatus.FINISHED, task2.getStatus());
 	}
 	/*
