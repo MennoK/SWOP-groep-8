@@ -163,26 +163,25 @@ public class Task {
 	 * @return
 	 */
 	public LocalDateTime getEstimatedFinishTime() {
-		
-		if(this.getEndTime() != null) {
+
+		if (this.getEndTime() != null) {
 			return this.getEndTime();
 		} else {
 			
 			if(this.getDependencies().isEmpty()) {
-				return this.lastUpdateTime.plus(this.estimatedDuration);
+				return add(this.lastUpdateTime, this.estimatedDuration);
 			} else {
-				//Find last estimated time of the dependencies
+				// Find last estimated time of the dependencies
 				LocalDateTime estimatedTime = this.lastUpdateTime;
-				for(Task t : this.getDependencies()) {
-					if(t.getEstimatedFinishTime().isAfter(estimatedTime)) {
+				for (Task t : this.getDependencies()) {
+					if (t.getEstimatedFinishTime().isAfter(estimatedTime)) {
 						estimatedTime = t.getEstimatedFinishTime();
 					}
 				}
-				return estimatedTime;
+				return add(estimatedTime, this.estimatedDuration);
 			}
-			
+
 		}
-		
 
 	}
 
@@ -437,9 +436,13 @@ public class Task {
 	 *            : true if failed
 	 */
 	private void setFailed() {
+<<<<<<< HEAD
 		if(this.getStatus() == TaskStatus.FINISHED || TaskStatus.AVAILABLE)
+=======
+		if (this.getStatus() != TaskStatus.FINISHED)
+>>>>>>> 72ebb67a5a9902a2bffd72da2d202ce52776e23a
 			this.failed = true;
-		else 
+		else
 			throw new IllegalStateException();
 	}
 
@@ -502,7 +505,10 @@ public class Task {
 		}
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 72ebb67a5a9902a2bffd72da2d202ce52776e23a
 	}
 
 	/**
