@@ -77,8 +77,6 @@ public class WorkTime {
 			throw new IllegalArgumentException("first day is after the second");
 		}
 		
-		
-		
 		Duration minutes = Duration.ofMinutes(0);
 		LocalDateTime working = new WorkTime(first, minutes).getFinishTime();
 		while(working.isBefore(second))
