@@ -56,6 +56,7 @@ public class TaskTester {
 
 	@Test
 	public void getStatusAvailableDependentTask() throws InvalidTimeException {
+		baseTask.updateStatus(now.minusDays(1), now, false);
 		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
 	}
 
@@ -95,13 +96,6 @@ public class TaskTester {
 	public void getEstimatedFinishTimeLevel2Task() {
 		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 0),
 				level2DependentTask.getEstimatedFinishTime(now));
-	}
-
-	@Test
-	public void getEstimatedFinishTimeUvaillableTaskOverDueDependence() {
-		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 0),
-				dependentTask.getEstimatedFinishTime(LocalDateTime.of(2015, 03,
-						05, 8, 0)));
 	}
 
 	@Test
