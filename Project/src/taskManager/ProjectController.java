@@ -42,6 +42,7 @@ public class ProjectController {
 	public void createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
+		project.update(this.getTime());
 		this.addProject(project);
 	}
 

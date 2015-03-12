@@ -7,81 +7,80 @@ import java.util.Arrays;
 
 public class WorkTime {
 
-	int startHour = 8;
-	int endHour = 16;
+	static final int startHour = 8;
+	static final int endHour = 16;
 	
-	static DayOfWeek[] workdays = new DayOfWeek[] { DayOfWeek.MONDAY,
+	static final DayOfWeek[] workdays = new DayOfWeek[] { DayOfWeek.MONDAY,
 			DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
 			DayOfWeek.FRIDAY };
-
-	long minutesToWork;
-
-	LocalDateTime current;
-
-	public WorkTime(LocalDateTime baseTime, Duration duration) {
-
-		this.minutesToWork = duration.toMinutes();
-		this.current = baseTime;
-
-	}
 	
-	public WorkTime(LocalDateTime firstTime, LocalDateTime secondTime) {
-		
-	}
 
-	public LocalDateTime getFinishTime() {
-		if(current.getHour() < this.startHour)
+	static public LocalDateTime getFinishTime(LocalDateTime current, Duration duration) {
+		if(current.getHour() < startHour)
 		{
-			current = current.plusHours(this.startHour - current.getHour());
+			current = current.plusHours(startHour - current.getHour());
 			current = current.minusMinutes(current.getMinute());
 		}
 		
+		long minutesToWork = duration.toMinutes();
+		
 		while (minutesToWork > 0) {
-			if (isWorkDay()) {
-				workUntilEndOfDayOrMinutesRunOut();
+			if (isWorkDay(current)) {
+				int oldHour = current.getHour();
+				int oldMinute = current.getMinute();
+				current = workUntilEndOfDayOrMinutesRunOut(current, minutesToWork);
+				
+				minutesToWork -= getTimeDifference(current, oldHour, oldMinute);
+				
+				
 			}
 			if(minutesToWork > 0)
-				setToNextDayStart();
+				current = setToNextDayStart(current);
 		}
-
-		return this.current;
+		return current;
 	}
 
-	private void setToNextDayStart() {
+	private static int getTimeDifference(LocalDateTime current, int oldHour,
+			int oldMinute) {
+		return ( (current.getHour() - oldHour) * 60 ) + ( current.getMinute() - oldMinute );
+	}
+
+	private static LocalDateTime setToNextDayStart(LocalDateTime current) {
 		current = current.plusDays(1);
 		current = current.minusHours(current.getHour() - startHour);
 		current = current.minusMinutes(current.getMinute());
+		return current;
 	}
 
-	private boolean isWorkDay() {
+	private static boolean isWorkDay(LocalDateTime current) {
 		
-
 		if (Arrays.asList(workdays).contains(current.getDayOfWeek())) {
 			return true;
 		}
 		return false;
 	}
 
-	private void workUntilEndOfDayOrMinutesRunOut() {
+	private static LocalDateTime workUntilEndOfDayOrMinutesRunOut(LocalDateTime current, long minutesToWork) {
 		while (current.getHour() < endHour && minutesToWork > 0) {
 			current = current.plusMinutes(1);
 			minutesToWork--;
 		}
+		
+		return current;
 
 	}
 	
-	public static Duration durationBetween(LocalDateTime first, LocalDateTime second)
-	{
+	public static Duration durationBetween(LocalDateTime first, LocalDateTime second) {
 		if(!first.isBefore(second)) {
 			throw new IllegalArgumentException("first day is after the second");
 		}
 		
 		Duration minutes = Duration.ofMinutes(0);
-		LocalDateTime working = new WorkTime(first, minutes).getFinishTime();
+		LocalDateTime working = WorkTime.getFinishTime(first, minutes);
 		while(working.isBefore(second))
 		{
 			minutes = minutes.plusMinutes(60);
-			working = new WorkTime(first, minutes).getFinishTime();
+			working = WorkTime.getFinishTime(first, minutes);
 		}
 		
 		return minutes;

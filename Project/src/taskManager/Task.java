@@ -142,8 +142,7 @@ public class Task {
 
 	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
 
-		WorkTime worktime = new WorkTime(baseTime, duration);
-		return worktime.getFinishTime();
+		return WorkTime.getFinishTime(baseTime, duration);
 
 	}
 

@@ -258,26 +258,6 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testWillFinishOnTime() {
-
-	}
-
-	@Test
-	public void testWillFinishOverTime() {
-
-	}
-
-	@Test
-	public void testGetEstimatedFinishTime() {
-
-	}
-
-	@Test
-	public void testGetTotalDelay() {
-
-	}
-
-	@Test
 	public void testDepRedirectedAfterCreateAlternativeTask() {
 		project.createTask("task1", Duration.ofHours(3), 0.5);
 		Task task1 = project.getAllTasks().get(0);
@@ -305,6 +285,24 @@ public class ProjectTester {
 		project.createTask("task4 (dep task1)", Duration.ofHours(20), 0.5);
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+	}
+
+	@Test
+	public void isFinishOnTime() {
+		project.createTask("task1", Duration.ofHours(3), 0.5);
+		project.getAllTasks().get(0).updateStatus(now, now.plusHours(3), false);
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+
+		project.createTask("task2 (dep task1)", Duration.ofHours(20), 0.5);
+		project.getAllTasks().get(1).updateStatus(now, now.plusDays(10), false);
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+		assertEquals(ProjectStatus.FINISHED, project.getStatus());
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testGetCurrentDelayOnTime() {
+		project.createTask("bla", Duration.ofHours(8), 0.5);
+		project.getCurrentDelay();
 	}
 
 	@Test

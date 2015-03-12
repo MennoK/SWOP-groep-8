@@ -12,7 +12,11 @@ import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.ProjectFinishingStatus;
 import taskManager.Task;
+<<<<<<< HEAD
 import taskManager.TaskFinishedStatus;
+import taskManager.TaskManClock;
+=======
+>>>>>>> e4a4c64028297fff1bba4b41874e93cfb4e121b4
 
 public class UseCase5AdvanceTime {
 
