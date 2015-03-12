@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import taskManager.Project;
 import taskManager.ProjectController;
+import taskManager.ProjectFinishingStatus;
+import taskManager.ProjectStatus;
 import taskManager.Task;
 import taskManager.TaskManClock;
 import taskManager.exception.InvalidTimeException;
@@ -31,7 +33,7 @@ public class UseCase5AdvanceTime {
 		now = LocalDateTime.of(2015, 03,05, 00 ,00);
 		controller = new ProjectController(now);
 		controller.createProject("project1", "description", now.plusDays(5));
-		controller.createProject("project2", "description", now.plusDays(5));
+		controller.createProject("project2", "description", now.plusDays(3));
 
 		project1 = controller.getAllProjects().get(0);
 		project2 = controller.getAllProjects().get(0);
@@ -46,16 +48,11 @@ public class UseCase5AdvanceTime {
 
 	}
 
-	@Test(expected=InvalidTimeException.class)
-	public void testInvalidTimeToAdvance() throws InvalidTimeException{
-		controller.advanceTime(now.minusDays(3));
-	}
-
 	@Test
-	public void advanceTime(){
+	public void advanceTime() {
+		controller.advanceTime(now.plusHours(10));
 		
-
+		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
+		
 	}
-
-
 }
