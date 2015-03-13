@@ -15,7 +15,9 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
-import taskManager.*;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.Task;
 
 /**
  * The Parser class implements a YAML parser for TaskMan

@@ -1,6 +1,6 @@
 package useCase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,7 +10,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.*;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.ProjectFinishingStatus;
+import taskManager.ProjectStatus;
+import taskManager.Task;
+import taskManager.TaskStatus;
 
 public class UseCase1ShowProjectsTester {
 

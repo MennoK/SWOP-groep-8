@@ -1,13 +1,11 @@
 package taskManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import taskManager.TaskManClock;
 
 public class TaskManClockTester {
 
