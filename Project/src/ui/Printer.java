@@ -71,11 +71,7 @@ public class Printer {
 	static String full(Project project) {
 		String str = oneLine(project);
 		str += ", " + project.getDescription();
-		if (project.getStatus() == ProjectStatus.ONGOING)
-			str += ", " + project.finishedOnTime();
-		if (project.getStatus() == ProjectStatus.FINISHED) {
-			str += ", " + project.finishedOnTime();
-		}
+		str += ", " + project.finishedOnTime();
 		str += " (Created " + project.getCreationTime();
 		str += ", Due " + project.getDueTime();
 		if (project.finishedOnTime() == ProjectFinishingStatus.OVER_TIME)
