@@ -7,15 +7,22 @@ import java.util.Arrays;
 
 public class WorkTime {
 
-	static final int startHour = 8;
-	static final int endHour = 16;
+	private static final int startHour = 8;
+	private static final int endHour = 16;
 	
-	static final DayOfWeek[] workdays = new DayOfWeek[] { DayOfWeek.MONDAY,
+	private static final DayOfWeek[] workdays = new DayOfWeek[] { DayOfWeek.MONDAY,
 			DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
 			DayOfWeek.FRIDAY };
 	
 
-	static public LocalDateTime getFinishTime(LocalDateTime current, Duration duration) {
+	/**
+	 * Returns the time that is a duration after the given time, counting only work hours.
+	 * 
+	 * @param current the time you want to start counting from
+	 * @param duration the duration in workhours/minutes
+	 * @return the time the duration is finished
+	 */
+	public static LocalDateTime getFinishTime(LocalDateTime current, Duration duration) {
 		if(current.getHour() < startHour)
 		{
 			current = current.plusHours(startHour - current.getHour());
@@ -70,6 +77,13 @@ public class WorkTime {
 
 	}
 	
+	/**
+	 * Calculates the duration in workhours between the two times
+	 * 
+	 * @param first the time you want to start counting from
+	 * @param second the time until you want to count
+	 * @return the duration in workhours between the two times
+	 */
 	public static Duration durationBetween(LocalDateTime first, LocalDateTime second) {
 		if(!first.isBefore(second)) {
 			throw new IllegalArgumentException("first day is after the second");
