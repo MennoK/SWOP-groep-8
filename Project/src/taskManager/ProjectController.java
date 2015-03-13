@@ -49,13 +49,13 @@ public class ProjectController {
 	/**
 	 * Creates a new project with the given arguments and adds the project to
 	 * the list of projects. The creationTime is set to the current time
-	 *
+	 * 
 	 * @param name
 	 *            : name of the project
 	 * @param description
 	 *            : description of the project
 	 * @param dueTime
-	 *            : due time of the project 
+	 *            : due time of the project
 	 */
 	public void createProject(String name, String description,
 			LocalDateTime dueTime) {
@@ -96,8 +96,8 @@ public class ProjectController {
 
 	/**
 	 * 
-	 * Advances the time of TaskMan. This will update the status of every
-	 * task in every project of the project controller
+	 * Advances the time of TaskMan. This will update the status of every task
+	 * in every project of the project controller
 	 * 
 	 * @param time
 	 *            : new time

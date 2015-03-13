@@ -25,7 +25,7 @@ import taskManager.Task;
  * We are using the snakeYAML library
  * 
  * @author Groep 8
- *
+ * 
  */
 
 public class Parser {

@@ -162,7 +162,6 @@ public class Task {
 		return false;
 	}
 
-
 	/**
 	 * Adds a list of dependencies to task. The dependent tasks may not be
 	 * already in the dependency list of the task
@@ -253,7 +252,6 @@ public class Task {
 		this.description = description;
 	}
 
-
 	/**
 	 * Sets the estimated duration of a task by a given argument. The estimated
 	 * duration of task has to be strictly positive
@@ -272,8 +270,8 @@ public class Task {
 	}
 
 	/**
-	 * Sets the acceptable deviation of task. The acceptable deviation must
-	 * be positive or zero
+	 * Sets the acceptable deviation of task. The acceptable deviation must be
+	 * positive or zero
 	 * 
 	 * @param acceptableDeviation
 	 * @throws IllegalArgumentException
@@ -350,7 +348,6 @@ public class Task {
 		this.isAlternativeFor = isAlternativeFor;
 	}
 
-	
 	/**
 	 * Returns the last update time
 	 * 
@@ -359,7 +356,7 @@ public class Task {
 	LocalDateTime getLastUpdateTime() {
 		return lastUpdateTime;
 	}
-	
+
 	/**
 	 * Pore mans observer pattern
 	 * 
@@ -369,7 +366,7 @@ public class Task {
 	void update(LocalDateTime time) {
 		this.lastUpdateTime = time;
 	}
-	
+
 	/**
 	 * Allows the user to update the status of a Task to finished or failed
 	 * 
@@ -401,10 +398,10 @@ public class Task {
 		} else
 			throw new IllegalStateException();
 	}
-	
+
 	/**
 	 * Gets the estimated finish time of an unfinished task.
-	 *  
+	 * 
 	 * @return the estimated finish time
 	 */
 	public LocalDateTime getEstimatedFinishTime() {
@@ -453,7 +450,6 @@ public class Task {
 		return TaskStatus.AVAILABLE;
 	}
 
-	
 	/**
 	 * Returns the TaskFinishedStatus of a task
 	 * 
@@ -475,7 +471,6 @@ public class Task {
 		}
 	}
 
-
 	/**
 	 * Returns a boolean true if the task is failed false if the task is not
 	 * failed
@@ -485,7 +480,7 @@ public class Task {
 	public boolean isFailed() {
 		return failed;
 	}
-	
+
 	/**
 	 * Returns the end time of a project
 	 * 
@@ -494,7 +489,6 @@ public class Task {
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
-
 
 	/**
 	 * Returns the acceptable deviation of a task
@@ -505,7 +499,7 @@ public class Task {
 	public double getAcceptableDeviation() {
 		return acceptableDeviation;
 	}
-	
+
 	/**
 	 * returns the estimated duration of a task
 	 * 
@@ -514,7 +508,7 @@ public class Task {
 	public Duration getEstimatedDuration() {
 		return estimatedDuration;
 	}
-	
+
 	/**
 	 * Returns the start time of task
 	 * 
@@ -523,7 +517,7 @@ public class Task {
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
-	
+
 	/**
 	 * Returns the list with dependencies of the task
 	 * 
@@ -559,5 +553,5 @@ public class Task {
 	public int getId() {
 		return this.id;
 	}
-	
+
 }
