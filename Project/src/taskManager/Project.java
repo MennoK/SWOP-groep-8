@@ -316,17 +316,20 @@ public class Project {
 		if (finishedOnTime() == ProjectFinishingStatus.ON_TIME)
 			throw new IllegalStateException(
 					"Can not ask the current delay of a task which is expected to finish on time");
-		if(this.getAllTasks().size() == 0)
-			throw new IllegalStateException("A project without tasks can't have a delay");
+		if (this.getAllTasks().size() == 0)
+			throw new IllegalStateException(
+					"A project without tasks can't have a delay");
 
 		Task latestFinishingTask = this.getAllTasks().get(0);
-		
+
 		for (Task task : getAllTasks()) {
-			if(task.getEstimatedFinishTime().isAfter(latestFinishingTask.getEstimatedFinishTime())) {
+			if (task.getEstimatedFinishTime().isAfter(
+					latestFinishingTask.getEstimatedFinishTime())) {
 				latestFinishingTask = task;
 			}
 		}
-		return WorkTime.durationBetween(dueTime, latestFinishingTask.getEstimatedFinishTime());
+		return WorkTime.durationBetween(dueTime,
+				latestFinishingTask.getEstimatedFinishTime());
 	}
 
 	/**
