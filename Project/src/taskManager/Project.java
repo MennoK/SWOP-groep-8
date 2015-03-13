@@ -291,12 +291,15 @@ public class Project {
 	 * 
 	 */
 	LocalDateTime getEstimatedFinishTime() {
-		LocalDateTime estimatedFinishTime = this.lastUpdateTime;
+		LocalDateTime estimatedFinishTime = this.creationTime;
 		for (Task task : getAllTasks()) {
 			LocalDateTime taskFinishTime = task.getEstimatedFinishTime();
 			if (taskFinishTime.isAfter(estimatedFinishTime)) {
 				estimatedFinishTime = task.getEstimatedFinishTime();
 			}
+		}
+		if(this.getStatus() != ProjectStatus.FINISHED && this.lastUpdateTime.isAfter(estimatedFinishTime)){
+			estimatedFinishTime = this.lastUpdateTime;
 		}
 		return estimatedFinishTime;
 	}

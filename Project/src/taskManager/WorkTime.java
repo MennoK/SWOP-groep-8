@@ -78,8 +78,8 @@ public class WorkTime {
 	private static LocalDateTime workUntilEndOfDayOrMinutesRunOut(
 			LocalDateTime current, long minutesToWork) {
 		while (current.getHour() < endHour && minutesToWork > 0) {
-			current = current.plusMinutes(1);
-			minutesToWork--;
+			current = current.plusMinutes(60);
+			minutesToWork-=60;
 		}
 
 		return current;
