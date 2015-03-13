@@ -3,6 +3,7 @@ bin/
 .metadata/
 
 Project/.settings
+Project/Project.iml
 .idea/
 
 UML/.vpprefdata/
