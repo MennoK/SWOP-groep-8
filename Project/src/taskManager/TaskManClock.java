@@ -34,7 +34,7 @@ public class TaskManClock {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the new time is not valid
 	 */
-	public void setTime(LocalDateTime newTime) {
+	void setTime(LocalDateTime newTime) {
 		if (!canHaveTime(newTime)) {
 			throw new IllegalArgumentException(
 					"The given time is before the current time");

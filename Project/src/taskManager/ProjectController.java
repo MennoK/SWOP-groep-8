@@ -19,7 +19,7 @@ public class ProjectController {
 	private TaskManClock taskManClock;
 
 	/**
-	 * The constructor of the projectController needs a TaskManClock.
+	 * The constructor of the projectController needs a date time.
 	 */
 	public ProjectController(LocalDateTime now) {
 		projects = new ArrayList<>();
@@ -35,9 +35,9 @@ public class ProjectController {
 	 * @param description
 	 *            : description of the project
 	 * @param creationTime
-	 *            : creation time of the project (only the date needed)
+	 *            : creation time of the project
 	 * @param dueTime
-	 *            : due time of the project (only the date needed)
+	 *            : due time of the project
 	 */
 	public void createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
@@ -48,14 +48,14 @@ public class ProjectController {
 
 	/**
 	 * Creates a new project with the given arguments and adds the project to
-	 * the list of projects The creationTime is set to the current time
+	 * the list of projects. The creationTime is set to the current time
 	 *
 	 * @param name
 	 *            : name of the project
 	 * @param description
 	 *            : description of the project
 	 * @param dueTime
-	 *            : due time of the project (only the date needed)
+	 *            : due time of the project 
 	 */
 	public void createProject(String name, String description,
 			LocalDateTime dueTime) {

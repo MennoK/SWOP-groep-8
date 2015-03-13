@@ -5,6 +5,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * 
+ * @author Groep 8
+ *
+ */
 public class WorkTime {
 
 	private static final int startHour = 8;
@@ -99,5 +104,5 @@ public class WorkTime {
 		
 		return minutes;
 	}
-
+	
 }
