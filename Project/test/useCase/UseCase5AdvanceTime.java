@@ -21,8 +21,7 @@ public class UseCase5AdvanceTime {
 	private Project project1;
 	private Project project2;
 	private Task task1;
-	private Task task2;
-	private Task task3;
+
 
 	@Before
 	public void setUp() {
@@ -33,21 +32,23 @@ public class UseCase5AdvanceTime {
 		controller.createProject("project2", "description", now.plusDays(3));
 
 		project1 = controller.getAllProjects().get(0);
-		project2 = controller.getAllProjects().get(0);
+		project2 = controller.getAllProjects().get(1);
 
 		project1.createTask("task 1 description", Duration.ofHours(20), 20);
-		project2.createTask("task 2 description", Duration.ofHours(20), 20);
-		project2.createTask("task 3 description", Duration.ofHours(20), 20);
 
 		task1 = project1.getAllTasks().get(0);
-		task2 = project2.getAllTasks().get(1);
-		task3 = project2.getAllTasks().get(2);
+
 
 	}
 
 	@Test
 	public void advanceTime() {
+		//advance time with 10 hours
 		controller.advanceTime(now.plusHours(10));
+		
+		//check if the last update time has changed in every project and every task
+		assertEquals(now.plusHours(10), controller.getTime());
+		assertEquals(now.plusHours(10),project1.getLastUpdateTime());
 
 	}
 }
