@@ -387,17 +387,21 @@ public class Task {
 			throw new IllegalArgumentException(
 					"the given end time is before the start time");
 
-		if (setToFail
-				&& (this.getStatus() == TaskStatus.AVAILABLE || this
-						.getStatus() == TaskStatus.UNAVAILABLE)) {
+		if (getStatus() == TaskStatus.FAILED)
+			throw new IllegalStateException("Can not update failed task");
+
+		if (getStatus() == TaskStatus.FINISHED)
+			throw new IllegalStateException("Can not update finished task");
+
+		if (getStatus() == TaskStatus.UNAVAILABLE && !setToFail)
+			throw new IllegalStateException(
+					"Can not finish an unavailable task");
+
+		if (setToFail) {
 			this.setFailed();
-			this.setStartTime(startTime);
-			this.setEndTime(endTime);
-		} else if (this.getStatus() == TaskStatus.AVAILABLE) {
-			this.setStartTime(startTime);
-			this.setEndTime(endTime);
-		} else
-			throw new IllegalStateException();
+		}
+		this.setStartTime(startTime);
+		this.setEndTime(endTime);
 	}
 
 	/**
