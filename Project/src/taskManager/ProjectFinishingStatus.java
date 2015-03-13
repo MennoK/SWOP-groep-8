@@ -1,9 +1,9 @@
 package taskManager;
 
 /**
- * The ProjectFinishingStatus class describes an enumerator class
- * that lists the statuses how a project has finished. There
- * are two possibilities: on time or over time.
+ * The ProjectFinishingStatus class describes an enumerator class that lists the
+ * statuses how a project has finished. There are two possibilities: on time or
+ * over time.
  * 
  * @author Groep 8
  */

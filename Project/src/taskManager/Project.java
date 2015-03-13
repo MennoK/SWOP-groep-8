@@ -3,6 +3,7 @@ package taskManager;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -141,7 +142,7 @@ public class Project {
 		updateDependencies(task, isAlternativeForTask);
 		this.addTask(task);
 	}
-	
+
 	/**
 	 * This method adds a given task to a project
 	 * 
@@ -155,7 +156,7 @@ public class Project {
 			throw new IllegalArgumentException(
 					"The given task is already in this project.");
 		} else {
-			this.getAllTasks().add(task);
+			this.tasks.add(task);
 		}
 	}
 
@@ -172,7 +173,6 @@ public class Project {
 	private boolean canHaveTask(Task task) {
 		return (!getAllTasks().contains(task) && task != null);
 	}
-
 
 	/**
 	 * checks all the dependencies of all the tasks and replaces the old, failed
@@ -207,7 +207,6 @@ public class Project {
 		this.name = name;
 	}
 
-
 	/**
 	 * sets a description for a project
 	 * 
@@ -217,7 +216,6 @@ public class Project {
 	private void setDescription(String description) {
 		this.description = description;
 	}
-
 
 	/**
 	 * This method sets the due time of project
@@ -302,7 +300,7 @@ public class Project {
 		}
 		return estimatedFinishTime;
 	}
-	
+
 	/**
 	 * Returns the currently expected delay of the project
 	 * 
@@ -327,11 +325,11 @@ public class Project {
 		}
 		return currentDelay;
 	}
-	
+
 	/**
 	 * Returns the status of a project
 	 * 
-	 * @return ONGOING: if not all tasks are finished 
+	 * @return ONGOING: if not all tasks are finished
 	 * @return FINISHED: if all tasks are finished
 	 */
 	public ProjectStatus getStatus() {
@@ -341,7 +339,7 @@ public class Project {
 			return ProjectStatus.ONGOING;
 		}
 	}
-	
+
 	/**
 	 * Returns true if and only if all tasks of the project are finished. It
 	 * returns false if a task is unavailable or not yet available.
@@ -363,17 +361,16 @@ public class Project {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns the list of tasks of the project
 	 * 
 	 * @return list of tasks
 	 */
 	public List<Task> getAllTasks() {
-		return tasks;
+		return Collections.unmodifiableList(tasks);
 	}
 
-	
 	/**
 	 * Returns the name of a project
 	 * 
@@ -400,7 +397,7 @@ public class Project {
 	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
-	
+
 	/**
 	 * returns the due time of project
 	 * 
@@ -418,6 +415,5 @@ public class Project {
 	public LocalDateTime getLastUpdateTime() {
 		return lastUpdateTime;
 	}
-
 
 }

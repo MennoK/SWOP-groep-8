@@ -1,7 +1,5 @@
 package useCase;
 
-import static org.junit.Assert.*;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -10,9 +8,7 @@ import org.junit.Test;
 
 import taskManager.Project;
 import taskManager.ProjectController;
-import taskManager.ProjectFinishingStatus;
 import taskManager.Task;
-import taskManager.TaskFinishedStatus;
 
 public class UseCase5AdvanceTime {
 

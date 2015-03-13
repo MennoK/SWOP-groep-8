@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * The TaskManClock class implements the internal clock of the system.
  * 
  * @author Groep 8
- *
+ * 
  */
 
 public class TaskManClock {

@@ -8,17 +8,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-enum TaskStatus { ONGOING, FINISHED, FAILED }
+enum TaskStatus {
+	ONGOING, FINISHED, FAILED
+}
 
 public class TaskManInitFileChecker extends StreamTokenizer {
 
-	DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-	
+	DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+			.ofPattern("yyyy-MM-dd HH:mm");
+
 	TaskManInitFileChecker(Reader r) {
 		super(r);
 	}
-	
+
 	public int nextToken() {
 		try {
 			return super.nextToken();
@@ -26,28 +28,28 @@ public class TaskManInitFileChecker extends StreamTokenizer {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	void error(String msg) {
 		throw new RuntimeException("Line " + lineno() + ": " + msg);
 	}
-	
+
 	boolean isWord(String word) {
 		return ttype == TT_WORD && sval.equals(word);
 	}
-	
+
 	void expectChar(char c) {
 		if (ttype != c)
-			error ("'" + c + "' expected");
+			error("'" + c + "' expected");
 		nextToken();
 	}
-		
+
 	void expectLabel(String name) {
 		if (!isWord(name))
 			error("Keyword '" + name + "' expected");
 		nextToken();
 		expectChar(':');
 	}
-	
+
 	String expectStringField(String label) {
 		expectLabel(label);
 		if (ttype != '"')
@@ -56,29 +58,29 @@ public class TaskManInitFileChecker extends StreamTokenizer {
 		nextToken();
 		return value;
 	}
-	
+
 	LocalDateTime expectDateField(String label) {
 		String date = expectStringField(label);
 		return LocalDateTime.parse(date, dateTimeFormatter);
 	}
-	
+
 	int expectInt() {
-		if (ttype != TT_NUMBER || nval != (double)(int)nval)
+		if (ttype != TT_NUMBER || nval != (double) (int) nval)
 			error("Integer expected");
-		int value = (int)nval;
+		int value = (int) nval;
 		nextToken();
 		return value;
 	}
-	
+
 	int expectIntField(String label) {
 		expectLabel(label);
 		return expectInt();
 	}
-	
+
 	List<Integer> expectIntList() {
 		ArrayList<Integer> list = new ArrayList<>();
 		expectChar('[');
-		while (ttype == TT_NUMBER){
+		while (ttype == TT_NUMBER) {
 			list.add(expectInt());
 			if (ttype == ',')
 				expectChar(',');
@@ -88,16 +90,16 @@ public class TaskManInitFileChecker extends StreamTokenizer {
 		expectChar(']');
 		return list;
 	}
-	
+
 	void checkFile() {
 		slashSlashComments(false);
 		slashStarComments(false);
 		ordinaryChar('/'); // otherwise "//" keeps treated as comments.
 		commentChar('#');
-		
+
 		nextToken();
 		expectLabel("projects");
-		
+
 		while (ttype == '-') {
 			expectChar('-');
 			String name = expectStringField("name");
