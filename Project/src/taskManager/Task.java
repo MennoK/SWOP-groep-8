@@ -3,6 +3,7 @@ package taskManager;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -524,7 +525,7 @@ public class Task {
 	 * @return dependencies: list with dependencies
 	 */
 	public List<Task> getDependencies() {
-		return dependencies;
+		return Collections.unmodifiableList(dependencies);
 	}
 
 	/**
