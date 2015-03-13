@@ -3,6 +3,7 @@ package taskManager;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -155,7 +156,7 @@ public class Project {
 			throw new IllegalArgumentException(
 					"The given task is already in this project.");
 		} else {
-			this.getAllTasks().add(task);
+			this.tasks.add(task);
 		}
 	}
 
@@ -367,7 +368,7 @@ public class Project {
 	 * @return list of tasks
 	 */
 	public List<Task> getAllTasks() {
-		return tasks;
+		return Collections.unmodifiableList(tasks);
 	}
 
 	/**

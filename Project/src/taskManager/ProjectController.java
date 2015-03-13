@@ -2,6 +2,7 @@ package taskManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -76,7 +77,7 @@ public class ProjectController {
 			throw new IllegalArgumentException(
 					"The given project is already in this project.");
 		} else {
-			getAllProjects().add(project);
+			projects.add(project);
 		}
 	}
 
@@ -119,7 +120,7 @@ public class ProjectController {
 	 * @return projects: list of projects
 	 */
 	public List<Project> getAllProjects() {
-		return projects;
+		return Collections.unmodifiableList(projects);
 	}
 
 	/**
