@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import sun.org.mozilla.javascript.ast.NewExpression;
 import taskManager.*;
 
 public class UseCase1ShowProjectsTester {

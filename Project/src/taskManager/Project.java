@@ -43,9 +43,9 @@ public class Project {
 	 * @param description
 	 *            : description of the project
 	 * @param creationTime
-	 *            : creation time of the project (only the date needed)
+	 *            : creation time of the project
 	 * @param dueTime
-	 *            : due time of the project (only the date needed)
+	 *            : due time of the project
 	 */
 	Project(String name, String description, LocalDateTime creationTime,
 			LocalDateTime dueTime) {
@@ -141,30 +141,7 @@ public class Project {
 		updateDependencies(task, isAlternativeForTask);
 		this.addTask(task);
 	}
-
-	/**
-	 * checks all the dependencies of all the tasks and replaces the old, failed
-	 * task with a new one.
-	 * 
-	 * @param alternativeTask
-	 * @param isAlternativeForTask
-	 */
-	private void updateDependencies(Task alternativeTask,
-			Task isAlternativeForTask) {
-		List<Task> taskList = this.getAllTasks();
-		List<Task> dependecyList;
-		for (Task task : taskList) {
-			dependecyList = task.getDependencies();
-			for (Task dependency : dependecyList) {
-				if (dependency == isAlternativeForTask) {
-					task.addDependency(alternativeTask);
-					dependecyList.remove(dependency);
-				}
-			}
-		}
-
-	}
-
+	
 	/**
 	 * This method adds a given task to a project
 	 * 
@@ -196,49 +173,28 @@ public class Project {
 		return (!getAllTasks().contains(task) && task != null);
 	}
 
-	/**
-	 * Returns the list of tasks of the project
-	 * 
-	 * @return list of tasks
-	 */
-	public List<Task> getAllTasks() {
-		return tasks;
-	}
 
 	/**
-	 * Returns true if and only if all tasks of the project are finished. It
-	 * returns false if a task is unavailable or not yet available.
+	 * checks all the dependencies of all the tasks and replaces the old, failed
+	 * task with a new the alternative one.
 	 * 
-	 * If a project does not have any tasks, the project is not finished.
-	 * 
-	 * @return true if and only if all tasks are finished
+	 * @param alternativeTask
+	 * @param isAlternativeForTask
 	 */
-	private boolean hasFinished() {
-		if (this.getAllTasks().size() != 0) {
-			for (Task task : this.getAllTasks()) {
-				if (task.getStatus() == TaskStatus.UNAVAILABLE
-						|| task.getStatus() == TaskStatus.AVAILABLE) {
-					return false;
+	private void updateDependencies(Task alternativeTask,
+			Task isAlternativeForTask) {
+		List<Task> taskList = this.getAllTasks();
+		List<Task> dependecyList;
+		for (Task task : taskList) {
+			dependecyList = task.getDependencies();
+			for (Task dependency : dependecyList) {
+				if (dependency == isAlternativeForTask) {
+					task.addDependency(alternativeTask);
+					dependecyList.remove(dependency);
 				}
 			}
-			return true;
-		} else {
-			return false;
 		}
-	}
 
-	/**
-	 * Returns the status of a project
-	 * 
-	 * @return ONGOING: if not all tasks are finished FINISHED: if all tasks are
-	 *         finished
-	 */
-	public ProjectStatus getStatus() {
-		if (hasFinished()) {
-			return ProjectStatus.FINISHED;
-		} else {
-			return ProjectStatus.ONGOING;
-		}
 	}
 
 	/**
@@ -251,23 +207,6 @@ public class Project {
 		this.name = name;
 	}
 
-	/**
-	 * Returns the name of a project
-	 * 
-	 * @return name of a project
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * returns the description of a project
-	 * 
-	 * @return description of a project
-	 */
-	public String getDescription() {
-		return description;
-	}
 
 	/**
 	 * sets a description for a project
@@ -279,14 +218,6 @@ public class Project {
 		this.description = description;
 	}
 
-	/**
-	 * returns the due time of project
-	 * 
-	 * @return dueTime of a project
-	 */
-	public LocalDateTime getDueTime() {
-		return dueTime;
-	}
 
 	/**
 	 * This method sets the due time of project
@@ -316,20 +247,6 @@ public class Project {
 		return dueTime.isAfter(getCreationTime())
 				|| dueTime.isEqual(getCreationTime());
 	}
-
-	/*	*//**
-	 * Determines if the project will finish on time or over time. A
-	 * project has finished on time if the estimated finish time before the due
-	 * time of the project, otherwise its over time
-	 * 
-	 * @return
-	 */
-	/*
-	 * public ProjectFinishingStatus willFinishOnTime() { if
-	 * (this.getEstimatedFinishTime().isBefore(this.getDueTime())) { return
-	 * ProjectFinishingStatus.ON_TIME; } return
-	 * ProjectFinishingStatus.OVER_TIME; }
-	 */
 
 	/**
 	 * Returns whether the project finished on time or not.
@@ -385,25 +302,7 @@ public class Project {
 		}
 		return estimatedFinishTime;
 	}
-
-	/**
-	 * returns the creation time of a project
-	 * 
-	 * @return creationTime of a project
-	 */
-	public LocalDateTime getCreationTime() {
-		return creationTime;
-	}
-
-	/**
-	 * Returns the latest update time
-	 * 
-	 * @return lastUpdateTime: latest update time
-	 */
-	public LocalDateTime getLastUpdateTime() {
-		return lastUpdateTime;
-	}
-
+	
 	/**
 	 * Returns the currently expected delay of the project
 	 * 
@@ -428,4 +327,97 @@ public class Project {
 		}
 		return currentDelay;
 	}
+	
+	/**
+	 * Returns the status of a project
+	 * 
+	 * @return ONGOING: if not all tasks are finished 
+	 * @return FINISHED: if all tasks are finished
+	 */
+	public ProjectStatus getStatus() {
+		if (hasFinished()) {
+			return ProjectStatus.FINISHED;
+		} else {
+			return ProjectStatus.ONGOING;
+		}
+	}
+	
+	/**
+	 * Returns true if and only if all tasks of the project are finished. It
+	 * returns false if a task is unavailable or not yet available.
+	 * 
+	 * If a project does not have any tasks, the project is not finished.
+	 * 
+	 * @return true if and only if all tasks are finished
+	 */
+	private boolean hasFinished() {
+		if (this.getAllTasks().size() != 0) {
+			for (Task task : this.getAllTasks()) {
+				if (task.getStatus() == TaskStatus.UNAVAILABLE
+						|| task.getStatus() == TaskStatus.AVAILABLE) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns the list of tasks of the project
+	 * 
+	 * @return list of tasks
+	 */
+	public List<Task> getAllTasks() {
+		return tasks;
+	}
+
+	
+	/**
+	 * Returns the name of a project
+	 * 
+	 * @return name of a project
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * returns the description of a project
+	 * 
+	 * @return description of a project
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * returns the creation time of a project
+	 * 
+	 * @return creationTime of a project
+	 */
+	public LocalDateTime getCreationTime() {
+		return creationTime;
+	}
+	
+	/**
+	 * returns the due time of project
+	 * 
+	 * @return dueTime of a project
+	 */
+	public LocalDateTime getDueTime() {
+		return dueTime;
+	}
+
+	/**
+	 * Returns the latest update time
+	 * 
+	 * @return lastUpdateTime: latest update time
+	 */
+	public LocalDateTime getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+
 }

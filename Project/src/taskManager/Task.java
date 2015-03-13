@@ -162,35 +162,6 @@ public class Task {
 		return false;
 	}
 
-	/**
-	 * 
-	 * TODO doc
-	 * 
-	 * @param now
-	 * @return
-	 */
-	public LocalDateTime getEstimatedFinishTime() {
-
-		if (this.getEndTime() != null) {
-			return this.getEndTime();
-		} else {
-
-			if (this.getDependencies().isEmpty()) {
-				return add(this.lastUpdateTime, this.estimatedDuration);
-			} else {
-				// Find last estimated time of the dependencies
-				LocalDateTime estimatedTime = this.lastUpdateTime;
-				for (Task t : this.getDependencies()) {
-					if (t.getEstimatedFinishTime().isAfter(estimatedTime)) {
-						estimatedTime = t.getEstimatedFinishTime();
-					}
-				}
-				return add(estimatedTime, this.estimatedDuration);
-			}
-
-		}
-
-	}
 
 	/**
 	 * Adds a list of dependencies to task. The dependent tasks may not be
@@ -234,27 +205,6 @@ public class Task {
 	}
 
 	/**
-	 * Returns the TaskFinishedStatus of a task
-	 * 
-	 * @return taskFinishStatus : status of a finished task
-	 * @throws InvalidActivityException
-	 *             : thrown when the task is not finished yet
-	 */
-	public TaskFinishedStatus getFinishStatus() throws InvalidActivityException {
-		if (this.getStatus() != TaskStatus.FINISHED) {
-			throw new InvalidActivityException("The task is not finished yet");
-		} else {
-			if (wasFinishedEarly()) {
-				return TaskFinishedStatus.EARLY;
-			} else if (wasFinishedWithADelay()) {
-				return TaskFinishedStatus.WITH_A_DELAY;
-			} else {
-				return TaskFinishedStatus.ON_TIME;
-			}
-		}
-	}
-
-	/**
 	 * Checks whether the task has finished early or not. This occurs only if
 	 * the end time of the task is before the esimated duration minus the
 	 * acceptable deviation
@@ -294,24 +244,6 @@ public class Task {
 	}
 
 	/**
-	 * Returns the list with dependencies of the task
-	 * 
-	 * @return dependencies: list with dependencies
-	 */
-	public List<Task> getDependencies() {
-		return dependencies;
-	}
-
-	/**
-	 * Returns the description of task
-	 * 
-	 * @return description: the description of a task
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
 	 * Sets the description of the task
 	 * 
 	 * @param description
@@ -321,14 +253,6 @@ public class Task {
 		this.description = description;
 	}
 
-	/**
-	 * returns the estimated duration of a task
-	 * 
-	 * @return estimatedDuration: estimated duration of a task
-	 */
-	public Duration getEstimatedDuration() {
-		return estimatedDuration;
-	}
 
 	/**
 	 * Sets the estimated duration of a task by a given argument. The estimated
@@ -348,17 +272,7 @@ public class Task {
 	}
 
 	/**
-	 * Returns the acceptable deviation of a task
-	 * 
-	 * @return acceptableDeviation: the acceptable deviation of a task
-	 * 
-	 */
-	public double getAcceptableDeviation() {
-		return acceptableDeviation;
-	}
-
-	/**
-	 * Sets the acceptable deviation of task. The The acceptable deviation must
+	 * Sets the acceptable deviation of task. The acceptable deviation must
 	 * be positive or zero
 	 * 
 	 * @param acceptableDeviation
@@ -375,15 +289,6 @@ public class Task {
 	}
 
 	/**
-	 * Returns the end time of a project
-	 * 
-	 * @return endTime : the endTime of a project
-	 */
-	public LocalDateTime getEndTime() {
-		return endTime;
-	}
-
-	/**
 	 * Sets the end time.
 	 * 
 	 * @param endTime
@@ -391,29 +296,6 @@ public class Task {
 	 */
 	private void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
-	}
-
-	/**
-	 * Checks whether the endtime is after the start time
-	 * 
-	 * @param startTime
-	 *            : the startTime of a task
-	 * @param endTime
-	 *            : the endTime of a task
-	 * @return true if and only if the start time is before the endtime
-	 */
-	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
-			LocalDateTime endTime) {
-		return endTime.isAfter(startTime);
-	}
-
-	/**
-	 * Returns the start time of task
-	 * 
-	 * @return startTime : the start time of a task
-	 */
-	public LocalDateTime getStartTime() {
-		return startTime;
 	}
 
 	/**
@@ -427,13 +309,17 @@ public class Task {
 	}
 
 	/**
-	 * Returns a boolean true if the task is failed false if the task is not
-	 * failed
+	 * Checks whether the end time is after the start time
 	 * 
-	 * @return true if and only if the task is failed
+	 * @param startTime
+	 *            : the startTime of a task
+	 * @param endTime
+	 *            : the endTime of a task
+	 * @return true if and only if the start time is before the endtime
 	 */
-	public boolean isFailed() {
-		return failed;
+	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
+			LocalDateTime endTime) {
+		return endTime.isAfter(startTime);
 	}
 
 	/**
@@ -464,24 +350,26 @@ public class Task {
 		this.isAlternativeFor = isAlternativeFor;
 	}
 
+	
 	/**
-	 * Returns the task which this task is alternative for
+	 * Returns the last update time
 	 * 
-	 * @return isAlternativeFor: the alternative task
+	 * @return lastupdatetime
 	 */
-	public Task getAlternativeFor() {
-		return this.isAlternativeFor;
+	LocalDateTime getLastUpdateTime() {
+		return lastUpdateTime;
 	}
-
+	
 	/**
-	 * Returns the id of a task
+	 * Pore mans observer pattern
 	 * 
-	 * @return id : id of the task
+	 * @param time
+	 *            : the new time of the clock
 	 */
-	public int getId() {
-		return this.id;
+	void update(LocalDateTime time) {
+		this.lastUpdateTime = time;
 	}
-
+	
 	/**
 	 * Allows the user to update the status of a Task to finished or failed
 	 * 
@@ -513,6 +401,34 @@ public class Task {
 		} else
 			throw new IllegalStateException();
 	}
+	
+	/**
+	 * Gets the estimated finish time of an unfinished task.
+	 *  
+	 * @return the estimated finish time
+	 */
+	public LocalDateTime getEstimatedFinishTime() {
+
+		if (this.getEndTime() != null) {
+			return this.getEndTime();
+		} else {
+
+			if (this.getDependencies().isEmpty()) {
+				return add(this.lastUpdateTime, this.estimatedDuration);
+			} else {
+				// Find last estimated time of the dependencies
+				LocalDateTime estimatedTime = this.lastUpdateTime;
+				for (Task t : this.getDependencies()) {
+					if (t.getEstimatedFinishTime().isAfter(estimatedTime)) {
+						estimatedTime = t.getEstimatedFinishTime();
+					}
+				}
+				return add(estimatedTime, this.estimatedDuration);
+			}
+
+		}
+
+	}
 
 	/**
 	 * Gets the status of task. There are four different statuses for a task:
@@ -537,20 +453,111 @@ public class Task {
 		return TaskStatus.AVAILABLE;
 	}
 
+	
 	/**
-	 * Pore mans observer pattern
+	 * Returns the TaskFinishedStatus of a task
 	 * 
-	 * @param time
-	 *            : the new time of the clock
+	 * @return taskFinishStatus : status of a finished task
+	 * @throws InvalidActivityException
+	 *             : thrown when the task is not finished yet
 	 */
-	void update(LocalDateTime time) {
-		this.lastUpdateTime = time;
+	public TaskFinishedStatus getFinishStatus() throws InvalidActivityException {
+		if (this.getStatus() != TaskStatus.FINISHED) {
+			throw new InvalidActivityException("The task is not finished yet");
+		} else {
+			if (wasFinishedEarly()) {
+				return TaskFinishedStatus.EARLY;
+			} else if (wasFinishedWithADelay()) {
+				return TaskFinishedStatus.WITH_A_DELAY;
+			} else {
+				return TaskFinishedStatus.ON_TIME;
+			}
+		}
+	}
+
+
+	/**
+	 * Returns a boolean true if the task is failed false if the task is not
+	 * failed
+	 * 
+	 * @return true if and only if the task is failed
+	 */
+	public boolean isFailed() {
+		return failed;
+	}
+	
+	/**
+	 * Returns the end time of a project
+	 * 
+	 * @return endTime : the endTime of a project
+	 */
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
+
+
+	/**
+	 * Returns the acceptable deviation of a task
+	 * 
+	 * @return acceptableDeviation: the acceptable deviation of a task
+	 * 
+	 */
+	public double getAcceptableDeviation() {
+		return acceptableDeviation;
+	}
+	
+	/**
+	 * returns the estimated duration of a task
+	 * 
+	 * @return estimatedDuration: estimated duration of a task
+	 */
+	public Duration getEstimatedDuration() {
+		return estimatedDuration;
+	}
+	
+	/**
+	 * Returns the start time of task
+	 * 
+	 * @return startTime : the start time of a task
+	 */
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+	
+	/**
+	 * Returns the list with dependencies of the task
+	 * 
+	 * @return dependencies: list with dependencies
+	 */
+	public List<Task> getDependencies() {
+		return dependencies;
 	}
 
 	/**
-	 * Getter for lastUpdateTime
+	 * Returns the description of task
+	 * 
+	 * @return description: the description of a task
 	 */
-	LocalDateTime getLastUpdateTime() {
-		return lastUpdateTime;
+	public String getDescription() {
+		return description;
 	}
+
+	/**
+	 * Returns the task which this task is alternative for
+	 * 
+	 * @return isAlternativeFor: the alternative task
+	 */
+	public Task getAlternativeFor() {
+		return this.isAlternativeFor;
+	}
+
+	/**
+	 * Returns the id of a task
+	 * 
+	 * @return id : id of the task
+	 */
+	public int getId() {
+		return this.id;
+	}
+	
 }
