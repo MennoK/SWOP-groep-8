@@ -21,6 +21,9 @@ public class ProjectController {
 
 	/**
 	 * The constructor of the projectController needs a date time.
+	 * 
+	 * @param now
+	 *            : the time at which the ProjectController is created
 	 */
 	public ProjectController(LocalDateTime now) {
 		projects = new ArrayList<>();

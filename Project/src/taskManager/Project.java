@@ -86,8 +86,8 @@ public class Project {
 	 *            : estimated duration of task
 	 * @param acceptableDeviation
 	 *            : acceptable deviation of a task
-	 * @param alternativeTask
-	 *            : The alternative task
+	 * @param isAlternativeForTask
+	 *            : The original task
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeForTask) {
@@ -128,7 +128,7 @@ public class Project {
 	 *            : estimated duration of task
 	 * @param acceptableDeviation
 	 *            : acceptable deviation of a task
-	 * @param alternativeTask
+	 * @param isAlternativeForTask
 	 *            : The alternative task
 	 * @param dependencies
 	 *            : list with dependencies

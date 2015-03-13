@@ -2,6 +2,7 @@ bin/
 .classpath
 .metadata/
 
+Project/doc
 Project/.settings
 Project/.project
 Project/Project.iml

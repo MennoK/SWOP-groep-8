@@ -439,6 +439,8 @@ public class Task {
 	 * A task is failed when the boolean isFailed is true A task is finished
 	 * when the task has an end time The task availability is dependent on the
 	 * dependencies of the task
+	 * 
+	 * @return the status of the task
 	 */
 	public TaskStatus getStatus() {
 		if (isFailed()) {
