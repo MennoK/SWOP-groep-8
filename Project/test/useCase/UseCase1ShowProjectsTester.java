@@ -1,6 +1,6 @@
 package useCase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,7 +10,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.*;
+import taskManager.Project;
+import taskManager.ProjectController;
+import taskManager.ProjectFinishingStatus;
+import taskManager.ProjectStatus;
+import taskManager.Task;
+import taskManager.TaskStatus;
 
 public class UseCase1ShowProjectsTester {
 
@@ -19,12 +24,12 @@ public class UseCase1ShowProjectsTester {
 	private Project project2;
 	private Project project0;
 	private Project project3;
-	
+
 	private Task task1;
 	private Task task2;
 	private Task task3;
 	private Task task4;
-	
+
 	private LocalDateTime now;
 
 	@Before
@@ -34,7 +39,6 @@ public class UseCase1ShowProjectsTester {
 		// project0 has 0 tasks
 		// project1 has 1 task (finished)
 		// project2 has 2 tasks (1 task is dependent on the other)
-		
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
@@ -45,7 +49,8 @@ public class UseCase1ShowProjectsTester {
 				LocalDateTime.of(2015, 03, 10, 11, 00));
 		controller.createProject("Project 0", "Description 3",
 				LocalDateTime.of(2015, 03, 10, 11, 00));
-		controller.createProject("Project 3", "Description 3", LocalDateTime.of(2015, 03, 10, 16, 00));
+		controller.createProject("Project 3", "Description 3",
+				LocalDateTime.of(2015, 03, 10, 16, 00));
 
 		project0 = controller.getAllProjects().get(2);
 		project1 = controller.getAllProjects().get(0);
@@ -82,7 +87,7 @@ public class UseCase1ShowProjectsTester {
 		assertEquals("Description 1", project1.getDescription());
 		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
 				project1.getCreationTime());
-		assertEquals(	LocalDateTime.of(2015, 03, 10, 11, 00),
+		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
 				project1.getDueTime());
 
 		assertEquals("Project 2", project2.getName());
@@ -100,26 +105,27 @@ public class UseCase1ShowProjectsTester {
 				project0.getDueTime());
 
 		// show details of the projects: over_time/on_time and hours short
-		//project 1 is finished -> ON_TIME
-		//project 2 is ongoing and should be OVER_TIME should be 5 hours delay (2 dependent tasks)
-		
-		assertEquals(ProjectFinishingStatus.OVER_TIME, project2.finishedOnTime());
+		// project 1 is finished -> ON_TIME
+		// project 2 is ongoing and should be OVER_TIME should be 5 hours delay
+		// (2 dependent tasks)
+
+		assertEquals(ProjectFinishingStatus.OVER_TIME,
+				project2.finishedOnTime());
 		assertEquals(Duration.ofHours(5), project2.getCurrentDelay());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 		ArrayList<Task> dep = new ArrayList<>();
 		dep.add(task4);
-		
+
 		project3.createTask("task5", Duration.ofHours(1), 0.4, dep);
 
-		//project 3 has 2 dependent tasks -> should still finish on time
+		// project 3 has 2 dependent tasks -> should still finish on time
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 		// Show their status: project with zero tasks in ongoing
 		assertEquals(ProjectStatus.ONGOING, project0.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project1.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project2.getStatus());
 
-		
 		// show tasks of each project
 		assertEquals(0, project0.getAllTasks().size());
 		assertEquals(1, project1.getAllTasks().size());

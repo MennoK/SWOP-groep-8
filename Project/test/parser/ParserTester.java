@@ -1,6 +1,8 @@
 package parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.time.Duration;
