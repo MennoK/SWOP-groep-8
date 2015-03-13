@@ -198,7 +198,6 @@ public class TaskTester {
 	@Test
 	public void createAlternativeTask() {
 		new Task("desc2", Duration.ofHours(3), 2, now, failedTask);
-		// TODO write asserts
 	}
 
 	@Test
@@ -206,7 +205,6 @@ public class TaskTester {
 		ArrayList<Task> dep = new ArrayList<Task>();
 		dep.add(baseTask);
 		new Task("desc2", Duration.ofHours(3), 2, now, failedTask, dep);
-		// TODO write asserts
 	}
 
 	@Test(expected = IllegalArgumentException.class)
