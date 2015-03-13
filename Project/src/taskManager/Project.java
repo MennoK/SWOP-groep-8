@@ -277,10 +277,12 @@ public class Project {
 	 *            the current time
 	 */
 	void update(LocalDateTime time) {
+		if(this.getStatus() != ProjectStatus.FINISHED){
+			this.lastUpdateTime = time;
+		}
 		for (Task task : this.getAllTasks()) {
 			task.update(time);
 		}
-		this.lastUpdateTime = time;
 	}
 
 	/**
