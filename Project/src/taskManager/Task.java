@@ -529,6 +529,13 @@ public class Task {
 	}
 
 	/**
+	 * Remove task from the dependency list
+	 */
+	void removeDependency(Task task) {
+		dependencies.remove(task);
+	}
+
+	/**
 	 * Returns the description of task
 	 * 
 	 * @return description: the description of a task

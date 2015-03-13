@@ -184,13 +184,11 @@ public class Project {
 	private void updateDependencies(Task alternativeTask,
 			Task isAlternativeForTask) {
 		List<Task> taskList = this.getAllTasks();
-		List<Task> dependecyList;
 		for (Task task : taskList) {
-			dependecyList = task.getDependencies();
-			for (Task dependency : dependecyList) {
+			for (Task dependency : task.getDependencies()) {
 				if (dependency == isAlternativeForTask) {
 					task.addDependency(alternativeTask);
-					dependecyList.remove(dependency);
+					task.removeDependency(dependency);
 				}
 			}
 		}
@@ -277,7 +275,7 @@ public class Project {
 	 *            the current time
 	 */
 	void update(LocalDateTime time) {
-		if(this.getStatus() != ProjectStatus.FINISHED){
+		if (this.getStatus() != ProjectStatus.FINISHED) {
 			this.lastUpdateTime = time;
 		}
 		for (Task task : this.getAllTasks()) {
