@@ -6,7 +6,6 @@ import javax.activity.InvalidActivityException;
 
 import taskManager.Project;
 import taskManager.ProjectFinishingStatus;
-import taskManager.ProjectStatus;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
 
