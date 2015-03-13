@@ -320,4 +320,11 @@ public class ProjectTester {
 		task1.updateStatus(now, now.plusHours(4 * 8), false);
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
+
+	@Test
+	public void testGetCurrentDelayTwoTasks() {
+		project.createTask("bla", Duration.ofHours(5 * 8), 0.5);
+		project.createTask("bla", Duration.ofHours(4 * 8), 0.5);
+		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
+	}
 }
