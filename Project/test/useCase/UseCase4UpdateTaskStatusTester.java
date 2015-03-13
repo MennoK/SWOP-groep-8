@@ -106,31 +106,6 @@ public class UseCase4UpdateTaskStatusTester {
 		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 	}
-	/*
-	 * @Test public void testUpdateTaskStatusFinishedtestNoDependencies() {
-	 * //User has selected task1
-	 * 
-	 * task1.setEndTime(LocalDateTime.of(2017, 03, 01, 00 ,00));
-	 * assertEquals(TaskStatus.FINISHED, task1.getStatus()); }
-	 * 
-	 * @Test public void testUpdateTaskStatusFinishedtestWithDependencies() {
-	 * //User has selected task1 assertEquals(TaskStatus.UNAVAILABLE,
-	 * task3.getStatus()); task2.setEndTime(LocalDateTime.of(2017, 03, 01, 00
-	 * ,00)); assertEquals(TaskStatus.FINISHED, task2.getStatus());
-	 * assertEquals(TaskStatus.AVAILABLE, task3.getStatus()); } //TODO:
-	 * implement
-	 * 
-	 * @Test public void testUpdateTaskStatusFailedNoDependencies() { //User has
-	 * selected task1
-	 * 
-	 * task1.setFailed(true); assertEquals(TaskStatus.FAILED,
-	 * task1.getStatus()); } //TODO: implement
-	 * 
-	 * @Test public void testUpdateTaskStatusFailedWithDependencies() { //User
-	 * has selected task1
-	 * 
-	 * task1.setFailed(true); assertEquals(TaskStatus.FAILED,
-	 * task1.getStatus()); }
-	 */
+
 
 }
