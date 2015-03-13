@@ -327,4 +327,11 @@ public class ProjectTester {
 		project.createTask("bla", Duration.ofHours(4 * 8), 0.5);
 		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
 	}
+	@Test(expected =IllegalStateException.class)
+	public void testGetCurrentDelayNoTask() {
+		project.getCurrentDelay();
+	}
+	
+		
+	
 }
