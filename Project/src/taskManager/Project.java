@@ -275,9 +275,7 @@ public class Project {
 	 *            the current time
 	 */
 	void update(LocalDateTime time) {
-		if (this.getStatus() != ProjectStatus.FINISHED) {
-			this.lastUpdateTime = time;
-		}
+		this.lastUpdateTime = time;
 		for (Task task : this.getAllTasks()) {
 			task.update(time);
 		}
@@ -298,7 +296,8 @@ public class Project {
 				estimatedFinishTime = task.getEstimatedFinishTime();
 			}
 		}
-		if(this.getStatus() != ProjectStatus.FINISHED && this.lastUpdateTime.isAfter(estimatedFinishTime)){
+		if (this.getStatus() != ProjectStatus.FINISHED
+				&& this.lastUpdateTime.isAfter(estimatedFinishTime)) {
 			estimatedFinishTime = this.lastUpdateTime;
 		}
 		return estimatedFinishTime;
