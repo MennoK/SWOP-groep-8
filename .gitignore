@@ -3,6 +3,7 @@ bin/
 .metadata/
 
 Project/.settings
+Project/.project
 Project/Project.iml
 .idea/
 
