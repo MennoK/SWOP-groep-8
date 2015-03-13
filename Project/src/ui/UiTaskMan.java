@@ -196,7 +196,7 @@ public class UiTaskMan {
 		System.out.println("Welcome to TaskMan");
 		UiTaskMan ui = new UiTaskMan();
 		ui.menu();
-		System.out.println("Goodbye");
+		System.out.println("Goodbye!");
 	}
 
 }
