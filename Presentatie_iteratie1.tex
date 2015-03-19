@@ -121,14 +121,18 @@
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
-        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[scale=0.5]{/home/travolter/SWOP-groep-8/Presentatie_iteratie1/figures/Class_Diagram.png}};
+        \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\textwidth]{/home/travolter/SWOP-groep-8/Presentatie_iteratie1/figures/Class_Diagram.png}};
         \begin{scope}[x={(image.south east)},y={(image.north west)}]
-          
-            \node[anchor=south west,inner sep=0] (image) at (0.0,0.0) {\includegraphics[scale=0.3]{/home/travolter/SWOP-groep-8/Presentatie_iteratie1/figures/Package_overview.png}};
+            \draw[help lines,xstep=.1,ystep=.1] (0,0) grid (1,1);
+            \foreach \x in {0,1,...,9} { \node [anchor=north] at (\x/10,0) {0.\x}; }
+            \foreach \y in {0,1,...,9} { \node [anchor=east] at (0,\y/10) {0.\y}; }
+            \node[anchor=south west,inner sep=0] (image) at (0.5,0.7) {\includegraphics[width=0.1\textwidth]{/home/travolter/SWOP-groep-8/Presentatie_iteratie1/figures/Package_overview.png}};
         \end{scope}
     \end{tikzpicture}
     \caption{Find that penguin!}
 \end{figure}
+\end{document}
+
 \end{frame}
 
 
