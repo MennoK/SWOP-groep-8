@@ -87,9 +87,13 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[SWOP iteratie 1]{SWOP iteratie 1} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Software ontwerp: iteratie 1]{Software ontwerp: iteratie 1 (groep 8)} % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{Groep 8} % Your name
+\author[Groep 8]{\\
+		Andr\'e Jacobs \\
+		Menno Keustermans\\
+		Bruno Lannoo \\
+		Thomas Marcelis} % Your name
 \institute[KULeuven] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {\\ % Your institution for the title page
 \medskip
@@ -110,14 +114,44 @@
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
 
+%----------------------------------------------------------------------------------------
+%	Packages overzicht:
+%		In src zijn er 4 packages:
+%		
+%		Front-end : user interface
+%					-> gebruikt exception, parser en taskmanager
+%		Back-end : taskManager
+%----------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle {General overview}
-\begin{figure}[htp]
+\frametitle {Packages: overzicht}
+\begin{figure*}
 \centering
-\includegraphics[scale=0.42]{UML/Class_Diagrams.jpg}
-
-\label{}
-\end{figure}
+\includegraphics[width=1.3\textwidth]{figures/PackageDiagram.pdf}
+\caption{Test}
+\end{figure*}
 \end{frame}
+
+%----------------------------------------------------------------------------------------
+%	Class diagram overzicht: (back-end)
+%		Project-controller heeft overzicht over alle projecten en bevat
+%		de interne klok van het systeem
+%
+%		Project heeft overzicht van alle taken
+%
+%		Taken
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle {Class diagram: overzicht}
+\begin{figure*}
+\centering
+\begin{center}
+\includegraphics[width=0.92\textwidth]{figures/ClassDiagram.pdf}
+\end{center}
+
+\end{figure*}
+\end{frame}
+
 \end{document} 
