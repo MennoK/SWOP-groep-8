@@ -23,54 +23,13 @@
 % which change the colors and layouts of slides. Below this is a list
 % of all the themes, uncomment each in turn to see what they look like.
 
-%\usetheme{default}
-%\usetheme{AnnArbor}
-%\usetheme{Antibes}
-%\usetheme{Bergen}
-%\usetheme{Berkeley}
-%\usetheme{Berlin}
-%\usetheme{Boadilla}
-%\usetheme{CambridgeUS}
-%\usetheme{Copenhagen}
-%\usetheme{Darmstadt}
-%\usetheme{Dresden}
-%\usetheme{Frankfurt}
-%\usetheme{Goettingen}
-%\usetheme{Hannover}
-%\usetheme{Ilmenau}
-%\usetheme{JuanLesPins}
-%\usetheme{Luebeck}
-%
 \usetheme{Madrid}
-%\usetheme{Malmoe}
-%\usetheme{Marburg}
-%\usetheme{Montpellier}
-%\usetheme{PaloAlto}
-%\usetheme{Pittsburgh}
-%\usetheme{Rochester}
-%\usetheme{Singapore}
-%\usetheme{Szeged}
-%\usetheme{Warsaw}
 
 % As well as themes, the Beamer class has a number of color themes
 % for any slide theme. Uncomment each of these in turn to see how it
 % changes the colors of your current slide theme.
 
-%\usecolortheme{albatross}
-%\usecolortheme{beaver}
-%\usecolortheme{beetle}
-%\usecolortheme{crane}
-%\usecolortheme{dolphin}
-%\usecolortheme{dove}
-%\usecolortheme{fly}
-%\usecolortheme{lily}
-%\usecolortheme{orchid}
-%\usecolortheme{rose}
-%
 \usecolortheme{seagull}
-%\usecolortheme{seahorse}
-%\usecolortheme{whale}
-%\usecolortheme{wolverine}
 
 %\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
 %\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
@@ -145,10 +104,11 @@
 
 \begin{frame}
 \frametitle {Class diagram: overzicht}
+\vspace{-1.4cm}
 \begin{figure}
 \centering
 \begin{center}
-\includegraphics[width=0.92\textwidth]{figures/ClassDiagram.pdf}
+\includegraphics[width=1.05\textwidth]{figures/ClassDiagram.pdf}
 \end{center}
 
 \end{figure}
@@ -197,6 +157,67 @@
 \end{frame}
 
 %----------------------------------------------------------------------------------------
+%	Observer pattern
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle {Observer pattern}
+\vspace{-0.5cm}
+\begin{columns}
+	\begin{column}{.58\paperwidth}
+		\begin{figure}
+			\includegraphics[width=0.55\paperwidth]{figures/OriginalDesignClock.png}
+		\end{figure}
+	\end{column}
+	\begin{column}{.3\paperwidth}
+		\includegraphics[width=0.3\paperwidth]{figures/MiniClassDiagram.png}
+	\end{column}
+\end{columns}
+\vspace{-0.2cm}
+\begin{figure}
+	\includegraphics[width=0.68\paperwidth]{figures/FinalDesignClock.png}
+\end{figure}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	Pure fabrication
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Pure fabrication}
+\begin{itemize}
+\item WorkTime
+\begin{itemize}
+\item Werkuren tussen twee dagen 
+\item Deadline berekening
+\item Configureerbaar
+\end{itemize}
+\end{itemize}
+\includegraphics[width=0.8\paperwidth]{figures/WorkTime.png}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	Extensions
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Extensions}
+\begin{itemize}
+\item Vanwege low coupling
+\begin{itemize}
+\item extra constraints makkelijk te implementeren
+\end{itemize}
+\item Vanwege high cohesion
+\begin{itemize}
+\item makkelijk om nieuwe domein elementen toe te voegen
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
 %	Testing
 %		Unit testing: om corner cases te testen
 %       Use Case testing: succes scenarios getest
@@ -211,12 +232,35 @@
 \end{itemize}
 \begin{columns}
 	\begin{column}{.4\paperwidth}
-		\includegraphics[width=0.2\paperwidth]{figures/Package_overview_eclipse.png}
+		\includegraphics[width=0.25\paperwidth]{figures/Package_overview_eclipse.png}
 	\end{column}
-	\begin{column}{.4\paperwidth}
-		\includegraphics[width=0.35\paperwidth]{figures/coverage.png}
+	\begin{column}{.5\paperwidth}
+		\includegraphics[width=0.45\paperwidth]{figures/coverage.png}
 	\end{column}
 \end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview Projectmanagement}
+
+\begin{itemize}
+	\item Design co\"ordinator: Andr\'e
+	\item Domain co\"ordinator: Thomas
+	\item Test co\"ordinator: Bruno
+\end{itemize}
+
+Volgende iteratie:
+
+\begin{itemize}
+	\item Design co\"ordinator: Bruno
+	\item Domain co\"ordinator: Menno
+	\item Test co\"ordinator: Thomas
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[width=0.6\paperwidth]{figures/workHours.png}
+\end{figure}
+
 \end{frame}
 
 \end{document} 
