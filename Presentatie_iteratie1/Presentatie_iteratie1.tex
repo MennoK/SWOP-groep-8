@@ -125,11 +125,11 @@
 
 \begin{frame}
 \frametitle {Packages: overzicht}
-\begin{figure*}
+\begin{figure}
 \centering
 \includegraphics[width=1.3\textwidth]{figures/PackageDiagram.pdf}
 \caption{Test}
-\end{figure*}
+\end{figure}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -145,13 +145,55 @@
 
 \begin{frame}
 \frametitle {Class diagram: overzicht}
-\begin{figure*}
+\begin{figure}
 \centering
 \begin{center}
 \includegraphics[width=0.92\textwidth]{figures/ClassDiagram.pdf}
 \end{center}
 
-\end{figure*}
+\end{figure}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	ProjectController (discussion GRASP)
+%		Information expert
+%			Verantwoordelijkheden:
+%				- houdt lijst van projecten bij
+%				- houdt ook de klok bij
+%
+%			Creator:
+%				Verantwoordelijkheden: 
+%				- Maakt elk project aan.
+%	
+%			Controller:
+%				Aanspreekpunt voor alle informatie
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle {ProjectController: Grasp Patterns}
+\begin{columns}
+	\begin{column}{.45\paperwidth}
+	\begin{itemize}
+		\item Information expert:
+			\begin{itemize}
+				\item Kent alle projecten
+				\item Kent de klok
+			\end{itemize}
+		\item Creator:
+			\begin{itemize}
+				\item Maakt de projecten aan
+			\end{itemize}
+		\item Controller:
+			\begin{itemize}
+				\item Aanspreekpunt voor alle UC
+			\end{itemize}
+	\end{itemize}
+	\end{column}
+	\begin{column}{.45\paperwidth}
+		\includegraphics[width=0.4\paperwidth]{figures/MiniClassDiagram.png}
+	\end{column}
+\end{columns}
 \end{frame}
 
 \end{document} 
