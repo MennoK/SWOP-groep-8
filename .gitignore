@@ -18,3 +18,9 @@ Personal/
 .directory
 
 group08/
+
+.log
+.aux
+.nav
+.toc
+.synctex.gz
