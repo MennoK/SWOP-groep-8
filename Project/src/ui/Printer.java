@@ -54,8 +54,8 @@ public class Printer {
 				str += " task " + dep.getId();
 			str += " }";
 		}
-		if (task.getAlternativeFor() != null)
-			str += ", alternative for task " + task.getAlternativeFor().getId();
+		if (task.getOriginal() != null)
+			str += ", alternative for task " + task.getOriginal().getId();
 		try {
 			TaskFinishedStatus finishStatus = task.getFinishStatus();
 			str += ", started " + task.getStartTime();

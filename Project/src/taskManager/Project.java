@@ -179,14 +179,14 @@ public class Project {
 	 * task with a new the alternative one.
 	 * 
 	 * @param alternativeTask
-	 * @param isAlternativeForTask
+	 * @param originalTask
 	 */
 	private void updateDependencies(Task alternativeTask,
-			Task isAlternativeForTask) {
+			Task originalTask) {
 		List<Task> taskList = this.getAllTasks();
 		for (Task task : taskList) {
 			for (Task dependency : task.getDependencies()) {
-				if (dependency == isAlternativeForTask) {
+				if (dependency == originalTask) {
 					task.addDependency(alternativeTask);
 					task.removeDependency(dependency);
 				}
