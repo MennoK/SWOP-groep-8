@@ -65,7 +65,7 @@ public class Task {
 	 */
 	Task(String description, Duration estimatedDuration, double acceptableDeviation, LocalDateTime now, Task originalTask,
 			List<Task> dependencies){
-		if((dependencies != null || !dependencies.isEmpty())&& originalTask != null){
+		if((dependencies != null || !dependencies.isEmpty()) && originalTask != null){
 			if (dependencies.contains(originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -76,17 +76,21 @@ public class Task {
 							"Can not create an alternative task which is indirectly dependent"
 									+ " on the task it is an alternative for");
 		}
+
 		addMultipleDependencies(dependencies);
-		setAlternativeTask(originalTask);
-		
+
+		// null means no original task
+		if(originalTask != null){
+			setAlternativeTask(originalTask);
+		}
 		setDescription(description);
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
 		this.id = idCounter.getAndIncrement();
-		
+
 		update(now);
 	}
-			
+
 	/**
 	 * Constructor of task with arguments: description, estimatedDuration and
 	 * acceptable deviation
