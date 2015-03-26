@@ -67,10 +67,12 @@ public class Project {
 		Duration estimatedDuration;
 		double acceptableDeviation;
 		// Optional
-		
+		Task originalTask = null;
+		List<Task> dependencies = new ArrayList<Task>();
+
 		/**
-		 * Creates a TaskBuilder with the required information for the creation of a
-		 * Task
+		 * Creates a TaskBuilder with the required information for the creation
+		 * of a Task
 		 * 
 		 * @param description
 		 *            : description of a task
@@ -79,20 +81,52 @@ public class Project {
 		 * @param acceptableDeviation
 		 *            : acceptable deviation of a task
 		 */
-		public TaskBuilder(String description,
-				Duration estimatedDuration, double acceptableDeviation) {
+		public TaskBuilder(String description, Duration estimatedDuration,
+				double acceptableDeviation) {
 			this.description = description;
 			this.estimatedDuration = estimatedDuration;
 			this.acceptableDeviation = acceptableDeviation;
 		}
-		
+
+		/**
+		 * If the Task being build is the alternative Task for some other Task
+		 * which failed then use this to specify the original task.
+		 * 
+		 * @param originalTask
+		 *            : the failed Task
+		 * @return This TaskBuilder
+		 */
+		public TaskBuilder setOriginalTask(Task originalTask) {
+			this.originalTask = originalTask;
+			return this;
+		}
+
+		/**
+		 * If the Task being build has dependencies, then specify them here.
+		 * 
+		 * @param dependencies
+		 *            : the dependencies of the future Task
+		 * @return This TaskBuilder
+		 */
+		public TaskBuilder setDependencies(List<Task> dependencies) {
+			this.dependencies = dependencies;
+			return this;
+		}
+
 		/**
 		 * Build a Task after all the optional values have been set.
 		 */
 		public void build() {
-			Task task = new Task(description, estimatedDuration,
-					acceptableDeviation, lastUpdateTime);
-			addTask(task);
+			if (originalTask == null) {
+				Task task = new Task(description, estimatedDuration,
+						acceptableDeviation, lastUpdateTime);
+				addTask(task);
+			} else {
+				Task task = new Task(description, estimatedDuration,
+						acceptableDeviation, lastUpdateTime, originalTask);
+				updateDependencies(task, originalTask);
+				addTask(task);
+			}
 		}
 	}
 
@@ -110,7 +144,8 @@ public class Project {
 	@Deprecated
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
-		new TaskBuilder(description, estimatedDuration, acceptableDeviation).build();
+		new TaskBuilder(description, estimatedDuration, acceptableDeviation)
+				.build();
 	}
 
 	/**
@@ -126,13 +161,11 @@ public class Project {
 	 * @param isAlternativeForTask
 	 *            : The original task
 	 */
+	@Deprecated
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeForTask) {
-		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, isAlternativeForTask);
-
-		updateDependencies(task, isAlternativeForTask);
-		this.addTask(task);
+		new TaskBuilder(description, estimatedDuration, acceptableDeviation)
+				.setOriginalTask(isAlternativeForTask).build();
 	}
 
 	/**
