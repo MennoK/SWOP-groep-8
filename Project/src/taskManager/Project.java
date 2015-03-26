@@ -119,11 +119,12 @@ public class Project {
 		public void build() {
 			if (originalTask == null) {
 				Task task = new Task(description, estimatedDuration,
-						acceptableDeviation, lastUpdateTime);
+						acceptableDeviation, lastUpdateTime, dependencies);
 				addTask(task);
 			} else {
 				Task task = new Task(description, estimatedDuration,
-						acceptableDeviation, lastUpdateTime, originalTask);
+						acceptableDeviation, lastUpdateTime, originalTask,
+						dependencies);
 				updateDependencies(task, originalTask);
 				addTask(task);
 			}
@@ -181,11 +182,11 @@ public class Project {
 	 * @param dependencies
 	 *            : list with dependencies
 	 */
+	@Deprecated
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, List<Task> dependencies) {
-		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, dependencies);
-		this.addTask(task);
+		new TaskBuilder(description, estimatedDuration, acceptableDeviation)
+				.setDependencies(dependencies).build();
 	}
 
 	/**
@@ -203,14 +204,13 @@ public class Project {
 	 * @param dependencies
 	 *            : list with dependencies
 	 */
+	@Deprecated
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeForTask,
 			List<Task> dependencies) {
-		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime, isAlternativeForTask,
-				dependencies);
-		updateDependencies(task, isAlternativeForTask);
-		this.addTask(task);
+		new TaskBuilder(description, estimatedDuration, acceptableDeviation)
+				.setOriginalTask(isAlternativeForTask)
+				.setDependencies(dependencies).build();
 	}
 
 	/**
