@@ -59,6 +59,44 @@ public class Project {
 	}
 
 	/**
+	 * A Builder for different kinds of Task's
+	 */
+	public class TaskBuilder {
+		// Required
+		String description;
+		Duration estimatedDuration;
+		double acceptableDeviation;
+		// Optional
+		
+		/**
+		 * Creates a TaskBuilder with the required information for the creation of a
+		 * Task
+		 * 
+		 * @param description
+		 *            : description of a task
+		 * @param estimatedDuration
+		 *            : estimated duration of task
+		 * @param acceptableDeviation
+		 *            : acceptable deviation of a task
+		 */
+		public TaskBuilder(String description,
+				Duration estimatedDuration, double acceptableDeviation) {
+			this.description = description;
+			this.estimatedDuration = estimatedDuration;
+			this.acceptableDeviation = acceptableDeviation;
+		}
+		
+		/**
+		 * Build a Task after all the optional values have been set.
+		 */
+		public void build() {
+			Task task = new Task(description, estimatedDuration,
+					acceptableDeviation, lastUpdateTime);
+			addTask(task);
+		}
+	}
+
+	/**
 	 * Creates a new task no dependencies or alternative task to the project and
 	 * will add the task to the tasklist of the project.
 	 * 
@@ -69,11 +107,10 @@ public class Project {
 	 * @param acceptableDeviation
 	 *            : acceptable deviation of a task
 	 */
+	@Deprecated
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation) {
-		Task task = new Task(description, estimatedDuration,
-				acceptableDeviation, this.lastUpdateTime);
-		this.addTask(task);
+		new TaskBuilder(description, estimatedDuration, acceptableDeviation).build();
 	}
 
 	/**
