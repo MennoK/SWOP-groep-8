@@ -117,17 +117,19 @@ public class Project {
 		 * Build a Task after all the optional values have been set.
 		 */
 		public void build() {
-			if (originalTask == null) {
-				Task task = new Task(description, estimatedDuration,
-						acceptableDeviation, lastUpdateTime, dependencies);
-				addTask(task);
-			} else {
-				Task task = new Task(description, estimatedDuration,
-						acceptableDeviation, lastUpdateTime, originalTask,
-						dependencies);
-				updateDependencies(task, originalTask);
-				addTask(task);
-			}
+			Task task = new Task(description, estimatedDuration,
+					acceptableDeviation, lastUpdateTime, originalTask,
+					dependencies);
+			/*
+			 * TODO discuss this choice:
+			 * 
+			 * if originalTask==null nothing happens since no Task depend on
+			 * NULL
+			 * 
+			 * alternative: add an if(originalTask!=null) statement
+			 */
+			updateDependencies(task, originalTask);
+			addTask(task);
 		}
 	}
 
@@ -251,8 +253,7 @@ public class Project {
 	 * @param alternativeTask
 	 * @param originalTask
 	 */
-	private void updateDependencies(Task alternativeTask,
-			Task originalTask) {
+	private void updateDependencies(Task alternativeTask, Task originalTask) {
 		List<Task> taskList = this.getAllTasks();
 		for (Task task : taskList) {
 			for (Task dependency : task.getDependencies()) {
