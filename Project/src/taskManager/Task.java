@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Task {
 
-	private ArrayList<Task> dependencies = new ArrayList<>();
+	private List<Task> dependencies = new ArrayList<>();
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
@@ -100,7 +100,7 @@ public class Task {
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now,
-			ArrayList<Task> dependencies) {
+			List<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		addMultipleDependencies(dependencies);
 	}
@@ -124,7 +124,7 @@ public class Task {
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now,
-			Task isAlternativeFor, ArrayList<Task> dependencies) {
+			Task isAlternativeFor, List<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		if (dependencies.contains(isAlternativeFor))
 			throw new IllegalArgumentException(
@@ -165,13 +165,13 @@ public class Task {
 	 * Adds a list of dependencies to task. The dependent tasks may not be
 	 * already in the dependency list of the task
 	 * 
-	 * @param dependencies
+	 * @param dependencies2
 	 *            : list with dependency task
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	private void addMultipleDependencies(ArrayList<Task> dependencies) {
-		for (Task dependency : dependencies) {
+	private void addMultipleDependencies(List<Task> dependencies2) {
+		for (Task dependency : dependencies2) {
 			if (!isValidDependency(dependency)) {
 				throw new IllegalArgumentException(
 						"The given dependency task is already dependent on this task");
