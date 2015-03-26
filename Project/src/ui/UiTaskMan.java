@@ -73,8 +73,7 @@ public class UiTaskMan {
 			System.out.println("Project creation aborted.");
 			return;
 		}
-		projectController.createProject(name, description,
-				projectController.getTime(), dueTime);
+		projectController.createProject(name, description, dueTime);
 	}
 
 	private ArrayList<Task> askDependence(Project project)

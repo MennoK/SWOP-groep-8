@@ -61,7 +61,7 @@ public class Printer {
 			str += ", started " + task.getStartTime();
 			str += ", finished " + task.getEndTime();
 			str += " (" + finishStatus + ")";
-		} catch (InvalidActivityException e) {
+		} catch (IllegalArgumentException e) {
 			// If not finished
 		}
 		return str;
