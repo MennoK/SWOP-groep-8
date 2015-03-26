@@ -46,7 +46,7 @@ public class ProjectTester {
 	public void testCreateTaskStandard() {
 		project.createTask("desc", Duration.ofHours(5), 20);
 		assertEquals(1, project.getAllTasks().size());
-		assertEquals(null, project.getAllTasks().get(0).getAlternativeFor());
+		assertEquals(null, project.getAllTasks().get(0).getOriginal());
 		assertEquals(0, project.getAllTasks().get(0).getDependencies().size());
 	}
 
@@ -60,7 +60,7 @@ public class ProjectTester {
 
 		assertEquals(2, project.getAllTasks().size());
 		assertEquals(project.getAllTasks().get(0), project.getAllTasks().get(1)
-				.getAlternativeFor());
+				.getOriginal());
 		assertEquals(0, project.getAllTasks().get(0).getDependencies().size());
 
 	}
@@ -73,7 +73,7 @@ public class ProjectTester {
 		project.createTask("desc", Duration.ofHours(5), 20, dependency);
 
 		assertEquals(2, project.getAllTasks().size());
-		assertEquals(null, project.getAllTasks().get(1).getAlternativeFor());
+		assertEquals(null, project.getAllTasks().get(1).getOriginal());
 		assertEquals(1, project.getAllTasks().get(1).getDependencies().size());
 	}
 

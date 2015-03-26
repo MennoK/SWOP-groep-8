@@ -38,7 +38,7 @@ public class Task {
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
 	private boolean failed = false;
-	private Task isAlternativeFor;
+	private Task originalTask;
 
 	private LocalDateTime lastUpdateTime;
 
@@ -342,21 +342,21 @@ public class Task {
 	}
 
 	/**
-	 * Sets the alternative task if and only if the the current task his status
+	 * Sets the alternative task if and only if the original task
 	 * is failed
 	 * 
-	 * @param isAlternativeFor
-	 *            : alternative task
+	 * @param original
+	 *            : original task
 	 * @throws IllegalArgumentException
 	 *             : thrown when the task is not failed
 	 */
-	private void setAlternativeTask(Task isAlternativeFor)
+	private void setAlternativeTask(Task original)
 			throws IllegalArgumentException {
-		if (isAlternativeFor.getStatus() != TaskStatus.FAILED) {
+		if (original.getStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
 					"Task cannot be alternative to a task that has not failed");
 		}
-		this.isAlternativeFor = isAlternativeFor;
+		this.originalTask = original;
 	}
 
 	/**
@@ -561,12 +561,12 @@ public class Task {
 	}
 
 	/**
-	 * Returns the task which this task is alternative for
+	 * Returns the task which this task is the alternative for
 	 * 
-	 * @return isAlternativeFor: the alternative task
+	 * @return original: the original task
 	 */
-	public Task getAlternativeFor() {
-		return this.isAlternativeFor;
+	public Task getOriginal() {
+		return this.originalTask;
 	}
 
 	/**
