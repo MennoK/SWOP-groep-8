@@ -47,6 +47,47 @@ public class Task {
 	private int id;
 
 	/**
+	 * Constructor of Task. A task has a set of required parameters, namely : description,
+	 * estimated duration and acceptable deviation. A task has also 
+	 * optional parameters: an original task and dependencies list
+	 * 
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 * @param originalTask
+	 *            : the original task which failed
+	 * @param dependencies
+	 *            : list with dependencies
+	 *            
+	 */
+	Task(String description, Duration estimatedDuration, double acceptableDeviation, LocalDateTime now, Task originalTask,
+			List<Task> dependencies){
+		if((dependencies != null || !dependencies.isEmpty())&& originalTask != null){
+			if (dependencies.contains(originalTask))
+				throw new IllegalArgumentException(
+						"Can not create an alternative task which is dependent"
+								+ " on the task it is an alternative for");
+			for (Task dep : dependencies)
+				if (dep.hasDependency(originalTask))
+					throw new IllegalArgumentException(
+							"Can not create an alternative task which is indirectly dependent"
+									+ " on the task it is an alternative for");
+		}
+		addMultipleDependencies(dependencies);
+		setAlternativeTask(originalTask);
+		
+		setDescription(description);
+		setEstimatedDuration(estimatedDuration);
+		setAcceptableDeviation(acceptableDeviation);
+		this.id = idCounter.getAndIncrement();
+		
+		update(now);
+	}
+			
+	/**
 	 * Constructor of task with arguments: description, estimatedDuration and
 	 * acceptable deviation
 	 * 
@@ -57,6 +98,7 @@ public class Task {
 	 * @param acceptableDeviation
 	 *            : acceptable duration of task
 	 */
+	@Deprecated
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now) {
 		setDescription(description);
@@ -79,6 +121,7 @@ public class Task {
 	 * @param isAlternativeFor
 	 *            : the alternative task which failed
 	 */
+	@Deprecated
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now, Task isAlternativeFor) {
 		this(description, estimatedDuration, acceptableDeviation, now);
@@ -98,6 +141,7 @@ public class Task {
 	 * @param dependencies
 	 *            : list with dependencies
 	 */
+	@Deprecated
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now,
 			List<Task> dependencies) {
@@ -105,39 +149,7 @@ public class Task {
 		addMultipleDependencies(dependencies);
 	}
 
-	/**
-	 * Constructor of task with arguments: description, estimatedDuration and
-	 * acceptable deviation and and a task which the task an alternative for and
-	 * a list with dependencies
-	 * 
-	 * @param description
-	 *            : given description of a task
-	 * @param estimatedDuration
-	 *            : estimated duration of task
-	 * @param acceptableDeviation
-	 *            : acceptable duration of task
-	 * @param isAlternativeFor
-	 *            : the alternative task which failed
-	 * @param dependencies
-	 *            : list with dependencies
-	 * 
-	 */
-	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now,
-			Task isAlternativeFor, List<Task> dependencies) {
-		this(description, estimatedDuration, acceptableDeviation, now);
-		if (dependencies.contains(isAlternativeFor))
-			throw new IllegalArgumentException(
-					"Can not create an alternative task which is dependent"
-							+ " on the task it is an alternative for");
-		for (Task dep : dependencies)
-			if (dep.hasDependency(isAlternativeFor))
-				throw new IllegalArgumentException(
-						"Can not create an alternative task which is indirectly dependent"
-								+ " on the task it is an alternative for");
-		addMultipleDependencies(dependencies);
-		setAlternativeTask(isAlternativeFor);
-	}
+
 
 	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
 
