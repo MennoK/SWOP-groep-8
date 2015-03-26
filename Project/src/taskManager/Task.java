@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.activity.InvalidActivityException;
-
 /**
  * A task is a unit of work that can be performed by a user of the system. A
  * task is assigned to an unfinished project upon creation. Each task has a
@@ -464,9 +462,9 @@ public class Task {
 	 * @throws InvalidActivityException
 	 *             : thrown when the task is not finished yet
 	 */
-	public TaskFinishedStatus getFinishStatus() throws InvalidActivityException {
+	public TaskFinishedStatus getFinishStatus() throws IllegalArgumentException {
 		if (this.getStatus() != TaskStatus.FINISHED) {
-			throw new InvalidActivityException("The task is not finished yet");
+			throw new IllegalArgumentException("The task is not finished yet");
 		} else {
 			if (wasFinishedEarly()) {
 				return TaskFinishedStatus.EARLY;
