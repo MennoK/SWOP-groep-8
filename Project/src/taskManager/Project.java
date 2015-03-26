@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Project {
 
-	private ArrayList<Task> tasks;
+	private List<Task> tasks;
 	private String name;
 	private String description;
 	private final LocalDateTime creationTime;
@@ -112,7 +112,7 @@ public class Project {
 	 *            : list with dependencies
 	 */
 	public void createTask(String description, Duration estimatedDuration,
-			double acceptableDeviation, ArrayList<Task> dependencies) {
+			double acceptableDeviation, List<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, this.lastUpdateTime, dependencies);
 		this.addTask(task);
@@ -135,7 +135,7 @@ public class Project {
 	 */
 	public void createTask(String description, Duration estimatedDuration,
 			double acceptableDeviation, Task isAlternativeForTask,
-			ArrayList<Task> dependencies) {
+			List<Task> dependencies) {
 		Task task = new Task(description, estimatedDuration,
 				acceptableDeviation, this.lastUpdateTime, isAlternativeForTask,
 				dependencies);

@@ -4,6 +4,8 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -12,12 +14,12 @@ import java.util.Arrays;
  */
 public class WorkTime {
 
-	private static final int startHour = 8;
-	private static final int endHour = 16;
+	private static final int STARTHOUR = 8;
+	private static final int ENDHOUR = 16;
 
-	private static final DayOfWeek[] workdays = new DayOfWeek[] {
+	private static final List<DayOfWeek> WORKDAYS = Collections.unmodifiableList(Arrays.asList(new DayOfWeek[] {
 			DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-			DayOfWeek.THURSDAY, DayOfWeek.FRIDAY };
+			DayOfWeek.THURSDAY, DayOfWeek.FRIDAY }));
 
 	/**
 	 * Returns the time that is a duration after the given time, counting only
@@ -31,8 +33,8 @@ public class WorkTime {
 	 */
 	public static LocalDateTime getFinishTime(LocalDateTime current,
 			Duration duration) {
-		if (current.getHour() < startHour) {
-			current = current.plusHours(startHour - current.getHour());
+		if (current.getHour() < STARTHOUR) {
+			current = current.plusHours(STARTHOUR - current.getHour());
 			current = current.minusMinutes(current.getMinute());
 		}
 
@@ -62,14 +64,14 @@ public class WorkTime {
 
 	private static LocalDateTime setToNextDayStart(LocalDateTime current) {
 		current = current.plusDays(1);
-		current = current.minusHours(current.getHour() - startHour);
+		current = current.minusHours(current.getHour() - STARTHOUR);
 		current = current.minusMinutes(current.getMinute());
 		return current;
 	}
 
 	private static boolean isWorkDay(LocalDateTime current) {
 
-		if (Arrays.asList(workdays).contains(current.getDayOfWeek())) {
+		if (WORKDAYS.contains(current.getDayOfWeek())) {
 			return true;
 		}
 		return false;
@@ -77,7 +79,7 @@ public class WorkTime {
 
 	private static LocalDateTime workUntilEndOfDayOrMinutesRunOut(
 			LocalDateTime current, long minutesToWork) {
-		while (current.getHour() < endHour && minutesToWork > 0) {
+		while (current.getHour() < ENDHOUR && minutesToWork > 0) {
 			current = current.plusMinutes(60);
 			minutesToWork-=60;
 		}

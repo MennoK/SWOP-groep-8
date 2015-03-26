@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.activity.InvalidActivityException;
-
 /**
  * A task is a unit of work that can be performed by a user of the system. A
  * task is assigned to an unfinished project upon creation. Each task has a
@@ -33,7 +31,7 @@ import javax.activity.InvalidActivityException;
  */
 public class Task {
 
-	private ArrayList<Task> dependencies = new ArrayList<>();
+	private List<Task> dependencies = new ArrayList<>();
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
@@ -102,7 +100,7 @@ public class Task {
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now,
-			ArrayList<Task> dependencies) {
+			List<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		addMultipleDependencies(dependencies);
 	}
@@ -126,7 +124,7 @@ public class Task {
 	 */
 	Task(String description, Duration estimatedDuration,
 			double acceptableDeviation, LocalDateTime now,
-			Task isAlternativeFor, ArrayList<Task> dependencies) {
+			Task isAlternativeFor, List<Task> dependencies) {
 		this(description, estimatedDuration, acceptableDeviation, now);
 		if (dependencies.contains(isAlternativeFor))
 			throw new IllegalArgumentException(
@@ -167,13 +165,13 @@ public class Task {
 	 * Adds a list of dependencies to task. The dependent tasks may not be
 	 * already in the dependency list of the task
 	 * 
-	 * @param dependencies
+	 * @param dependencies2
 	 *            : list with dependency task
 	 * @throws LoopingDependencyException
 	 *             : thrown when a loop occurs
 	 */
-	private void addMultipleDependencies(ArrayList<Task> dependencies) {
-		for (Task dependency : dependencies) {
+	private void addMultipleDependencies(List<Task> dependencies2) {
+		for (Task dependency : dependencies2) {
 			if (!isValidDependency(dependency)) {
 				throw new IllegalArgumentException(
 						"The given dependency task is already dependent on this task");
@@ -464,9 +462,9 @@ public class Task {
 	 * @throws InvalidActivityException
 	 *             : thrown when the task is not finished yet
 	 */
-	public TaskFinishedStatus getFinishStatus() throws InvalidActivityException {
+	public TaskFinishedStatus getFinishStatus() throws IllegalArgumentException {
 		if (this.getStatus() != TaskStatus.FINISHED) {
-			throw new InvalidActivityException("The task is not finished yet");
+			throw new IllegalArgumentException("The task is not finished yet");
 		} else {
 			if (wasFinishedEarly()) {
 				return TaskFinishedStatus.EARLY;

@@ -170,7 +170,7 @@ public class TaskTester {
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
 
-	@Test(expected = InvalidActivityException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void taskIsNotFinishedYet() throws InvalidActivityException {
 		baseTask.getFinishStatus();
 	}
