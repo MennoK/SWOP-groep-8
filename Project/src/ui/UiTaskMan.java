@@ -8,6 +8,7 @@ import parser.Parser;
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.Task;
+import taskManager.Project.TaskBuilder;
 import ui.exception.ExitUseCaseException;
 
 public class UiTaskMan {
@@ -94,20 +95,16 @@ public class UiTaskMan {
 			System.out.println(Printer.listProjects(projectController
 					.getAllProjects()));
 			Project project = reader.select(projectController.getAllProjects());
+			Project.TaskBuilder builder = project.new TaskBuilder(
+					reader.getString("Give a description:"),
+					reader.getDuration("Give an estimate for the task duration:"),
+					reader.getDouble("Give an acceptable deviation:"))
+					.setDependencies(askDependence(project));
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
 				System.out.println(Printer.listTasks(project.getAllTasks()));
-				project.createTask(
-						reader.getString("Give a description:"),
-						reader.getDuration("Give an estimate for the task duration:"),
-						reader.getDouble("Give an acceptable deviation:"),
-						reader.select(project.getAllTasks()),
-						askDependence(project));
-			} else
-				project.createTask(
-						reader.getString("Give a description:"),
-						reader.getDuration("Give an estimate for the task duration:"),
-						reader.getDouble("Give an acceptable deviation:"),
-						askDependence(project));
+				builder.setOriginalTask(reader.select(project.getAllTasks()));
+			}
+			builder.build();
 			return;
 		}
 	}
