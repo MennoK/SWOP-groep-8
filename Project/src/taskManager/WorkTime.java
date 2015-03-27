@@ -93,14 +93,15 @@ public class WorkTime {
 			throw new IllegalArgumentException("first day is after the second");
 		}
 
-		Duration minutes = Duration.ofMinutes(0);
-		LocalDateTime working = WorkTime.getFinishTime(first, minutes);
+		Duration hoursWorked = Duration.ofHours(0);
+		LocalDateTime working = WorkTime.getFinishTime(first, hoursWorked);
+		
 		while (working.isBefore(second)) {
-			minutes = minutes.plusMinutes(60);
-			working = WorkTime.getFinishTime(first, minutes);
+			hoursWorked = hoursWorked.plusHours(1);
+			working = WorkTime.getFinishTime(working, Duration.ofHours(1));
 		}
 
-		return minutes;
+		return hoursWorked;
 	}
 
 }
