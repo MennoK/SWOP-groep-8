@@ -106,7 +106,7 @@ public class ProjectTester {
 	@Test
 	public void testCreateTaskStandardWithDependencies() {
 		standardProject.new TaskBuilder("desc", Duration.ofHours(5), 20)
-				.setDependencies(tasksStandardProject).build();
+				.addDependencies(task0).build();
 		Task newTask = getNewestTask(standardProject);
 
 		assertEquals(2, standardProject.getAllTasks().size());
@@ -147,7 +147,7 @@ public class ProjectTester {
 	public void testFinishedProjectStatusWithDependencies() {
 		// Create task1 (dependent on task0)
 		standardProject.new TaskBuilder("desc", Duration.ofHours(8), 50)
-				.setDependencies(tasksStandardProject).build();
+				.addDependencies(task0).build();
 		Task task1 = getNewestTask(standardProject);
 
 		// set task0 to finished
@@ -284,13 +284,11 @@ public class ProjectTester {
 	public void testDepRedirectedAfterCreateAlternativeTask() {
 		emptyProject.new TaskBuilder("task1", Duration.ofHours(3), 0.5).build();
 		Task task1 = emptyProject.getAllTasks().get(0);
-		ArrayList<Task> dep = new ArrayList<Task>();
-		dep.add(task1);
 		emptyProject.new TaskBuilder("task2 (dep task1)", Duration.ofHours(5),
-				0.5).setDependencies(dep).build();
+				0.5).addDependencies(task1).build();
 		Task task2 = emptyProject.getAllTasks().get(1);
 		emptyProject.new TaskBuilder("task4 (dep task1)", Duration.ofHours(5),
-				0.5).setDependencies(dep).build();
+				0.5).addDependencies(task1).build();
 		Task task4 = emptyProject.getAllTasks().get(2);
 		task1.updateStatus(now, now.plusHours(4), true);
 		emptyProject.new TaskBuilder("task3", Duration.ofHours(1), 0.5)
@@ -352,10 +350,8 @@ public class ProjectTester {
 		emptyProject.new TaskBuilder("desc", Duration.ofHours(3 * 8), 0.5)
 				.build();
 		Task task1 = emptyProject.getAllTasks().get(0);
-		ArrayList<Task> dep = new ArrayList<Task>();
-		dep.add(task1);
 		emptyProject.new TaskBuilder("bla", Duration.ofHours(2 * 8), 0.5)
-				.setDependencies(dep).build();
+				.addDependencies(task1).build();
 		task1.updateStatus(now, now.plusHours(4 * 8), false);
 		assertEquals(Duration.ofHours(8), emptyProject.getCurrentDelay());
 	}
