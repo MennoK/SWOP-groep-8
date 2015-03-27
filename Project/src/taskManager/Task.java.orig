@@ -93,6 +93,73 @@ public class Task{
 		handleTimeChange(now);
 	}
 
+<<<<<<< HEAD
+=======
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation
+	 * 
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 */
+	@Deprecated
+	Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, LocalDateTime now) {
+		setDescription(description);
+		setEstimatedDuration(estimatedDuration);
+		setAcceptableDeviation(acceptableDeviation);
+		this.id = idCounter.getAndIncrement();
+		handleTimeChange(now);
+	}
+
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation and a task which the task an alternative for
+	 * 
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 * @param isAlternativeFor
+	 *            : the alternative task which failed
+	 */
+	@Deprecated
+	Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, LocalDateTime now, Task isAlternativeFor) {
+		this(description, estimatedDuration, acceptableDeviation, now);
+		setAlternativeTask(isAlternativeFor);
+	}
+
+	/**
+	 * Constructor of task with arguments: description, estimatedDuration and
+	 * acceptable deviation, and a list of dependencies
+	 * 
+	 * @param description
+	 *            : given description of a task
+	 * @param estimatedDuration
+	 *            : estimated duration of task
+	 * @param acceptableDeviation
+	 *            : acceptable duration of task
+	 * @param dependencies
+	 *            : list with dependencies
+	 */
+	@Deprecated
+	Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, LocalDateTime now,
+			List<Task> dependencies) {
+		this(description, estimatedDuration, acceptableDeviation, now);
+		addMultipleDependencies(dependencies);
+	}
+
+
+
+>>>>>>> 07904e8a3d67226986a1f26cd23aa6f0c310bbc9
 	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
 
 		return WorkTime.getFinishTime(baseTime, duration);

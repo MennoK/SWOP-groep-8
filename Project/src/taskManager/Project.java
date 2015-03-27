@@ -26,7 +26,7 @@ import java.util.List;
  * 
  */
 
-public class Project {
+public class Project implements TimeObserver {
 
 	private List<Task> tasks;
 	private String name;
@@ -55,7 +55,7 @@ public class Project {
 		this.creationTime = creationTime;
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
-		this.update(creationTime);
+		this.handleTimeChange(creationTime);
 	}
 
 	/**
@@ -257,18 +257,20 @@ public class Project {
 	}
 
 	/**
-	 * Updates the state of the object and it's tasks with state =
-	 * lastupdatetime
+	 * observer pattern
 	 * 
 	 * @param time
-	 *            the current time
+	 *            : the new time of the clock
 	 */
-	void update(LocalDateTime time) {
+	@Override
+	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
-		for (Task task : this.getAllTasks()) {
-			task.update(time);
+		for(Task t : this.getAllTasks())
+		{
+			t.handleTimeChange(time);
 		}
 	}
+
 
 	/**
 	 * Estimates the finish time by calculating the estimated finished time of

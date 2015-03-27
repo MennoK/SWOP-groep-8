@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class TaskManClock {
 
 	private LocalDateTime currentTime;
+	private ArrayList<TimeObserver> observers;
 
 	/**
 	 * The constructor of the class TaskManClock sets the current time to the
@@ -23,6 +25,7 @@ public class TaskManClock {
 	 */
 	public TaskManClock(LocalDateTime startTime) {
 		this.currentTime = startTime;
+		this.observers = new ArrayList<>();
 	}
 
 	/**
@@ -40,6 +43,9 @@ public class TaskManClock {
 					"The given time is before the current time");
 		} else {
 			this.currentTime = newTime;
+			for(TimeObserver obs : this.observers) {
+				obs.handleTimeChange(newTime);
+			}
 		}
 	}
 
@@ -65,4 +71,13 @@ public class TaskManClock {
 	public LocalDateTime getTime() {
 		return currentTime;
 	}
+	
+	boolean register(TimeObserver observer) {
+		return this.observers.add(observer);
+	}
+	boolean unregister(TimeObserver observer) {
+		return this.observers.remove(observer);
+	}
+	
+	
 }

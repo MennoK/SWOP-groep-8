@@ -242,7 +242,7 @@ public class TaskTester {
 
 	@Test
 	public void update() {
-		baseTask.update(now.plusDays(5));
+		baseTask.handleTimeChange(now.plusDays(5));
 		assertEquals(now.plusDays(5), baseTask.getLastUpdateTime());
 	}
 }

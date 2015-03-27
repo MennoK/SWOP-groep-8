@@ -46,7 +46,7 @@ public class ProjectController {
 	public void createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
-		project.update(this.getTime());
+		project.handleTimeChange(this.getTime());
 		this.addProject(project);
 	}
 
@@ -81,6 +81,7 @@ public class ProjectController {
 					"The given project is already in this project.");
 		} else {
 			projects.add(project);
+			this.taskManClock.register(project);
 		}
 	}
 
@@ -112,9 +113,6 @@ public class ProjectController {
 
 		this.taskManClock.setTime(time);
 
-		for (Project project : this.getAllProjects()) {
-			project.update(time);
-		}
 	}
 
 	/**
