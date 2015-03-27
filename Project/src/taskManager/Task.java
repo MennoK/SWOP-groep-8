@@ -47,8 +47,8 @@ public class Task {
 	private int id;
 
 	/**
-	 * Constructor of Task. A task has a set of required parameters, namely : description,
-	 * estimated duration and acceptable deviation. A task has also 
+	 * Constructor of Task. A task has a set of required parameters, namely :
+	 * description, estimated duration and acceptable deviation. A task has also
 	 * optional parameters: an original task and dependencies list
 	 * 
 	 * @param description
@@ -61,11 +61,13 @@ public class Task {
 	 *            : the original task which failed
 	 * @param dependencies
 	 *            : list with dependencies
-	 *            
+	 * 
 	 */
-	Task(String description, Duration estimatedDuration, double acceptableDeviation, LocalDateTime now, Task originalTask,
-			List<Task> dependencies){
-		if((dependencies != null || !dependencies.isEmpty()) && originalTask != null){
+	Task(String description, Duration estimatedDuration,
+			double acceptableDeviation, LocalDateTime now, Task originalTask,
+			List<Task> dependencies) {
+		if ((dependencies != null || !dependencies.isEmpty())
+				&& originalTask != null) {
 			if (dependencies.contains(originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -80,7 +82,7 @@ public class Task {
 		addMultipleDependencies(dependencies);
 
 		// null means no original task
-		if(originalTask != null){
+		if (originalTask != null) {
 			setAlternativeTask(originalTask);
 		}
 		setDescription(description);
@@ -90,70 +92,6 @@ public class Task {
 
 		update(now);
 	}
-
-	/**
-	 * Constructor of task with arguments: description, estimatedDuration and
-	 * acceptable deviation
-	 * 
-	 * @param description
-	 *            : given description of a task
-	 * @param estimatedDuration
-	 *            : estimated duration of task
-	 * @param acceptableDeviation
-	 *            : acceptable duration of task
-	 */
-	@Deprecated
-	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now) {
-		setDescription(description);
-		setEstimatedDuration(estimatedDuration);
-		setAcceptableDeviation(acceptableDeviation);
-		this.id = idCounter.getAndIncrement();
-		update(now);
-	}
-
-	/**
-	 * Constructor of task with arguments: description, estimatedDuration and
-	 * acceptable deviation and a task which the task an alternative for
-	 * 
-	 * @param description
-	 *            : given description of a task
-	 * @param estimatedDuration
-	 *            : estimated duration of task
-	 * @param acceptableDeviation
-	 *            : acceptable duration of task
-	 * @param isAlternativeFor
-	 *            : the alternative task which failed
-	 */
-	@Deprecated
-	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now, Task isAlternativeFor) {
-		this(description, estimatedDuration, acceptableDeviation, now);
-		setAlternativeTask(isAlternativeFor);
-	}
-
-	/**
-	 * Constructor of task with arguments: description, estimatedDuration and
-	 * acceptable deviation, and a list of dependencies
-	 * 
-	 * @param description
-	 *            : given description of a task
-	 * @param estimatedDuration
-	 *            : estimated duration of task
-	 * @param acceptableDeviation
-	 *            : acceptable duration of task
-	 * @param dependencies
-	 *            : list with dependencies
-	 */
-	@Deprecated
-	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now,
-			List<Task> dependencies) {
-		this(description, estimatedDuration, acceptableDeviation, now);
-		addMultipleDependencies(dependencies);
-	}
-
-
 
 	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
 
@@ -346,8 +284,7 @@ public class Task {
 	}
 
 	/**
-	 * Sets the alternative task if and only if the original task
-	 * is failed
+	 * Sets the alternative task if and only if the original task is failed
 	 * 
 	 * @param original
 	 *            : original task
