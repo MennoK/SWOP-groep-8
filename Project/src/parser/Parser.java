@@ -133,8 +133,9 @@ public class Parser {
 							taskNr - 1));
 				}
 
-				projectOfTask.createTask(description, estimatedDuration,
-						acceptableDeviation, alternativeTask, dependencyList);
+				projectOfTask.new TaskBuilder(description, estimatedDuration,
+						acceptableDeviation).setOriginalTask(alternativeTask)
+						.setDependencies(dependencyList).build();
 
 			}
 
@@ -144,8 +145,9 @@ public class Parser {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				Task alternativeTask = projectOfTask.getAllTasks().get(
 						alternativeTaskNr - 1);
-				projectOfTask.createTask(description, estimatedDuration,
-						acceptableDeviation, alternativeTask);
+				projectOfTask.new TaskBuilder(description, estimatedDuration,
+						acceptableDeviation).setOriginalTask(alternativeTask)
+						.build();
 			}
 
 			else if (task.get("prerequisiteTasks") != null
@@ -159,13 +161,14 @@ public class Parser {
 					dependencyList.add(projectOfTask.getAllTasks().get(
 							taskNr - 1));
 				}
-				projectOfTask.createTask(description, estimatedDuration,
-						acceptableDeviation, dependencyList);
+				projectOfTask.new TaskBuilder(description, estimatedDuration,
+						acceptableDeviation).setDependencies(dependencyList)
+						.build();
 
 			} else if (task.get("prerequisiteTasks") == null
 					&& task.get("alternativeFor") == null) {
-				projectOfTask.createTask(description, estimatedDuration,
-						acceptableDeviation);
+				projectOfTask.new TaskBuilder(description, estimatedDuration,
+						acceptableDeviation).build();
 
 			}
 
