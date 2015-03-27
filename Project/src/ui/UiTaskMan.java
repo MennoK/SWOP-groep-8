@@ -76,16 +76,6 @@ public class UiTaskMan {
 		projectController.createProject(name, description, dueTime);
 	}
 
-	private ArrayList<Task> askDependence(Project project)
-			throws ExitUseCaseException {
-		ArrayList<Task> dependences = new ArrayList<Task>();
-		while (reader.getBoolean("Is this task dependent on an other task?")) {
-			System.out.println(Printer.listTasks(project.getAllTasks()));
-			dependences.add(reader.select(project.getAllTasks()));
-		}
-		return dependences;
-	}
-
 	private void createTask() throws ExitUseCaseException {
 		while (true) {
 			System.out.println("Creating a task\n"
@@ -97,8 +87,12 @@ public class UiTaskMan {
 			Project.TaskBuilder builder = project.new TaskBuilder(
 					reader.getString("Give a description:"),
 					reader.getDuration("Give an estimate for the task duration:"),
-					reader.getDouble("Give an acceptable deviation:"))
-					.setDependencies(askDependence(project));
+					reader.getDouble("Give an acceptable deviation:"));
+			while (reader
+					.getBoolean("Is this task dependent on an other task?")) {
+				System.out.println(Printer.listTasks(project.getAllTasks()));
+				builder.addDependencies(reader.select(project.getAllTasks()));
+			}
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
 				System.out.println(Printer.listTasks(project.getAllTasks()));
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
