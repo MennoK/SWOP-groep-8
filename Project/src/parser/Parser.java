@@ -126,17 +126,16 @@ public class Parser {
 						alternativeTaskNr - 1);
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task
 						.get("prerequisiteTasks");
-				ArrayList<Task> dependencyList = new ArrayList<Task>();
+
+				Project.TaskBuilder builder = projectOfTask.new TaskBuilder(
+						description, estimatedDuration, acceptableDeviation)
+						.setOriginalTask(alternativeTask);
 
 				for (Integer taskNr : prerequisiteTasks) {
-					dependencyList.add(projectOfTask.getAllTasks().get(
+					builder.addDependencies(projectOfTask.getAllTasks().get(
 							taskNr - 1));
 				}
-
-				projectOfTask.new TaskBuilder(description, estimatedDuration,
-						acceptableDeviation).setOriginalTask(alternativeTask)
-						.setDependencies(dependencyList).build();
-
+				builder.build();
 			}
 
 			if (task.get("alternativeFor") != null
@@ -157,13 +156,14 @@ public class Parser {
 						.get("prerequisiteTasks");
 				ArrayList<Task> dependencyList = new ArrayList<Task>();
 
+				Project.TaskBuilder builder = projectOfTask.new TaskBuilder(
+						description, estimatedDuration, acceptableDeviation);
+
 				for (Integer taskNr : prerequisiteTasks) {
-					dependencyList.add(projectOfTask.getAllTasks().get(
+					builder.addDependencies(projectOfTask.getAllTasks().get(
 							taskNr - 1));
 				}
-				projectOfTask.new TaskBuilder(description, estimatedDuration,
-						acceptableDeviation).setDependencies(dependencyList)
-						.build();
+				builder.build();
 
 			} else if (task.get("prerequisiteTasks") == null
 					&& task.get("alternativeFor") == null) {

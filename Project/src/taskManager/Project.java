@@ -102,19 +102,6 @@ public class Project implements TimeObserver {
 		}
 
 		/**
-		 * If the Task being build has dependencies, then specify them here.
-		 * 
-		 * @param dependencies
-		 *            : the dependencies of the future Task
-		 * @return This TaskBuilder
-		 */
-		@Deprecated
-		public TaskBuilder setDependencies(List<Task> dependencies) {
-			this.dependencies = dependencies;
-			return this;
-		}
-
-		/**
 		 * If the Task being build has dependencies, then add them one at a
 		 * time.
 		 */

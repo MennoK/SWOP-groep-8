@@ -42,17 +42,14 @@ public class UseCase4UpdateTaskStatusTester {
 		task1 = project1.getAllTasks().get(0);
 		task2 = project1.getAllTasks().get(1);
 
-		ArrayList<Task> dependency = new ArrayList<>();
-		dependency.add(task2);
 		// task 3 has dependency on task2
 		project1.new TaskBuilder("Task 3", Duration.ofHours(8), 0.4)
-				.setDependencies(dependency).build();
+				.addDependencies(task2).build();
 		// task 4 had depndency on task 2
 		project1.new TaskBuilder("Task 4", Duration.ofHours(8), 0.4)
-				.setDependencies(dependency).build();
+				.addDependencies(task2).build();
 		task3 = project1.getAllTasks().get(2);
 		task4 = project1.getAllTasks().get(3);
-
 	}
 
 	@Test

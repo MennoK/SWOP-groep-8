@@ -47,10 +47,8 @@ public class UseCase3CreateTaskTester {
 				project1.getAllTasks().get(0).getAcceptableDeviation(), 0.001);
 
 		// create a new task dependent on the simple task
-		ArrayList<Task> dependencyList = new ArrayList<Task>();
-		dependencyList.add(project1.getAllTasks().get(0));
 		project1.new TaskBuilder("task with dependency", Duration.ofHours(20),
-				50).setDependencies(dependencyList).build();
+				50).addDependencies(project1.getAllTasks().get(0)).build();
 
 		assertEquals(2, project1.getAllTasks().size());
 		assertEquals(project1.getAllTasks().get(0),

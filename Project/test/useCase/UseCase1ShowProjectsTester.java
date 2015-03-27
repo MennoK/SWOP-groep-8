@@ -59,10 +59,8 @@ public class UseCase1ShowProjectsTester {
 
 		project1.new TaskBuilder("Task 1", Duration.ofHours(5), 0.4).build();
 		project2.new TaskBuilder("Task 2", Duration.ofHours(2), 0.4).build();
-		ArrayList<Task> dependencies = new ArrayList<Task>();
-		dependencies.add(project2.getAllTasks().get(0));
 		project2.new TaskBuilder("Task 3", Duration.ofHours(3), 0.4)
-				.setDependencies(dependencies).build();
+				.addDependencies(project2.getAllTasks().get(0)).build();
 		project3.new TaskBuilder("task4", Duration.ofHours(2), 0.4).build();
 
 		task1 = project1.getAllTasks().get(0);
@@ -115,11 +113,9 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(Duration.ofHours(5), project2.getCurrentDelay());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
-		ArrayList<Task> dep = new ArrayList<>();
-		dep.add(task4);
 
 		project3.new TaskBuilder("task5", Duration.ofHours(1), 0.4)
-				.setDependencies(dep).build();
+				.addDependencies(task4).build();
 
 		// project 3 has 2 dependent tasks -> should still finish on time
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
