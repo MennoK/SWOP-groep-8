@@ -25,18 +25,20 @@ public class TaskTester {
 	@Before
 	public void setUp() throws Exception {
 		now = LocalDateTime.of(2015, 03, 03, 8, 0);
-		baseTask = new Task("a task", Duration.ofHours(8), 0.2, now);
+		baseTask = new Task("a task", Duration.ofHours(8), 0.2, now, null,
+				new ArrayList<Task>());
 
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(baseTask);
 		dependentTask = new Task("a dependent task", Duration.ofHours(8), 0.2,
-				now, dependencies);
+				now, null, dependencies);
 
 		finishedTask = new Task("a finished task", Duration.ofHours(8), 0.2,
-				now);
+				now, null, new ArrayList<Task>());
 		finishedTask.updateStatus(now, now.plusHours(2), false);
 
-		failedTask = new Task("a failed task", Duration.ofHours(8), 0.2, now);
+		failedTask = new Task("a failed task", Duration.ofHours(8), 0.2, now,
+				null, new ArrayList<Task>());
 		failedTask.updateStatus(now, now.plusHours(2), true);
 
 		ArrayList<Task> level2dependencies = new ArrayList<Task>();
@@ -44,7 +46,7 @@ public class TaskTester {
 		level2dependencies.add(failedTask);
 		level2dependencies.add(dependentTask);
 		level2DependentTask = new Task("a task dependent on all kind of tasks",
-				Duration.ofHours(8), 0.2, now, level2dependencies);
+				Duration.ofHours(8), 0.2, now, null, level2dependencies);
 	}
 
 	@Test
@@ -98,15 +100,18 @@ public class TaskTester {
 
 	@Test
 	public void testGetEstimatedFinishTime() {
-		Task task = new Task("bla", Duration.ofHours(5 * 8), 0.5, now);
+		Task task = new Task("bla", Duration.ofHours(5 * 8), 0.5, now, null,
+				new ArrayList<Task>());
 		assertEquals(now.plusDays(6).plusHours(8),
 				task.getEstimatedFinishTime());
 	}
 
 	@Test
 	public void getId() {
-		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2, now);
-		Task newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2, now);
+		Task newTask1 = new Task("new task 1", Duration.ofHours(8), 0.2, now,
+				null, new ArrayList<Task>());
+		Task newTask2 = new Task("new task 2", Duration.ofHours(8), 0.2, now,
+				null, new ArrayList<Task>());
 
 		assertEquals(newTask1.getId() + 1, newTask2.getId());
 	}
@@ -116,7 +121,8 @@ public class TaskTester {
 		ArrayList<Task> dependencies = new ArrayList<Task>();
 		dependencies.add(baseTask);
 		dependencies.add(baseTask);
-		new Task("new task 2", Duration.ofHours(8), 0.2, now, dependencies);
+		new Task("new task 2", Duration.ofHours(8), 0.2, now, null,
+				dependencies);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -177,17 +183,20 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void negativeDuration() {
-		new Task("desc", Duration.ofHours(-2), 2, now);
+		new Task("desc", Duration.ofHours(-2), 2, now, null,
+				new ArrayList<Task>());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void zeroDuration() {
-		new Task("desc", Duration.ofHours(0), 2, now);
+		new Task("desc", Duration.ofHours(0), 2, now, null,
+				new ArrayList<Task>());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void invalidDeviation() {
-		new Task("desc", Duration.ofHours(3), -2, now);
+		new Task("desc", Duration.ofHours(3), -2, now, null,
+				new ArrayList<Task>());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -197,7 +206,8 @@ public class TaskTester {
 
 	@Test
 	public void createAlternativeTask() {
-		new Task("desc2", Duration.ofHours(3), 2, now, failedTask);
+		new Task("desc2", Duration.ofHours(3), 2, now, failedTask,
+				new ArrayList<Task>());
 	}
 
 	@Test
@@ -224,8 +234,10 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void setAlternativeTaskInvalidTaskNotFailed() {
-		Task newTask = new Task("desc", Duration.ofHours(3), 2, now);
-		new Task("desc2", Duration.ofHours(3), 2, now, newTask);
+		Task newTask = new Task("desc", Duration.ofHours(3), 2, now, null,
+				new ArrayList<Task>());
+		new Task("desc2", Duration.ofHours(3), 2, now, newTask,
+				new ArrayList<Task>());
 	}
 
 	@Test

@@ -80,8 +80,12 @@ public class ProjectTester {
 
 	@Test
 	public void testAddTaskValidTasks() {
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task1);
 		project.addTask(task2);
 
@@ -94,7 +98,9 @@ public class ProjectTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddTaskThatIsAlreadyInList() {
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task1);
 		project.addTask(task1);
 	}
@@ -113,13 +119,17 @@ public class ProjectTester {
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// 1 task
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		task1.updateStatus(now, LocalDateTime.now(), false);
 		project.addTask(task1);
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 
 		// 2 tasks
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		task2.updateStatus(now, LocalDateTime.now(), false);
 		project.addTask(task2);
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
@@ -129,8 +139,12 @@ public class ProjectTester {
 	public void testProjectStatusIsFinishedDependenciesTwoTaskFinished()
 			throws NullPointerException {
 		// 1(finished) -> 2(finished)
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		task1.updateStatus(now, LocalDateTime.now(), false);
 		task2.updateStatus(now, LocalDateTime.now(), false);
 		task2.addDependency(task1);
@@ -145,10 +159,14 @@ public class ProjectTester {
 	public void testProjectStatusIsFinishedDependenciesOneTaskFailedAlternativeFinished() {
 
 		// 1(finished) -> 2(finished)
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task1);
 		task1.updateStatus(now, LocalDateTime.now(), true);
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, task1);
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, task1,
+				new ArrayList<Task>());
 		project.addTask(task2);
 
 		task2.updateStatus(now, LocalDateTime.now(), false);
@@ -162,13 +180,19 @@ public class ProjectTester {
 	@Test
 	public void testProjectStatusIsFinishedThreeTasksWithDependencies() {
 		// 1(failed) -x-> 2(finished) <- 3(finished)
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task1);
 		task1.updateStatus(now, LocalDateTime.now(), true);
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, task1);
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, task1,
+				new ArrayList<Task>());
 		project.addTask(task2);
 		task2.updateStatus(now, LocalDateTime.now(), false);
-		Task task3 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task3 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task3);
 		task2.addDependency(task3);
 		task3.updateStatus(now, LocalDateTime.now(), false);
@@ -182,13 +206,17 @@ public class ProjectTester {
 	@Test
 	public void testProjectStatusIsOngoingNoDependencies() {
 		// 1 task
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task1);
 		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// 2 tasks
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		project.addTask(task2);
 		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
@@ -198,9 +226,12 @@ public class ProjectTester {
 	public void testProjectOngoingWithDependenciesAvailable() {
 		ArrayList<Task> dependencies = new ArrayList<>();
 
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		dependencies.add(task1);
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now,
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, null,
 				dependencies);
 		project.addTask(task1);
 		project.addTask(task2);
@@ -215,9 +246,12 @@ public class ProjectTester {
 	public void testProjectOngoingWithDependenciesUnavailable() {
 		ArrayList<Task> dependencies = new ArrayList<>();
 
-		Task task1 = new Task("desc", Duration.ofHours(8), 50, now);
+		// TODO Can this not be done with TaskBuilder?
+		Task task1 = new Task("desc", Duration.ofHours(8), 50, now, null,
+				new ArrayList<Task>());
 		dependencies.add(task1);
-		Task task2 = new Task("desc", Duration.ofHours(8), 50, now,
+		// TODO Can this not be done with TaskBuilder?
+		Task task2 = new Task("desc", Duration.ofHours(8), 50, now, null,
 				dependencies);
 		project.addTask(task1);
 		project.addTask(task2);

@@ -2,8 +2,6 @@ package ui;
 
 import java.util.List;
 
-import javax.activity.InvalidActivityException;
-
 import taskManager.Project;
 import taskManager.ProjectFinishingStatus;
 import taskManager.Task;
