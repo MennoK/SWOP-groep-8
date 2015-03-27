@@ -67,10 +67,11 @@ public class ProjectTester {
 
 	@Test
 	public void testCreateTaskStandardWithdependencies() {
-		project.createTask("desc", Duration.ofHours(5), 20);
+		project.new TaskBuilder("desc", Duration.ofHours(5), 20).build();
 		ArrayList<Task> dependency = new ArrayList<Task>();
 		dependency.add(project.getAllTasks().get(0));
-		project.createTask("desc", Duration.ofHours(5), 20, dependency);
+		project.new TaskBuilder("desc", Duration.ofHours(5), 20)
+				.setDependencies(dependency).build();
 
 		assertEquals(2, project.getAllTasks().size());
 		assertEquals(null, project.getAllTasks().get(1).getOriginal());
@@ -258,16 +259,19 @@ public class ProjectTester {
 
 	@Test
 	public void testDepRedirectedAfterCreateAlternativeTask() {
-		project.createTask("task1", Duration.ofHours(3), 0.5);
+		project.new TaskBuilder("task1", Duration.ofHours(3), 0.5).build();
 		Task task1 = project.getAllTasks().get(0);
 		ArrayList<Task> dep = new ArrayList<Task>();
 		dep.add(task1);
-		project.createTask("task2 (dep task1)", Duration.ofHours(5), 0.5, dep);
+		project.new TaskBuilder("task2 (dep task1)", Duration.ofHours(5), 0.5)
+				.setDependencies(dep).build();
 		Task task2 = project.getAllTasks().get(1);
-		project.createTask("task4 (dep task1)", Duration.ofHours(5), 0.5, dep);
+		project.new TaskBuilder("task4 (dep task1)", Duration.ofHours(5), 0.5)
+				.setDependencies(dep).build();
 		Task task4 = project.getAllTasks().get(2);
 		task1.updateStatus(now, now.plusHours(4), true);
-		project.createTask("task3", Duration.ofHours(1), 0.5, task1);
+		project.new TaskBuilder("task3", Duration.ofHours(1), 0.5)
+				.setOriginalTask(task1).build();
 		Task task3 = project.getAllTasks().get(3);
 		assertFalse(task2.hasDependency(task1));
 		assertTrue(task2.hasDependency(task3));
@@ -327,11 +331,10 @@ public class ProjectTester {
 		project.createTask("bla", Duration.ofHours(4 * 8), 0.5);
 		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
 	}
-	@Test(expected =IllegalStateException.class)
+
+	@Test(expected = IllegalStateException.class)
 	public void testGetCurrentDelayNoTask() {
 		project.getCurrentDelay();
 	}
-	
-		
-	
+
 }
