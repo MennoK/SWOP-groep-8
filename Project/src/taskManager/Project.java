@@ -16,7 +16,7 @@ import java.util.List;
  * Additionally, for ongoing projects, the system should indicate whether the
  * project is estimated to finish on time or over time (based on the time spans
  * of the finished tasks, the estimated duration of the unfinished tasks
- * ignoring the acceptable deviation and parallelizing as mush as possible, and
+ * ignoring the acceptable deviation and parallelizing as much as possible, and
  * using a Monday to Friday working week with 8 hours a day). For finished
  * projects, the system should indicate the total delay that occurred within the
  * tasks of the project, and whether the project finished on time or not (based
