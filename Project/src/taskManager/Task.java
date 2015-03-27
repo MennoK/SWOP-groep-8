@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  * @author groep 8
  */
-public class Task {
+public class Task{
 
 	private List<Task> dependencies = new ArrayList<>();
 	private String description;
@@ -88,7 +88,7 @@ public class Task {
 		setAcceptableDeviation(acceptableDeviation);
 		this.id = idCounter.getAndIncrement();
 
-		update(now);
+		handleTimeChange(now);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class Task {
 		setEstimatedDuration(estimatedDuration);
 		setAcceptableDeviation(acceptableDeviation);
 		this.id = idCounter.getAndIncrement();
-		update(now);
+		handleTimeChange(now);
 	}
 
 	/**
@@ -373,12 +373,12 @@ public class Task {
 	}
 
 	/**
-	 * Pore mans observer pattern
+	 * observer pattern
 	 * 
 	 * @param time
 	 *            : the new time of the clock
 	 */
-	void update(LocalDateTime time) {
+	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
 	}
 

@@ -252,7 +252,7 @@ public class ProjectTester {
 	public void testUpdate() {
 		project.createTask("descr", Duration.ofHours(20), 20);
 
-		project.update(now);
+		project.handleTimeChange(now);
 		assertEquals(now, project.getLastUpdateTime());
 		assertEquals(now, project.getAllTasks().get(0).getLastUpdateTime());
 	}
