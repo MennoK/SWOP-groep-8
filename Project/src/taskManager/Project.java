@@ -108,8 +108,18 @@ public class Project implements TimeObserver {
 		 *            : the dependencies of the future Task
 		 * @return This TaskBuilder
 		 */
+		@Deprecated
 		public TaskBuilder setDependencies(List<Task> dependencies) {
 			this.dependencies = dependencies;
+			return this;
+		}
+
+		/**
+		 * If the Task being build has dependencies, then add them one at a
+		 * time.
+		 */
+		public TaskBuilder addDependencies(Task dependency) {
+			this.dependencies.add(dependency);
 			return this;
 		}
 
@@ -265,12 +275,10 @@ public class Project implements TimeObserver {
 	@Override
 	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
-		for(Task t : this.getAllTasks())
-		{
+		for (Task t : this.getAllTasks()) {
 			t.handleTimeChange(time);
 		}
 	}
-
 
 	/**
 	 * Estimates the finish time by calculating the estimated finished time of
