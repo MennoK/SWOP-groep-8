@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
+import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
+
 import taskManager.Project;
 import taskManager.ProjectController;
 import taskManager.Task;
@@ -110,81 +112,38 @@ public class Parser {
 			// estimated duration and acceptable deviation.
 			int projectNumber = (int) (task.get("project"));
 			String description = (String) (task.get("description"));
-			Duration estimatedDuration = Duration.ofHours((long) (int) task
-					.get("estimatedDuration"));
-			double acceptableDeviation = (double) ((int) (task
-					.get("acceptableDeviation")));
+			Duration estimatedDuration = Duration.ofHours((long) (int) task.get("estimatedDuration"));
+			double acceptableDeviation = (double) ((int) (task.get("acceptableDeviation")));
 			acceptableDeviation /= 100;
 
-			Project projectOfTask = controller.getAllProjects().get(
-					projectNumber);
+			Project projectOfTask = controller.getAllProjects().get(projectNumber);
 
-			if (task.get("alternativeFor") != null
-					&& task.get("prerequisiteTasks") != null) {
-				int alternativeTaskNr = (int) task.get("alternativeFor");
-				Task alternativeTask = projectOfTask.getAllTasks().get(
-						alternativeTaskNr - 1);
-				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task
-						.get("prerequisiteTasks");
+			Project.TaskBuilder builder = projectOfTask.new TaskBuilder(description, estimatedDuration, acceptableDeviation);
 
-				Project.TaskBuilder builder = projectOfTask.new TaskBuilder(
-						description, estimatedDuration, acceptableDeviation)
-						.setOriginalTask(alternativeTask);
-
+			//add dependencies if there are any
+			if (task.get("prerequisiteTasks") != null) {
+				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task.get("prerequisiteTasks");
 				for (Integer taskNr : prerequisiteTasks) {
-					builder.addDependencies(projectOfTask.getAllTasks().get(
-							taskNr - 1));
+					builder.addDependencies(projectOfTask.getAllTasks().get(taskNr - 1));				
 				}
-				builder.build();
 			}
 
-			if (task.get("alternativeFor") != null
-					&& task.get("prerequisiteTasks") == null) {
-
+			//add alternative task if there is any
+			if (task.get("alternativeFor") != null) {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
-				Task alternativeTask = projectOfTask.getAllTasks().get(
-						alternativeTaskNr - 1);
-				projectOfTask.new TaskBuilder(description, estimatedDuration,
-						acceptableDeviation).setOriginalTask(alternativeTask)
-						.build();
+				builder.setOriginalTask(projectOfTask.getAllTasks().get(alternativeTaskNr - 1));
 			}
 
-			else if (task.get("prerequisiteTasks") != null
-					&& task.get("alternativeFor") == null) {
-
-				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task
-						.get("prerequisiteTasks");
-				ArrayList<Task> dependencyList = new ArrayList<Task>();
-
-				Project.TaskBuilder builder = projectOfTask.new TaskBuilder(
-						description, estimatedDuration, acceptableDeviation);
-
-				for (Integer taskNr : prerequisiteTasks) {
-					builder.addDependencies(projectOfTask.getAllTasks().get(
-							taskNr - 1));
-				}
-				builder.build();
-
-			} else if (task.get("prerequisiteTasks") == null
-					&& task.get("alternativeFor") == null) {
-				projectOfTask.new TaskBuilder(description, estimatedDuration,
-						acceptableDeviation).build();
-
-			}
-
-			Task newTask = projectOfTask.getAllTasks().get(
-					projectOfTask.getAllTasks().size() - 1);
+			//build the new task
+			builder.build();
+			Task newTask = projectOfTask.getAllTasks().get(projectOfTask.getAllTasks().size() - 1);
 
 			// if status is failed or finished, update the status and set start
 			// en end time
 			if (task.get("status") != null) {
 				String status = (String) task.get("status");
-				LocalDateTime startTime = LocalDateTime
-						.parse((CharSequence) task.get("startTime"),
-								dateTimeFormatter);
-				LocalDateTime endTime = LocalDateTime.parse(
-						(CharSequence) task.get("endTime"), dateTimeFormatter);
-
+				LocalDateTime startTime = LocalDateTime.parse((CharSequence) task.get("startTime"),dateTimeFormatter);
+				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
 				if (status.equals("failed")) {
 					newTask.updateStatus(startTime, endTime, true);
 				} else {
