@@ -98,14 +98,18 @@ public class Reader {
 	LocalDateTime getDate(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + "\n(format: 'yyyy-mm-ddThh:mm:ss')\n"
-					+ "(type 1 for 09/02/2015, 08:00)");
+					+ "(type N for 2015-02-09T08:00:00 + N days)");
+			String answer = getData();
 			try {
-				String answer = getData();
-				if (answer.equals("1"))
-					return LocalDateTime.of(2015, 2, 9, 8, 0);
-				return LocalDateTime.parse(answer);
-			} catch (java.time.format.DateTimeParseException e) {
-				System.out.println("The given date was invalid, try again.");
+				return LocalDateTime.of(2015, 2, 9, 8, 0).plusDays(
+						Integer.parseInt(answer));
+			} catch (NumberFormatException e1) {
+				try {
+					return LocalDateTime.parse(answer);
+				} catch (java.time.format.DateTimeParseException e2) {
+					System.out
+							.println("The given date was invalid, try again.");
+				}
 			}
 		}
 	}
