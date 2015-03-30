@@ -57,11 +57,9 @@ public class ProjectTester {
 		project = new Project("project", "desc", time, time.plusDays(4));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testDueTimeOnCreationTime() {
-		// TODO is this really the wanted behavior
 		project = new Project("project", "desc", time, time);
-		assertEquals(time, project.getDueTime());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

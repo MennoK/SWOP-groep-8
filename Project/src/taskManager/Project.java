@@ -227,8 +227,7 @@ public class Project implements TimeObserver {
 	 *         equal to the creation time
 	 */
 	private boolean canHaveDueTime(LocalDateTime dueTime) {
-		return dueTime.isAfter(getCreationTime())
-				|| dueTime.isEqual(getCreationTime());
+		return dueTime.isAfter(getCreationTime());
 	}
 
 	/**
