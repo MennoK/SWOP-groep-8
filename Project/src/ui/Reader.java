@@ -23,9 +23,9 @@ public class Reader {
 	}
 
 	private String getData() throws ExitUseCaseException {
-		System.out.println("Type 0 to skip/return to main menu.");
+		System.out.println("Type enter to skip/return to main menu.");
 		String str = getScan().nextLine();
-		if (str.equals("0"))
+		if (str.equals(""))
 			throw new ExitUseCaseException("Exit signal caught.");
 		return str;
 	}
@@ -98,10 +98,10 @@ public class Reader {
 	LocalDateTime getDate(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + "\n(format: 'yyyy-mm-ddThh:mm:ss')\n"
-					+ "(type N for 2015-02-09T08:00:00 + N days)");
+					+ "(type N for 2015-02-09T08:00:00 + N hours)");
 			String answer = getData();
 			try {
-				return LocalDateTime.of(2015, 2, 9, 8, 0).plusDays(
+				return LocalDateTime.of(2015, 2, 9, 8, 0).plusHours(
 						Integer.parseInt(answer));
 			} catch (NumberFormatException e1) {
 				try {

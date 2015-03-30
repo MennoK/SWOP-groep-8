@@ -21,12 +21,12 @@ public class UiTaskMan {
 			try {
 				fileName = reader
 						.getString("Give a file for initialisation of the system:\n"
-								+ "(press enter to use ./input.tman)");
+								+ "(press 0 to use ./input.tman)");
 			} catch (ExitUseCaseException e1) {
 				System.out.println("Starting with an empty system");
 				return;
 			}
-			if (fileName.equals(""))
+			if (fileName.equals("0"))
 				fileName = "./input.tman";
 			try {
 				Parser parser = new Parser();
