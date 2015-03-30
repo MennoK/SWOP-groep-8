@@ -209,7 +209,8 @@ public class Project implements TimeObserver {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given due time is not valid
 	 */
-	void setDueTime(LocalDateTime dueTime) throws IllegalArgumentException {
+	private void setDueTime(LocalDateTime dueTime)
+			throws IllegalArgumentException {
 		if (!canHaveDueTime(dueTime)) {
 			throw new IllegalArgumentException(
 					"The given due time is not valid.");

@@ -58,20 +58,15 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testDueTimeSetterAfterCreationTime() {
-		project.setDueTime(time.plusHours(8));
-		assertEquals(project.getDueTime(), time.plusHours(8));
-	}
-
-	@Test
-	public void testDueTimeSetterOnCreationTime() {
-		project.setDueTime(time);
-		assertEquals(project.getDueTime(), time);
+	public void testDueTimeOnCreationTime() {
+		// TODO is this really the wanted behavior
+		project = new Project("project", "desc", time, time);
+		assertEquals(time, project.getDueTime());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testDueTimeSetterBeforeCreationTime() {
-		project.setDueTime(time.minusHours(1));
+	public void testDueTimeBeforeCreationTime() {
+		project = new Project("project", "desc", time, time.minusHours(1));
 	}
 
 	@Test
@@ -80,13 +75,15 @@ public class ProjectTester {
 	}
 
 	@Test
-	public void testProjectWithNoTasksIsOngoing() {
-		assertEquals(ProjectStatus.ONGOING, project.getStatus());
-	}
-
-	@Test
 	public void testBaseProject() {
 		setUpBaseProject();
+
+		// Check the base data
+		assertEquals("project", project.getName());
+		assertEquals("desc", project.getDescription());
+		assertEquals(time, project.getCreationTime());
+		assertEquals(time.plusDays(4), project.getDueTime());
+
 		// Check the presence and correctness of the created Task
 		assertEquals(1, project.getAllTasks().size());
 		assertEquals(null, baseTask.getOriginal());
