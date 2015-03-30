@@ -204,6 +204,11 @@ public class TaskTester {
 		baseTask.updateStatus(now, now.minusDays(2), false);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void taskStartedBeforeProjectCreated() {
+		baseTask.updateStatus(now.minusHours(5), now.minusHours(2), false);
+	}
+
 	@Test
 	public void createAlternativeTask() {
 		new Task("desc2", Duration.ofHours(3), 2, now, failedTask,
