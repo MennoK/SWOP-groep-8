@@ -43,14 +43,11 @@ public class UseCase1ShowProjectsTester {
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
 		controller = new ProjectController(now);
-		controller.createProject("Project 1", "Description 1",
-				LocalDateTime.of(2015, 03, 10, 11, 00));
-		controller.createProject("Project 2", "Description 2",
-				LocalDateTime.of(2015, 03, 10, 11, 00));
-		controller.createProject("Project 0", "Description 3",
-				LocalDateTime.of(2015, 03, 10, 11, 00));
-		controller.createProject("Project 3", "Description 3",
-				LocalDateTime.of(2015, 03, 10, 16, 00));
+		controller.createProject("Project 1", "Description 1", now);
+		controller.createProject("Project 2", "Description 2", now);
+		controller.createProject("Project 0", "Description 3", now);
+		controller
+				.createProject("Project 3", "Description 3", now.plusHours(5));
 
 		project0 = controller.getAllProjects().get(2);
 		project1 = controller.getAllProjects().get(0);
@@ -64,8 +61,8 @@ public class UseCase1ShowProjectsTester {
 		project3.new TaskBuilder("task4", Duration.ofHours(2), 0.4).build();
 
 		task1 = project1.getAllTasks().get(0);
-		task1.updateStatus(LocalDateTime.of(2015, 03, 04, 00, 00),
-				LocalDateTime.of(2015, 03, 05, 00, 00), false);
+		task1.updateStatus(now.minusDays(6).minusHours(11), now.minusDays(5)
+				.minusHours(11), false);
 		task2 = project2.getAllTasks().get(0);
 		task3 = project2.getAllTasks().get(1);
 		task4 = project3.getAllTasks().get(0);
@@ -84,24 +81,18 @@ public class UseCase1ShowProjectsTester {
 		// show projects name description, creation time and due time
 		assertEquals("Project 1", project1.getName());
 		assertEquals("Description 1", project1.getDescription());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
-				project1.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
-				project1.getDueTime());
+		assertEquals(now, project1.getCreationTime());
+		assertEquals(now, project1.getDueTime());
 
 		assertEquals("Project 2", project2.getName());
 		assertEquals("Description 2", project2.getDescription());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
-				project2.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
-				project2.getDueTime());
+		assertEquals(now, project2.getCreationTime());
+		assertEquals(now, project2.getDueTime());
 
 		assertEquals("Project 0", project0.getName());
 		assertEquals("Description 3", project0.getDescription());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
-				project0.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 11, 00),
-				project0.getDueTime());
+		assertEquals(now, project0.getCreationTime());
+		assertEquals(now, project0.getDueTime());
 
 		// show details of the projects: over_time/on_time and hours short
 		// project 1 is finished -> ON_TIME

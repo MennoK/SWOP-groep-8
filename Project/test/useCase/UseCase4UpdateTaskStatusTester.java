@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
