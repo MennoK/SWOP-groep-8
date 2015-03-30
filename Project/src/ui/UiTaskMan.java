@@ -102,6 +102,10 @@ public class UiTaskMan {
 		}
 	}
 
+	private void planTask() throws ExitUseCaseException {
+		System.out.println("TODO implement plan task");
+	}
+
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
@@ -139,10 +143,15 @@ public class UiTaskMan {
 		}
 	}
 
+	private void runSimulation() throws ExitUseCaseException {
+		System.out.println("TODO implement run simulation");
+	}
+
 	private void printMenu() {
 		System.out.println("\nMain menu:\n" + "1: Show projects\n"
-				+ "2: Create project\n" + "3: Create task\n"
-				+ "4: Update task status\n" + "5: Advance time\n" + "6: Exit");
+				+ "2: Create project\n" + "3: Create task\n" + "4: Plan task\n"
+				+ "5: Update task status\n" + "6: Advance time\n"
+				+ "7: Run simulation\n" + "9: Exit");
 	}
 
 	void menu() {
@@ -151,7 +160,7 @@ public class UiTaskMan {
 				printMenu();
 				String choice = reader.getString("Select an option");
 				switch (choice) {
-				case "6":
+				case "9":
 					reader.close();
 					return;
 				case "1":
@@ -164,10 +173,16 @@ public class UiTaskMan {
 					createTask();
 					break;
 				case "4":
-					updateTaskStatus();
+					planTask();
 					break;
 				case "5":
+					updateTaskStatus();
+					break;
+				case "6":
 					advanceTime();
+					break;
+				case "7":
+					runSimulation();
 					break;
 				default:
 					System.out
@@ -183,8 +198,7 @@ public class UiTaskMan {
 
 	public static void main(String[] args) {
 		System.out.println("Welcome to TaskMan");
-		UiTaskMan ui = new UiTaskMan();
-		ui.menu();
+		new UiTaskMan().menu();
 		System.out.println("Goodbye!");
 	}
 
