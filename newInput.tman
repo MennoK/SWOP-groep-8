@@ -1,0 +1,186 @@
+# The file format is a simple subset of YAML.
+# Everything after '#' is ignored (i.e. single line comment)
+
+systemTime: "2014-04-01 09:00"
+
+dailyAvailability :
+  - startTime : "12:00"
+    endTime   : "17:00"
+
+resourceTypes:
+  - name              : "car"
+    # Inner lists are between "[" and "]". Their items are seperated by ",".
+    requires          : []
+    conflictsWith     : []
+    dailyAvailability :
+  - name              : "white board"
+    requires          : []
+    conflictsWith     : []
+    dailyAvailability :
+  - name              : "demo kit"
+    requires          : []
+    conflictsWith     : [1]
+    dailyAvailability :
+  - name              : "conference room"
+    requires          : [2]
+    conflictsWith     : [3]
+    dailyAvailability :
+  - name              : "distributed testing setup"
+    requires          : []
+    conflictsWith     : []
+    dailyAvailability :
+  - name              : "data center"
+    requires          : []
+    conflictsWith     : []
+    dailyAvailability : 0
+
+resources:
+  - name: "Car 1"
+    type: 0
+    planning: 0
+  - name: "Car 2"
+    type: 0
+    planning: 0
+  - name: "Car 3"
+    type: 0
+    planning: 
+  - name: "White Board 1"
+    type: 1
+    planning: 
+  - name: "White Board 2"
+    type: 1
+    planning: 
+  - name: "Demo Kit 1"
+    type: 2
+    planning: 
+  - name: "Demo Kit 2"
+    type: 2
+    planning: 0
+  - name: "The Big Conference Room"
+    type: 3
+    planning:
+  - name: "The Small Conference Room"
+    type: 3
+    planning: 
+  - name: "The Distributed Test Facility"
+    type: 4
+    planning: 
+  - name: "Data Center X"
+    type: 5
+    planning: 
+  - name: "Data Center Y"
+    type: 5
+    planning: 2
+
+developers:
+  - name     : "John Deere"
+    planning : [0]
+  - name     : "Tom Hawk"
+    planning : [0,1]
+  - name     : "Bob Grylls"
+    planning : [2]
+
+projects:
+  - name         : "project x"
+    description  : "a project description"
+    creationTime : "2014-01-01 09:00" # YYYY-MM-DD HH:MM
+    dueTime      : "2014-02-01 18:00"
+
+  - name         : "project y"
+    description  : "another project description"
+    creationTime : "2014-01-01 09:00"
+    dueTime      : "2016-01-01 18:00"
+
+  - name         : "project z"
+    description  : "yet another project description"
+    creationTime : "2015-04-25 09:00"
+    dueTime      : "2015-04-30 18:00"
+
+plannings:
+  - plannedStartTime : "2014-01-01 09:00"
+    developers       : [0, 1]
+    resources        : [0, 1, 6]
+    task             : 0
+  - plannedStartTime : "2014-01-02 17:00"
+    developers       : [1]
+    resources        : []
+    task             : 3
+  - plannedStartTime : "2014-03-01 09:00"
+    developers       : [2]
+    resources        : [11]
+    task             : 4
+
+tasks:
+  - project            : 0
+    description        : "task description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    alternativeFor     :
+    resourceTypes      : [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
+    prerequisiteTasks  :
+    planning           : 0
+    status             : finished
+    startTime          : "2014-01-01 10:00"
+    endTime            : "2014-01-02 17:00"
+
+  - project            : 1
+    description        : "another task description"
+    estimatedDuration  : 50000
+    acceptableDeviation: 50
+    alternativeFor     :
+    resourceTypes      : []
+    prerequisiteTasks  :
+    planning           :
+    status             :
+
+  - project            : 1
+    description        : "yet another task description"
+    estimatedDuration  : 10000
+    acceptableDeviation: 10
+    alternativeFor     :
+    resourceTypes      : []
+    prerequisiteTasks  :
+    planning           :
+    status             :
+
+  - project            : 1
+    description        : "description"
+    estimatedDuration  : 5000
+    acceptableDeviation: 0
+    alternativeFor     :
+    resourceTypes      : []
+    prerequisiteTasks  : [ 1, 2 ]
+    planning           : 1
+    status             : failed
+    startTime          : "2014-01-02 09:00"
+    endTime            : "2014-03-25 18:00"
+
+  - project            : 1
+    description        : "description"
+    estimatedDuration  : 50000
+    acceptableDeviation: 0
+    alternativeFor     : 3
+    resourcesTypes     : [{type: 5,  quantity: 1}]
+    prerequisiteTasks  : [ 1, 2 ]
+    planning           : 2
+    status             : executing
+
+  - project            : 2
+    description        : "description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    alternativeFor     :
+    resourceTypes      : []
+    prerequisiteTasks  :
+    planning           :
+    status             :
+
+  - project            : 2
+    description        : "description"
+    estimatedDuration  : 500
+    acceptableDeviation: 50
+    resourceTypes      : []
+    alternativeFor     :
+    prerequisiteTasks  :
+    planning           :
+    status             :
