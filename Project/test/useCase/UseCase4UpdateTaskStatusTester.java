@@ -9,13 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 import taskManager.Task;
 import taskManager.TaskStatus;
 
 public class UseCase4UpdateTaskStatusTester {
 
-	private ProjectController controller;
+	private ProjectExpert controller;
 	private Project project1;
 	private Task task1;
 	private Task task2;
@@ -29,7 +29,7 @@ public class UseCase4UpdateTaskStatusTester {
 		// create a contoller and a project with 3 tasks
 		// task 3 is dependent on task 1
 
-		controller = new ProjectController(now);
+		controller = new ProjectExpert(now);
 		controller.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));

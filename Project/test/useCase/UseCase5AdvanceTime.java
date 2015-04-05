@@ -8,14 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
 
 public class UseCase5AdvanceTime {
 
-	private ProjectController controller;
+	private ProjectExpert controller;
 	private Project project1;
 	private Project project2;
 
@@ -32,7 +32,7 @@ public class UseCase5AdvanceTime {
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
-		controller = new ProjectController(now);
+		controller = new ProjectExpert(now);
 		controller.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 10, 17, 00));
 

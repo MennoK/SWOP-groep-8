@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ProjectControllerTester {
+public class ProjectExpertTester {
 
-	private ProjectController projectController;
+	private ProjectExpert projectController;
 
 	@Before
 	public void setUp() {
-		projectController = new ProjectController(LocalDateTime.of(2000, 03,
+		projectController = new ProjectExpert(LocalDateTime.of(2000, 03,
 				05, 00, 00));
 	}
 

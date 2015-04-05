@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
@@ -19,7 +19,7 @@ import taskManager.TaskStatus;
 
 public class UseCase1ShowProjectsTester {
 
-	private ProjectController controller;
+	private ProjectExpert controller;
 	private Project project1;
 	private Project project2;
 	private Project project0;
@@ -42,7 +42,7 @@ public class UseCase1ShowProjectsTester {
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
-		controller = new ProjectController(now);
+		controller = new ProjectExpert(now);
 		controller.createProject("Project 1", "Desc 1", now.plusDays(2));
 		controller.createProject("Project 2", "Desc 2", now.plusHours(3));
 		controller.createProject("Project 0", "Desc 3", now.plusDays(2));

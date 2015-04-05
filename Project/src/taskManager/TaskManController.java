@@ -1,5 +1,90 @@
 package taskManager;
 
+/**
+ * The taskManController class controls every expert
+ * 
+ * @author Groep 8
+ *
+ */
 public class TaskManController {
 
+	private DeveloperExpert developerExpert;
+	private ResourceExpert resourceExpert;
+	private ProjectExpert projectExpert;
+	private PlanningExpert planningExpert;
+	
+	/**
+	 * Constructor of TaskManController. When a new TaskManController
+	 * has been created new expert classes will be created.
+	 */
+	public TaskManController(){
+		createDeveloperExpert();
+		createResourceExpert();
+		createProjectExpert();
+		createPlanningExpert();
+	}
+
+	/**
+	 * Creates a new planning expert
+	 */
+	private void createPlanningExpert() {
+		this.planningExpert = new PlanningExpert();
+	}
+
+	/**
+	 * Creates a new project expert
+	 */
+	private void createProjectExpert() {
+	}
+
+	/**
+	 * Creates a new resource expert
+	 */
+	private void createResourceExpert() {
+		this.resourceExpert = new ResourceExpert();
+	}
+	
+	/**
+	 * Creates a new developer expert
+	 */
+	private void createDeveloperExpert() {
+		this.developerExpert = new DeveloperExpert();
+	}
+
+	/**
+	 * Returns the developer expert 
+	 * 
+	 * @return developerExpert : developer expert
+	 */
+	public DeveloperExpert getDeveloperExpert() {
+		return developerExpert;
+	}
+
+	/**
+	 * Returns the resource expert 
+	 * 
+	 * @return resourceExpert : resource expert
+	 */
+	public ResourceExpert getResourceExpert() {
+		return resourceExpert;
+	}
+
+	/**
+	 * Returns the project expert 
+	 * 
+	 * @return projectExpert : project expert
+	 */
+	public ProjectExpert getProjectExpert() {
+		return projectExpert;
+	}
+
+	/**
+	 * Returns the planning expert 
+	 * 
+	 * @return planningExpert : planning expert
+	 */
+	public PlanningExpert getPlanningExpert() {
+		return planningExpert;
+	}
+	
 }

@@ -9,18 +9,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 
 public class UseCase3CreateTaskTester {
 
-	private ProjectController controller;
+	private ProjectExpert controller;
 	private LocalDateTime now;
 
 	@Before
 	public void setUp() {
 		// create a controller
 		now = LocalDateTime.of(2015, 03, 07, 01, 00);
-		controller = new ProjectController(now);
+		controller = new ProjectExpert(now);
 
 	}
 

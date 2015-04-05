@@ -14,7 +14,7 @@ import java.util.List;
  * @author Groep 8
  */
 
-public class ProjectController {
+public class ProjectExpert {
 
 	private ArrayList<Project> projects;
 	private TaskManClock taskManClock;
@@ -25,7 +25,7 @@ public class ProjectController {
 	 * @param now
 	 *            : the time at which the ProjectController is created
 	 */
-	public ProjectController(LocalDateTime now) {
+	public ProjectExpert(LocalDateTime now) {
 		projects = new ArrayList<>();
 		this.taskManClock = new TaskManClock(now);
 	}

@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 import parser.Parser;
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 import taskManager.Task;
 import ui.exception.ExitUseCaseException;
 
 public class UiTaskMan {
 
-	private ProjectController projectController;
+	private ProjectExpert projectController;
 	private Reader reader;
 
 	private void askInitialState() {
@@ -49,7 +49,7 @@ public class UiTaskMan {
 		}
 
 		System.out.println("Current time initialized on:\n" + now + "\n");
-		projectController = new ProjectController(now);
+		projectController = new ProjectExpert(now);
 		askInitialState();
 	}
 

@@ -9,16 +9,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 
 public class UseCase2CreateProjectTester {
 
-	private ProjectController controller;
+	private ProjectExpert controller;
 
 	@Before
 	public void setUp() {
 		// create a project controller
-		controller = new ProjectController(LocalDateTime.of(2015, 03, 07, 01,
+		controller = new ProjectExpert(LocalDateTime.of(2015, 03, 07, 01,
 				00));
 		;
 	}

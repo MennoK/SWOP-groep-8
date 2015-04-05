@@ -1,5 +1,5 @@
 package taskManager;
 
-public class DeveloperFacade {
+public class DeveloperFacade extends Facade{
 
 }

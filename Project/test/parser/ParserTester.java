@@ -13,19 +13,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 import taskManager.Task;
 
 public class ParserTester {
 
 	DateTimeFormatter dateTimeFormatter = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd HH:mm");
-	static ProjectController projectController;
+	static ProjectExpert projectController;
 
 	// run setup only once
 	@BeforeClass
 	public static void setUp() {
-		projectController = new ProjectController(null);
+		projectController = new ProjectExpert(null);
 		try {
 			new Parser().parse("./input.tman", projectController);
 		} catch (FileNotFoundException | RuntimeException e) {

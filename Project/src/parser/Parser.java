@@ -18,7 +18,7 @@ import org.yaml.snakeyaml.Yaml;
 import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
 
 import taskManager.Project;
-import taskManager.ProjectController;
+import taskManager.ProjectExpert;
 import taskManager.Task;
 
 /**
@@ -45,7 +45,7 @@ public class Parser {
 	 * @throws RuntimeException
 	 */
 	@SuppressWarnings("unchecked")
-	public void parse(String pathToFile, ProjectController projectController)
+	public void parse(String pathToFile, ProjectExpert projectController)
 			throws FileNotFoundException, RuntimeException {
 		// check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(
@@ -78,7 +78,7 @@ public class Parser {
 	 */
 	private void constructProjects(
 			List<LinkedHashMap<String, Object>> projects,
-			ProjectController controller) {
+			ProjectExpert controller) {
 		for (LinkedHashMap<String, Object> project : projects) {
 			// get all arguments needed for a project: name, description,
 			// creation time and due time
@@ -104,7 +104,7 @@ public class Parser {
 	 *            : the projectController
 	 */
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
-			ProjectController controller) {
+			ProjectExpert controller) {
 
 		for (LinkedHashMap<String, Object> task : tasks) {
 
