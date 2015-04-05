@@ -39,6 +39,7 @@ public class Task{
 	private LocalDateTime startTime;
 	private boolean failed = false;
 	private Task originalTask;
+	
 
 	private LocalDateTime lastUpdateTime;
 
@@ -517,6 +518,14 @@ public class Task{
 	 */
 	public int getId() {
 		return this.id;
+	}
+	/**
+	 * Returns the estimated duration of a task
+	 * 
+	 * @return duration: estimated duration of a task
+	 */
+	public Duration getDuration(){
+		return this.estimatedDuration;
 	}
 
 }
