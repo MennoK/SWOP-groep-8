@@ -66,7 +66,7 @@ public class Task{
 		private Project project;
 		private LocalDateTime now;
 		private Task originalTask = null;
-		
+
 		private List<Task> dependencies = new ArrayList<Task>();
 		private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
 
@@ -111,7 +111,7 @@ public class Task{
 			this.dependencies.add(dependency);
 			return this;
 		}
-		
+
 		/**
 		 * If the Task being build has required resource types, then add them one at a
 		 * time.
@@ -133,10 +133,12 @@ public class Task{
 	}
 
 	/**
+	 * The constructor of task has a task builder as argument.
+	 * The task builder contains all the required parameters
+	 * and possible optional parameters
 	 * 
-	 * 
+	 * @param taskBuilder : task builder with parameters
 	 */
-	//TODO new constructor
 	public Task(TaskBuilder taskBuilder) {
 		if ((taskBuilder.dependencies != null || !taskBuilder.dependencies.isEmpty())
 				&& taskBuilder.originalTask != null) {
@@ -152,6 +154,7 @@ public class Task{
 		}
 
 		addMultipleDependencies(taskBuilder.dependencies);
+		addMultipleResourceTypes(taskBuilder.requiredResourceTypes);
 
 		// null means no original task
 		if (taskBuilder.originalTask != null) {
@@ -167,9 +170,7 @@ public class Task{
 	}
 
 	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
-
 		return WorkTime.getFinishTime(baseTime, duration);
-
 	}
 
 	/**
@@ -227,6 +228,47 @@ public class Task{
 		} else {
 			dependencies.add(dependency);
 		}
+	}
+
+	/**
+	 * Adds a set of required resource types to task. The required resource type may not be
+	 * already in the set of resource type of the task
+	 * 
+	 * @param requiredResourceTypes
+	 *            : set with required resource type
+	 */
+	private void addMultipleResourceTypes(Set<ResourceType> requiredResourceTypes) {
+		for (ResourceType requiredResourceType : requiredResourceTypes) {
+			addResourceType(requiredResourceType);
+		}
+	}
+
+	/**
+	 * Adds a given resource type to the set of required
+	 * resource types of the task
+	 * 
+	 * @param requiredResourceType
+	 *            : required resource type
+	 */
+	void addResourceType(ResourceType requiredResourceType) {
+		if (!isValidResourceType(requiredResourceType)) {
+			throw new IllegalArgumentException(
+					"The given resource type is already required by this task");
+		} else {
+			requiredResourceTypes.add(requiredResourceType);
+		}
+	}
+
+	/**
+	 * This method returns true if and only if the given resource type is not yet
+	 * in the set of required resource types
+	 * 
+	 * @param required resource type
+	 * @return true if and only if the set of required resource type does not contain the given
+	 * 			resource type.
+	 */
+	private boolean isValidResourceType(ResourceType requiredResourceType) {
+		return !this.getRequiredResourceTypes().contains(requiredResourceType);
 	}
 
 	/**
@@ -555,6 +597,16 @@ public class Task{
 	public List<Task> getDependencies() {
 		return Collections.unmodifiableList(dependencies);
 	}
+	
+	/**
+	 * Returns the set with required resource type of the task
+	 * 
+	 * @return dependencies: set with required resource type
+	 */
+	public Set<ResourceType> getRequiredResourceTypes() {
+		return requiredResourceTypes;
+	}
+	
 
 	/**
 	 * Remove task from the dependency list
