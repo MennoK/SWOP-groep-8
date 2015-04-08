@@ -2,6 +2,10 @@ package taskManager;
 
 import static org.junit.Assert.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +16,21 @@ public class ResourceTypeTester {
 
 	private ResourceExpert resourceExpert;
 	private ResourceType resourceType;
+	private ResourceType requiredResourceType;
+	private ResourceType conflictedResourceType;
 	private List<ResourceType> resourceTypeList;
 	
 	@Before
 	public void setUp() {
 		resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("type").build();
-		
+		resourceExpert.createResourceType("requiredResourceType").build();
+		resourceExpert.createResourceType("conflictedResourceType").build();
+
 		resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);
+		requiredResourceType = resourceTypeList.get(1);
+		conflictedResourceType = resourceTypeList.get(2);
 	}
 	
 	@Test
@@ -52,7 +62,7 @@ public class ResourceTypeTester {
 
 	@Test
 	public void testAddRequiredResourceType(){
-		
+	
 	}
 
 	@Test

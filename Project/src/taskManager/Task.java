@@ -4,8 +4,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
 
 /**
  * A task is a unit of work that can be performed by a user of the system. A
@@ -27,71 +31,139 @@ import java.util.concurrent.atomic.AtomicInteger;
  * the project status (ongoing or finished). The time spent on the failed task
  * is however counted for the total execution time of the project.
  * 
- * @author groep 8
+ * @author Groep 8
  */
 public class Task{
 
-	private List<Task> dependencies = new ArrayList<>();
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
+
+	private List<Task> dependencies = new ArrayList<>();
+	private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
+	private Task originalTask;
+	private boolean failed = false;
+
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
-	private boolean failed = false;
-	private Task originalTask;
-	
-
 	private LocalDateTime lastUpdateTime;
 
-	// Thread safe integer sequence generator that starts at 1
 	private static AtomicInteger idCounter = new AtomicInteger(1);
 	private int id;
 
 	/**
-	 * Constructor of Task. A task has a set of required parameters, namely :
-	 * description, estimated duration and acceptable deviation. A task has also
-	 * optional parameters: an original task and dependencies list
+	 * The TaskBuilder is an inner class builder for constructing
+	 * new tasks. The description, estimated duration and acceptable 
+	 * deviation of a task are required parameters.
+	 * The optional parameters for a task are the original task,
+	 * dependencies and required resource types.
+	 */
+	public static class TaskBuilder {
+
+		private String description;
+		private Duration estimatedDuration;
+		private double acceptableDeviation;
+		private Project project;
+		private LocalDateTime now;
+		private Task originalTask = null;
+		
+		private List<Task> dependencies = new ArrayList<Task>();
+		private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
+
+		/**
+		 * Creates a TaskBuilder with the required information for the creation
+		 * of a Task
+		 * 
+		 * @param description
+		 *            : description of a task
+		 * @param estimatedDuration
+		 *            : estimated duration of task
+		 * @param acceptableDeviation
+		 *            : acceptable deviation of a task
+		 */
+		public TaskBuilder(String description, Duration estimatedDuration,
+				double acceptableDeviation, Project project) {
+			this.description = description;
+			this.estimatedDuration = estimatedDuration;
+			this.acceptableDeviation = acceptableDeviation;
+			this.project = project;
+			this.now = project.getLastUpdateTime();
+		}
+
+		/**
+		 * If the Task being build is the alternative Task for some other Task
+		 * which failed then use this to specify the original task.
+		 * 
+		 * @param originalTask
+		 *            : the failed Task
+		 * @return This TaskBuilder
+		 */
+		public TaskBuilder setOriginalTask(Task originalTask) {
+			this.originalTask = originalTask;
+			return this;
+		}
+
+		/**
+		 * If the Task being build has dependencies, then add them one at a
+		 * time.
+		 */
+		public TaskBuilder addDependencies(Task dependency) {
+			this.dependencies.add(dependency);
+			return this;
+		}
+		
+		/**
+		 * If the Task being build has required resource types, then add them one at a
+		 * time.
+		 */
+		public TaskBuilder addRequiredResourceType(ResourceType requiredResourceType) {
+			this.requiredResourceTypes.add(requiredResourceType);
+			return this;
+		}
+
+		/**
+		 * Build a Task after all the optional values have been set.
+		 */
+		public Task build() {
+			Task task = new Task(this);
+			project.updateDependencies(task, originalTask);
+			project.addTask(task);
+			return task;
+		}
+	}
+
+	/**
 	 * 
-	 * @param description
-	 *            : given description of a task
-	 * @param estimatedDuration
-	 *            : estimated duration of task
-	 * @param acceptableDeviation
-	 *            : acceptable duration of task
-	 * @param originalTask
-	 *            : the original task which failed
-	 * @param dependencies
-	 *            : list with dependencies
 	 * 
 	 */
-	Task(String description, Duration estimatedDuration,
-			double acceptableDeviation, LocalDateTime now, Task originalTask,
-			List<Task> dependencies) {
-		if ((dependencies != null || !dependencies.isEmpty())
-				&& originalTask != null) {
-			if (dependencies.contains(originalTask))
+	//TODO new constructor
+	public Task(TaskBuilder taskBuilder) {
+		if ((taskBuilder.dependencies != null || !taskBuilder.dependencies.isEmpty())
+				&& taskBuilder.originalTask != null) {
+			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
 								+ " on the task it is an alternative for");
-			for (Task dep : dependencies)
-				if (dep.hasDependency(originalTask))
+			for (Task dep : taskBuilder.dependencies)
+				if (dep.hasDependency(taskBuilder.originalTask))
 					throw new IllegalArgumentException(
 							"Can not create an alternative task which is indirectly dependent"
 									+ " on the task it is an alternative for");
 		}
 
-		addMultipleDependencies(dependencies);
+		addMultipleDependencies(taskBuilder.dependencies);
 
 		// null means no original task
-		if (originalTask != null) {
-			setAlternativeTask(originalTask);
+		if (taskBuilder.originalTask != null) {
+			setAlternativeTask(taskBuilder.originalTask);
 		}
-		setDescription(description);
-		setEstimatedDuration(estimatedDuration);
-		setAcceptableDeviation(acceptableDeviation);
+
+		setDescription(taskBuilder.description);
+		setEstimatedDuration(taskBuilder.estimatedDuration);
+		setAcceptableDeviation(taskBuilder.acceptableDeviation);
 		this.id = idCounter.getAndIncrement();
 
-		handleTimeChange(now);
+		handleTimeChange(taskBuilder.now);
 	}
 
 	private LocalDateTime add(LocalDateTime baseTime, Duration duration) {
@@ -379,9 +451,7 @@ public class Task{
 				}
 				return add(estimatedTime, this.estimatedDuration);
 			}
-
 		}
-
 	}
 
 	/**

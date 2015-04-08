@@ -17,7 +17,7 @@ public class DeveloperExpertTester {
 	}
 	
 	@Test
-	public void createDeveloper() {
+	public void testCreateDeveloper() {
 		developerExpert.createDeveloper("Bob");
 		assertEquals(1, developerExpert.getAllDevelopers().size());
 		ArrayList<Developer> devList = new ArrayList<Developer>();
@@ -26,7 +26,13 @@ public class DeveloperExpertTester {
 	}
 	
 	@Test
-	public void cannotHaveTheSameDeveloper(){
+	public void testGetAllDevelopersWithNoDevelopersReturnsAnEmptySet(){
+		assertTrue(developerExpert.getAllDevelopers().isEmpty());
+		assertFalse(developerExpert.getAllDevelopers() == null);
+	}
+	
+	@Test
+	public void testCannotHaveTheSameDeveloper(){
 		developerExpert.createDeveloper("Bob");
 		ArrayList<Developer> devList = new ArrayList<Developer>();
 		devList.addAll(developerExpert.getAllDevelopers());
@@ -34,7 +40,7 @@ public class DeveloperExpertTester {
 	}
 	
 	@Test 
-	public void cannotHaveNullDeveloper(){
+	public void testCannotHaveNullDeveloper(){
 		assertFalse(developerExpert.canHaveDeveloper(null));
 	}
 }

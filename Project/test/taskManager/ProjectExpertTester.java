@@ -56,7 +56,7 @@ public class ProjectExpertTester {
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		Project project1 = projectController.getAllProjects().get(0);
-		project1.new TaskBuilder("descr", Duration.ofHours(20), 20).build();
+		project1.createTask("descr", Duration.ofHours(20), 20).build();
 
 		projectController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
 

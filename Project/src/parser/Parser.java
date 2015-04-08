@@ -20,6 +20,7 @@ import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.Task;
+import taskManager.Task.TaskBuilder;
 
 /**
  * The Parser class implements a YAML parser for TaskMan
@@ -118,7 +119,7 @@ public class Parser {
 
 			Project projectOfTask = controller.getAllProjects().get(projectNumber);
 
-			Project.TaskBuilder builder = projectOfTask.new TaskBuilder(description, estimatedDuration, acceptableDeviation);
+			TaskBuilder builder = projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
 
 			//add dependencies if there are any
 			if (task.get("prerequisiteTasks") != null) {

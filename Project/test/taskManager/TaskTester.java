@@ -12,6 +12,8 @@ import javax.activity.InvalidActivityException;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskManager.Task.TaskBuilder;
+
 public class TaskTester {
 
 	private LocalDateTime now;
@@ -25,28 +27,24 @@ public class TaskTester {
 	@Before
 	public void setUp() throws Exception {
 		now = LocalDateTime.of(2015, 03, 03, 8, 0);
-		baseTask = new Task("a task", Duration.ofHours(8), 0.2, now, null,
-				new ArrayList<Task>());
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 
-		ArrayList<Task> dependencies = new ArrayList<Task>();
-		dependencies.add(baseTask);
-		dependentTask = new Task("a dependent task", Duration.ofHours(8), 0.2,
-				now, null, dependencies);
+		project.createTask("a task", Duration.ofHours(8), 0.2).build();
+		baseTask = project.getAllTasks().get(0);
+		
+		project.createTask("a dependent task", Duration.ofHours(8), 0.2).addDependencies(baseTask).build();
+		dependentTask = project.getAllTasks().get(1);
 
-		finishedTask = new Task("a finished task", Duration.ofHours(8), 0.2,
-				now, null, new ArrayList<Task>());
+		project.createTask("a finished task", Duration.ofHours(8), 0.2).build();
+		finishedTask = project.getAllTasks().get(2);
 		finishedTask.updateStatus(now, now.plusHours(2), false);
 
-		failedTask = new Task("a failed task", Duration.ofHours(8), 0.2, now,
-				null, new ArrayList<Task>());
+		project.createTask("a failed task", Duration.ofHours(8), 0.2);
+		failedTask = project.getAllTasks().get(3);
 		failedTask.updateStatus(now, now.plusHours(2), true);
 
-		ArrayList<Task> level2dependencies = new ArrayList<Task>();
-		level2dependencies.add(finishedTask);
-		level2dependencies.add(failedTask);
-		level2dependencies.add(dependentTask);
-		level2DependentTask = new Task("a task dependent on all kind of tasks",
-				Duration.ofHours(8), 0.2, now, null, level2dependencies);
+		project.createTask("a task dependent on all kind of tasks",Duration.ofHours(8), 0.2).addDependencies(finishedTask).addDependencies(failedTask).addDependencies(dependentTask).build();
+		level2DependentTask = project.getAllTasks().get(4);
 	}
 
 	@Test

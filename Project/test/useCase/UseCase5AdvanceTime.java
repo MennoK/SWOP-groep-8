@@ -42,7 +42,7 @@ public class UseCase5AdvanceTime {
 		project1 = controller.getAllProjects().get(0);
 		project2 = controller.getAllProjects().get(1);
 
-		project1.new TaskBuilder("Task 1", Duration.ofHours(5), 0.4).build();
+		project1.createTask("Task 1", Duration.ofHours(5), 0.4).build();
 
 		task1 = project1.getAllTasks().get(0);
 		task1.updateStatus(LocalDateTime.of(2015, 03, 04, 00, 00),

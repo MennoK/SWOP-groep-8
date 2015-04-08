@@ -33,9 +33,17 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithConflictedResourceTypes(){
-		resourceExpert.createResourceType("resourcetype").addConflictedResourceTypes(resourceExpert.createResourceType("conflict").build()).build();
+		resourceExpert.createResourceType("conflict").build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
+		
+		resourceExpert.createResourceType("resourcetype").addConflictedResourceTypes(resourceTypeList.get(0)).build();
+		resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+
+		for(ResourceType type : resourceTypeList){
+			System.out.println(type.getName());
+		}
+		
 		assertEquals(2, resourceExpert.getAllResourceTypes().size());
 		assertEquals(1, resourceTypeList.get(1).getConflictedResourceTypes().size());
 

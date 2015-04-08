@@ -8,6 +8,7 @@ import parser.Parser;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.Task;
+import taskManager.Task.TaskBuilder;
 import ui.exception.ExitUseCaseException;
 
 public class UiTaskMan {
@@ -84,7 +85,7 @@ public class UiTaskMan {
 			System.out.println(Printer.listProjects(projectController
 					.getAllProjects()));
 			Project project = reader.select(projectController.getAllProjects());
-			Project.TaskBuilder builder = project.new TaskBuilder(
+			TaskBuilder builder = project.createTask(
 					reader.getString("Give a description:"),
 					reader.getDuration("Give an estimate for the task duration:"),
 					reader.getDouble("Give an acceptable deviation:"));
