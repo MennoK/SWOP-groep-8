@@ -4,8 +4,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,7 +44,7 @@ public class Task{
 	private double acceptableDeviation;
 
 	private List<Task> dependencies = new ArrayList<>();
-	private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
+	private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType,Integer>();
 	private Task originalTask;
 	private boolean failed = false;
 
@@ -68,7 +72,7 @@ public class Task{
 		private Task originalTask = null;
 
 		private List<Task> dependencies = new ArrayList<Task>();
-		private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
+		private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType,Integer>();
 
 		/**
 		 * Creates a TaskBuilder with the required information for the creation
@@ -114,10 +118,10 @@ public class Task{
 
 		/**
 		 * If the Task being build has required resource types, then add them one at a
-		 * time.
+		 * time with their quantity.
 		 */
-		public TaskBuilder addRequiredResourceType(ResourceType requiredResourceType) {
-			this.requiredResourceTypes.add(requiredResourceType);
+		public TaskBuilder addRequiredResourceType(ResourceType requiredResourceType, int quantity) {
+			this.requiredResourceTypes.put(requiredResourceType,quantity);
 			return this;
 		}
 
@@ -231,44 +235,51 @@ public class Task{
 	}
 
 	/**
-	 * Adds a set of required resource types to task. The required resource type may not be
-	 * already in the set of resource type of the task
+	 * Adds a map of required resource types to task. The required resource type may not be
+	 * already in the map of resource type of the task
 	 * 
 	 * @param requiredResourceTypes
-	 *            : set with required resource type
+	 *            : map with required resource type
 	 */
-	private void addMultipleResourceTypes(Set<ResourceType> requiredResourceTypes) {
-		for (ResourceType requiredResourceType : requiredResourceTypes) {
-			addResourceType(requiredResourceType);
-		}
+	private void addMultipleResourceTypes(Map<ResourceType,Integer> requiredResourceTypes) {
+		for (Map.Entry<ResourceType, Integer> entry : requiredResourceTypes.entrySet()) {
+			addResourceType(entry.getKey(), entry.getValue());
+		} 
 	}
 
 	/**
-	 * Adds a given resource type to the set of required
-	 * resource types of the task
+	 * Adds a given resource type and the needed quantity
+	 * to the map of required resource types of the task
 	 * 
 	 * @param requiredResourceType
 	 *            : required resource type
 	 */
-	void addResourceType(ResourceType requiredResourceType) {
+	void addResourceType(ResourceType requiredResourceType, int quantity) {
 		if (!isValidResourceType(requiredResourceType)) {
 			throw new IllegalArgumentException(
 					"The given resource type is already required by this task");
-		} else {
-			requiredResourceTypes.add(requiredResourceType);
+		} 
+		if(quantity < 1){
+			throw new IllegalArgumentException("The quantity must be strictly positive");
+		}
+		if(requiredResourceType.getAllResources().size() < quantity ){
+			throw new IllegalArgumentException("The amount of resources of the given resource type does not exist");
+		}
+		else {
+			requiredResourceTypes.put(requiredResourceType,quantity);
 		}
 	}
 
 	/**
 	 * This method returns true if and only if the given resource type is not yet
-	 * in the set of required resource types
+	 * in the map of required resource types
 	 * 
 	 * @param required resource type
-	 * @return true if and only if the set of required resource type does not contain the given
+	 * @return true if and only if the map of required resource type does not contain the given
 	 * 			resource type.
 	 */
 	private boolean isValidResourceType(ResourceType requiredResourceType) {
-		return !this.getRequiredResourceTypes().contains(requiredResourceType);
+		return !this.getRequiredResourceTypes().containsKey(requiredResourceType);
 	}
 
 	/**
@@ -599,11 +610,12 @@ public class Task{
 	}
 	
 	/**
-	 * Returns the set with required resource type of the task
+	 * Returns the map with required resource type and their quantity
+	 * of the task
 	 * 
-	 * @return dependencies: set with required resource type
+	 * @return requiredResourceTypes: map with required resource type and quantity
 	 */
-	public Set<ResourceType> getRequiredResourceTypes() {
+	public Map<ResourceType, Integer> getRequiredResourceTypes() {
 		return requiredResourceTypes;
 	}
 	

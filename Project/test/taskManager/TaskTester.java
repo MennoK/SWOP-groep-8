@@ -240,9 +240,11 @@ public class TaskTester {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		ResourceExpert resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("resourcetype").build();
-		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 		
-		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0)).build();
+		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+		list.get(0).createResource("res1");
+		
+		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0),1).build();
 		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes().size());
 	}
 	
@@ -251,7 +253,35 @@ public class TaskTester {
 		ResourceExpert resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("resourcetype").build();
 		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
-		baseTask.addResourceType(list.get(0));
-		baseTask.addResourceType(list.get(0));
+		list.get(0).createResource("res1");
+		baseTask.addResourceType(list.get(0),1);
+		baseTask.addResourceType(list.get(0),1);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addResourceTypeWithInvalidQuantity(){
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		ResourceExpert resourceExpert = new ResourceExpert();
+		resourceExpert.createResourceType("resourcetype").build();
+		
+		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+		list.get(0).createResource("res1");
+		
+		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0),-1).build();
+		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes().size());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void addResourceTypeWithNotEnoughResources(){
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		ResourceExpert resourceExpert = new ResourceExpert();
+		resourceExpert.createResourceType("resourcetype").build();
+		
+		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+		list.get(0).createResource("res1");
+		
+		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0),2).build();
+		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes().size());
+	}
+	
 }
