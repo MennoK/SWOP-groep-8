@@ -1,6 +1,6 @@
 package taskManager;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -19,7 +19,7 @@ public class DeveloperExpert {
 	 * a new set of developers.
 	 */
 	DeveloperExpert(){
-		this.developers = new HashSet<Developer>();
+		this.developers = new LinkedHashSet<Developer>();
 	}
 	
 	/**

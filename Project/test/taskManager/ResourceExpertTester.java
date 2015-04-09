@@ -2,6 +2,7 @@ package taskManager;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +37,9 @@ public class ResourceExpertTester {
 		resourceExpert.createResourceType("conflict").build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
-		
 		resourceExpert.createResourceType("resourcetype").addConflictedResourceTypes(resourceTypeList.get(0)).build();
 		resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
-
-		for(ResourceType type : resourceTypeList){
-			System.out.println(type.getName());
-		}
-		
+	
 		assertEquals(2, resourceExpert.getAllResourceTypes().size());
 		assertEquals(1, resourceTypeList.get(1).getConflictedResourceTypes().size());
 
@@ -79,6 +75,14 @@ public class ResourceExpertTester {
 	
 		assertEquals("required", requiredRTlist.get(0).getName());
 		assertEquals("conflict", conflictedRTlist.get(0).getName());
+	}
+	
+	@Test
+	public void testCreateResourceTypeWithDailyAvailability(){
+		resourceExpert.createResourceType("resourcetype").addDailyAvailability(new TimeInterval(LocalTime.of(12, 00), LocalTime.of(17, 00))).build();
+		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+		assertEquals(LocalTime.of(12, 00), resourceTypeList.get(0).getDailyAvailability().getBegin());
+		assertEquals(LocalTime.of(17, 00), resourceTypeList.get(0).getDailyAvailability().getEnd());
 	}
 
 	@Test

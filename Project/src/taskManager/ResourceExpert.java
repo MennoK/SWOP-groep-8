@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import taskManager.ResourceType.ResourceTypeBuilder;
@@ -14,14 +15,14 @@ import taskManager.ResourceType.ResourceTypeBuilder;
  */
 public class ResourceExpert {
 
-	private Set<ResourceType> resourcetypes = new HashSet<ResourceType>();
+	private Set<ResourceType> resourcetypes;
 	
 	/**
 	 * Default constructor of the resource expert. It initializes
 	 * a new set of resource types
 	 */
 	public ResourceExpert(){
-		this.resourcetypes = new HashSet<ResourceType>();
+		this.resourcetypes = new LinkedHashSet<ResourceType>();
 	}
 	
 	/**

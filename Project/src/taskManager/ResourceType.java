@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -17,12 +18,13 @@ import java.util.Set;
 public class ResourceType {
 
 	private String name;
-	private Set<ResourceType> requiredResourceTypes = new HashSet<ResourceType>();
-	private Set<ResourceType> conflictedResourceTypes = new HashSet<ResourceType>();;	
-	private Set<Resource> resources = new HashSet<Resource>();
+	private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
+	private Set<ResourceType> conflictedResourceTypes = new LinkedHashSet<ResourceType>();;	
+	private Set<Resource> resources = new LinkedHashSet<Resource>();
+	private TimeInterval dailyAvailability;
 
 	/**
-	 * ResourceTypeBuilder is an inner class builder for constructing
+	 * The ResourceTypeBuilder is an inner class builder for constructing
 	 * resource types. The name of a resourceType is a required parameter.
 	 * The optional parameters for a resource type are the required
 	 * and conflicted resource types
@@ -33,8 +35,9 @@ public class ResourceType {
 
 		private final String name;
 		private final ResourceExpert resourceExpert;
-		private Set<ResourceType> requiredResourceTypes = new HashSet<ResourceType>();
-		private Set<ResourceType> conflictedResourceTypes = new HashSet<ResourceType>();;
+		private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
+		private Set<ResourceType> conflictedResourceTypes = new LinkedHashSet<ResourceType>();;
+		private TimeInterval dailyAvailability;
 
 		/**
 		 * Constructor creates the resourceTypeBuilder with the required
@@ -66,6 +69,11 @@ public class ResourceType {
 			this.conflictedResourceTypes.add(conflictedResourceType);
 			return this;
 		}
+		
+		public ResourceTypeBuilder addDailyAvailability(TimeInterval dailyAvailability){
+			this.dailyAvailability = dailyAvailability;
+			return this;
+		}
 
 		/**
 		 * Builds a resource type after all the optional values have been set.
@@ -77,8 +85,13 @@ public class ResourceType {
 		}
 	}
 
+	/**
+	 * 
+	 * @param builder
+	 */
 	public ResourceType(ResourceTypeBuilder builder){
 		setName(builder.name);
+		setDailyAvailability(builder.dailyAvailability);
 		addMultipleRequiredResourceTypes(builder.requiredResourceTypes);
 		addMultipleConflictedResourceTypes(builder.conflictedResourceTypes);
 	}
@@ -176,7 +189,7 @@ public class ResourceType {
 	 * @return true if and only if the resource is not already in the set of required resource type
 	 */
 	private boolean isValidRequiredResourceType(ResourceType resourceType){
-		return !this.getRequiredResourceTypes().contains(resourceType);
+		return !(this.getRequiredResourceTypes().contains(resourceType) || this.getConflictedResourceTypes().contains(resourceType));
 	}
 
 	/**
@@ -233,7 +246,7 @@ public class ResourceType {
 	 * @return true if and only if the resource is not already in the set of conflicted resource type
 	 */
 	private boolean isValidConflictedResourceType(ResourceType resourceType){
-		return !this.getConflictedResourceTypes().contains(resourceType);
+		return !(this.getConflictedResourceTypes().contains(resourceType) || this.getRequiredResourceTypes().contains(resourceType));
 	}
 
 	/**
@@ -252,6 +265,24 @@ public class ResourceType {
 	 */
 	public String getName(){
 		return name;
+	}
+	
+	/**
+	 * Sets the resource type daily availability
+	 * 
+	 * @param dailyAvailability
+	 */
+	private void setDailyAvailability(TimeInterval dailyAvailability) {
+		this.dailyAvailability = dailyAvailability;
+	}
+	
+	/**
+	 * Returns the daily availability of the resource type
+	 * 
+	 * @return dailyAvailability : daily availability of resource type
+	 */
+	public TimeInterval getDailyAvailability(){
+		return dailyAvailability;
 	}
 
 	/**
