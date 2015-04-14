@@ -13,8 +13,6 @@ import javax.activity.InvalidActivityException;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Task.TaskBuilder;
-
 public class TaskTester {
 
 	private LocalDateTime now;
@@ -29,12 +27,14 @@ public class TaskTester {
 	@Before
 	public void setUp() throws Exception {
 		now = LocalDateTime.of(2015, 03, 03, 8, 0);
-		project = new Project("proj", "descr", LocalDateTime.of(2015, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		project = new Project("proj", "descr", LocalDateTime.of(2015, 03, 03,
+				8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 
 		project.createTask("a task", Duration.ofHours(8), 0.2).build();
 		baseTask = project.getAllTasks().get(0);
 
-		project.createTask("a dependent task", Duration.ofHours(8), 0.2).addDependencies(baseTask).build();
+		project.createTask("a dependent task", Duration.ofHours(8), 0.2)
+				.addDependencies(baseTask).build();
 		dependentTask = project.getAllTasks().get(1);
 
 		project.createTask("a finished task", Duration.ofHours(8), 0.2).build();
@@ -45,7 +45,10 @@ public class TaskTester {
 		failedTask = project.getAllTasks().get(3);
 		failedTask.updateStatus(now, now.plusHours(2), true);
 
-		project.createTask("a task dependent on all kind of tasks",Duration.ofHours(8), 0.2).addDependencies(finishedTask).addDependencies(failedTask).addDependencies(dependentTask).build();
+		project.createTask("a task dependent on all kind of tasks",
+				Duration.ofHours(8), 0.2).addDependencies(finishedTask)
+				.addDependencies(failedTask).addDependencies(dependentTask)
+				.build();
 		level2DependentTask = project.getAllTasks().get(4);
 	}
 
@@ -100,25 +103,29 @@ public class TaskTester {
 
 	@Test
 	public void testGetEstimatedFinishTime() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2015, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		Project project = new Project("proj", "descr", LocalDateTime.of(2015,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		project.createTask("bla", Duration.ofHours(5 * 8), 0.5).build();
-		assertEquals(now.plusDays(6).plusHours(8),
-				project.getAllTasks().get(0).getEstimatedFinishTime());
+		assertEquals(now.plusDays(6).plusHours(8), project.getAllTasks().get(0)
+				.getEstimatedFinishTime());
 	}
 
 	@Test
 	public void getId() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 
 		project.createTask("new task 1", Duration.ofHours(8), 0.2).build();
 		project.createTask("new task 2", Duration.ofHours(8), 0.2).build();
 
-		assertEquals(project.getAllTasks().get(0).getId() + 1, project.getAllTasks().get(1).getId());
+		assertEquals(project.getAllTasks().get(0).getId() + 1, project
+				.getAllTasks().get(1).getId());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createTaskWithDoubleDependency() {
-		project.createTask("new task 2", Duration.ofHours(8), 0.2).addDependencies(baseTask).addDependencies(baseTask).build();
+		project.createTask("new task 2", Duration.ofHours(8), 0.2)
+				.addDependencies(baseTask).addDependencies(baseTask).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -179,19 +186,22 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void negativeDuration() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		project.createTask("bla", Duration.ofHours(-1), 0.5).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void zeroDuration() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		project.createTask("bla", Duration.ofHours(0), 0.5).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void negativeDeviation() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		project.createTask("bla", Duration.ofHours(5 * 8), -2).build();
 	}
 
@@ -202,86 +212,108 @@ public class TaskTester {
 
 	@Test
 	public void createAlternativeTask() {
-		project.createTask("desc2", Duration.ofHours(3), 2).setOriginalTask(failedTask).build();
+		project.createTask("desc2", Duration.ofHours(3), 2)
+				.setOriginalTask(failedTask).build();
 	}
 
 	@Test
 	public void createAlternativeTaskWithDep() {
-		project.createTask("desc2", Duration.ofHours(3), 2).addDependencies(baseTask).setOriginalTask(failedTask).build();
+		project.createTask("desc2", Duration.ofHours(3), 2)
+				.addDependencies(baseTask).setOriginalTask(failedTask).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createAlternativeTaskWithAutoDep() {
-		project.createTask("desc2", Duration.ofHours(3), 2).addDependencies(failedTask).setOriginalTask(failedTask).build();
+		project.createTask("desc2", Duration.ofHours(3), 2)
+				.addDependencies(failedTask).setOriginalTask(failedTask)
+				.build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createAlternativeTaskWithIndirectAutoDep() {
 		baseTask.updateStatus(now, now.plusDays(2), true);
-		project.createTask("desc2", Duration.ofHours(3), 2).addDependencies(dependentTask).setOriginalTask(baseTask).build();
+		project.createTask("desc2", Duration.ofHours(3), 2)
+				.addDependencies(dependentTask).setOriginalTask(baseTask)
+				.build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void setAlternativeTaskInvalidTaskNotFailed() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		project.createTask("bla", Duration.ofHours(5 * 8), 3).build();;
-		project.createTask("desc2", Duration.ofHours(3), 2).setOriginalTask(project.getAllTasks().get(0)).build();
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+		project.createTask("bla", Duration.ofHours(5 * 8), 3).build();
+		;
+		project.createTask("desc2", Duration.ofHours(3), 2)
+				.setOriginalTask(project.getAllTasks().get(0)).build();
 
 	}
-	
+
 	@Test
 	public void update() {
 		baseTask.handleTimeChange(now.plusDays(5));
 		assertEquals(now.plusDays(5), baseTask.getLastUpdateTime());
 	}
-	
+
 	@Test
-	public void addResourceType(){
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+	public void addResourceType() {
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		ResourceExpert resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("resourcetype").build();
-		
-		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+
+		List<ResourceType> list = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
 		list.get(0).createResource("res1");
-		
-		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0),1).build();
-		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes().size());
+
+		project.createTask("desc", Duration.ofHours(2), 2)
+				.addRequiredResourceType(list.get(0), 1).build();
+		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes()
+				.size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void addAlreadyPresentResourceType(){
+	public void addAlreadyPresentResourceType() {
 		ResourceExpert resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("resourcetype").build();
-		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+		List<ResourceType> list = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
 		list.get(0).createResource("res1");
-		baseTask.addResourceType(list.get(0),1);
-		baseTask.addResourceType(list.get(0),1);
+		baseTask.addResourceType(list.get(0), 1);
+		baseTask.addResourceType(list.get(0), 1);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void addResourceTypeWithInvalidQuantity(){
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+	public void addResourceTypeWithInvalidQuantity() {
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		ResourceExpert resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("resourcetype").build();
-		
-		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+
+		List<ResourceType> list = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
 		list.get(0).createResource("res1");
-		
-		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0),-1).build();
-		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes().size());
+
+		project.createTask("desc", Duration.ofHours(2), 2)
+				.addRequiredResourceType(list.get(0), -1).build();
+		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes()
+				.size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void addResourceTypeWithNotEnoughResources(){
-		Project project = new Project("proj", "descr", LocalDateTime.of(2014, 03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
+	public void addResourceTypeWithNotEnoughResources() {
+		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
+				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		ResourceExpert resourceExpert = new ResourceExpert();
 		resourceExpert.createResourceType("resourcetype").build();
-		
-		List<ResourceType> list = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+
+		List<ResourceType> list = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
 		list.get(0).createResource("res1");
-		
-		project.createTask("desc", Duration.ofHours(2), 2).addRequiredResourceType(list.get(0),2).build();
-		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes().size());
+
+		project.createTask("desc", Duration.ofHours(2), 2)
+				.addRequiredResourceType(list.get(0), 2).build();
+		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes()
+				.size());
 	}
-	
+
 }

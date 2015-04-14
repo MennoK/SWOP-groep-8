@@ -5,15 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
 
 /**
  * A task is a unit of work that can be performed by a user of the system. A
@@ -37,14 +31,14 @@ import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
  * 
  * @author Groep 8
  */
-public class Task{
+public class Task {
 
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
 
 	private List<Task> dependencies = new ArrayList<>();
-	private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType,Integer>();
+	private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
 	private Task originalTask;
 	private boolean failed = false;
 
@@ -56,11 +50,10 @@ public class Task{
 	private int id;
 
 	/**
-	 * The TaskBuilder is an inner class builder for constructing
-	 * new tasks. The description, estimated duration and acceptable 
-	 * deviation of a task are required parameters.
-	 * The optional parameters for a task are the original task,
-	 * dependencies and required resource types.
+	 * The TaskBuilder is an inner class builder for constructing new tasks. The
+	 * description, estimated duration and acceptable deviation of a task are
+	 * required parameters. The optional parameters for a task are the original
+	 * task, dependencies and required resource types.
 	 */
 	public static class TaskBuilder {
 
@@ -72,7 +65,7 @@ public class Task{
 		private Task originalTask = null;
 
 		private List<Task> dependencies = new ArrayList<Task>();
-		private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType,Integer>();
+		private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
 
 		/**
 		 * Creates a TaskBuilder with the required information for the creation
@@ -117,11 +110,12 @@ public class Task{
 		}
 
 		/**
-		 * If the Task being build has required resource types, then add them one at a
-		 * time with their quantity.
+		 * If the Task being build has required resource types, then add them
+		 * one at a time with their quantity.
 		 */
-		public TaskBuilder addRequiredResourceType(ResourceType requiredResourceType, int quantity) {
-			this.requiredResourceTypes.put(requiredResourceType,quantity);
+		public TaskBuilder addRequiredResourceType(
+				ResourceType requiredResourceType, int quantity) {
+			this.requiredResourceTypes.put(requiredResourceType, quantity);
 			return this;
 		}
 
@@ -137,15 +131,15 @@ public class Task{
 	}
 
 	/**
-	 * The constructor of task has a task builder as argument.
-	 * The task builder contains all the required parameters
-	 * and possible optional parameters
+	 * The constructor of task has a task builder as argument. The task builder
+	 * contains all the required parameters and possible optional parameters
 	 * 
-	 * @param taskBuilder : task builder with parameters
+	 * @param taskBuilder
+	 *            : task builder with parameters
 	 */
 	public Task(TaskBuilder taskBuilder) {
-		if ((taskBuilder.dependencies != null || !taskBuilder.dependencies.isEmpty())
-				&& taskBuilder.originalTask != null) {
+		if ((taskBuilder.dependencies != null || !taskBuilder.dependencies
+				.isEmpty()) && taskBuilder.originalTask != null) {
 			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -235,21 +229,23 @@ public class Task{
 	}
 
 	/**
-	 * Adds a map of required resource types to task. The required resource type may not be
-	 * already in the map of resource type of the task
+	 * Adds a map of required resource types to task. The required resource type
+	 * may not be already in the map of resource type of the task
 	 * 
 	 * @param requiredResourceTypes
 	 *            : map with required resource type
 	 */
-	private void addMultipleResourceTypes(Map<ResourceType,Integer> requiredResourceTypes) {
-		for (Map.Entry<ResourceType, Integer> entry : requiredResourceTypes.entrySet()) {
+	private void addMultipleResourceTypes(
+			Map<ResourceType, Integer> requiredResourceTypes) {
+		for (Map.Entry<ResourceType, Integer> entry : requiredResourceTypes
+				.entrySet()) {
 			addResourceType(entry.getKey(), entry.getValue());
-		} 
+		}
 	}
 
 	/**
-	 * Adds a given resource type and the needed quantity
-	 * to the map of required resource types of the task
+	 * Adds a given resource type and the needed quantity to the map of required
+	 * resource types of the task
 	 * 
 	 * @param requiredResourceType
 	 *            : required resource type
@@ -258,28 +254,31 @@ public class Task{
 		if (!isValidResourceType(requiredResourceType)) {
 			throw new IllegalArgumentException(
 					"The given resource type is already required by this task");
-		} 
-		if(quantity < 1){
-			throw new IllegalArgumentException("The quantity must be strictly positive");
 		}
-		if(requiredResourceType.getAllResources().size() < quantity ){
-			throw new IllegalArgumentException("The amount of resources of the given resource type does not exist");
+		if (quantity < 1) {
+			throw new IllegalArgumentException(
+					"The quantity must be strictly positive");
 		}
-		else {
-			requiredResourceTypes.put(requiredResourceType,quantity);
+		if (requiredResourceType.getAllResources().size() < quantity) {
+			throw new IllegalArgumentException(
+					"The amount of resources of the given resource type does not exist");
+		} else {
+			requiredResourceTypes.put(requiredResourceType, quantity);
 		}
 	}
 
 	/**
-	 * This method returns true if and only if the given resource type is not yet
-	 * in the map of required resource types
+	 * This method returns true if and only if the given resource type is not
+	 * yet in the map of required resource types
 	 * 
-	 * @param required resource type
-	 * @return true if and only if the map of required resource type does not contain the given
-	 * 			resource type.
+	 * @param required
+	 *            resource type
+	 * @return true if and only if the map of required resource type does not
+	 *         contain the given resource type.
 	 */
 	private boolean isValidResourceType(ResourceType requiredResourceType) {
-		return !this.getRequiredResourceTypes().containsKey(requiredResourceType);
+		return !this.getRequiredResourceTypes().containsKey(
+				requiredResourceType);
 	}
 
 	/**
@@ -608,17 +607,17 @@ public class Task{
 	public List<Task> getDependencies() {
 		return Collections.unmodifiableList(dependencies);
 	}
-	
+
 	/**
-	 * Returns the map with required resource type and their quantity
-	 * of the task
+	 * Returns the map with required resource type and their quantity of the
+	 * task
 	 * 
-	 * @return requiredResourceTypes: map with required resource type and quantity
+	 * @return requiredResourceTypes: map with required resource type and
+	 *         quantity
 	 */
 	public Map<ResourceType, Integer> getRequiredResourceTypes() {
 		return requiredResourceTypes;
 	}
-	
 
 	/**
 	 * Remove task from the dependency list
@@ -653,12 +652,13 @@ public class Task{
 	public int getId() {
 		return this.id;
 	}
+
 	/**
 	 * Returns the estimated duration of a task
 	 * 
 	 * @return duration: estimated duration of a task
 	 */
-	public Duration getDuration(){
+	public Duration getDuration() {
 		return this.estimatedDuration;
 	}
 

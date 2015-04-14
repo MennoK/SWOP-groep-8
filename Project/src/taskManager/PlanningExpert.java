@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Occurs;
-
 public class PlanningExpert {
 	Set<Planning> planningSet = new HashSet<Planning>();
 	
