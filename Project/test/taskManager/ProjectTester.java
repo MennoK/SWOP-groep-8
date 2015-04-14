@@ -280,8 +280,8 @@ public class ProjectTester {
 	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
-		project.createTask("task2 (dep task1)", Duration.ofHours(3 * 8),
-				0.5).build();
+		project.createTask("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
+				.build();
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 
@@ -314,7 +314,10 @@ public class ProjectTester {
 				.addDependencies(baseTask).build();
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
-		baseTask.updateStatus(time, time.plusHours(2 * 8), false);
+		// To delay task finish time with 8 work hours add 3*24.
+		// 8 work hours = 24 real hours
+		// + 2 days of weekend
+		baseTask.updateStatus(time, time.plusHours(8 + 3 * 24), false);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
