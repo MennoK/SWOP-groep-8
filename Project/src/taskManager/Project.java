@@ -240,12 +240,12 @@ public class Project implements TimeObserver {
 	 */
 	public Duration getCurrentDelay() {
 
-		if (finishedOnTime() == ProjectFinishingStatus.ON_TIME)
-			throw new IllegalStateException(
-					"Can not ask the current delay of a task which is expected to finish on time");
 		if (this.getAllTasks().size() == 0)
 			throw new IllegalStateException(
 					"A project without tasks can't have a delay");
+		if (finishedOnTime() == ProjectFinishingStatus.ON_TIME)
+			throw new IllegalStateException(
+					"Can not ask the current delay of a task which is expected to finish on time");
 
 		Task latestFinishingTask = this.getAllTasks().get(0);
 
