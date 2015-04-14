@@ -59,24 +59,28 @@ public class Project implements TimeObserver {
 		this.tasks = new ArrayList<Task>();
 		this.handleTimeChange(creationTime);
 	}
-	
+
 	/**
 	 * 
-	 * Returns a new task builder to add extra parameters such as
-	 * other dependency task, the original task if you want to create
-	 * an alternative task and required resource types
+	 * Returns a new task builder to add extra parameters such as other
+	 * dependency task, the original task if you want to create an alternative
+	 * task and required resource types
 	 * 
-	 * @param description : required description of a task
-	 * @param estimatedDuration : required estimatedDuration of a task
-	 * @param acceptableDeviation : required acceptableDeviation of a task
+	 * @param description
+	 *            : required description of a task
+	 * @param estimatedDuration
+	 *            : required estimatedDuration of a task
+	 * @param acceptableDeviation
+	 *            : required acceptableDeviation of a task
 	 * 
 	 * @return taskBuilder : new builder for creating task
 	 */
-	public TaskBuilder createTask(String description, Duration estimatedDuration,
-				double acceptableDeviation){
-		return new TaskBuilder(description, estimatedDuration, acceptableDeviation, this);
+	public TaskBuilder createTask(String description,
+			Duration estimatedDuration, double acceptableDeviation) {
+		return new TaskBuilder(description, estimatedDuration,
+				acceptableDeviation, this);
 	}
-	
+
 	/**
 	 * This method adds a given task to a project
 	 * 
@@ -93,7 +97,7 @@ public class Project implements TimeObserver {
 			this.tasks.add(task);
 		}
 	}
-	
+
 	/**
 	 * This method checks if a project can have a given task. It returns true if
 	 * and only if the project does not contain the task yet and the task is not
@@ -118,11 +122,9 @@ public class Project implements TimeObserver {
 	void updateDependencies(Task alternativeTask, Task originalTask) {
 		List<Task> taskList = this.getAllTasks();
 		for (Task task : taskList) {
-			for (Task dependency : task.getDependencies()) {
-				if (dependency == originalTask) {
-					task.addDependency(alternativeTask);
-					task.removeDependency(dependency);
-				}
+			if (task.getDependencies().contains(originalTask)) {
+				task.addDependency(alternativeTask);
+				task.removeDependency(originalTask);
 			}
 		}
 
