@@ -15,8 +15,8 @@ public class ProjectExpertTester {
 
 	@Before
 	public void setUp() {
-		projectController = new ProjectExpert(LocalDateTime.of(2000, 03,
-				05, 00, 00));
+		projectController = new ProjectExpert(LocalDateTime.of(2000, 03, 05,
+				00, 00));
 	}
 
 	@Test
@@ -26,6 +26,8 @@ public class ProjectExpertTester {
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		assertEquals(1, projectController.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController
+				.getAllProjects().get(0).getLastUpdateTime());
 
 		projectController.createProject("name2", "description",
 				LocalDateTime.of(2015, 03, 06, 00, 00));
