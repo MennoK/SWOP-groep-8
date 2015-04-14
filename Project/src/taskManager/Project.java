@@ -188,18 +188,10 @@ public class Project implements TimeObserver {
 	 *             if the project is not yet finished
 	 */
 	public ProjectFinishingStatus finishedOnTime() throws IllegalStateException {
-		if (!this.hasFinished()) {
-			if (this.getEstimatedFinishTime().isBefore(this.getDueTime())) {
-				return ProjectFinishingStatus.ON_TIME;
-			}
+		if (this.getEstimatedFinishTime().isAfter(this.getDueTime())) {
 			return ProjectFinishingStatus.OVER_TIME;
-		} else {
-			if (this.getEstimatedFinishTime().isAfter(this.getDueTime())) {
-				return ProjectFinishingStatus.OVER_TIME;
-			} else {
-				return ProjectFinishingStatus.ON_TIME;
-			}
 		}
+		return ProjectFinishingStatus.ON_TIME;
 	}
 
 	/**
