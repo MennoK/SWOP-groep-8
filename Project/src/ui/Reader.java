@@ -2,10 +2,14 @@ package ui;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
 import ui.exception.ExitUseCaseException;
+import utility.Summarizable;
+import utility.Utility;
 
 public class Reader {
 	private Scanner scan;
@@ -34,11 +38,16 @@ public class Reader {
 		getScan().close();
 	}
 
-	<T> T select(List<T> options) throws ExitUseCaseException {
+	<T extends Summarizable> T select(Collection<T> options)
+			throws ExitUseCaseException {
+		// Needs to be a list to be able to print options in order in get one
+		// from that order
+		List<T> listOfOptions = new ArrayList<T>(options);
 		while (true) {
+			System.out.println(Utility.listSummaries(listOfOptions, 1));
 			System.out.println("select one:");
 			try {
-				return options.get(Integer.parseInt(getData()) - 1);
+				return listOfOptions.get(Integer.parseInt(getData()) - 1);
 			} catch (java.lang.IndexOutOfBoundsException e) {
 				System.out.println(e.getMessage());
 			} catch (java.lang.NumberFormatException e) {
@@ -69,6 +78,17 @@ public class Reader {
 			default:
 				System.out.println("Invalid answer, try again.");
 				break;
+			}
+		}
+	}
+
+	int getInteger(String querry) throws ExitUseCaseException {
+		while (true) {
+			System.out.println(querry + " (integer)");
+			try {
+				return Integer.parseInt(getData());
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give a integer");
 			}
 		}
 	}

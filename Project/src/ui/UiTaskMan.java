@@ -88,8 +88,6 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			System.out.println(Utility.listSummaries(projectController
-					.getProjectExpert().getAllProjects(), 1));
 			Project project = reader.select(projectController
 					.getProjectExpert().getAllProjects());
 			TaskBuilder builder = project.createTask(reader
@@ -98,18 +96,17 @@ public class UiTaskMan {
 					reader.getDouble("Give an acceptable deviation:"));
 			while (reader
 					.getBoolean("Is this task dependent on an (other) task?")) {
-				System.out.println(Utility.listSummaries(project.getAllTasks(),
-						1));
 				builder.addDependencies(reader.select(project.getAllTasks()));
 			}
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
-				System.out.println(Utility.listSummaries(project.getAllTasks(),
-						1));
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
 			}
 			while (reader
-					.getBoolean("Does this task require and (other) ressources?")) {
-				// TODO
+					.getBoolean("Does this task require an (other) ressource type?")) {
+				builder.addRequiredResourceType(
+						reader.select(projectController.getResourceExpert()
+								.getAllResourceTypes()),
+						reader.getInteger("How many times is this ressource type needed?"));
 			}
 			builder.build();
 			return;
