@@ -23,7 +23,7 @@ public class UiTaskMan {
 			try {
 				fileName = reader
 						.getString("Give a file for initialisation of the system:\n"
-								+ "(press 1 to use ./input1.tman)"
+								+ "(press 1 to use ./input1.tman)\n"
 								+ "(press 2 to use ./input2.tman)");
 			} catch (ExitUseCaseException e1) {
 				System.out.println("Starting with an empty system");
@@ -66,7 +66,7 @@ public class UiTaskMan {
 				.getAllProjects());
 		System.out.println(Printer.full(project));
 		Task task = reader.select(project.getAllTasks());
-		System.out.println(Printer.full(task));
+		System.out.println(task);
 	}
 
 	private void createProject() throws ExitUseCaseException {
@@ -97,13 +97,17 @@ public class UiTaskMan {
 					.getDuration("Give an estimate for the task duration:"),
 					reader.getDouble("Give an acceptable deviation:"));
 			while (reader
-					.getBoolean("Is this task dependent on an other task?")) {
+					.getBoolean("Is this task dependent on an (other) task?")) {
 				System.out.println(Printer.listTasks(project.getAllTasks()));
 				builder.addDependencies(reader.select(project.getAllTasks()));
 			}
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
 				System.out.println(Printer.listTasks(project.getAllTasks()));
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
+			}
+			while (reader
+					.getBoolean("Does this task require and (other) ressources?")) {
+				// TODO
 			}
 			builder.build();
 			return;
@@ -157,10 +161,12 @@ public class UiTaskMan {
 	}
 
 	private void printMenu() {
-		System.out.println("\nMain menu:\n" + "1: Show projects\n"
-				+ "2: Create project\n" + "3: Create task\n" + "4: Plan task\n"
-				+ "5: Update task status\n" + "6: Advance time\n"
-				+ "7: Run simulation\n" + "9: Exit");
+		System.out
+				.println("\nMain menu:\n" + "1: Show projects\t"
+						+ "2: Create project\t" + "3: Create task\n"
+						+ "4: Plan task\t\t" + "5: Update task status\t"
+						+ "6: Advance time\n" + "7: Run simulation\t\t\t\t"
+						+ "9: Exit");
 	}
 
 	void menu() {

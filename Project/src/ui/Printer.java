@@ -9,10 +9,6 @@ import taskManager.TaskFinishedStatus;
 
 public class Printer {
 
-	static String oneLine(Task task) {
-		return "Task " + task.getId() + " " + task.getStatus();
-	}
-
 	static String oneLine(Project project) {
 		return "project '" + project.getName() + "': " + project.getStatus();
 	}
@@ -24,7 +20,8 @@ public class Printer {
 	static String listTasks(List<Task> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
-			str += (i + startingIndex) + ": " + oneLine(options.get(i)) + "\n";
+			str += (i + startingIndex) + ": " + options.get(i).toSummary()
+					+ "\n";
 		}
 		return str.trim();
 	}
@@ -39,30 +36,6 @@ public class Printer {
 			str += (i + startingIndex) + ": " + oneLine(options.get(i)) + "\n";
 		}
 		return str.trim();
-	}
-
-	static String full(Task task) {
-		String str = oneLine(task) + ": ";
-		str += task.getDescription() + ", ";
-		str += task.getEstimatedDuration().toHours() + " hours, ";
-		str += task.getAcceptableDeviation() * 100 + "% margin";
-		if (!task.getDependencies().isEmpty()) {
-			str += ", depends on {";
-			for (Task dep : task.getDependencies())
-				str += " task " + dep.getId();
-			str += " }";
-		}
-		if (task.getOriginal() != null)
-			str += ", alternative for task " + task.getOriginal().getId();
-		try {
-			TaskFinishedStatus finishStatus = task.getFinishStatus();
-			str += ", started " + task.getStartTime();
-			str += ", finished " + task.getEndTime();
-			str += " (" + finishStatus + ")";
-		} catch (IllegalArgumentException e) {
-			// If not finished
-		}
-		return str;
 	}
 
 	static String full(Project project) {
