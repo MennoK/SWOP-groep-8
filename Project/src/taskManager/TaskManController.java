@@ -1,5 +1,7 @@
 package taskManager;
 
+import java.time.LocalDateTime;
+
 /**
  * The taskManController class controls every expert
  * 
@@ -12,15 +14,15 @@ public class TaskManController {
 	private ResourceExpert resourceExpert;
 	private ProjectExpert projectExpert;
 	private PlanningExpert planningExpert;
-	
+
 	/**
-	 * Constructor of TaskManController. When a new TaskManController
-	 * has been created new expert classes will be created.
+	 * Constructor of TaskManController. When a new TaskManController has been
+	 * created new expert classes will be created.
 	 */
-	public TaskManController(){
+	public TaskManController(LocalDateTime now) {
 		createDeveloperExpert();
 		createResourceExpert();
-		createProjectExpert();
+		createProjectExpert(now);
 		createPlanningExpert();
 	}
 
@@ -34,8 +36,8 @@ public class TaskManController {
 	/**
 	 * Creates a new project expert
 	 */
-	private void createProjectExpert() {
-		this.projectExpert = new ProjectExpert(null);
+	private void createProjectExpert(LocalDateTime now) {
+		this.projectExpert = new ProjectExpert(now);
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class TaskManController {
 	private void createResourceExpert() {
 		this.resourceExpert = new ResourceExpert();
 	}
-	
+
 	/**
 	 * Creates a new developer expert
 	 */
@@ -53,7 +55,7 @@ public class TaskManController {
 	}
 
 	/**
-	 * Returns the developer expert 
+	 * Returns the developer expert
 	 * 
 	 * @return developerExpert : developer expert
 	 */
@@ -62,7 +64,7 @@ public class TaskManController {
 	}
 
 	/**
-	 * Returns the resource expert 
+	 * Returns the resource expert
 	 * 
 	 * @return resourceExpert : resource expert
 	 */
@@ -71,7 +73,7 @@ public class TaskManController {
 	}
 
 	/**
-	 * Returns the project expert 
+	 * Returns the project expert
 	 * 
 	 * @return projectExpert : project expert
 	 */
@@ -80,12 +82,12 @@ public class TaskManController {
 	}
 
 	/**
-	 * Returns the planning expert 
+	 * Returns the planning expert
 	 * 
 	 * @return planningExpert : planning expert
 	 */
 	public PlanningExpert getPlanningExpert() {
 		return planningExpert;
 	}
-	
+
 }

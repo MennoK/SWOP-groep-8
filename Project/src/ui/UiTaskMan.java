@@ -9,11 +9,12 @@ import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.Task;
 import taskManager.Task.TaskBuilder;
+import taskManager.TaskManController;
 import ui.exception.ExitUseCaseException;
 
 public class UiTaskMan {
 
-	private ProjectExpert projectController;
+	private TaskManController projectController;
 	private Reader reader;
 
 	private void askInitialState() {
@@ -50,15 +51,16 @@ public class UiTaskMan {
 		}
 
 		System.out.println("Current time initialized on:\n" + now + "\n");
-		projectController = new ProjectExpert(now);
+		projectController = new TaskManController(now);
 		askInitialState();
 	}
 
 	private void showProjects() throws ExitUseCaseException {
 		// TODO move listProjects to a generic list and move it inside select
 		System.out.println(Printer.listProjects(projectController
-				.getAllProjects()));
-		Project project = reader.select(projectController.getAllProjects());
+				.getProjectExpert().getAllProjects()));
+		Project project = reader.select(projectController.getProjectExpert()
+				.getAllProjects());
 		System.out.println(Printer.full(project));
 		Task task = reader.select(project.getAllTasks());
 		System.out.println(Printer.full(task));
@@ -74,7 +76,8 @@ public class UiTaskMan {
 			System.out.println("Project creation aborted.");
 			return;
 		}
-		projectController.createProject(name, description, dueTime);
+		projectController.getProjectExpert().createProject(name, description,
+				dueTime);
 	}
 
 	private void createTask() throws ExitUseCaseException {
@@ -83,11 +86,12 @@ public class UiTaskMan {
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
 			System.out.println(Printer.listProjects(projectController
-					.getAllProjects()));
-			Project project = reader.select(projectController.getAllProjects());
-			TaskBuilder builder = project.createTask(
-					reader.getString("Give a description:"),
-					reader.getDuration("Give an estimate for the task duration:"),
+					.getProjectExpert().getAllProjects()));
+			Project project = reader.select(projectController
+					.getProjectExpert().getAllProjects());
+			TaskBuilder builder = project.createTask(reader
+					.getString("Give a description:"), reader
+					.getDuration("Give an estimate for the task duration:"),
 					reader.getDouble("Give an acceptable deviation:"));
 			while (reader
 					.getBoolean("Is this task dependent on an other task?")) {
@@ -111,7 +115,8 @@ public class UiTaskMan {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
 		ArrayList<Task> allTasks = new ArrayList<Task>();
-		for (Project project : projectController.getAllProjects()) {
+		for (Project project : projectController.getProjectExpert()
+				.getAllProjects()) {
 			System.out.println(Printer.oneLine(project));
 			System.out.println(Printer.listTasks(project.getAllTasks(),
 					allTasks.size() + 1));
@@ -135,8 +140,8 @@ public class UiTaskMan {
 	private void advanceTime() throws ExitUseCaseException {
 		while (true) {
 			try {
-				projectController.advanceTime(reader
-						.getDate("Enter the new timestamp:"));
+				projectController.getProjectExpert().advanceTime(
+						reader.getDate("Enter the new timestamp:"));
 				return;
 			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());
