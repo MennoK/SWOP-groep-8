@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -15,12 +16,21 @@ import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
+import parser.TaskManInitFileChecker.IntPair;
+
 import com.oracle.webservices.internal.api.databinding.Databinding.Builder;
 
+import taskManager.DeveloperExpert;
 import taskManager.Project;
 import taskManager.ProjectExpert;
+import taskManager.Resource;
+import taskManager.ResourceExpert;
+import taskManager.ResourceType;
+import taskManager.ResourceType.ResourceTypeBuilder;
 import taskManager.Task;
+import taskManager.TimeInterval;
 import taskManager.Task.TaskBuilder;
+import taskManager.TaskManController;
 
 /**
  * The Parser class implements a YAML parser for TaskMan
@@ -35,6 +45,10 @@ public class Parser {
 
 	private DateTimeFormatter dateTimeFormatter = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd HH:mm");
+	private DateTimeFormatter timeFormatter = DateTimeFormatter
+			.ofPattern("HH:mm");
+
+	private List<TimeInterval> timeIntervals = new  ArrayList<TimeInterval>();
 
 	/**
 	 * This method parses the input file (needs absolute path) after it has
@@ -46,8 +60,9 @@ public class Parser {
 	 * @throws RuntimeException
 	 */
 	@SuppressWarnings("unchecked")
-	public void parse(String pathToFile, ProjectExpert projectController)
+	public void parse(String pathToFile, TaskManController controller)
 			throws FileNotFoundException, RuntimeException {
+
 		// check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(
 				new FileReader(pathToFile));
@@ -58,24 +73,120 @@ public class Parser {
 		Yaml yaml = new Yaml();
 		Map<String, Object> objects = (Map<String, Object>) yaml.load(input);
 
-		// create all projects given by the input file
-		constructProjects(
-				(List<LinkedHashMap<String, Object>>) objects.get("projects"),
-				projectController);
+		// create system time
+		constructSystemTime((CharSequence) objects.get("systemTime"),controller);
 
-		// create all tasks given by the input file
-		constructTasks(
-				(List<LinkedHashMap<String, Object>>) objects.get("tasks"),
-				projectController);
+		// create daily availability
+		constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) objects.get("dailyAvailability"));
+
+		// create all resource types
+		constructResourceTypes(	(List<LinkedHashMap<String, Object>>) objects.get("resourceTypes"),controller.getResourceExpert());
+
+		// create all resources
+		constructResources(	(List<LinkedHashMap<String, Object>>) objects.get("resources"),controller.getResourceExpert());
+
+		// create all developers
+		constructDevelopers((List<LinkedHashMap<String, Object>>) objects.get("developers"),controller.getDeveloperExpert());
+
+		// create all projects
+		constructProjects((List<LinkedHashMap<String, Object>>) objects.get("projects"),controller.getProjectExpert());
+
+		// create all tasks
+		constructTasks((List<LinkedHashMap<String, Object>>) objects.get("tasks"),controller.getProjectExpert(),controller.getResourceExpert());
+
+		//construct plannings
+		constructPlannings((List<LinkedHashMap<String, Object>>) objects.get("plannings"),controller);
+
+	}
+
+
+	private void constructSystemTime(CharSequence time, TaskManController controller) {
+		LocalDateTime systemTime = LocalDateTime.parse(time, dateTimeFormatter);
+		//TODO setter in taskmancontroller aanmaken
 	}
 
 	/**
-	 * The method will construct the projects given by the input file
-	 * 
-	 * @param projects
-	 *            : list of all projects
-	 * @param controller
-	 *            : the projectController
+	 * Constructs the daily availabilities 
+	 */
+	private void constructDailyAvailabilities(
+			List<LinkedHashMap<String, Object>> dailyAvailabilities) {
+
+		for(LinkedHashMap<String, Object> dailyAvailability : dailyAvailabilities){
+
+			LocalTime startTime = LocalTime.parse((CharSequence) dailyAvailability.get("startTime"), timeFormatter);
+			LocalTime endTime = LocalTime.parse((CharSequence) dailyAvailability.get("endTime"), timeFormatter);
+			timeIntervals.add(new TimeInterval(startTime, endTime));
+		}
+	}
+
+	/**
+	 * Construct the resource types 
+	 */
+	private void constructResourceTypes(
+			List<LinkedHashMap<String, Object>> resourceTypes,
+			ResourceExpert resourceExpert) {
+
+		for(LinkedHashMap<String, Object> resourceType : resourceTypes){
+
+			String name = (String) resourceType.get("name");
+
+			ResourceTypeBuilder builder = resourceExpert.createResourceType(name);
+			List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+
+			if (resourceType.get("requires") != null) {
+				ArrayList<Integer> requiredResourceTypes = (ArrayList<Integer>) resourceType.get("requires");
+				for (Integer resourceTypeNr : requiredResourceTypes) {
+					builder.addRequiredResourceTypes(resourceTypeList.get(resourceTypeNr - 1));
+				}
+			}
+
+			if (resourceType.get("conflictsWith") != null) {
+				ArrayList<Integer> conflictedResourceTypes = (ArrayList<Integer>) resourceType.get("conflictsWith");
+				for (Integer resourceTypeNr : conflictedResourceTypes) {
+					builder.addConflictedResourceTypes(resourceTypeList.get(resourceTypeNr - 1));
+				}
+			}
+
+			if (resourceType.get("dailyAvailability") != null) {
+				int dailyAvailability = (int) resourceType.get("dailyAvailability");
+				builder.addDailyAvailability(timeIntervals.get(dailyAvailability));
+			}
+
+			builder.build();
+		}
+	}
+
+	/**
+	 * Construct the resources 
+	 */
+	private void constructResources(List<LinkedHashMap<String, Object>> resources,
+			ResourceExpert resourceExpert) {
+
+		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+
+		for(LinkedHashMap<String, Object> resource : resources){
+			String name = (String) resource.get("name");
+			int resourceTypeNumber = (int) (resource.get("type"));
+			ResourceType resourceTypeOfResource= resourceTypeList.get(resourceTypeNumber);
+
+			resourceTypeOfResource.createResource(name);
+		}
+	}
+
+	/**
+	 * Constructs the developers
+	 */
+	private void constructDevelopers(List<LinkedHashMap<String, Object>> developers,
+			DeveloperExpert developerExpert) {
+		for (LinkedHashMap<String, Object> developer : developers) {
+			//get the developer name
+			String name = (String) developer.get("name");
+			developerExpert.createDeveloper(name);
+		}	
+	}
+
+	/**
+	 * Construct the projects
 	 */
 	private void constructProjects(
 			List<LinkedHashMap<String, Object>> projects,
@@ -97,16 +208,10 @@ public class Parser {
 	}
 
 	/**
-	 * The method will construct the tasks given by the input file
-	 * 
-	 * @param tasks
-	 *            : list of all projects
-	 * @param controller
-	 *            : the projectController
+	 * Constructs the tasks
 	 */
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
-			ProjectExpert controller) {
-
+			ProjectExpert projectExpert, ResourceExpert resourceExpert) {
 		for (LinkedHashMap<String, Object> task : tasks) {
 
 			// get all arguments needed for a task: project, description,
@@ -117,7 +222,7 @@ public class Parser {
 			double acceptableDeviation = (double) ((int) (task.get("acceptableDeviation")));
 			acceptableDeviation /= 100;
 
-			Project projectOfTask = controller.getAllProjects().get(projectNumber);
+			Project projectOfTask = projectExpert.getAllProjects().get(projectNumber);
 
 			TaskBuilder builder = projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
 
@@ -134,6 +239,14 @@ public class Parser {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				builder.setOriginalTask(projectOfTask.getAllTasks().get(alternativeTaskNr - 1));
 			}
+			
+			//add required resource types
+			if (task.get("requiredTypes") != null){
+				List<ResourceType> resourceTypeList =  new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
+				for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) task.get("requiredTypes")) {
+					builder.addRequiredResourceType(resourceTypeList.get((int) pair.get("type")), (int) pair.get("quantity"));
+				}
+			}
 
 			//build the new task
 			builder.build();
@@ -143,15 +256,27 @@ public class Parser {
 			// en end time
 			if (task.get("status") != null) {
 				String status = (String) task.get("status");
-				LocalDateTime startTime = LocalDateTime.parse((CharSequence) task.get("startTime"),dateTimeFormatter);
-				LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
-				if (status.equals("failed")) {
-					newTask.updateStatus(startTime, endTime, true);
-				} else {
-					newTask.updateStatus(startTime, endTime, false);
+				if(!status.equals("executing")){
+					LocalDateTime startTime = LocalDateTime.parse((CharSequence) task.get("startTime"),dateTimeFormatter);
+					LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
+					if (status.equals("failed")) {
+						newTask.updateStatus(startTime, endTime, true);
+					} else {
+						newTask.updateStatus(startTime, endTime, false);
+					}
 				}
+				//TODO new status: executing
 
 			}
+		}
+	}
+
+	/**
+	 * Constructs the projects
+	 */
+	private void constructPlannings(List<LinkedHashMap<String, Object>> plannings,TaskManController controller) {	
+		for(LinkedHashMap<String, Object> planning : plannings){
+
 		}
 	}
 }

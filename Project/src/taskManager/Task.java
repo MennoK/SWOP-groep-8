@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +39,7 @@ public class Task {
 	private double acceptableDeviation;
 
 	private List<Task> dependencies = new ArrayList<>();
-	private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
+	private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 	private Task originalTask;
 	private boolean failed = false;
 
@@ -65,7 +66,7 @@ public class Task {
 		private Task originalTask = null;
 
 		private List<Task> dependencies = new ArrayList<Task>();
-		private Map<ResourceType, Integer> requiredResourceTypes = new HashMap<ResourceType, Integer>();
+		private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 
 		/**
 		 * Creates a TaskBuilder with the required information for the creation

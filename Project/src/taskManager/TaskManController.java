@@ -35,6 +35,7 @@ public class TaskManController {
 	 * Creates a new project expert
 	 */
 	private void createProjectExpert() {
+		this.projectExpert = new ProjectExpert(null);
 	}
 
 	/**
