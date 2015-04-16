@@ -37,7 +37,7 @@ public class ParserTester {
 				05, 00, 00));
 
 		try {
-			new Parser().parse("./newInput.tman", taskManController);
+			new Parser().parse("./input2.tman", taskManController);
 			resourceTypeList = new ArrayList<ResourceType>(taskManController
 					.getResourceExpert().getAllResourceTypes());
 		} catch (FileNotFoundException | RuntimeException e) {

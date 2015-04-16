@@ -23,13 +23,16 @@ public class UiTaskMan {
 			try {
 				fileName = reader
 						.getString("Give a file for initialisation of the system:\n"
-								+ "(press 0 to use ./input.tman)");
+								+ "(press 1 to use ./input1.tman)"
+								+ "(press 2 to use ./input2.tman)");
 			} catch (ExitUseCaseException e1) {
 				System.out.println("Starting with an empty system");
 				return;
 			}
-			if (fileName.equals("0"))
-				fileName = "./input.tman";
+			if (fileName.equals("1"))
+				fileName = "./input1.tman";
+			else if (fileName.equals("2"))
+				fileName = "./input2.tman";
 			try {
 				Parser parser = new Parser();
 				parser.parse(fileName, projectController);
