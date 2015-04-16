@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 import ui.exception.ExitUseCaseException;
 import utility.Summarizable;
-import utility.Utility;
 
 public class Reader {
 	private Scanner scan;
@@ -44,7 +43,7 @@ public class Reader {
 		// from that order
 		List<T> listOfOptions = new ArrayList<T>(options);
 		while (true) {
-			System.out.println(Utility.listSummaries(listOfOptions, 1));
+			System.out.println(Summarizable.listSummaries(listOfOptions, 1));
 			System.out.println("select one:");
 			try {
 				return listOfOptions.get(Integer.parseInt(getData()) - 1);

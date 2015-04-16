@@ -8,7 +8,6 @@ import java.util.List;
 
 import taskManager.Task.TaskBuilder;
 import utility.Summarizable;
-import utility.Utility;
 
 /**
  * a project consists of multiple tasks required to complete the project. A
@@ -374,7 +373,7 @@ public class Project implements TimeObserver, Summarizable {
 		if (finishedOnTime() == ProjectFinishingStatus.OVER_TIME)
 			str += "(" + getCurrentDelay().toHours() + " working hours short)";
 		str += ")\n";
-		str += Utility.listSummaries(getAllTasks(), 1);
+		str += Summarizable.listSummaries(getAllTasks(), 1);
 		return str;
 	}
 }

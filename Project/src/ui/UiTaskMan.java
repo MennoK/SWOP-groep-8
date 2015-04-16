@@ -10,7 +10,7 @@ import taskManager.Task;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
 import ui.exception.ExitUseCaseException;
-import utility.Utility;
+import utility.Summarizable;
 
 public class UiTaskMan {
 
@@ -60,7 +60,7 @@ public class UiTaskMan {
 
 	private void showProjects() throws ExitUseCaseException {
 		// TODO move listProjects to a generic list and move it inside select
-		System.out.println(Utility.listSummaries(projectController
+		System.out.println(Summarizable.listSummaries(projectController
 				.getProjectExpert().getAllProjects(), 1));
 		Project project = reader.select(projectController.getProjectExpert()
 				.getAllProjects());
@@ -124,8 +124,8 @@ public class UiTaskMan {
 		for (Project project : projectController.getProjectExpert()
 				.getAllProjects()) {
 			System.out.println(project.toSummary());
-			System.out.println(Utility.listSummaries(project.getAllTasks(),
-					allTasks.size() + 1));
+			System.out.println(Summarizable.listSummaries(
+					project.getAllTasks(), allTasks.size() + 1));
 			allTasks.addAll(project.getAllTasks());
 		}
 		Task task = reader.select(allTasks);
