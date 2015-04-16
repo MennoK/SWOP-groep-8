@@ -6,6 +6,7 @@ import taskManager.Project;
 import taskManager.ProjectFinishingStatus;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
+import utility.Utility;
 
 public class Printer {
 
@@ -48,7 +49,7 @@ public class Printer {
 			str += "(" + project.getCurrentDelay().toHours()
 					+ " working hours short)";
 		str += ")\n";
-		str += listTasks(project.getAllTasks());
+		str += Utility.listSummaries(project.getAllTasks(), 1);
 		return str;
 	}
 }

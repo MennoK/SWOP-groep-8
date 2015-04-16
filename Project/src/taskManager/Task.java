@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import utility.Summarizable;
+
 /**
  * A task is a unit of work that can be performed by a user of the system. A
  * task is assigned to an unfinished project upon creation. Each task has a
@@ -32,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  * @author Groep 8
  */
-public class Task {
+public class Task implements Summarizable {
 
 	private String description;
 	private Duration estimatedDuration;
