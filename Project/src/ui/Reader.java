@@ -37,13 +37,15 @@ public class Reader {
 		getScan().close();
 	}
 
-	<T extends Summarizable> T select(Collection<T> options)
+	<T extends Summarizable> T select(Collection<T> options, boolean silent)
 			throws ExitUseCaseException {
 		// Needs to be a list to be able to print options in order in get one
 		// from that order
 		List<T> listOfOptions = new ArrayList<T>(options);
 		while (true) {
-			System.out.println(Summarizable.listSummaries(listOfOptions, 1));
+			if (!silent)
+				System.out
+						.println(Summarizable.listSummaries(listOfOptions, 1));
 			System.out.println("select one:");
 			try {
 				return listOfOptions.get(Integer.parseInt(getData()) - 1);
@@ -53,6 +55,11 @@ public class Reader {
 				System.out.println("Give an integer");
 			}
 		}
+	}
+
+	<T extends Summarizable> T select(Collection<T> options)
+			throws ExitUseCaseException {
+		return select(options, false);
 	}
 
 	String getString(String querry) throws ExitUseCaseException {

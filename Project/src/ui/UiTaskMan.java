@@ -128,7 +128,7 @@ public class UiTaskMan {
 					project.getAllTasks(), allTasks.size() + 1));
 			allTasks.addAll(project.getAllTasks());
 		}
-		Task task = reader.select(allTasks);
+		Task task = reader.select(allTasks, true);
 
 		while (true) {
 			try {
