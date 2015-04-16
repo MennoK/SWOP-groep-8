@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 import parser.Parser;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.Task;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
 import ui.exception.ExitUseCaseException;
+import utility.Utility;
 
 public class UiTaskMan {
 
@@ -60,11 +60,11 @@ public class UiTaskMan {
 
 	private void showProjects() throws ExitUseCaseException {
 		// TODO move listProjects to a generic list and move it inside select
-		System.out.println(Printer.listProjects(projectController
-				.getProjectExpert().getAllProjects()));
+		System.out.println(Utility.listSummaries(projectController
+				.getProjectExpert().getAllProjects(), 1));
 		Project project = reader.select(projectController.getProjectExpert()
 				.getAllProjects());
-		System.out.println(Printer.full(project));
+		System.out.println(project);
 		Task task = reader.select(project.getAllTasks());
 		System.out.println(task);
 	}
@@ -88,8 +88,8 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			System.out.println(Printer.listProjects(projectController
-					.getProjectExpert().getAllProjects()));
+			System.out.println(Utility.listSummaries(projectController
+					.getProjectExpert().getAllProjects(), 1));
 			Project project = reader.select(projectController
 					.getProjectExpert().getAllProjects());
 			TaskBuilder builder = project.createTask(reader
@@ -98,11 +98,13 @@ public class UiTaskMan {
 					reader.getDouble("Give an acceptable deviation:"));
 			while (reader
 					.getBoolean("Is this task dependent on an (other) task?")) {
-				System.out.println(Printer.listTasks(project.getAllTasks()));
+				System.out.println(Utility.listSummaries(project.getAllTasks(),
+						1));
 				builder.addDependencies(reader.select(project.getAllTasks()));
 			}
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
-				System.out.println(Printer.listTasks(project.getAllTasks()));
+				System.out.println(Utility.listSummaries(project.getAllTasks(),
+						1));
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
 			}
 			while (reader
@@ -124,8 +126,8 @@ public class UiTaskMan {
 		ArrayList<Task> allTasks = new ArrayList<Task>();
 		for (Project project : projectController.getProjectExpert()
 				.getAllProjects()) {
-			System.out.println(Printer.oneLine(project));
-			System.out.println(Printer.listTasks(project.getAllTasks(),
+			System.out.println(project.toSummary());
+			System.out.println(Utility.listSummaries(project.getAllTasks(),
 					allTasks.size() + 1));
 			allTasks.addAll(project.getAllTasks());
 		}
