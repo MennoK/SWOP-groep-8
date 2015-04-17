@@ -541,7 +541,7 @@ public class Task implements Summarizable {
 	 * @throws InvalidActivityException
 	 *             : thrown when the task is not finished yet
 	 */
-	public TaskFinishedStatus getFinishStatus() throws IllegalArgumentException {
+	public TaskFinishedStatus getFinishStatus() {
 		if (this.getStatus() != TaskStatus.FINISHED) {
 			throw new IllegalArgumentException("The task is not finished yet");
 		} else {
@@ -692,17 +692,11 @@ public class Task implements Summarizable {
 		}
 		if (getOriginal() != null)
 			str += ", alternative for task " + getOriginal().getId();
-
-		// TODO can this be solved nicer?
-		try {
-			TaskFinishedStatus finishStatus = getFinishStatus();
+		if (this.getStatus() != TaskStatus.FINISHED) {
 			str += ", started " + getStartTime();
 			str += ", finished " + getEndTime();
-			str += " (" + finishStatus + ")";
-		} catch (IllegalArgumentException e) {
-			// If not finished
+			str += " (" + getFinishStatus() + ")";
 		}
-
 		return str;
 	}
 }
