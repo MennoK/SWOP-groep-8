@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -692,7 +691,7 @@ public class Task implements Summarizable {
 		}
 		if (getOriginal() != null)
 			str += ", alternative for task " + getOriginal().getId();
-		if (this.getStatus() != TaskStatus.FINISHED) {
+		if (this.getStatus() == TaskStatus.FINISHED) {
 			str += ", started " + getStartTime();
 			str += ", finished " + getEndTime();
 			str += " (" + getFinishStatus() + ")";
