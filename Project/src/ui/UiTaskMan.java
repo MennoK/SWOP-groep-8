@@ -59,13 +59,10 @@ public class UiTaskMan {
 	}
 
 	private void showProjects() throws ExitUseCaseException {
-		// TODO move listProjects to a generic list and move it inside select
-		System.out.println(Summarizable.listSummaries(projectController
-				.getProjectExpert().getAllProjects(), 1));
 		Project project = reader.select(projectController.getProjectExpert()
 				.getAllProjects());
 		System.out.println(project);
-		Task task = reader.select(project.getAllTasks());
+		Task task = reader.select(project.getAllTasks(), true);
 		System.out.println(task);
 	}
 
