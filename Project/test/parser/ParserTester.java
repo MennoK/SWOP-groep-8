@@ -352,6 +352,7 @@ public class ParserTester {
 		assertEquals(
 				LocalDateTime.parse(("2014-03-25 18:00"), dateTimeFormatter),
 				task3.getEndTime());
+		
 	}
 
 	@Test
