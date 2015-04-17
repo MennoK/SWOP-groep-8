@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import utility.Summarizable;
+
 /**
  * A task is a unit of work that can be performed by a user of the system. A
  * task is assigned to an unfinished project upon creation. Each task has a
@@ -32,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  * @author Groep 8
  */
-public class Task {
+public class Task implements Summarizable {
 
 	private String description;
 	private Duration estimatedDuration;
@@ -663,4 +665,44 @@ public class Task {
 		return this.estimatedDuration;
 	}
 
+	/**
+	 * Partial toString method
+	 * 
+	 * @return a summary of the main information defining a Task
+	 */
+	public String toSummary() {
+		return "Task " + getId() + " " + getStatus();
+	}
+
+	/**
+	 * Full toString method
+	 * 
+	 * @return a complete description of a Task
+	 */
+	public String toString() {
+		String str = toSummary() + ": ";
+		str += getDescription() + ", ";
+		str += getEstimatedDuration().toHours() + " hours, ";
+		str += getAcceptableDeviation() * 100 + "% margin";
+		if (!getDependencies().isEmpty()) {
+			str += ", depends on {";
+			for (Task dep : getDependencies())
+				str += " task " + dep.getId();
+			str += " }";
+		}
+		if (getOriginal() != null)
+			str += ", alternative for task " + getOriginal().getId();
+
+		// TODO can this be solved nicer?
+		try {
+			TaskFinishedStatus finishStatus = getFinishStatus();
+			str += ", started " + getStartTime();
+			str += ", finished " + getEndTime();
+			str += " (" + finishStatus + ")";
+		} catch (IllegalArgumentException e) {
+			// If not finished
+		}
+
+		return str;
+	}
 }

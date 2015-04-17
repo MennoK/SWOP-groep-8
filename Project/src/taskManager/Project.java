@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import taskManager.Task.TaskBuilder;
+import utility.Summarizable;
 
 /**
  * a project consists of multiple tasks required to complete the project. A
@@ -28,7 +29,7 @@ import taskManager.Task.TaskBuilder;
  * 
  */
 
-public class Project implements TimeObserver {
+public class Project implements TimeObserver, Summarizable {
 
 	private List<Task> tasks;
 	private String name;
@@ -349,4 +350,30 @@ public class Project implements TimeObserver {
 		return lastUpdateTime;
 	}
 
+	/**
+	 * Partial toString method
+	 * 
+	 * @return a summary of the main information defining a Project
+	 */
+	public String toSummary() {
+		return "project '" + getName() + "': " + getStatus();
+	}
+
+	/**
+	 * Full toString method
+	 * 
+	 * @return a complete description of a project
+	 */
+	public String toString() {
+		String str = toSummary();
+		str += ", " + getDescription();
+		str += ", " + finishedOnTime();
+		str += " (Created " + getCreationTime();
+		str += ", Due " + getDueTime();
+		if (finishedOnTime() == ProjectFinishingStatus.OVER_TIME)
+			str += "(" + getCurrentDelay().toHours() + " working hours short)";
+		str += ")\n";
+		str += Summarizable.listSummaries(getAllTasks(), 1);
+		return str;
+	}
 }
