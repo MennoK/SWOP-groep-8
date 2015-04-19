@@ -48,7 +48,7 @@ public class PlanningExpertTester {
 		//create a project with a task
 		project = new Project("project", "a project", time1.minusDays(1), time2.plusDays(1));
 		project.createTask("a task", Duration.ofHours(1), 1).build();
-		project.createTask("a task", Duration.ofHours(1), 1).addRequiredResourceType(resourceType, 1).build();
+		project.createTask("a task", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
 		task1 = project.getAllTasks().get(0);
 		task2 = project.getAllTasks().get(1);
 		
@@ -121,12 +121,24 @@ public class PlanningExpertTester {
 	}
 	@Test
 	public void testHasConflictWithPlannedTask() {
+		planningExpert.createPlanning(time1, task1, developers).build(planningExpert);
+
+		assertTrue(planningExpert.hasConflictWithAPlannedTask(task2, time1));
+
+		assertTrue(planningExpert.hasConflictWithAPlannedTask(task2, time1.minusHours(1)));
+
+		assertFalse(planningExpert.hasConflictWithAPlannedTask(task2, time2));
 
 	}
 
 	@Test
 	public void testGetConflictingTasks() {
 
+		planningExpert.createPlanning(time1, task1, developers).build(planningExpert);
+		
+		Set<Task> conflictSet = new HashSet<>();
+		conflictSet.add(task1);
+		assertEquals(conflictSet, planningExpert.getConflictingTasks(task2, time1.minusHours(1)));
 	}
 
 	@Test

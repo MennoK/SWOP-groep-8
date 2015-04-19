@@ -186,15 +186,45 @@ public class PlanningExpert {
 	}
 
 
-	public boolean hasConflictWithPlannedTask(Task task, LocalDateTime time){
+	/**
+	 * returns if a task will have a conflict if planned on a certain time
+	 * 
+	 * @param task
+	 * 			  : the task that would conflict with currently planned tasks
+	 * @param time
+	 * 			  : the time at which there might be a conflict
+	 * @return
+	 */
+	public boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time){
+		for (Planning planning : planningSet) {
+			if(overLap(planning, time, task)){
+				return true;
+			}
+		}
 		return false;
 		
-	}
-	public Set<Task> getConflictingTasks(Task task){
-		return null;
 		
 	}
-	public void resolveConflictingTasks(Set<Task> tasks){
+	/**
+	 * returns all tasks that would conflict if a task would be planned at a certain time 
+	 * 
+	 * @param task
+	 * 			  : the task for which we want to get all the conflicts
+	 * @param time
+	 * 			  : the time for the task to be planned
+	 * @param tasks
+	 * 			  : all tasks where there is possible a conflict with
+	 * @return
+	 */
+	public Set<Task> getConflictingTasks(Task task, LocalDateTime time, Set<Task> tasks){
+		Set<Task> conflictingTasks = new HashSet<>();
+		for (Task conflictingTask : tasks) {
+			if(overLap(conflictingTask.getPlanning(), time, task)){
+				conflictingTasks.add(conflictingTask);
+			}
+		}
+		return conflictingTasks;
+		
 		
 	}
 	public Set<Planning> getAllPlannings(){
