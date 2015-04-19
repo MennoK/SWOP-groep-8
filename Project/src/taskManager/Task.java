@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -543,7 +542,7 @@ public class Task implements Summarizable {
 	 * @throws InvalidActivityException
 	 *             : thrown when the task is not finished yet
 	 */
-	public TaskFinishedStatus getFinishStatus() throws IllegalArgumentException {
+	public TaskFinishedStatus getFinishStatus() {
 		if (this.getStatus() != TaskStatus.FINISHED) {
 			throw new IllegalArgumentException("The task is not finished yet");
 		} else {
@@ -715,17 +714,11 @@ public class Task implements Summarizable {
 		}
 		if (getOriginal() != null)
 			str += ", alternative for task " + getOriginal().getId();
-
-		// TODO can this be solved nicer?
-		try {
-			TaskFinishedStatus finishStatus = getFinishStatus();
+		if (this.getStatus() == TaskStatus.FINISHED) {
 			str += ", started " + getStartTime();
 			str += ", finished " + getEndTime();
-			str += " (" + finishStatus + ")";
-		} catch (IllegalArgumentException e) {
-			// If not finished
+			str += " (" + getFinishStatus() + ")";
 		}
-
 		return str;
 	}
 
