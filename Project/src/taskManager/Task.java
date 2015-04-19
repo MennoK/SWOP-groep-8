@@ -48,6 +48,8 @@ public class Task implements Summarizable {
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
 	private LocalDateTime lastUpdateTime;
+	
+	private Planning planning;
 
 	private static AtomicInteger idCounter = new AtomicInteger(1);
 	private int id;
@@ -664,7 +666,28 @@ public class Task implements Summarizable {
 	public Duration getDuration() {
 		return this.estimatedDuration;
 	}
+	/**
+	 * returns the planning of the task, if it has one
+	 * @return
+	 */
+	public Planning getPlanning() {
+		if(this.hasPlanning()){
+			return planning;
+		}
+		else throw new NullPointerException("the task has no planning");
+	}
 
+	/**
+	 * sets a planning for the task
+	 * @param planning
+	 */
+	public void setPlanning(Planning planning) {
+		this.planning = planning;
+	}
+	public boolean hasPlanning(){
+		return (planning != null);
+	}
+	
 	/**
 	 * Partial toString method
 	 * 
@@ -705,4 +728,7 @@ public class Task implements Summarizable {
 
 		return str;
 	}
+
+	
+	
 }
