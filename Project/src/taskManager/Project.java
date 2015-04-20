@@ -76,7 +76,7 @@ public class Project{
 	 * 
 	 * @return taskBuilder : new builder for creating task
 	 */
-	public TaskBuilder createTask(String description,
+	public TaskBuilder taskBuilder(String description,
 			Duration estimatedDuration, double acceptableDeviation) {
 		return new TaskBuilder(description, estimatedDuration,
 				acceptableDeviation, this);

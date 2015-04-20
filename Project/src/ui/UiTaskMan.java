@@ -84,7 +84,7 @@ public class UiTaskMan {
 					+ "Adding task to which project?");
 			Project project = reader.select(projectController
 					.getProjectExpert().getAllProjects());
-			TaskBuilder builder = project.createTask(reader
+			TaskBuilder builder = project.taskBuilder(reader
 					.getString("Give a description:"), reader
 					.getDuration("Give an estimate for the task duration:"),
 					reader.getDouble("Give an acceptable deviation:"));

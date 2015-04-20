@@ -31,7 +31,7 @@ public class ResourceExpert {
 	 * @param name : required name of a resource type
 	 * @return resourceTypeBuilder : new builder for creating resource types
 	 */
-	public ResourceTypeBuilder createResourceType(String name){
+	public ResourceTypeBuilder resourceTypeBuilder(String name){
 		return new ResourceTypeBuilder(name,this);
 	}
 		

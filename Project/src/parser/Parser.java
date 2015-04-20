@@ -221,7 +221,7 @@ public class Parser {
 
 			Project projectOfTask = projectExpert.getAllProjects().get(projectNumber);
 
-			TaskBuilder builder = projectOfTask.createTask(description, estimatedDuration, acceptableDeviation);
+			TaskBuilder builder = projectOfTask.taskBuilder(description, estimatedDuration, acceptableDeviation);
 
 			//add dependencies if there are any
 			if (task.get("prerequisiteTasks") != null) {

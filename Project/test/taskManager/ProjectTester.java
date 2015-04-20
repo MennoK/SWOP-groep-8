@@ -22,7 +22,7 @@ public class ProjectTester {
 	 * create a project with one generic Task
 	 */
 	private void setUpBaseProject() {
-		project.createTask("desc", Duration.ofHours(8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5).build();
 		baseTask = getNewestTask(project);
 	}
 
@@ -31,7 +31,7 @@ public class ProjectTester {
 	 */
 	private void setUpProjectWithDependence() {
 		setUpBaseProject();
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.addDependencies(baseTask).build();
 		dependentTask = getNewestTask(project);
 	}
@@ -104,7 +104,7 @@ public class ProjectTester {
 	@Test
 	public void testTwoTaskproject() {
 		setUpBaseProject();
-		project.createTask("desc", Duration.ofHours(8), 50).build();
+		project.taskBuilder("desc", Duration.ofHours(8), 50).build();
 		Task task2 = getNewestTask(project);
 
 		// Check project structure
@@ -142,7 +142,7 @@ public class ProjectTester {
 		// Set baseTask to failed
 		baseTask.updateStatus(time, time.plusHours(2), true);
 		// Create alternativeTask
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.setOriginalTask(baseTask).build();
 		alternativeTask = getNewestTask(project);
 
@@ -212,7 +212,7 @@ public class ProjectTester {
 		// Set baseTask to failed
 		baseTask.updateStatus(time, time.plusHours(2), true);
 		// Create alternativeTask
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.setOriginalTask(baseTask).build();
 		alternativeTask = getNewestTask(project);
 
@@ -280,7 +280,7 @@ public class ProjectTester {
 	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
-		project.createTask("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
+		project.taskBuilder("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
 				.build();
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
@@ -301,7 +301,7 @@ public class ProjectTester {
 	@Test
 	public void testDelayToMuchWork() {
 		setUpBaseProject();
-		project.createTask("bla", Duration.ofHours(2 * 8), 0.5)
+		project.taskBuilder("bla", Duration.ofHours(2 * 8), 0.5)
 				.addDependencies(baseTask).build();
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
@@ -310,7 +310,7 @@ public class ProjectTester {
 	@Test
 	public void testDelayBaseTaskDelayed() {
 		setUpBaseProject();
-		project.createTask("bla", Duration.ofHours(8), 0.5)
+		project.taskBuilder("bla", Duration.ofHours(8), 0.5)
 				.addDependencies(baseTask).build();
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -324,8 +324,8 @@ public class ProjectTester {
 
 	@Test
 	public void testGetCurrentDelayTwoTasks() {
-		project.createTask("desc", Duration.ofHours(5 * 8), 0.5).build();
-		project.createTask("desc", Duration.ofHours(4 * 8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(5 * 8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(4 * 8), 0.5).build();
 		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
 	}
 
