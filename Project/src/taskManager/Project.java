@@ -38,6 +38,8 @@ public class Project implements TimeObserver, Summarizable {
 	private LocalDateTime dueTime;
 
 	private LocalDateTime lastUpdateTime;
+	
+	private ProjectMemento memento;
 
 	/**
 	 * Constructor of the Project class: Sets a new list of tasks
@@ -375,6 +377,23 @@ public class Project implements TimeObserver, Summarizable {
 		str += ")\n";
 		str += Summarizable.listSummaries(getAllTasks(), 1);
 		return str;
+	}
+	
+	public void save() {
+		this.memento = new ProjectMemento(this);
+	}
+	
+	public boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			for(Task task: this.tasks) {
+				task.load();
+			}
+			return true;
+		}
 	}
 	
 	private class ProjectMemento {
