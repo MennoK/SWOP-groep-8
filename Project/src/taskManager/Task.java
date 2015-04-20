@@ -475,7 +475,7 @@ public class Task implements Summarizable {
 		if (getCalculatedStatus() == TaskStatus.FINISHED)
 			throw new IllegalStateException("Can not update finished task");
 
-		if (getCalculatedStatus() == TaskStatus.UNAVAILABLE && !setToFail)
+		if (getCalculatedStatus() == TaskStatus.UNAVAILABLE)
 			throw new IllegalStateException(
 					"Can not finish an unavailable task");
 

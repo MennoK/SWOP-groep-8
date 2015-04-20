@@ -62,10 +62,6 @@ public class UseCase4UpdateTaskStatusTester {
 		assertEquals(TaskStatus.UNAVAILABLE, task3.getCalculatedStatus());
 		assertEquals(TaskStatus.UNAVAILABLE, task4.getCalculatedStatus());
 
-		// Unavailable -> failed
-		task4.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
-				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FAILED, task4.getCalculatedStatus());
 		// Available -> failed
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
@@ -76,6 +72,13 @@ public class UseCase4UpdateTaskStatusTester {
 		assertEquals(TaskStatus.FINISHED, task2.getCalculatedStatus());
 		assertEquals(TaskStatus.AVAILABLE, task3.getCalculatedStatus());
 
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void updateTaskStatusUnavailableToFailed() {
+		// Unavailable -> failed
+		task4.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
+				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 	}
 
 	@Test(expected = IllegalStateException.class)
