@@ -13,6 +13,7 @@ import org.junit.Test;
 public class ProjectTester {
 
 	private LocalDateTime time;
+	private TaskManController controler;
 	private Project project;
 	private Task baseTask;
 	private Task dependentTask;
@@ -54,7 +55,10 @@ public class ProjectTester {
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		project = new Project("project", "desc", time, time.plusDays(4));
+		controler = new TaskManController(time);
+		controler.getProjectExpert().createProject("project", "desc",
+				time.plusDays(4));
+		project = controler.getProjectExpert().getAllProjects().get(0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -88,7 +92,7 @@ public class ProjectTester {
 		assertEquals(0, baseTask.getDependencies().size());
 
 		// Check the status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -96,7 +100,7 @@ public class ProjectTester {
 		baseTask.updateStatus(time, time.plusHours(8), false);
 
 		// Check the status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -115,24 +119,24 @@ public class ProjectTester {
 		assertEquals(0, task2.getDependencies().size());
 
 		// check status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set baseTask finished
 		baseTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set task2 finished
 		task2.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, task2.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 	}
 
@@ -154,8 +158,9 @@ public class ProjectTester {
 		assertEquals(0, alternativeTask.getDependencies().size());
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE,
+				alternativeTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -163,8 +168,8 @@ public class ProjectTester {
 		alternativeTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -182,8 +187,9 @@ public class ProjectTester {
 		assertEquals(baseTask, dependentTask.getDependencies().get(0));
 
 		// check status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE,
+				dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -191,8 +197,8 @@ public class ProjectTester {
 		baseTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -200,8 +206,8 @@ public class ProjectTester {
 		dependentTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -231,9 +237,11 @@ public class ProjectTester {
 		assertTrue(dependentTask.hasDependency(alternativeTask));
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE,
+				alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE,
+				dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -241,18 +249,18 @@ public class ProjectTester {
 		alternativeTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set to finished
 		dependentTask.updateStatus(time, time.plusHours(8), false);
 
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}

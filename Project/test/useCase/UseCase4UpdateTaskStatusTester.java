@@ -57,24 +57,24 @@ public class UseCase4UpdateTaskStatusTester {
 	@Test
 	public void updateTaskStatusSuccess() {
 		// initial status
-		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task4.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task1.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task3.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task4.getCalculatedStatus());
 
 		// Unavailable -> failed
 		task4.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FAILED, task4.getStatus());
+		assertEquals(TaskStatus.FAILED, task4.getCalculatedStatus());
 		// Available -> failed
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FAILED, task1.getStatus());
+		assertEquals(TaskStatus.FAILED, task1.getCalculatedStatus());
 		// Available -> Finished && Unavailable -> Available
 		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
+		assertEquals(TaskStatus.FINISHED, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task3.getCalculatedStatus());
 
 	}
 

@@ -14,9 +14,8 @@ public class TaskManController {
 	private ResourceExpert resourceExpert;
 	private ProjectExpert projectExpert;
 	private PlanningExpert planningExpert;
-	
-	private TaskManClock taskManClock;
 
+	private TaskManClock taskManClock;
 
 	/**
 	 * Constructor of TaskManController. When a new TaskManController has been
@@ -24,7 +23,7 @@ public class TaskManController {
 	 */
 	public TaskManController(LocalDateTime now) {
 		this.taskManClock = new TaskManClock(now);
-		
+
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
@@ -96,7 +95,7 @@ public class TaskManController {
 	public PlanningExpert getPlanningExpert() {
 		return planningExpert;
 	}
-	
+
 	/**
 	 * 
 	 * Advances the time of TaskMan. This will update the status of every task
@@ -111,7 +110,7 @@ public class TaskManController {
 		this.taskManClock.setTime(time);
 		this.getProjectExpert().handleTimeChange(this.taskManClock.getTime());
 	}
-	
+
 	/**
 	 * Returns the time
 	 * 
@@ -120,6 +119,40 @@ public class TaskManController {
 	public LocalDateTime getTime() {
 		return this.taskManClock.getTime();
 	}
-	
 
+	/**
+	 * Tell the system execution of Task was started. And updates the status of
+	 * all Tasks.
+	 * 
+	 * @param task
+	 * @param startTime
+	 */
+	public void setExecuting(Task task, LocalDateTime startTime) {
+		task.setExecuting(startTime);
+		// TODO update all other task's
+	}
+
+	/**
+	 * Tell the system execution of Task was finished. And updates the status of
+	 * all Tasks.
+	 * 
+	 * @param task
+	 * @param endTime
+	 */
+	public void setFinished(Task task, LocalDateTime endTime) {
+		task.setFinished(endTime);
+		// TODO update all other task's
+	}
+
+	/**
+	 * Tell the system execution of Task failed. And updates the status of all
+	 * Tasks.
+	 * 
+	 * @param task
+	 * @param endTime
+	 */
+	public void setFailed(Task task, LocalDateTime endTime) {
+		task.setFailed(endTime);
+		// TODO update all other task's
+	}
 }
