@@ -494,17 +494,21 @@ public class Task implements Summarizable {
 		return status;
 	}
 
+	void setStatus(TaskStatus status) {
+		this.status = status;
+	}
+
 	/**
 	 * Set the status to Executing
 	 * 
 	 * @param startTime
 	 */
 	public void setExecuting(LocalDateTime startTime) {
-		if (status != TaskStatus.AVAILABLE)
+		if (getStatus() != TaskStatus.AVAILABLE)
 			throw new IllegalStateException(
 					"Task needs to be availlable to become executing");
 		setStartTime(startTime);
-		status = TaskStatus.EXECUTING;
+		setStatus(TaskStatus.EXECUTING);
 	}
 
 	/**
@@ -520,7 +524,7 @@ public class Task implements Summarizable {
 			throw new IllegalArgumentException(
 					"End time can not be before start time");
 		setEndTime(endTime);
-		status = TaskStatus.FINISHED;
+		setStatus(TaskStatus.FINISHED);
 	}
 
 	/**
@@ -536,7 +540,7 @@ public class Task implements Summarizable {
 			throw new IllegalArgumentException(
 					"End time can not be before start time");
 		setEndTime(endTime);
-		status = TaskStatus.FAILED;
+		setStatus(TaskStatus.FAILED);
 
 		// TODO remove after refactoring
 		setOldFailed();
