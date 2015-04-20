@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import javax.sound.midi.ControllerEventListener;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +27,8 @@ public class ProjectTester {
 	private void setUpBaseProject() {
 		project.taskBuilder("desc", Duration.ofHours(8), 0.5).build();
 		baseTask = getNewestTask(project);
+		controler.getPlanningExpert().createPlanning(time, baseTask,
+				new Developer("Jef"));
 	}
 
 	/**
