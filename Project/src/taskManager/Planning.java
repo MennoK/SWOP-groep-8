@@ -2,6 +2,7 @@ package taskManager;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,11 +41,12 @@ public class Planning {
 		 * 		      : assigned developers 
 		 	*/
 		public PlanningBuilder(LocalDateTime startTime,
-				Task task, Set<Developer> developers) {
+				Task task, Developer developer) {
 			this.startTime = startTime;
 			this.endTime = startTime.plus(task.getDuration());
 			this.task = task;
-			this.developers = developers;
+			this.developers = new LinkedHashSet<>();
+			this.developers.add(developer);
 			resources = new LinkedHashMap<>();
 		}
 
@@ -56,6 +58,13 @@ public class Planning {
 			return this;
 		}
 
+		/**
+		 * a planning may require more developers
+		 */
+		public PlanningBuilder addDeveloper (Developer developer) { 
+			this.developers.add(developer);
+			return this;
+		}
 		/**
 		 * Build a Planning after all the optional values have been set.
 		 */

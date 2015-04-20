@@ -1,8 +1,11 @@
 package useCase;
 
+import static org.junit.Assert.*;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -39,9 +42,9 @@ public class UseCase6PlanTaskTester {
 		//2 default times
 		this.time1 =  LocalDateTime.of(2015, 03, 10, 11, 00);
 		this.time2 =  LocalDateTime.of(2015, 03, 10, 15, 00);
-		
+		TaskManController tmController = new TaskManController(time1);
 		//create planning expert 
-		this.planningExpert = new PlanningExpert();
+		this.planningExpert = tmController.getPlanningExpert();
 		//create some resources
 		resourceExpert = tmController.getResourceExpert();
 		resourceExpert.resourceTypeBuilder("type").build();
@@ -54,6 +57,7 @@ public class UseCase6PlanTaskTester {
 		//create a project with a task
 	
 		projectExpert = tmController.getProjectExpert();
+		projectExpert.createProject("name", "des", time2.plusDays(13));
 		project = projectExpert.getAllProjects().get(0);
 		project.taskBuilder("a task", Duration.ofHours(1), 1).build();
 		project.taskBuilder("a task", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
@@ -73,6 +77,11 @@ public class UseCase6PlanTaskTester {
 
 	@Test
 	public void planTask() {
+		//user gets list with all unplanned tasks (task1 and task2)
 		
+		Set<Task> unplannedTasks = project.getAllTasks();
+		assertEquals(unplannedTasks, planningExpert.getUnplannedTasks(new LinkedHashSet<Task>(project.getAllTasks())));
+		//user selects task1
+		Set<LocalDateTime> possibleStartTimes = planningExpert.getPossibleStartTimes(task1, time1, developers);
 	}
 }
