@@ -376,4 +376,29 @@ public class Project implements TimeObserver, Summarizable {
 		str += Summarizable.listSummaries(getAllTasks(), 1);
 		return str;
 	}
+	
+	private class ProjectMemento {
+		private List<Task> tasks;
+		private String name;
+		private String description;
+		private LocalDateTime dueTime;
+
+		private LocalDateTime lastUpdateTime;
+		
+		public ProjectMemento(Project project) {
+			this.tasks = new ArrayList<Task>(project.tasks);
+			this.name = new String(project.name);
+			this.description = new String(project.description);
+			this.dueTime = project.dueTime.plusSeconds(0);
+		}
+		
+		public void load(Project project) {
+			project.tasks = this.tasks;
+			project.name = this.name;
+			project.description = this.description;
+			project.dueTime = this.dueTime;
+			
+			project.lastUpdateTime = this.lastUpdateTime;
+		}
+	}
 }
