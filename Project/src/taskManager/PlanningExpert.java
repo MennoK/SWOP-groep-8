@@ -154,9 +154,9 @@ public class PlanningExpert {
 	 * @return planningBuilder : new builder for creating planning
 	 */
 	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
-			Set<Developer> developers) {
+			Developer developer) {
 
-		return new PlanningBuilder(startTime, task, developers);
+		return new PlanningBuilder(startTime, task, developer);
 	}
 
 	/**
