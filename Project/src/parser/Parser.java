@@ -52,9 +52,9 @@ public class Parser {
 			.ofPattern("HH:mm");
 
 	private List<TimeInterval> timeIntervals = new ArrayList<TimeInterval>();
-	private List<Task> tasks = new ArrayList<Task>();
-	private List<Resource> resources = new ArrayList<Resource>();
-	private List<Developer> developers = new ArrayList<Developer>();
+	private List<Task> alltasks = new ArrayList<Task>();
+	private List<Resource> allresources = new ArrayList<Resource>();
+	private List<Developer> alldevelopers = new ArrayList<Developer>();
 
 	/**
 	 * This method parses the input file (needs absolute path) after it has
@@ -70,9 +70,8 @@ public class Parser {
 			throws FileNotFoundException, RuntimeException {
 
 		// check if the given input file is valid for taskman
-//		TaskManInitFileChecker checker = new TaskManInitFileChecker(
-//				new FileReader(pathToFile));
-//		checker.checkFile();
+		TaskManInitFileChecker checker = new TaskManInitFileChecker(new FileReader(pathToFile));
+		checker.checkFile();
 
 		// create new yaml
 		InputStream input = new FileInputStream(new File(pathToFile));
@@ -208,6 +207,12 @@ public class Parser {
 
 			resourceTypeOfResource.createResource(name);
 		}
+		
+		for(ResourceType type : resourceExpert.getAllResourceTypes()){
+			for(Resource resource : type.getAllResources()){
+				allresources.add(resource);
+			}
+		}
 	}
 
 	/**
@@ -221,6 +226,7 @@ public class Parser {
 			String name = (String) developer.get("name");
 			developerExpert.createDeveloper(name);
 		}
+		alldevelopers = new ArrayList<Developer>(developerExpert.getAllDevelopers());
 	}
 
 	/**
@@ -324,6 +330,13 @@ public class Parser {
 
 			}
 		}
+		
+		for(Project project : projectExpert.getAllProjects()){
+			for(Task task : project.getAllTasks()){
+				alltasks.add(task);
+			}
+		}
+	
 	}
 
 	/**
@@ -335,23 +348,31 @@ public class Parser {
 		for (LinkedHashMap<String, Object> planning : plannings) {
 			LocalDateTime startTime = LocalDateTime.parse((CharSequence) planning.get("plannedStartTime"), dateTimeFormatter);
 			ArrayList<Integer> developersNr = (ArrayList<Integer>) planning.get("developers");
-			Set<Developer> assignedDevs = new LinkedHashSet<Developer>();
+			List<Developer> assignedDevs = new ArrayList<Developer>();
 
 			for(Integer devNr: developersNr){
-				assignedDevs.add(developers.get(devNr));
+				assignedDevs.add(alldevelopers.get(devNr));
 			}
 
 			int taskNr = (int) (planning.get("task"));
-			PlanningBuilder pbuilder = controller.getPlanningExpert().createPlanning(startTime, tasks.get(taskNr), assignedDevs);
+			PlanningBuilder pbuilder = controller.getPlanningExpert().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
+			
+			for (int i = 1; i < assignedDevs.size(); i++) {
+				pbuilder.addDeveloper(assignedDevs.get(i));
+			}
 
 
 			if(planning.get("resources") != null){		
-/*				List<ResourceType> resourceTypeList =  new ArrayList<ResourceType>(controller.getResourceExpert().getAllResourceTypes());
-						for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) task.get("requiredTypes")) {
-							pbuilder.addResources(resourceTypeList.get((int) pair.get("type")), (int) pair.get("quantity"));
-						}		*/		
+				List<ResourceType> resourceList =  new ArrayList<ResourceType>(controller.getResourceExpert().getAllResourceTypes());
+						for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) planning.get("resources")) {
+							Set<Resource> resourceSet = new LinkedHashSet<Resource>();
+							for(Integer resourceNr: (ArrayList<Integer>) pair.get("resource")){
+								resourceSet.add(allresources.get(resourceNr));
+							}
+							pbuilder.addResources(resourceList.get((int) pair.get("type")), resourceSet);
+						}		
 			}
+			pbuilder.build(controller.getPlanningExpert());
 		}
 	}
-
 }
