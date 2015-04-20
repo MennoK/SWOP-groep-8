@@ -795,9 +795,9 @@ public class Task implements Summarizable {
 			this.originalTask = task.originalTask;
 			this.failed = task.failed;
 
-			this.endTime = task.endTime.plusSeconds(0);
-			this.startTime = task.startTime.plusSeconds(0);
-			this.lastUpdateTime = task.lastUpdateTime.plusSeconds(0);
+			this.endTime = task.endTime;
+			this.startTime = task.startTime;
+			this.lastUpdateTime = task.lastUpdateTime;
 
 			this.planning = task.planning;
 			this.id = task.id;

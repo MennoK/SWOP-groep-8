@@ -381,6 +381,9 @@ public class Project implements TimeObserver, Summarizable {
 	
 	public void save() {
 		this.memento = new Memento(this);
+		for(Task task: this.tasks) {
+			task.save();
+		}
 	}
 	
 	public boolean load() {
@@ -408,7 +411,9 @@ public class Project implements TimeObserver, Summarizable {
 			this.tasks = new ArrayList<Task>(project.tasks);
 			this.name = new String(project.name);
 			this.description = new String(project.description);
-			this.dueTime = project.dueTime.plusSeconds(0);
+			this.dueTime = project.dueTime;
+			
+			this.lastUpdateTime = project.lastUpdateTime;
 		}
 		
 		public void load(Project project) {
