@@ -48,7 +48,7 @@ public class Task implements Summarizable {
 	private LocalDateTime startTime;
 	private LocalDateTime lastUpdateTime;
 
-	private TaskMemento memento;
+	private Memento memento;
 
 	private Planning planning;
 
@@ -748,7 +748,7 @@ public class Task implements Summarizable {
 	}
 
 	void save() {
-		this.memento = new TaskMemento(this);
+		this.memento = new Memento(this);
 	}
 
 	boolean load() {
@@ -761,7 +761,7 @@ public class Task implements Summarizable {
 		}
 	}
 
-	private class TaskMemento {
+	private class Memento {
 
 		private String description;
 		private Duration estimatedDuration;
@@ -784,7 +784,7 @@ public class Task implements Summarizable {
 		// Alles moet gekopieerd worden, behalve referenties naar objecten in
 		// ons domein
 		// bv. de dependencies worden shallow gekopieerd
-		public TaskMemento(Task task) {
+		public Memento(Task task) {
 			this.description = new String(task.description);
 			this.estimatedDuration = task.estimatedDuration.plusSeconds(0);
 			this.acceptableDeviation = new Double(task.acceptableDeviation);

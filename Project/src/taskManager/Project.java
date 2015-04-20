@@ -39,7 +39,7 @@ public class Project implements TimeObserver, Summarizable {
 
 	private LocalDateTime lastUpdateTime;
 	
-	private ProjectMemento memento;
+	private Memento memento;
 
 	/**
 	 * Constructor of the Project class: Sets a new list of tasks
@@ -380,7 +380,7 @@ public class Project implements TimeObserver, Summarizable {
 	}
 	
 	public void save() {
-		this.memento = new ProjectMemento(this);
+		this.memento = new Memento(this);
 	}
 	
 	public boolean load() {
@@ -396,7 +396,7 @@ public class Project implements TimeObserver, Summarizable {
 		}
 	}
 	
-	private class ProjectMemento {
+	private class Memento {
 		private List<Task> tasks;
 		private String name;
 		private String description;
@@ -404,7 +404,7 @@ public class Project implements TimeObserver, Summarizable {
 
 		private LocalDateTime lastUpdateTime;
 		
-		public ProjectMemento(Project project) {
+		public Memento(Project project) {
 			this.tasks = new ArrayList<Task>(project.tasks);
 			this.name = new String(project.name);
 			this.description = new String(project.description);
