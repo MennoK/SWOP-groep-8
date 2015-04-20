@@ -43,4 +43,12 @@ public class DeveloperExpertTester {
 	public void testCannotHaveNullDeveloper(){
 		assertFalse(developerExpert.canHaveDeveloper(null));
 	}
+	
+	@Test
+	public void testMementoSavesDevelopers() {
+		developerExpert.save();
+		developerExpert.createDeveloper("Bob");
+		developerExpert.load();
+		assertEquals(0, developerExpert.getAllDevelopers().size());
+	}
 }
