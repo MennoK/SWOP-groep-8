@@ -126,7 +126,7 @@ public class PlanningExpert {
 	private boolean overLap(Planning planning, LocalDateTime time, Task task) {
 
 		if (planning.getEndTime().isAfter(time)
-				&& time.isBefore(time.plus(task.getDuration()))) {
+				&& planning.getStartTime().isBefore(time.plus(task.getDuration()))) {
 			return true;
 		}
 		if (planning.getStartTime().isAfter(time)

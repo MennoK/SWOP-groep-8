@@ -25,7 +25,7 @@ public class ProjectExpert implements TimeObserver{
 	 * @param now
 	 *            : the time at which the ProjectController is created
 	 */
-	public ProjectExpert() {
+	ProjectExpert() {
 		projects = new ArrayList<>();
 	}
 
