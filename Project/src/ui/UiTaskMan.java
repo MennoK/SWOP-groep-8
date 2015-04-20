@@ -23,15 +23,12 @@ public class UiTaskMan {
 			try {
 				fileName = reader
 						.getString("Give a file for initialisation of the system:\n"
-								+ "(press 1 to use ./input1.tman)\n"
 								+ "(press 2 to use ./input2.tman)");
 			} catch (ExitUseCaseException e1) {
 				System.out.println("Starting with an empty system");
 				return;
 			}
-			if (fileName.equals("1"))
-				fileName = "./input1.tman";
-			else if (fileName.equals("2"))
+			if (fileName.equals("2"))
 				fileName = "./input2.tman";
 			try {
 				Parser parser = new Parser();
@@ -197,7 +194,7 @@ public class UiTaskMan {
 					break;
 				default:
 					System.out
-							.println("Invalid choice, try again. (0 to exit)");
+							.println("Invalid choice, try again. (9 to exit)");
 					break;
 				}
 			} catch (ExitUseCaseException e) {
