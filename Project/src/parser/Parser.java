@@ -10,21 +10,27 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resources;
+import javax.xml.stream.events.StartDocument;
 
 import org.yaml.snakeyaml.Yaml;
 
 import parser.TaskManInitFileChecker.IntPair;
-
-
+import taskManager.Developer;
 import taskManager.DeveloperExpert;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.Resource;
 import taskManager.ResourceExpert;
 import taskManager.ResourceType;
+import taskManager.Planning.PlanningBuilder;
 import taskManager.ResourceType.ResourceTypeBuilder;
 import taskManager.Task;
 import taskManager.TimeInterval;
@@ -46,6 +52,9 @@ public class Parser {
 			.ofPattern("HH:mm");
 
 	private List<TimeInterval> timeIntervals = new  ArrayList<TimeInterval>();
+	private List<Task> tasks = new ArrayList<Task>();
+	private List<Resource> resources = new ArrayList<Resource>();
+	private List<Developer> developers = new ArrayList<Developer>();
 
 	/**
 	 * This method parses the input file (needs absolute path) after it has
@@ -61,9 +70,9 @@ public class Parser {
 			throws FileNotFoundException, RuntimeException {
 
 		// check if the given input file is valid for taskman
-		TaskManInitFileChecker checker = new TaskManInitFileChecker(
-				new FileReader(pathToFile));
-		checker.checkFile();
+//		TaskManInitFileChecker checker = new TaskManInitFileChecker(
+//				new FileReader(pathToFile));
+//		checker.checkFile();
 
 		// create new yaml
 		InputStream input = new FileInputStream(new File(pathToFile));
@@ -236,7 +245,7 @@ public class Parser {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				builder.setOriginalTask(projectOfTask.getAllTasks().get(alternativeTaskNr - 1));
 			}
-			
+
 			//add required resource types
 			if (task.get("requiredTypes") != null){
 				List<ResourceType> resourceTypeList =  new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
@@ -273,7 +282,25 @@ public class Parser {
 	 */
 	private void constructPlannings(List<LinkedHashMap<String, Object>> plannings,TaskManController controller) {	
 		for(LinkedHashMap<String, Object> planning : plannings){
+			LocalDateTime startTime = LocalDateTime.parse((CharSequence) planning.get("plannedStartTime"), dateTimeFormatter);
+			ArrayList<Integer> developersNr = (ArrayList<Integer>) planning.get("developers");
+			Set<Developer> assignedDevs = new LinkedHashSet<Developer>();
 
+			for(Integer devNr: developersNr){
+				assignedDevs.add(developers.get(devNr));
+			}
+
+			int taskNr = (int) (planning.get("task"));
+			PlanningBuilder pbuilder = controller.getPlanningExpert().createPlanning(startTime, tasks.get(taskNr), assignedDevs);
+
+
+			if(planning.get("resources") != null){		
+/*				List<ResourceType> resourceTypeList =  new ArrayList<ResourceType>(controller.getResourceExpert().getAllResourceTypes());
+						for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) task.get("requiredTypes")) {
+							pbuilder.addResources(resourceTypeList.get((int) pair.get("type")), (int) pair.get("quantity"));
+						}		*/		
+			}
 		}
 	}
+
 }
