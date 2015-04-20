@@ -64,8 +64,13 @@ public class PlanningExpertTester {
 
 	@Test
 	public void testGetUnplannedTasks() {
+
+
+		assertEquals(0, planningExpert.getAllPlannings().size());
+		
 		//create planning for task1
 		planningExpert.createPlanning(time1, task1, developers).build(planningExpert);
+		
 		//check if the planning has been created
 		assertEquals(1, planningExpert.getAllPlannings().size());
 		
@@ -74,6 +79,13 @@ public class PlanningExpertTester {
 		unplannedTasks.add(task2);
 		assertEquals(unplannedTasks, planningExpert.getUnplannedTasks(new HashSet<Task>(project.getAllTasks())));
 		assertEquals(1, planningExpert.getUnplannedTasks(new HashSet<Task>(project.getAllTasks())).size());
+		
+		project.taskBuilder("task3", Duration.ofHours(3), 2).build();
+		Task task3 = project.getAllTasks().get(2);
+		unplannedTasks.add(task3);
+
+		assertEquals(unplannedTasks, planningExpert.getUnplannedTasks(new HashSet<Task>(project.getAllTasks())));
+		assertEquals(2, planningExpert.getUnplannedTasks(new HashSet<Task>(project.getAllTasks())).size());
 		
 	}
 
@@ -105,6 +117,8 @@ public class PlanningExpertTester {
 		assertEquals(time2.plus(task2.getDuration()),planningList.get(1).getEndTime());
 		assertEquals(this.developers,planningList.get(1).getDevelopers());
 		assertEquals(resourceType.getAllResources(), planningList.get(1).getResources().get(resourceType));
+		
+
 	}
 
 	@Test 
@@ -123,6 +137,9 @@ public class PlanningExpertTester {
 		possibleStartTimes2.add(time1.plusHours(2));
 		possibleStartTimes2.add(time1.plusHours(3));
 		assertEquals(possibleStartTimes2,planningExpert.getPossibleStartTimes(task2, time1, developers));
+		planningExpert.createPlanning(time1.plusHours(2), task1, developers).build(planningExpert);
+
+		//CASE3:  task1 + allDevs are planned for time1 until time1+1 AND task2 + resource + all devs are planned for time1+2
 		
 	}
 	@Test

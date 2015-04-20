@@ -111,6 +111,12 @@ public class TaskManInitFileChecker extends StreamTokenizer {
     public int first;
     public int second;
   }
+  
+  public class IntListPair
+  {
+	  public int first;
+	  public List<Integer> second;
+  }
 
   List<IntPair> expectLabeledPairList(String first, String second) {
     ArrayList<IntPair> list = new ArrayList<>();
@@ -136,6 +142,32 @@ public class TaskManInitFileChecker extends StreamTokenizer {
     expectChar(']');
     return list;
   }
+  
+   List<IntListPair> expectLabeledIntListPairList(String first,
+			String second) {
+	  List<IntListPair> list = new ArrayList<>();
+	    expectChar('[');
+	    while (ttype == '{'){
+	      if (ttype == '{')
+	      {
+	        expectChar('{');
+	        int f = expectIntField(first);
+	        expectChar(',');
+	        List<Integer> s = expectIntList();
+	        expectChar('}');
+	        IntPair p = new IntPair();
+	        p.first = f;
+	        p.second = s;
+	        list.add(p);
+	      }
+	      if (ttype == ',')
+	        expectChar(',');
+	      else if (ttype != ']')
+	        error("']' (end of list) or ',' (new list item) expected");
+	    }
+	    expectChar(']');
+	    return list;
+	}
 
   @SuppressWarnings("unused")
 void checkFile() {
@@ -162,6 +194,7 @@ void checkFile() {
       expectLabel("requires");
       List<Integer> requirements = expectIntList();
       expectLabel("conflictsWith");
+      expectLabel("second");
       List<Integer> conflicts = expectIntList();
       expectLabel("dailyAvailability");
       if (ttype == TT_NUMBER)
@@ -234,10 +267,9 @@ void checkFile() {
       LocalDateTime dueTime = expectDateField("plannedStartTime");
       expectLabel("developers");
       List<Integer> developers = expectIntList();
-      expectLabel("resources");
-      List<Integer> resources = expectIntList();
       int task = expectIntField("task");
-
+      expectLabel("resources");
+      List<IntListPair> resources = expectLabeledIntListPairList("type", "resource");
     }
     
     if (ttype != TT_EOF)

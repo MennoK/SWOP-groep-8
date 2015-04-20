@@ -51,8 +51,8 @@ public class Planning {
 		/**
 		 * a planning may require resources 
 		 */
-		public PlanningBuilder addResources ( Map<ResourceType, Set<Resource>> resources){
-			this.resources = new LinkedHashMap<>(resources);
+		public PlanningBuilder addResources (ResourceType resourcetypes, Set<Resource> resource){
+			this.resources.put(resourcetypes, resource);
 			return this;
 		}
 
