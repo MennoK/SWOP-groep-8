@@ -113,9 +113,9 @@ public class PlanningExpertTester {
 		
 		//CASE2: task1 + allDevs are planned for time1 until time1+1
 		Set<LocalDateTime> possibleStartTimes2 = new HashSet<>();
-		possibleStartTimes.add(time1.plusHours(1));
-		possibleStartTimes.add(time1.plusHours(2));
-		possibleStartTimes.add(time1.plusHours(3));
+		possibleStartTimes2.add(time1.plusHours(1));
+		possibleStartTimes2.add(time1.plusHours(2));
+		possibleStartTimes2.add(time1.plusHours(3));
 		assertEquals(possibleStartTimes2,planningExpert.getPossibleStartTimes(task2, time1, developers));
 		
 	}
