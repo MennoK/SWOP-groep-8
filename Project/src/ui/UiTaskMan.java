@@ -3,6 +3,7 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import parser.Parser;
 import taskManager.Project;
@@ -140,9 +141,9 @@ public class UiTaskMan {
 	private void advanceTime() throws ExitUseCaseException {
 		while (true) {
 			try {
-				//TODO project controller to taskManController
-				projectController.getProjectExpert().advanceTime(
-						reader.getDate("Enter the new timestamp:"));
+				// TODO project controller to taskManController
+				projectController.advanceTime(reader
+						.getDate("Enter the new timestamp:"));
 				return;
 			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());

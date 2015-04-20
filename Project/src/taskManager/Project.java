@@ -29,7 +29,7 @@ import utility.Summarizable;
  * 
  */
 
-public class Project{
+public class Project implements Summarizable {
 
 	private List<Task> tasks;
 	private String name;
