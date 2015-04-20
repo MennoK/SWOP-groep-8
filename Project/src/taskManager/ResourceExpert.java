@@ -20,7 +20,7 @@ public class ResourceExpert {
 	 * Default constructor of the resource expert. It initializes
 	 * a new set of resource types
 	 */
-	public ResourceExpert(){
+	ResourceExpert(){
 		this.resourcetypes = new LinkedHashSet<ResourceType>();
 	}
 	
