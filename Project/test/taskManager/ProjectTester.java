@@ -334,4 +334,115 @@ public class ProjectTester {
 		project.getCurrentDelay();
 	}
 
+	@Test
+	public void mementoRemovesNewTasks() {
+		project.createTask("desc", Duration.ofHours(5 * 8), 0.5).build();
+		project.save();
+		int initialSize = project.getAllTasks().size();
+		project.createTask("hello", Duration.ofHours(1 * 2), 0.5).build();
+		project.load();
+
+		assertEquals(initialSize, project.getAllTasks().size());
+	}
+
+	@Test
+	public void mementoSurvivesUpdateStatus() {
+		// Add a task that will take to long
+		project.createTask("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
+				.build();
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
+		project.save();
+
+		// Let the task finish to late
+		getNewestTask(project).updateStatus(time, time.plusDays(10), false);
+
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+		assertEquals(ProjectStatus.FINISHED, project.getStatus());
+
+		// first assertions again correct after load
+		project.load();
+		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
+		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
+	}
+
+	@Test
+	public void mementoWithAlternativeTasksAndDependencies() {
+		setUpProjectWithDependence();
+		// Set baseTask to failed
+		baseTask.updateStatus(time, time.plusHours(2), true);
+		// Create alternativeTask
+		project.createTask("desc", Duration.ofHours(8), 0.5)
+				.setOriginalTask(baseTask).build();
+		alternativeTask = getNewestTask(project);
+
+		// set memento
+		project.save();
+
+		// check structure
+		assertEquals(3, project.getAllTasks().size());
+		assertEquals(null, baseTask.getOriginal());
+		assertEquals(null, dependentTask.getOriginal());
+		assertEquals(baseTask, alternativeTask.getOriginal());
+		assertEquals(0, baseTask.getDependencies().size());
+		assertEquals(1, dependentTask.getDependencies().size());
+		assertEquals(alternativeTask, dependentTask.getDependencies().get(0));
+		assertEquals(0, alternativeTask.getDependencies().size());
+
+		// double check
+		assertFalse(dependentTask.hasDependency(baseTask));
+		assertTrue(dependentTask.hasDependency(alternativeTask));
+
+		// check status
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(ProjectStatus.ONGOING, project.getStatus());
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+
+		// set to finished
+		alternativeTask.updateStatus(time, time.plusHours(8), false);
+
+		// check status
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
+		assertEquals(ProjectStatus.ONGOING, project.getStatus());
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+
+		// set to finished
+		dependentTask.updateStatus(time, time.plusHours(8), false);
+
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
+		assertEquals(ProjectStatus.FINISHED, project.getStatus());
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+
+		// reset memento
+		project.load();
+
+		//first assertions again
+		// check structure
+		assertEquals(3, project.getAllTasks().size());
+		assertEquals(null, baseTask.getOriginal());
+		assertEquals(null, dependentTask.getOriginal());
+		assertEquals(baseTask, alternativeTask.getOriginal());
+		assertEquals(0, baseTask.getDependencies().size());
+		assertEquals(1, dependentTask.getDependencies().size());
+		assertEquals(alternativeTask, dependentTask.getDependencies().get(0));
+		assertEquals(0, alternativeTask.getDependencies().size());
+
+		// double check
+		assertFalse(dependentTask.hasDependency(baseTask));
+		assertTrue(dependentTask.hasDependency(alternativeTask));
+
+		// check status
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(ProjectStatus.ONGOING, project.getStatus());
+		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
+	}
+
 }
