@@ -138,7 +138,7 @@ public class PlanningExpertTester {
 		
 		Set<Task> conflictSet = new HashSet<>();
 		conflictSet.add(task1);
-		assertEquals(conflictSet, planningExpert.getConflictingTasks(task2, time1.minusHours(1)));
+		assertEquals(conflictSet, planningExpert.getConflictingTasks(task2, time1.minusHours(1), conflictSet));
 	}
 
 	@Test
