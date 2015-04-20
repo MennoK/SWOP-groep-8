@@ -74,6 +74,7 @@ public class PlanningExpertTester {
 		unplannedTasks.add(task2);
 		assertEquals(unplannedTasks, planningExpert.getUnplannedTasks(new HashSet<Task>(project.getAllTasks())));
 		assertEquals(1, planningExpert.getUnplannedTasks(new HashSet<Task>(project.getAllTasks())).size());
+		
 	}
 
 	@Test
