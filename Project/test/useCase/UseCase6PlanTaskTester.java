@@ -79,9 +79,13 @@ public class UseCase6PlanTaskTester {
 	public void planTask() {
 		//user gets list with all unplanned tasks (task1 and task2)
 		
-		Set<Task> unplannedTasks = project.getAllTasks();
+		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
 		assertEquals(unplannedTasks, planningExpert.getUnplannedTasks(new LinkedHashSet<Task>(project.getAllTasks())));
 		//user selects task1
-		Set<LocalDateTime> possibleStartTimes = planningExpert.getPossibleStartTimes(task1, time1, developers);
+		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
+		possibleStartTimes.add(time1);
+		possibleStartTimes.add(time1.plusHours(1));
+		possibleStartTimes.add(time1.plusHours(2));
+		assertEquals(possibleStartTimes,planningExpert.getPossibleStartTimes(task1, time1, developers));
 	}
 }
