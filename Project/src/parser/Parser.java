@@ -99,7 +99,7 @@ public class Parser {
 
 	private void constructSystemTime(CharSequence time, TaskManController controller) {
 		LocalDateTime systemTime = LocalDateTime.parse(time, dateTimeFormatter);
-		//TODO setter in taskmancontroller aanmaken
+		controller.advanceTime(systemTime);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class Parser {
 
 			String name = (String) resourceType.get("name");
 
-			ResourceTypeBuilder builder = resourceExpert.createResourceType(name);
+			ResourceTypeBuilder builder = resourceExpert.resourceTypeBuilder(name);
 			List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 			if (resourceType.get("requires") != null) {
