@@ -24,3 +24,5 @@ group08/
 *.nav
 *.toc
 *.synctex.gz
+
+.recommenders/

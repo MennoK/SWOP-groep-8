@@ -14,10 +14,10 @@ import java.util.List;
  * @author Groep 8
  */
 
-public class ProjectExpert {
+public class ProjectExpert implements TimeObserver{
 
 	private ArrayList<Project> projects;
-	private TaskManClock taskManClock;
+	private LocalDateTime lastUpdateTime;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -25,9 +25,8 @@ public class ProjectExpert {
 	 * @param now
 	 *            : the time at which the ProjectController is created
 	 */
-	public ProjectExpert(LocalDateTime now) {
+	public ProjectExpert() {
 		projects = new ArrayList<>();
-		this.taskManClock = new TaskManClock(now);
 	}
 
 	/**
@@ -46,7 +45,7 @@ public class ProjectExpert {
 	public void createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
-		project.handleTimeChange(this.getTime());
+		project.handleTimeChange(lastUpdateTime);
 		this.addProject(project);
 	}
 
@@ -63,7 +62,7 @@ public class ProjectExpert {
 	 */
 	public void createProject(String name, String description,
 			LocalDateTime dueTime) {
-		this.createProject(name, description, this.getTime(), dueTime);
+		this.createProject(name, description, lastUpdateTime, dueTime);
 	}
 
 	/**
@@ -81,7 +80,6 @@ public class ProjectExpert {
 					"The given project is already in this project.");
 		} else {
 			projects.add(project);
-			this.taskManClock.register(project);
 		}
 	}
 
@@ -98,21 +96,13 @@ public class ProjectExpert {
 	boolean canHaveProject(Project project) {
 		return (!getAllProjects().contains(project) && project != null);
 	}
-
-	/**
-	 * 
-	 * Advances the time of TaskMan. This will update the status of every task
-	 * in every project of the project controller
-	 * 
-	 * @param time
-	 *            : new time
-	 * @throws IllegalArgumentException
-	 *             : thrown when the given time is invalid
-	 */
-	public void advanceTime(LocalDateTime time) {
-
-		this.taskManClock.setTime(time);
-
+	
+	@Override
+	public void handleTimeChange(LocalDateTime time) {
+		this.lastUpdateTime = time;
+		for (Project project : this.getAllProjects()) {
+			project.handleTimeChange(time);
+		}		
 	}
 
 	/**
@@ -123,15 +113,5 @@ public class ProjectExpert {
 	public List<Project> getAllProjects() {
 		return Collections.unmodifiableList(projects);
 	}
-
-	/**
-	 * Returns the time
-	 * 
-	 * @return LocalDateTime : time
-	 */
-	public LocalDateTime getTime() {
-		return this.taskManClock.getTime();
-	}
-	
 	
 }

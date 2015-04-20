@@ -12,11 +12,14 @@ import org.junit.Test;
 public class ProjectExpertTester {
 
 	private ProjectExpert projectController;
+	private TaskManController taskManController;
 
 	@Before
 	public void setUp() {
-		projectController = new ProjectExpert(LocalDateTime.of(2000, 03, 05,
+		taskManController = new TaskManController(LocalDateTime.of(2000, 03, 05,
 				00, 00));
+
+		projectController = taskManController.getProjectExpert();
 	}
 
 	@Test
@@ -60,10 +63,10 @@ public class ProjectExpertTester {
 		Project project1 = projectController.getAllProjects().get(0);
 		project1.createTask("descr", Duration.ofHours(20), 20).build();
 
-		projectController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
+		taskManController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
 
 		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00),
-				projectController.getTime());
+				taskManController.getTime());
 		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00),
 				project1.getLastUpdateTime());
 		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00), project1
@@ -74,6 +77,6 @@ public class ProjectExpertTester {
 	@Test(expected = IllegalArgumentException.class)
 	public void testAdvanceTimeWithInvalidTime() {
 		LocalDateTime newTime = LocalDateTime.of(1999, 03, 05, 00, 00);
-		projectController.advanceTime(newTime);
+		taskManController.advanceTime(newTime);
 	}
 }

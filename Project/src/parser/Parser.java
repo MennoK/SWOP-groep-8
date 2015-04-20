@@ -33,11 +33,9 @@ import taskManager.TaskManController;
 
 /**
  * The Parser class implements a YAML parser for TaskMan
- * 
  * We are using the snakeYAML library
  * 
  * @author Groep 8
- * 
  */
 
 public class Parser {
