@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +47,8 @@ public class Task implements Summarizable {
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
 	private LocalDateTime lastUpdateTime;
+	
+	private Planning planning;
 
 	private static AtomicInteger idCounter = new AtomicInteger(1);
 	private int id;
@@ -541,7 +542,7 @@ public class Task implements Summarizable {
 	 * @throws InvalidActivityException
 	 *             : thrown when the task is not finished yet
 	 */
-	public TaskFinishedStatus getFinishStatus() throws IllegalArgumentException {
+	public TaskFinishedStatus getFinishStatus() {
 		if (this.getStatus() != TaskStatus.FINISHED) {
 			throw new IllegalArgumentException("The task is not finished yet");
 		} else {
@@ -664,7 +665,28 @@ public class Task implements Summarizable {
 	public Duration getDuration() {
 		return this.estimatedDuration;
 	}
+	/**
+	 * returns the planning of the task, if it has one
+	 * @return
+	 */
+	public Planning getPlanning() {
+		if(this.hasPlanning()){
+			return planning;
+		}
+		else throw new NullPointerException("the task has no planning");
+	}
 
+	/**
+	 * sets a planning for the task
+	 * @param planning
+	 */
+	public void setPlanning(Planning planning) {
+		this.planning = planning;
+	}
+	public boolean hasPlanning(){
+		return (planning != null);
+	}
+	
 	/**
 	 * Partial toString method
 	 * 
@@ -692,17 +714,14 @@ public class Task implements Summarizable {
 		}
 		if (getOriginal() != null)
 			str += ", alternative for task " + getOriginal().getId();
-
-		// TODO can this be solved nicer?
-		try {
-			TaskFinishedStatus finishStatus = getFinishStatus();
+		if (this.getStatus() == TaskStatus.FINISHED) {
 			str += ", started " + getStartTime();
 			str += ", finished " + getEndTime();
-			str += " (" + finishStatus + ")";
-		} catch (IllegalArgumentException e) {
-			// If not finished
+			str += " (" + getFinishStatus() + ")";
 		}
-
 		return str;
 	}
+
+	
+	
 }
