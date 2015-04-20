@@ -37,7 +37,7 @@ public class PlanningExpertTester {
 		this.planningExpert = new PlanningExpert();
 		//create some resources
 		resourceExpert = new ResourceExpert();
-		resourceExpert.createResourceType("type").build();
+		resourceExpert.resourceTypeBuilder("type").build();
 		resourceTypeList = new ArrayList<ResourceType>(
 						resourceExpert.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);	
@@ -46,8 +46,8 @@ public class PlanningExpertTester {
 				
 		//create a project with a task
 		project = new Project("project", "a project", time1.minusDays(1), time2.plusDays(1));
-		project.createTask("a task", Duration.ofHours(1), 1).build();
-		project.createTask("a task", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
+		project.taskBuilder("a task", Duration.ofHours(1), 1).build();
+		project.taskBuilder("a task", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
 		task1 = project.getAllTasks().get(0);
 		task2 = project.getAllTasks().get(1);
 		

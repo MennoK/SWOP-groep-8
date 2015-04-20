@@ -39,16 +39,16 @@ public class UseCase4UpdateTaskStatusTester {
 
 		project1 = controller.getAllProjects().get(0);
 
-		project1.createTask("Task 1", Duration.ofHours(8), 0.4).build();
-		project1.createTask("Task 2", Duration.ofHours(8), 0.4).build();
+		project1.taskBuilder("Task 1", Duration.ofHours(8), 0.4).build();
+		project1.taskBuilder("Task 2", Duration.ofHours(8), 0.4).build();
 		task1 = project1.getAllTasks().get(0);
 		task2 = project1.getAllTasks().get(1);
 
 		// task 3 has dependency on task2
-		project1.createTask("Task 3", Duration.ofHours(8), 0.4)
+		project1.taskBuilder("Task 3", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build();
 		// task 4 had depndency on task 2
-		project1.createTask("Task 4", Duration.ofHours(8), 0.4)
+		project1.taskBuilder("Task 4", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build();
 		task3 = project1.getAllTasks().get(2);
 		task4 = project1.getAllTasks().get(3);

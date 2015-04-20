@@ -57,11 +57,11 @@ public class UseCase1ShowProjectsTester {
 		project2 = controller.getAllProjects().get(1);
 		project3 = controller.getAllProjects().get(3);
 
-		project1.createTask("Task 1", Duration.ofHours(5), 0.4).build();
-		project2.createTask("Task 2", Duration.ofHours(2), 0.4).build();
-		project2.createTask("Task 3", Duration.ofHours(3), 0.4)
+		project1.taskBuilder("Task 1", Duration.ofHours(5), 0.4).build();
+		project2.taskBuilder("Task 2", Duration.ofHours(2), 0.4).build();
+		project2.taskBuilder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build();
-		project3.createTask("task4", Duration.ofHours(2), 0.4).build();
+		project3.taskBuilder("task4", Duration.ofHours(2), 0.4).build();
 
 		task1 = project1.getAllTasks().get(0);
 		task1.updateStatus(now, now.plusDays(1), false);
@@ -107,7 +107,7 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 
-		project3.createTask("task5", Duration.ofHours(1), 0.4)
+		project3.taskBuilder("task5", Duration.ofHours(1), 0.4)
 				.addDependencies(task4).build();
 
 		// project 3 has 2 dependent tasks -> should still finish on time
