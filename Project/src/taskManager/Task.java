@@ -584,14 +584,21 @@ public class Task implements Summarizable {
 			return TaskStatus.FAILED;
 		} else if (getEndTime() != null) {
 			return TaskStatus.FINISHED;
-		} else if (!getDependencies().isEmpty()) {
-			for (Task dependency : getDependencies()) {
-				if (dependency.getCalculatedStatus() != TaskStatus.FINISHED) {
-					return TaskStatus.UNAVAILABLE;
-				}
-			}
 		}
-		return TaskStatus.AVAILABLE;
+		if (checkDependenciesFinished())
+			return TaskStatus.AVAILABLE;
+		return TaskStatus.UNAVAILABLE;
+	}
+
+	/**
+	 * Check whether the dependencies of this Task are finished
+	 */
+	boolean checkDependenciesFinished() {
+		for (Task dependency : getDependencies()) {
+			if (dependency.getCalculatedStatus() != TaskStatus.FINISHED)
+				return false;
+		}
+		return true;
 	}
 
 	/**
