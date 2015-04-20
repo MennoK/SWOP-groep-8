@@ -18,6 +18,8 @@ public class ProjectExpert {
 
 	private ArrayList<Project> projects;
 	private TaskManClock taskManClock;
+	
+	private Memento memento;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -133,5 +135,38 @@ public class ProjectExpert {
 		return this.taskManClock.getTime();
 	}
 	
+	public void save() {
+		this.memento = new Memento(this);
+		for(Project project: this.projects) {
+			project.save();
+		}
+		this.taskManClock.save();
+	}
+	
+	public boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			for(Project project: this.projects) {
+				project.load();
+			}
+			this.taskManClock.load();
+			return true;
+		}
+	}
+	
+	private class Memento {
+		private ArrayList<Project> projects;
+		
+		public Memento(ProjectExpert pe) {
+			this.projects = new ArrayList<Project>(pe.projects);
+		}
+		
+		public void load(ProjectExpert pe) {
+			pe.projects = this.projects;
+		}
+	}
 	
 }
