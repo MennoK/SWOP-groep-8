@@ -10,17 +10,20 @@ import org.junit.Test;
 
 import taskManager.Project;
 import taskManager.ProjectExpert;
+import taskManager.TaskManController;
 
 public class UseCase2CreateProjectTester {
 
 	private ProjectExpert controller;
+	private TaskManController taskManController;
 
 	@Before
 	public void setUp() {
 		// create a project controller
-		controller = new ProjectExpert(LocalDateTime.of(2015, 03, 07, 01,
+		taskManController = new TaskManController(LocalDateTime.of(2015, 03, 07, 01,
 				00));
-		;
+		controller = taskManController.getProjectExpert();
+		
 	}
 
 	@Test

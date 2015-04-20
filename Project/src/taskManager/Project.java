@@ -29,7 +29,7 @@ import utility.Summarizable;
  * 
  */
 
-public class Project implements TimeObserver, Summarizable {
+public class Project{
 
 	private List<Task> tasks;
 	private String name;
@@ -128,7 +128,6 @@ public class Project implements TimeObserver, Summarizable {
 				task.removeDependency(originalTask);
 			}
 		}
-
 	}
 
 	/**
@@ -201,7 +200,6 @@ public class Project implements TimeObserver, Summarizable {
 	 * @param time
 	 *            : the new time of the clock
 	 */
-	@Override
 	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
 		for (Task t : this.getAllTasks()) {

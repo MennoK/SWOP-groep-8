@@ -4,17 +4,21 @@ import static org.junit.Assert.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import taskManager.DeveloperExpert;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
+import taskManager.TaskManController;
 
 public class UseCase5AdvanceTime {
 
+	private TaskManController taskManController;
 	private ProjectExpert controller;
 	private Project project1;
 	private Project project2;
@@ -31,8 +35,10 @@ public class UseCase5AdvanceTime {
 		// project2 has 2 tasks (1 task is dependent on the other)
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
+		
+		taskManController = new TaskManController(now);
+		controller = taskManController.getProjectExpert();
 
-		controller = new ProjectExpert(now);
 		controller.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 10, 17, 00));
 
@@ -53,11 +59,11 @@ public class UseCase5AdvanceTime {
 	public void advanceTime() {
 
 		// advance time with 5 hours
-		controller.advanceTime(now.plusHours(5));
+		taskManController.advanceTime(now.plusHours(5));
 
 		// check if the last update time has changed in every project and every
 		// task
-		assertEquals(now.plusHours(5), controller.getTime());
+		assertEquals(now.plusHours(5), taskManController.getTime());
 		assertEquals(now.plusHours(5), project1.getLastUpdateTime());
 		assertEquals(now.plusHours(5), project2.getLastUpdateTime());
 
@@ -72,8 +78,8 @@ public class UseCase5AdvanceTime {
 		assertEquals(ProjectStatus.ONGOING, project2.getStatus());
 
 		// advance time with 2 hours, the project is still on time
-		controller.advanceTime(now.plusHours(7));
-		assertEquals(now.plusHours(7), controller.getTime());
+		taskManController.advanceTime(now.plusHours(7));
+		assertEquals(now.plusHours(7), taskManController.getTime());
 		assertEquals(now.plusHours(7), project1.getLastUpdateTime());
 		assertEquals(now.plusHours(7), project2.getLastUpdateTime());
 
