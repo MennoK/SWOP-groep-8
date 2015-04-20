@@ -1,15 +1,10 @@
 package taskManager;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import taskManager.Task.TaskBuilder;
 
 public class Planning {
 
@@ -120,7 +115,7 @@ public class Planning {
 		return resources;
 	}
 
-	public void setResources(Map<ResourceType, Set<Resource>> resources2) {
-		this.resources = resources2;
+	public void setResources(Map<ResourceType, Set<Resource>> resources) {
+		this.resources = resources;
 	}
 }

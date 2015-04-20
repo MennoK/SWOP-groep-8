@@ -33,7 +33,7 @@ public class ParserTester {
 	// run setup only once
 	@BeforeClass
 	public static void setUp() {
-		taskManController = new TaskManController(LocalDateTime.of(2015, 03,
+		taskManController = new TaskManController(LocalDateTime.of(2010, 03,
 				05, 00, 00));
 
 		try {
@@ -47,7 +47,7 @@ public class ParserTester {
 
 	@Test
 	public void testSystemTime() {
-
+		assertEquals(LocalDateTime.parse("2014-04-01 09:00", dateTimeFormatter), taskManController.getTime());
 	}
 
 	@Test
