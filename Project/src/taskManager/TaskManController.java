@@ -129,7 +129,7 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		// TODO update all other task's
+		getProjectExpert().updateTaskStatus();
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class TaskManController {
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
-		// TODO update all other task's
+		getProjectExpert().updateTaskStatus();
 	}
 
 	/**
@@ -153,6 +153,6 @@ public class TaskManController {
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
-		// TODO update all other task's
+		getProjectExpert().updateTaskStatus();
 	}
 }

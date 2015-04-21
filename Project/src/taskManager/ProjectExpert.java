@@ -117,6 +117,15 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
+	 * Update the status of all Tasks, switching from unavailable to available
+	 * or back if necessary.
+	 */
+	void updateTaskStatus() {
+		for (Task task : getAllTasks())
+			task.setStatus(calculateTaskStatus(task));
+	}
+
+	/**
 	 * Calculate's the status of a Task. If Task not Available or Unavailable
 	 * return the current state. Otherwise checks all the dependencies of a Task
 	 * and returns Available if all dependencies are met and Unavailable
