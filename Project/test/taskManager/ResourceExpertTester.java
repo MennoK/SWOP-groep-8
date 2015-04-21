@@ -25,7 +25,7 @@ public class ResourceExpertTester {
 
 	@Test
 	public void testCreateSimpleResourceType(){
-		resourceExpert.createResourceType("simple").build();
+		resourceExpert.resourceTypeBuilder("simple").build();
 		assertEquals(1, resourceExpert.getAllResourceTypes().size());
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
 		resourceTypeList.addAll(resourceExpert.getAllResourceTypes());
@@ -34,10 +34,10 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithConflictedResourceTypes(){
-		resourceExpert.createResourceType("conflict").build();
+		resourceExpert.resourceTypeBuilder("conflict").build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
-		resourceExpert.createResourceType("resourcetype").addConflictedResourceTypes(resourceTypeList.get(0)).build();
+		resourceExpert.resourceTypeBuilder("resourcetype").addConflictedResourceTypes(resourceTypeList.get(0)).build();
 		resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 	
 		assertEquals(2, resourceExpert.getAllResourceTypes().size());
@@ -50,7 +50,7 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithRequiredResourceTypes(){
-		resourceExpert.createResourceType("resourcetype").addRequiredResourceTypes(resourceExpert.createResourceType("required").build()).build();
+		resourceExpert.resourceTypeBuilder("resourcetype").addRequiredResourceTypes(resourceExpert.resourceTypeBuilder("required").build()).build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 		assertEquals(2, resourceExpert.getAllResourceTypes().size());
@@ -63,7 +63,7 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithRequiredAndConflictedResourceTypes(){
-		resourceExpert.createResourceType("resourcetype").addRequiredResourceTypes(resourceExpert.createResourceType("required").build()).addConflictedResourceTypes(resourceExpert.createResourceType("conflict").build()).build();
+		resourceExpert.resourceTypeBuilder("resourcetype").addRequiredResourceTypes(resourceExpert.resourceTypeBuilder("required").build()).addConflictedResourceTypes(resourceExpert.resourceTypeBuilder("conflict").build()).build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 		assertEquals(3, resourceExpert.getAllResourceTypes().size());
@@ -79,7 +79,7 @@ public class ResourceExpertTester {
 	
 	@Test
 	public void testCreateResourceTypeWithDailyAvailability(){
-		resourceExpert.createResourceType("resourcetype").addDailyAvailability(new TimeInterval(LocalTime.of(12, 00), LocalTime.of(17, 00))).build();
+		resourceExpert.resourceTypeBuilder("resourcetype").addDailyAvailability(new TimeInterval(LocalTime.of(12, 00), LocalTime.of(17, 00))).build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 		assertEquals(LocalTime.of(12, 00), resourceTypeList.get(0).getDailyAvailability().getBegin());
 		assertEquals(LocalTime.of(17, 00), resourceTypeList.get(0).getDailyAvailability().getEnd());
@@ -87,7 +87,7 @@ public class ResourceExpertTester {
 
 	@Test
 	public void cannotHaveNullResourceType(){
-		resourceExpert.createResourceType("simple").build();
+		resourceExpert.resourceTypeBuilder("simple").build();
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 		assertFalse(resourceExpert.canHaveResource(resourceTypeList.get(0)));

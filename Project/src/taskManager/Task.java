@@ -419,7 +419,8 @@ public class Task implements Summarizable {
 	 * @param failed
 	 *            : true if failed
 	 */
-	private void setFailed() {
+	@Deprecated
+	private void setOldFailed() {
 		this.failed = true;
 	}
 
@@ -433,7 +434,7 @@ public class Task implements Summarizable {
 	 */
 	private void setAlternativeTask(Task original)
 			throws IllegalArgumentException {
-		if (original.getStatus() != TaskStatus.FAILED) {
+		if (original.getCalculatedStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
 					"Task cannot be alternative to a task that has not failed");
 		}
@@ -482,27 +483,88 @@ public class Task implements Summarizable {
 	 * @throws IllegalArgumentException
 	 *             : if the startTime was after the endTime.
 	 */
+	@Deprecated
 	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
 			boolean setToFail) {
 		if (!isValidStartTimeAndEndTime(startTime, endTime))
 			throw new IllegalArgumentException(
 					"the given end time is before the start time");
 
-		if (getStatus() == TaskStatus.FAILED)
+		if (getCalculatedStatus() == TaskStatus.FAILED)
 			throw new IllegalStateException("Can not update failed task");
 
-		if (getStatus() == TaskStatus.FINISHED)
+		if (getCalculatedStatus() == TaskStatus.FINISHED)
 			throw new IllegalStateException("Can not update finished task");
 
-		if (getStatus() == TaskStatus.UNAVAILABLE && !setToFail)
+		if (getCalculatedStatus() == TaskStatus.UNAVAILABLE && this.failed)
 			throw new IllegalStateException(
 					"Can not finish an unavailable task");
 
 		if (setToFail) {
-			this.setFailed();
-		}
+			status = TaskStatus.FAILED;
+			this.setOldFailed();
+		} else
+			status = TaskStatus.FINISHED;
 		this.setStartTime(startTime);
 		this.setEndTime(endTime);
+	}
+
+	private TaskStatus status = TaskStatus.UNAVAILABLE;
+
+	public TaskStatus getStatus() {
+		return status;
+	}
+
+	void setStatus(TaskStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * Set the status to Executing
+	 * 
+	 * @param startTime
+	 */
+	public void setExecuting(LocalDateTime startTime) {
+		if (getStatus() != TaskStatus.AVAILABLE)
+			throw new IllegalStateException(
+					"Task needs to be availlable to become executing");
+		setStartTime(startTime);
+		setStatus(TaskStatus.EXECUTING);
+	}
+
+	/**
+	 * Set the status to finished
+	 * 
+	 * @param endTime
+	 */
+	public void setFinished(LocalDateTime endTime) {
+		if (getStatus() != TaskStatus.EXECUTING)
+			throw new IllegalStateException(
+					"Task needs to be executing to become finished");
+		if (endTime.isBefore(getStartTime()))
+			throw new IllegalArgumentException(
+					"End time can not be before start time");
+		setEndTime(endTime);
+		setStatus(TaskStatus.FINISHED);
+	}
+
+	/**
+	 * set the status to failed
+	 * 
+	 * @param endTime
+	 */
+	public void setFailed(LocalDateTime endTime) {
+		if (getStatus() != TaskStatus.EXECUTING)
+			throw new IllegalStateException(
+					"Task needs to be executing to become failed");
+		if (endTime.isBefore(getStartTime()))
+			throw new IllegalArgumentException(
+					"End time can not be before start time");
+		setEndTime(endTime);
+		setStatus(TaskStatus.FAILED);
+
+		// TODO remove after refactoring
+		setOldFailed();
 	}
 
 	/**
@@ -541,19 +603,27 @@ public class Task implements Summarizable {
 	 * 
 	 * @return the status of the task
 	 */
-	public TaskStatus getStatus() {
+	@Deprecated
+	public TaskStatus getCalculatedStatus() {
 		if (isFailed()) {
 			return TaskStatus.FAILED;
 		} else if (getEndTime() != null) {
 			return TaskStatus.FINISHED;
-		} else if (!getDependencies().isEmpty()) {
-			for (Task dependency : getDependencies()) {
-				if (dependency.getStatus() != TaskStatus.FINISHED) {
-					return TaskStatus.UNAVAILABLE;
-				}
-			}
 		}
-		return TaskStatus.AVAILABLE;
+		if (checkDependenciesFinished())
+			return TaskStatus.AVAILABLE;
+		return TaskStatus.UNAVAILABLE;
+	}
+
+	/**
+	 * Check whether the dependencies of this Task are finished
+	 */
+	boolean checkDependenciesFinished() {
+		for (Task dependency : getDependencies()) {
+			if (dependency.getCalculatedStatus() != TaskStatus.FINISHED)
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -564,7 +634,7 @@ public class Task implements Summarizable {
 	 *             : thrown when the task is not finished yet
 	 */
 	public TaskFinishedStatus getFinishStatus() {
-		if (this.getStatus() != TaskStatus.FINISHED) {
+		if (this.getCalculatedStatus() != TaskStatus.FINISHED) {
 			throw new IllegalArgumentException("The task is not finished yet");
 		} else {
 			if (wasFinishedEarly()) {
@@ -718,7 +788,7 @@ public class Task implements Summarizable {
 	 * @return a summary of the main information defining a Task
 	 */
 	public String toSummary() {
-		return "Task " + getId() + " " + getStatus();
+		return "Task " + getId() + " " + getCalculatedStatus();
 	}
 
 	/**
@@ -739,7 +809,7 @@ public class Task implements Summarizable {
 		}
 		if (getOriginal() != null)
 			str += ", alternative for task " + getOriginal().getId();
-		if (this.getStatus() == TaskStatus.FINISHED) {
+		if (this.getCalculatedStatus() == TaskStatus.FINISHED) {
 			str += ", started " + getStartTime();
 			str += ", finished " + getEndTime();
 			str += " (" + getFinishStatus() + ")";

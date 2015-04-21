@@ -152,13 +152,13 @@ tasks:
 plannings:
   - plannedStartTime : "2014-01-01 09:00"
     developers       : [0, 1]
-    resources        : [0, 1, 6]
     task             : 0
+    resources        : [{type: 0,  resource: [0, 1]}, {type: 2,  resource: [6]}]
   - plannedStartTime : "2014-01-02 17:00"
     developers       : [1]
-    resources        : []
     task             : 3
+    resources        : []
   - plannedStartTime : "2014-03-01 09:00"
     developers       : [2]
-    resources        : [11]
     task             : 4
+    resources        : [{type: 5,  resource: [11]}]

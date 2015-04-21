@@ -29,7 +29,7 @@ import utility.Summarizable;
  * 
  */
 
-public class Project implements TimeObserver, Summarizable {
+public class Project implements Summarizable {
 
 	private List<Task> tasks;
 	private String name;
@@ -78,7 +78,7 @@ public class Project implements TimeObserver, Summarizable {
 	 * 
 	 * @return taskBuilder : new builder for creating task
 	 */
-	public TaskBuilder createTask(String description,
+	public TaskBuilder taskBuilder(String description,
 			Duration estimatedDuration, double acceptableDeviation) {
 		return new TaskBuilder(description, estimatedDuration,
 				acceptableDeviation, this);
@@ -130,7 +130,6 @@ public class Project implements TimeObserver, Summarizable {
 				task.removeDependency(originalTask);
 			}
 		}
-
 	}
 
 	/**
@@ -203,7 +202,6 @@ public class Project implements TimeObserver, Summarizable {
 	 * @param time
 	 *            : the new time of the clock
 	 */
-	@Override
 	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
 		for (Task t : this.getAllTasks()) {
@@ -287,8 +285,8 @@ public class Project implements TimeObserver, Summarizable {
 	private boolean hasFinished() {
 		if (this.getAllTasks().size() != 0) {
 			for (Task task : this.getAllTasks()) {
-				if (task.getStatus() == TaskStatus.UNAVAILABLE
-						|| task.getStatus() == TaskStatus.AVAILABLE) {
+				if (task.getCalculatedStatus() == TaskStatus.UNAVAILABLE
+						|| task.getCalculatedStatus() == TaskStatus.AVAILABLE) {
 					return false;
 				}
 			}

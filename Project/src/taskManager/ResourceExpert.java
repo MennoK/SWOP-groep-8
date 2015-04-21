@@ -21,7 +21,7 @@ public class ResourceExpert {
 	 * Default constructor of the resource expert. It initializes a new set of
 	 * resource types
 	 */
-	public ResourceExpert() {
+	ResourceExpert(){
 		this.resourcetypes = new LinkedHashSet<ResourceType>();
 	}
 
@@ -33,8 +33,8 @@ public class ResourceExpert {
 	 *            : required name of a resource type
 	 * @return resourceTypeBuilder : new builder for creating resource types
 	 */
-	public ResourceTypeBuilder createResourceType(String name) {
-		return new ResourceTypeBuilder(name, this);
+	public ResourceTypeBuilder resourceTypeBuilder(String name){
+		return new ResourceTypeBuilder(name,this);
 	}
 
 	/**

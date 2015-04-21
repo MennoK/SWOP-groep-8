@@ -17,11 +17,13 @@ import org.junit.Test;
 
 import taskManager.Developer;
 import taskManager.DeveloperExpert;
+import taskManager.Planning;
 import taskManager.Project;
 import taskManager.Resource;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
+import taskManager.Planning.PlanningBuilder;
 
 public class ParserTester {
 
@@ -29,17 +31,19 @@ public class ParserTester {
 			.ofPattern("yyyy-MM-dd HH:mm");
 	static TaskManController taskManController;
 	static List<ResourceType> resourceTypeList;
+	static List<Planning> planningsList;
 
 	// run setup only once
 	@BeforeClass
 	public static void setUp() {
-		taskManController = new TaskManController(LocalDateTime.of(2015, 03,
+		taskManController = new TaskManController(LocalDateTime.of(2010, 03,
 				05, 00, 00));
 
 		try {
 			new Parser().parse("./input2.tman", taskManController);
 			resourceTypeList = new ArrayList<ResourceType>(taskManController
 					.getResourceExpert().getAllResourceTypes());
+			planningsList = new ArrayList<Planning>(taskManController.getPlanningExpert().getAllPlannings());
 		} catch (FileNotFoundException | RuntimeException e) {
 			e.printStackTrace();
 		}
@@ -47,7 +51,7 @@ public class ParserTester {
 
 	@Test
 	public void testSystemTime() {
-
+		assertEquals(LocalDateTime.parse("2014-04-01 09:00", dateTimeFormatter), taskManController.getTime());
 	}
 
 	@Test
@@ -316,7 +320,7 @@ public class ParserTester {
 		assertEquals(Duration.ofHours(500), task1.getEstimatedDuration());
 		assertEquals(task1.getAcceptableDeviation(), 0.50, 0.001);
 		assertEquals(0, task1.getDependencies().size());
-		assertEquals(taskManager.TaskStatus.FINISHED, task1.getStatus());
+		assertEquals(taskManager.TaskStatus.FINISHED, task1.getCalculatedStatus());
 		assertEquals(task1.getStartTime(),
 				LocalDateTime.parse(("2014-01-01 10:00"), dateTimeFormatter));
 		assertEquals(task1.getEndTime(),
@@ -354,8 +358,8 @@ public class ParserTester {
 		assertNull(task1.getOriginal());
 		assertNull(task1.getStartTime());
 		assertNull(task1.getEndTime());
-		assertNotEquals(taskManager.TaskStatus.FAILED, task1.getStatus());
-		assertNotEquals(taskManager.TaskStatus.FINISHED, task1.getStatus());
+		assertNotEquals(taskManager.TaskStatus.FAILED, task1.getCalculatedStatus());
+		assertNotEquals(taskManager.TaskStatus.FINISHED, task1.getCalculatedStatus());
 	}
 
 	@Test
@@ -372,8 +376,8 @@ public class ParserTester {
 		assertNull(task2.getOriginal());
 		assertNull(task2.getStartTime());
 		assertNull(task2.getEndTime());
-		assertNotEquals(taskManager.TaskStatus.FAILED, task2.getStatus());
-		assertNotEquals(taskManager.TaskStatus.FINISHED, task2.getStatus());
+		assertNotEquals(taskManager.TaskStatus.FAILED, task2.getCalculatedStatus());
+		assertNotEquals(taskManager.TaskStatus.FINISHED, task2.getCalculatedStatus());
 	}
 
 	@Test
@@ -388,13 +392,14 @@ public class ParserTester {
 		assertNull(task3.getOriginal());
 
 		assertEquals(2, task3.getDependencies().size());
-		assertEquals(taskManager.TaskStatus.FAILED, task3.getStatus());
+		assertEquals(taskManager.TaskStatus.FAILED, task3.getCalculatedStatus());
 		assertEquals(
 				LocalDateTime.parse(("2014-01-02 09:00"), dateTimeFormatter),
 				task3.getStartTime());
 		assertEquals(
 				LocalDateTime.parse(("2014-03-25 18:00"), dateTimeFormatter),
 				task3.getEndTime());
+		
 	}
 
 	@Test
@@ -412,8 +417,8 @@ public class ParserTester {
 
 		assertNull(task4.getStartTime());
 		assertNull(task4.getEndTime());
-		assertNotEquals(taskManager.TaskStatus.FAILED, task4.getStatus());
-		assertNotEquals(taskManager.TaskStatus.FINISHED, task4.getStatus());
+		assertNotEquals(taskManager.TaskStatus.FAILED, task4.getCalculatedStatus());
+		assertNotEquals(taskManager.TaskStatus.FINISHED, task4.getCalculatedStatus());
 
 		assertEquals(1, task4.getRequiredResourceTypes().size());
 		ResourceType type = (ResourceType) task4.getRequiredResourceTypes()
@@ -442,8 +447,8 @@ public class ParserTester {
 		assertNull(task1.getOriginal());
 		assertNull(task1.getStartTime());
 		assertNull(task1.getEndTime());
-		assertNotEquals(taskManager.TaskStatus.FAILED, task1.getStatus());
-		assertNotEquals(taskManager.TaskStatus.FINISHED, task1.getStatus());
+		assertNotEquals(taskManager.TaskStatus.FAILED, task1.getCalculatedStatus());
+		assertNotEquals(taskManager.TaskStatus.FINISHED, task1.getCalculatedStatus());
 	}
 
 	@Test
@@ -461,27 +466,48 @@ public class ParserTester {
 		assertNull(task2.getOriginal());
 		assertNull(task2.getStartTime());
 		assertNull(task2.getEndTime());
-		assertNotEquals(taskManager.TaskStatus.FAILED, task2.getStatus());
-		assertNotEquals(taskManager.TaskStatus.FINISHED, task2.getStatus());
+		assertNotEquals(taskManager.TaskStatus.FAILED, task2.getCalculatedStatus());
+		assertNotEquals(taskManager.TaskStatus.FINISHED, task2.getCalculatedStatus());
 	}
 
 	@Test
 	public void testThreePlanningisMade() {
-
+		assertEquals(3, taskManController.getPlanningExpert().getAllPlannings().size());
 	}
 
 	@Test
 	public void testPlanningOneisMade() {
-
+		LocalDateTime time = LocalDateTime.parse(("2014-01-01 09:00"), dateTimeFormatter);
+		assertEquals(time, planningsList.get(0).getStartTime());
+		assertEquals(time.plusHours(500), planningsList.get(0).getEndTime());
+		
+		List<Developer> developers = new ArrayList<Developer>(planningsList.get(0).getDevelopers());
+		assertEquals("John Deere", developers.get(0).getName());
+		assertEquals("Tom Hawk", developers.get(1).getName());
+		//TODO add other 
 	}
 
 	@Test
 	public void testPlanningTwoisMade() {
+		LocalDateTime time = LocalDateTime.parse(("2014-01-02 17:00"), dateTimeFormatter);
+		assertEquals(time, planningsList.get(1).getStartTime());
+		assertEquals(time.plusHours(50), planningsList.get(1).getEndTime());
+		
+		List<Developer> developers = new ArrayList<Developer>(planningsList.get(1).getDevelopers());
+		assertEquals("Tom Hawk", developers.get(0).getName());
+		//TODO add other 
 
 	}
 
 	@Test
 	public void testPlanningThreeisMade() {
+		LocalDateTime time = LocalDateTime.parse(("2014-03-01 09:00"), dateTimeFormatter);
+		assertEquals(time, planningsList.get(2).getStartTime());
+		assertEquals(time.plusHours(50), planningsList.get(2).getEndTime());
+		
+		List<Developer> developers = new ArrayList<Developer>(planningsList.get(2).getDevelopers());
+		assertEquals("Bob Grylls", developers.get(0).getName());
+		//TODO add other 
 
 	}
 }

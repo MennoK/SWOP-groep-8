@@ -3,7 +3,9 @@ package taskManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -14,12 +16,12 @@ import java.util.List;
  * @author Groep 8
  */
 
-public class ProjectExpert {
+public class ProjectExpert implements TimeObserver {
 
 	private ArrayList<Project> projects;
-	private TaskManClock taskManClock;
 	
 	private Memento memento;
+	private LocalDateTime lastUpdateTime;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -27,9 +29,8 @@ public class ProjectExpert {
 	 * @param now
 	 *            : the time at which the ProjectController is created
 	 */
-	public ProjectExpert(LocalDateTime now) {
+	ProjectExpert() {
 		projects = new ArrayList<>();
-		this.taskManClock = new TaskManClock(now);
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class ProjectExpert {
 	public void createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
-		project.handleTimeChange(this.getTime());
+		project.handleTimeChange(lastUpdateTime);
 		this.addProject(project);
 	}
 
@@ -65,7 +66,7 @@ public class ProjectExpert {
 	 */
 	public void createProject(String name, String description,
 			LocalDateTime dueTime) {
-		this.createProject(name, description, this.getTime(), dueTime);
+		this.createProject(name, description, lastUpdateTime, dueTime);
 	}
 
 	/**
@@ -83,7 +84,6 @@ public class ProjectExpert {
 					"The given project is already in this project.");
 		} else {
 			projects.add(project);
-			this.taskManClock.register(project);
 		}
 	}
 
@@ -101,20 +101,12 @@ public class ProjectExpert {
 		return (!getAllProjects().contains(project) && project != null);
 	}
 
-	/**
-	 * 
-	 * Advances the time of TaskMan. This will update the status of every task
-	 * in every project of the project controller
-	 * 
-	 * @param time
-	 *            : new time
-	 * @throws IllegalArgumentException
-	 *             : thrown when the given time is invalid
-	 */
-	public void advanceTime(LocalDateTime time) {
-
-		this.taskManClock.setTime(time);
-
+	@Override
+	public void handleTimeChange(LocalDateTime time) {
+		this.lastUpdateTime = time;
+		for (Project project : this.getAllProjects()) {
+			project.handleTimeChange(time);
+		}
 	}
 
 	/**
@@ -127,12 +119,98 @@ public class ProjectExpert {
 	}
 
 	/**
-	 * Returns the time
-	 * 
-	 * @return LocalDateTime : time
+	 * Update the status of all Tasks, switching from unavailable to available
+	 * or back if necessary.
 	 */
-	public LocalDateTime getTime() {
-		return this.taskManClock.getTime();
+	void updateTaskStatus() {
+		for (Task task : getAllTasks())
+			task.setStatus(calculateTaskStatus(task));
+	}
+
+	/**
+	 * Calculate's the status of a Task. If Task not Available or Unavailable
+	 * return the current state. Otherwise checks all the dependencies of a Task
+	 * and returns Available if all dependencies are met and Unavailable
+	 * otherwise.
+	 * 
+	 * @param task
+	 * @return The State of the Task
+	 */
+	TaskStatus calculateTaskStatus(Task task) {
+		if (task.getStatus() != TaskStatus.AVAILABLE
+				&& task.getStatus() != TaskStatus.UNAVAILABLE)
+			return task.getStatus();
+		if (task.getPlanning() == null) {
+			return TaskStatus.UNAVAILABLE;
+		}
+		if (!task.checkDependenciesFinished()) {
+			return TaskStatus.UNAVAILABLE;
+		}
+		for (Developer developer : task.getPlanning().getDevelopers()) {
+			if (isDeveloperBusy(developer))
+				return TaskStatus.UNAVAILABLE;
+		}
+		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
+			if (numAvailableRessources(type) < task.getRequiredResourceTypes()
+					.get(type))
+				return TaskStatus.UNAVAILABLE;
+		}
+		return TaskStatus.AVAILABLE;
+	}
+
+	/**
+	 * 
+	 * @param type
+	 * @return The number of resources of this type not in use by executing
+	 *         Tasks
+	 */
+	private int numAvailableRessources(ResourceType type) {
+		int count = 0;
+		for (Resource resource : type.getAllResources()) {
+			if (!isRessourceUsed(resource))
+				count++;
+		}
+		return count;
+	}
+
+	/**
+	 * 
+	 * @param resource
+	 * @return true if resource is already being used
+	 */
+	private boolean isRessourceUsed(Resource resource) {
+		for (Task task : getAllTasks()) {
+			if (task.getStatus() == TaskStatus.EXECUTING)
+				if (task.getPlanning().getResources().containsValue(resource))
+					return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param developer
+	 * @return true if developer is assigned to a Task in execution
+	 */
+	private boolean isDeveloperBusy(Developer developer) {
+		for (Task task : getAllTasks()) {
+			if (task.getStatus() == TaskStatus.EXECUTING)
+				if (task.getPlanning().getDevelopers().contains(developer))
+					return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @return All the tasks in all projects
+	 */
+	private Set<Task> getAllTasks() {
+		Set<Task> tasks = new HashSet<Task>();
+		for (Project project : getAllProjects()) {
+			tasks.addAll(project.getAllTasks());
+		}
+		return tasks;
 	}
 	
 	public void save() {
@@ -140,7 +218,6 @@ public class ProjectExpert {
 		for(Project project: this.projects) {
 			project.save();
 		}
-		this.taskManClock.save();
 	}
 	
 	public boolean load() {
@@ -152,20 +229,22 @@ public class ProjectExpert {
 			for(Project project: this.projects) {
 				project.load();
 			}
-			this.taskManClock.load();
 			return true;
 		}
 	}
 	
 	private class Memento {
 		private ArrayList<Project> projects;
+		private LocalDateTime lastUpdateTime;
 		
 		public Memento(ProjectExpert pe) {
 			this.projects = new ArrayList<Project>(pe.projects);
+			this.lastUpdateTime = pe.lastUpdateTime;
 		}
 		
 		public void load(ProjectExpert pe) {
 			pe.projects = this.projects;
+			pe.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
 	

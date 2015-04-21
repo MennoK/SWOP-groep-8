@@ -12,11 +12,14 @@ import org.junit.Test;
 public class ProjectExpertTester {
 
 	private ProjectExpert projectController;
+	private TaskManController taskManController;
 
 	@Before
 	public void setUp() {
-		projectController = new ProjectExpert(LocalDateTime.of(2000, 03, 05,
+		taskManController = new TaskManController(LocalDateTime.of(2000, 03, 05,
 				00, 00));
+
+		projectController = taskManController.getProjectExpert();
 	}
 
 	@Test
@@ -58,12 +61,12 @@ public class ProjectExpertTester {
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		Project project1 = projectController.getAllProjects().get(0);
-		project1.createTask("descr", Duration.ofHours(20), 20).build();
+		project1.taskBuilder("descr", Duration.ofHours(20), 20).build();
 
-		projectController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
+		taskManController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
 
 		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00),
-				projectController.getTime());
+				taskManController.getTime());
 		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00),
 				project1.getLastUpdateTime());
 		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00), project1
@@ -74,7 +77,7 @@ public class ProjectExpertTester {
 	@Test(expected = IllegalArgumentException.class)
 	public void testAdvanceTimeWithInvalidTime() {
 		LocalDateTime newTime = LocalDateTime.of(1999, 03, 05, 00, 00);
-		projectController.advanceTime(newTime);
+		taskManController.advanceTime(newTime);
 	}
 	
 	@Test
@@ -106,14 +109,14 @@ public class ProjectExpertTester {
 	
 	@Test
 	public void mementoRollsBackTime() {		
-		LocalDateTime time = projectController.getTime();
+		LocalDateTime time = taskManController.getTime();
 		
-		projectController.save();
+		taskManController.saveSystem();
 		
-		projectController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
+		taskManController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
 		
-		projectController.load();
+		taskManController.loadSystem();
 		
-		assertEquals(time, projectController.getTime());
+		assertEquals(time, taskManController.getTime());
 	}
 }

@@ -11,11 +11,13 @@ import org.junit.Test;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.Task;
+import taskManager.TaskManController;
 import taskManager.TaskStatus;
 
 public class UseCase4UpdateTaskStatusTester {
 
 	private ProjectExpert controller;
+	private TaskManController taskManController;
 	private Project project1;
 	private Task task1;
 	private Task task2;
@@ -29,23 +31,24 @@ public class UseCase4UpdateTaskStatusTester {
 		// create a contoller and a project with 3 tasks
 		// task 3 is dependent on task 1
 
-		controller = new ProjectExpert(now);
+		taskManController = new TaskManController(now);
+		controller = taskManController.getProjectExpert();
 		controller.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));
 
 		project1 = controller.getAllProjects().get(0);
 
-		project1.createTask("Task 1", Duration.ofHours(8), 0.4).build();
-		project1.createTask("Task 2", Duration.ofHours(8), 0.4).build();
+		project1.taskBuilder("Task 1", Duration.ofHours(8), 0.4).build();
+		project1.taskBuilder("Task 2", Duration.ofHours(8), 0.4).build();
 		task1 = project1.getAllTasks().get(0);
 		task2 = project1.getAllTasks().get(1);
 
 		// task 3 has dependency on task2
-		project1.createTask("Task 3", Duration.ofHours(8), 0.4)
+		project1.taskBuilder("Task 3", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build();
 		// task 4 had depndency on task 2
-		project1.createTask("Task 4", Duration.ofHours(8), 0.4)
+		project1.taskBuilder("Task 4", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build();
 		task3 = project1.getAllTasks().get(2);
 		task4 = project1.getAllTasks().get(3);
@@ -54,25 +57,28 @@ public class UseCase4UpdateTaskStatusTester {
 	@Test
 	public void updateTaskStatusSuccess() {
 		// initial status
-		assertEquals(TaskStatus.AVAILABLE, task1.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task4.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task1.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task3.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task4.getCalculatedStatus());
 
-		// Unavailable -> failed
-		task4.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
-				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FAILED, task4.getStatus());
 		// Available -> failed
 		task1.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), true);
-		assertEquals(TaskStatus.FAILED, task1.getStatus());
+		assertEquals(TaskStatus.FAILED, task1.getCalculatedStatus());
 		// Available -> Finished && Unavailable -> Available
 		task2.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
 				LocalDateTime.of(2015, 03, 02, 11, 00), false);
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
+		assertEquals(TaskStatus.FINISHED, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task3.getCalculatedStatus());
 
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void updateTaskStatusUnavailableToFailed() {
+		// Unavailable -> failed
+		task4.updateStatus(LocalDateTime.of(2015, 03, 02, 00, 00),
+				LocalDateTime.of(2015, 03, 02, 11, 00), true);
 	}
 
 	@Test(expected = IllegalStateException.class)

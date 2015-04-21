@@ -7,12 +7,15 @@ import static org.junit.Assert.assertTrue;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import javax.sound.midi.ControllerEventListener;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class ProjectTester {
 
 	private LocalDateTime time;
+	private TaskManController controler;
 	private Project project;
 	private Task baseTask;
 	private Task dependentTask;
@@ -22,8 +25,11 @@ public class ProjectTester {
 	 * create a project with one generic Task
 	 */
 	private void setUpBaseProject() {
-		project.createTask("desc", Duration.ofHours(8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5).build();
 		baseTask = getNewestTask(project);
+		controler.getPlanningExpert()
+				.createPlanning(time, baseTask, new Developer("Jef"))
+				.build(controler.getPlanningExpert());
 	}
 
 	/**
@@ -31,7 +37,7 @@ public class ProjectTester {
 	 */
 	private void setUpProjectWithDependence() {
 		setUpBaseProject();
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.addDependencies(baseTask).build();
 		dependentTask = getNewestTask(project);
 	}
@@ -54,7 +60,10 @@ public class ProjectTester {
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		project = new Project("project", "desc", time, time.plusDays(4));
+		controler = new TaskManController(time);
+		controler.getProjectExpert().createProject("project", "desc",
+				time.plusDays(4));
+		project = controler.getProjectExpert().getAllProjects().get(0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -88,7 +97,7 @@ public class ProjectTester {
 		assertEquals(0, baseTask.getDependencies().size());
 
 		// Check the status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -96,7 +105,7 @@ public class ProjectTester {
 		baseTask.updateStatus(time, time.plusHours(8), false);
 
 		// Check the status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -104,7 +113,7 @@ public class ProjectTester {
 	@Test
 	public void testTwoTaskproject() {
 		setUpBaseProject();
-		project.createTask("desc", Duration.ofHours(8), 50).build();
+		project.taskBuilder("desc", Duration.ofHours(8), 50).build();
 		Task task2 = getNewestTask(project);
 
 		// Check project structure
@@ -115,24 +124,24 @@ public class ProjectTester {
 		assertEquals(0, task2.getDependencies().size());
 
 		// check status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set baseTask finished
 		baseTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set task2 finished
 		task2.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, task2.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, task2.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 	}
 
@@ -142,7 +151,7 @@ public class ProjectTester {
 		// Set baseTask to failed
 		baseTask.updateStatus(time, time.plusHours(2), true);
 		// Create alternativeTask
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.setOriginalTask(baseTask).build();
 		alternativeTask = getNewestTask(project);
 
@@ -154,8 +163,9 @@ public class ProjectTester {
 		assertEquals(0, alternativeTask.getDependencies().size());
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE,
+				alternativeTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -163,8 +173,8 @@ public class ProjectTester {
 		alternativeTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -182,8 +192,9 @@ public class ProjectTester {
 		assertEquals(baseTask, dependentTask.getDependencies().get(0));
 
 		// check status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE,
+				dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -191,8 +202,8 @@ public class ProjectTester {
 		baseTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -200,8 +211,8 @@ public class ProjectTester {
 		dependentTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -212,7 +223,7 @@ public class ProjectTester {
 		// Set baseTask to failed
 		baseTask.updateStatus(time, time.plusHours(2), true);
 		// Create alternativeTask
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.setOriginalTask(baseTask).build();
 		alternativeTask = getNewestTask(project);
 
@@ -231,9 +242,11 @@ public class ProjectTester {
 		assertTrue(dependentTask.hasDependency(alternativeTask));
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE,
+				alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE,
+				dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -241,18 +254,18 @@ public class ProjectTester {
 		alternativeTask.updateStatus(time, time.plusHours(8), false);
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set to finished
 		dependentTask.updateStatus(time, time.plusHours(8), false);
 
-		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
-		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getCalculatedStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
@@ -280,7 +293,7 @@ public class ProjectTester {
 	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
-		project.createTask("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
+		project.taskBuilder("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
 				.build();
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
@@ -301,7 +314,7 @@ public class ProjectTester {
 	@Test
 	public void testDelayToMuchWork() {
 		setUpBaseProject();
-		project.createTask("bla", Duration.ofHours(2 * 8), 0.5)
+		project.taskBuilder("bla", Duration.ofHours(2 * 8), 0.5)
 				.addDependencies(baseTask).build();
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
@@ -310,7 +323,7 @@ public class ProjectTester {
 	@Test
 	public void testDelayBaseTaskDelayed() {
 		setUpBaseProject();
-		project.createTask("bla", Duration.ofHours(8), 0.5)
+		project.taskBuilder("bla", Duration.ofHours(8), 0.5)
 				.addDependencies(baseTask).build();
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
@@ -324,8 +337,8 @@ public class ProjectTester {
 
 	@Test
 	public void testGetCurrentDelayTwoTasks() {
-		project.createTask("desc", Duration.ofHours(5 * 8), 0.5).build();
-		project.createTask("desc", Duration.ofHours(4 * 8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(5 * 8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(4 * 8), 0.5).build();
 		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
 	}
 
@@ -336,10 +349,10 @@ public class ProjectTester {
 
 	@Test
 	public void mementoRemovesNewTasks() {
-		project.createTask("desc", Duration.ofHours(5 * 8), 0.5).build();
+		project.taskBuilder("desc", Duration.ofHours(5 * 8), 0.5).build();
 		project.save();
 		int initialSize = project.getAllTasks().size();
-		project.createTask("hello", Duration.ofHours(1 * 2), 0.5).build();
+		project.taskBuilder("hello", Duration.ofHours(1 * 2), 0.5).build();
 		project.load();
 
 		assertEquals(initialSize, project.getAllTasks().size());
@@ -348,7 +361,7 @@ public class ProjectTester {
 	@Test
 	public void mementoSurvivesUpdateStatus() {
 		// Add a task that will take to long
-		project.createTask("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
+		project.taskBuilder("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
 				.build();
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
@@ -372,7 +385,7 @@ public class ProjectTester {
 		// Set baseTask to failed
 		baseTask.updateStatus(time, time.plusHours(2), true);
 		// Create alternativeTask
-		project.createTask("desc", Duration.ofHours(8), 0.5)
+		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
 				.setOriginalTask(baseTask).build();
 		alternativeTask = getNewestTask(project);
 
