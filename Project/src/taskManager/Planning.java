@@ -3,6 +3,7 @@ package taskManager;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ public class Planning {
 	private Task task;
 	private Set<Developer> developers;
 	private Map<ResourceType, Set<Resource>> resources;
+	private Memento memento;
 	/**
 	 * The TaskBuilder is an inner class builder for constructing new tasks. The
 	 * description, estimated duration and acceptable deviation of a task are
@@ -122,5 +124,44 @@ public class Planning {
 
 	public void setResources(Map<ResourceType, Set<Resource>> resources2) {
 		this.resources = resources2;
+	}
+	
+	public void save() {
+		this.memento = new Memento(this);
+	}
+	
+	public boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+	
+	private class Memento {
+		private LocalDateTime startTime;
+		private LocalDateTime endTime;
+		private Task task;
+		private Set<Developer> developers;
+		private Map<ResourceType, Set<Resource>> resources;
+		
+		public Memento(Planning planning) {
+			this.startTime = planning.startTime;
+			this.endTime = planning.endTime;
+			this.task = planning.task;
+			this.developers = new LinkedHashSet<Developer>(planning.developers);
+			//TODO: check of deze juist is
+			this.resources = new HashMap<ResourceType, Set<Resource>>(planning.resources);
+		}
+		
+		public void load(Planning planning) {
+			planning.startTime = this.startTime;
+			planning.endTime = this.endTime;
+			planning.task = this.task;
+			planning.developers = this.developers;
+			planning.resources = this.resources;
+		}
 	}
 }

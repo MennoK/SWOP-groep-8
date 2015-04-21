@@ -90,4 +90,26 @@ public class TaskManController {
 		return planningExpert;
 	}
 
+	/**
+	 * Saves the current state of the system. Only the last state is remembered
+	 */
+	public void saveSystem() {
+		this.getProjectExpert().save();
+		this.getDeveloperExpert().save();
+		this.getPlanningExpert().save();
+		this.getResourceExpert().save();
+	}
+
+	/**
+	 * Loads the last saved state of the system
+	 * 
+	 * @return true if loaded, false if no previous state is found
+	 */
+	public boolean loadSystem() {
+		return this.getProjectExpert().load()
+				&& this.getDeveloperExpert().load()
+				&& this.getPlanningExpert().load()
+				&& this.getResourceExpert().load();
+	}
+
 }

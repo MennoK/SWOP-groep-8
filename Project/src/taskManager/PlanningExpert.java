@@ -11,6 +11,8 @@ import taskManager.Planning.PlanningBuilder;
 public class PlanningExpert {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
 	
+	private Memento memento;
+	
 	
 	
 	/**
@@ -229,5 +231,38 @@ public class PlanningExpert {
 	}
 	public Set<Planning> getAllPlannings(){
 		return this.planningSet;
+	}
+	
+	
+	public void save() {
+		this.memento = new Memento(this);
+		for(Planning planning: this.planningSet) {
+			planning.save();
+		}
+	}
+	
+	public boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			for(Planning planning: this.planningSet) {
+				planning.load();
+			}
+			return true;
+		}
+	}
+	
+	private class Memento {
+		Set<Planning> planningSet;
+		
+		public Memento(PlanningExpert pe) {
+			this.planningSet = new LinkedHashSet<Planning>(pe.planningSet);
+		}
+		
+		public void load(PlanningExpert pe) {
+			pe.planningSet = this.planningSet;
+		}
 	}
 }
