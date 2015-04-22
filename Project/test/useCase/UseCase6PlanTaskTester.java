@@ -12,15 +12,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Developer;
-import taskManager.DeveloperExpert;
-import taskManager.PlanningExpert;
-import taskManager.Project;
-import taskManager.ProjectExpert;
-import taskManager.ResourceExpert;
-import taskManager.ResourceType;
-import taskManager.Task;
-import taskManager.TaskManController;
+import taskManager.*;
 
 public class UseCase6PlanTaskTester {
 
@@ -79,7 +71,7 @@ public class UseCase6PlanTaskTester {
 		// user gets list with all unplanned tasks (task1 and task2)
 
 		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
-				project.getAllTasks());
+				project.getAllTasks();
 		//user selects task1 and receives 3 possible start times
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);

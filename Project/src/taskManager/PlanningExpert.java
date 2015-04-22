@@ -1,7 +1,6 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class PlanningExpert {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
-			LocalDateTime time, Set<Developer> developers) {
+		LocalDateTime time, Set<Developer> developers) {
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 		Set<ResourceType> requiredResourceTypes = task
 				.getRequiredResourceTypes().keySet();
@@ -51,7 +50,7 @@ public class PlanningExpert {
 			for (Planning planning : plannings) {
 				if (overLap(planning, time, task)) {
 					tempDevelopers = removeDevelopers(planning, tempDevelopers);
-					tempResourceMap = removResources(planning, tempResourceMap);
+					tempResourceMap = removeResources(planning, tempResourceMap);
 				}
 			}
 			if (tempDevelopers.size() > 0
@@ -78,7 +77,7 @@ public class PlanningExpert {
 
 	}
 
-	private Map<ResourceType, Set<Resource>> removResources(Planning planning,
+	private Map<ResourceType, Set<Resource>> removeResources(Planning planning,
 			Map<ResourceType, Set<Resource>> tempResourceMap) {
 
 		for (ResourceType type : planning.getResources().keySet()) {
@@ -92,7 +91,7 @@ public class PlanningExpert {
 
 	private Set<Developer> removeDevelopers(Planning planning,
 			Set<Developer> tempDevelopers) {
-		tempDevelopers.removeAll(tempDevelopers);
+		tempDevelopers.removeAll(planning.getDevelopers());
 		return tempDevelopers;
 
 	}
