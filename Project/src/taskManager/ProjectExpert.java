@@ -122,7 +122,7 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return All the tasks in all projects
 	 */
-	private Set<Task> getAllTasks() {
+	Set<Task> getAllTasks() {
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			tasks.addAll(project.getAllTasks());
@@ -137,6 +137,4 @@ public class ProjectExpert implements TimeObserver {
 	public void setPlanner(Planner planningExpert) {
 		this.planner = planningExpert;
 	}
-
-	
 }

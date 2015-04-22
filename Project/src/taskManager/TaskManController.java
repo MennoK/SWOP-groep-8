@@ -1,6 +1,9 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import utility.TimeSpan;
 
 /**
  * The taskManController class controls every expert
@@ -145,6 +148,21 @@ public class TaskManController {
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
 		// TODO update status of all tasks
+	}
+
+	private boolean isAvailableFor(Developer developer, Task task,
+			TimeSpan timeSpan) {
+		Set<Planning> otherPlanings = getPlanner().getAllPlannings();
+		otherPlanings.remove(task.getPlanning());
+		for (Planning otherPlanning : otherPlanings) {
+			if (otherPlanning.getDevelopers().contains(developer)) {
+				if (timeSpan.overlaps(new TimeSpan(
+						otherPlanning.getStartTime(), otherPlanning
+								.getEndTime())))
+					return false;
+			}
+		}
+		return true;
 	}
 	
 }
