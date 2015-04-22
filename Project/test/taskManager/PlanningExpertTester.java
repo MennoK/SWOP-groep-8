@@ -224,6 +224,11 @@ public class PlanningExpertTester {
 
 	}
 
+	//TODO: 
+	public Set<Resource> getAvailableResourcesOfType(ResourceType resourceType){
+		Set<Resource> resourceList = new LinkedHashSet<>();
+		return resourceList;
+	}
 	@Test
 	public void testResolveConflictingTasks() {
 
