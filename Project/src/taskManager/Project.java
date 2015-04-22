@@ -283,8 +283,8 @@ public class Project implements Summarizable {
 	private boolean hasFinished() {
 		if (this.getAllTasks().size() != 0) {
 			for (Task task : this.getAllTasks()) {
-				if (task.getStatus() == TaskStatus.UNAVAILABLE
-						|| task.getStatus() == TaskStatus.AVAILABLE) {
+				if (task.getCalculatedStatus() == TaskStatus.UNAVAILABLE
+						|| task.getCalculatedStatus() == TaskStatus.AVAILABLE) {
 					return false;
 				}
 			}

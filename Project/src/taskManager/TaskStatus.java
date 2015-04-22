@@ -8,5 +8,5 @@ package taskManager;
  * @author Groep 8
  */
 public enum TaskStatus {
-	AVAILABLE, UNAVAILABLE, FINISHED, FAILED
+	AVAILABLE, UNAVAILABLE, FINISHED, FAILED, EXECUTING
 }

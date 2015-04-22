@@ -142,9 +142,9 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(1, task3.getDependencies().size());
 
 		// show task status
-		assertEquals(TaskStatus.FINISHED, task1.getStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
+		assertEquals(TaskStatus.FINISHED, task1.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task3.getCalculatedStatus());
 	}
 
 }

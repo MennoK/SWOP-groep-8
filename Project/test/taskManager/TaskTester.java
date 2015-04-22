@@ -54,33 +54,33 @@ public class TaskTester {
 
 	@Test
 	public void getStatusAvailableUndependentTask() {
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
 	}
 
 	@Test
 	public void getStatusAvailableDependentTask() {
 		baseTask.updateStatus(now.minusDays(1), now, false);
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
 	}
 
 	@Test
 	public void getStatusUnavailableTask() {
-		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getCalculatedStatus());
 	}
 
 	@Test
 	public void getStatusFinishedTask() {
-		assertEquals(TaskStatus.FINISHED, finishedTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, finishedTask.getCalculatedStatus());
 	}
 
 	@Test
 	public void getStatusFailedTask() {
-		assertEquals(TaskStatus.FAILED, failedTask.getStatus());
+		assertEquals(TaskStatus.FAILED, failedTask.getCalculatedStatus());
 	}
 
 	@Test
 	public void getStatusLevel2DependentTask() {
-		assertEquals(TaskStatus.UNAVAILABLE, level2DependentTask.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, level2DependentTask.getCalculatedStatus());
 	}
 
 	@Test

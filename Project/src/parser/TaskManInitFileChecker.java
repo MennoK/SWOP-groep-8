@@ -153,9 +153,10 @@ public class TaskManInitFileChecker extends StreamTokenizer {
 	        expectChar('{');
 	        int f = expectIntField(first);
 	        expectChar(',');
+	        expectLabel(second);
 	        List<Integer> s = expectIntList();
 	        expectChar('}');
-	        IntPair p = new IntPair();
+	        IntListPair p = new IntListPair();
 	        p.first = f;
 	        p.second = s;
 	        list.add(p);
@@ -194,7 +195,6 @@ void checkFile() {
       expectLabel("requires");
       List<Integer> requirements = expectIntList();
       expectLabel("conflictsWith");
-      expectLabel("second");
       List<Integer> conflicts = expectIntList();
       expectLabel("dailyAvailability");
       if (ttype == TT_NUMBER)
