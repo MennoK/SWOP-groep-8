@@ -42,7 +42,7 @@ public class Planner {
 		
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
-		
+		System.out.println(resourceMap);
 		while (possibleStartTimes.size() < 3) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, timeSpan, task);
@@ -61,7 +61,7 @@ public class Planner {
 
 	Set<Developer> getAvailableDevelopers(Set<Developer> developers, TimeSpan timeSpan, Task task){
 		for (Planning planning : this.getAllPlannings()) {
-			if(timeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))){
+			if(timeSpan.overlaps(planning.getTimeSpan())){
 				developers.removeAll(planning.getDevelopers());
 			}
 		}
@@ -69,7 +69,7 @@ public class Planner {
 	}
 	Map<ResourceType, Set<Resource>>  getAvailableResources( Map<ResourceType, Set<Resource>> resources, TimeSpan timeSpan, Task task){
 		for (Planning planning : this.getAllPlannings()) {
-			if(timeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))){
+			if(timeSpan.overlaps(planning.getTimeSpan())){
 				for (ResourceType type : planning.getResources().keySet()) {
 					Set<Resource> resourceTypes = resources.get(type);
 					resourceTypes.removeAll(planning.getResources().get(type));
@@ -77,6 +77,7 @@ public class Planner {
 				}
 			}
 		}
+		System.out.println(timeSpan.getBegin() + " "+ resources);
 		return resources;
 	}
 	private boolean enoughResourcesAreAvailable(
@@ -177,7 +178,7 @@ public class Planner {
 	public boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time) {
 		TimeSpan taskTimeSpan = new TimeSpan(time, task.getDuration());
 		for (Planning planning : planningSet) {
-			if (taskTimeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))) {
+			if (taskTimeSpan.overlaps(planning.getTimeSpan())) {
 				return true;
 			}
 		}
@@ -203,9 +204,7 @@ public class Planner {
 		for (Task conflictingTask : tasks) {
 
 			if (conflictingTask.hasPlanning()) {
-				TimeSpan planningTimeSpan = new TimeSpan(conflictingTask.getPlanning().getStartTime(), conflictingTask.getPlanning().getEndTime());
-				
-				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
+				if (conflictingTask.getPlanning().getTimeSpan().overlaps(new TimeSpan(time, task.getDuration()))) {
 					conflictingTasks.add(conflictingTask);
 				}
 			}
