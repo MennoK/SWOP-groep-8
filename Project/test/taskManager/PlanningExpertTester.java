@@ -19,7 +19,7 @@ public class PlanningExpertTester {
 
 
 	public TaskManController tmController;
-	public PlanningExpert planningExpert;
+	public Planner planningExpert;
 	public LocalDateTime time1;
 	public LocalDateTime time2;
 	public Project project;
@@ -39,7 +39,7 @@ public class PlanningExpertTester {
 		this.time2 =  LocalDateTime.of(2015, 03, 10, 15, 00);
 		tmController = new TaskManController(time1);
 		//create planning expert 
-		this.planningExpert = tmController.getPlanningExpert();
+		this.planningExpert = tmController.getPlanner();
 		//create some resources
 		resourceExpert = tmController.getResourceExpert();
 		resourceExpert.resourceTypeBuilder("type").build();

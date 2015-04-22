@@ -20,6 +20,7 @@ public class ProjectExpert implements TimeObserver {
 
 	private ArrayList<Project> projects;
 	private LocalDateTime lastUpdateTime;
+	private Planner planner;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -29,6 +30,7 @@ public class ProjectExpert implements TimeObserver {
 	 */
 	ProjectExpert() {
 		projects = new ArrayList<>();
+		this.setPlanner(new Planner());
 	}
 
 	/**
@@ -127,4 +129,14 @@ public class ProjectExpert implements TimeObserver {
 		}
 		return tasks;
 	}
+
+	public Planner getPlanner() {
+		return planner;
+	}
+
+	public void setPlanner(Planner planningExpert) {
+		this.planner = planningExpert;
+	}
+
+	
 }

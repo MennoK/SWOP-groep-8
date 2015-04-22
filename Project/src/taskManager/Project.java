@@ -37,7 +37,6 @@ public class Project implements Summarizable {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
-
 	private LocalDateTime lastUpdateTime;
 
 	/**

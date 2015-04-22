@@ -8,7 +8,7 @@ import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
 
-public class PlanningExpert {
+public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
 
 	/**
