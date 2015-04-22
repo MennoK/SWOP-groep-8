@@ -33,9 +33,9 @@ import taskManager.ResourceType;
 import taskManager.Planning.PlanningBuilder;
 import taskManager.ResourceType.ResourceTypeBuilder;
 import taskManager.Task;
-import taskManager.TimeInterval;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
+import utility.TimeInterval;
 
 /**
  * The Parser class implements a YAML parser for TaskMan We are using the
@@ -355,7 +355,7 @@ public class Parser {
 			}
 
 			int taskNr = (int) (planning.get("task"));
-			PlanningBuilder pbuilder = controller.getPlanningExpert().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
+			PlanningBuilder pbuilder = controller.getPlanner().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
 			
 			for (int i = 1; i < assignedDevs.size(); i++) {
 				pbuilder.addDeveloper(assignedDevs.get(i));
@@ -372,7 +372,7 @@ public class Parser {
 							pbuilder.addResources(resourceList.get((int) pair.get("type")), resourceSet);
 						}		
 			}
-			pbuilder.build(controller.getPlanningExpert());
+			pbuilder.build(controller.getPlanner());
 		}
 	}
 }

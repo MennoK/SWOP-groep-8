@@ -1,4 +1,4 @@
-package taskManager;
+package utility;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -17,7 +17,6 @@ public class WorkTime {
 
 	private static final int STARTHOUR = 8;
 	private static final int ENDHOUR = 16;
-
 	private static final Set<DayOfWeek> WORKDAYS = Collections
 			.unmodifiableSet(new HashSet<DayOfWeek>(Arrays
 					.asList(new DayOfWeek[] { DayOfWeek.MONDAY,

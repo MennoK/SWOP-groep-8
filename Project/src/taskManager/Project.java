@@ -8,6 +8,7 @@ import java.util.List;
 
 import taskManager.Task.TaskBuilder;
 import utility.Summarizable;
+import utility.WorkTime;
 
 /**
  * a project consists of multiple tasks required to complete the project. A
@@ -36,7 +37,6 @@ public class Project implements Summarizable {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
-
 	private LocalDateTime lastUpdateTime;
 	
 	private Memento memento;

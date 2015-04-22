@@ -15,11 +15,11 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PlanningExpertTester {
+public class PlannerTester {
 
 
 	public TaskManController tmController;
-	public PlanningExpert planningExpert;
+	public Planner planningExpert;
 	public LocalDateTime time1;
 	public LocalDateTime time2;
 	public Project project;
@@ -39,7 +39,7 @@ public class PlanningExpertTester {
 		this.time2 =  LocalDateTime.of(2015, 03, 10, 15, 00);
 		tmController = new TaskManController(time1);
 		//create planning expert 
-		this.planningExpert = tmController.getPlanningExpert();
+		this.planningExpert = tmController.getPlanner();
 		//create some resources
 		resourceExpert = tmController.getResourceExpert();
 		resourceExpert.resourceTypeBuilder("type").build();
@@ -77,8 +77,6 @@ public class PlanningExpertTester {
 	public void testGetUnplannedTasks() {
 
 
-		assertEquals(0, planningExpert.getAllPlannings().size());
-		
 		//create planning for task1
 		planningExpert.createPlanning(time1, task1, developer1).addDeveloper(developer2).build(planningExpert);
 		
@@ -224,6 +222,11 @@ public class PlanningExpertTester {
 
 	}
 
+	//TODO: 
+	public Set<Resource> getAvailableResourcesOfType(ResourceType resourceType){
+		Set<Resource> resourceList = new LinkedHashSet<>();
+		return resourceList;
+	}
 	@Test
 	public void testResolveConflictingTasks() {
 			

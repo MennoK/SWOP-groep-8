@@ -22,6 +22,7 @@ public class ProjectExpert implements TimeObserver {
 	
 	private Memento memento;
 	private LocalDateTime lastUpdateTime;
+	private Planner planner;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -31,6 +32,7 @@ public class ProjectExpert implements TimeObserver {
 	 */
 	ProjectExpert() {
 		projects = new ArrayList<>();
+		this.setPlanner(new Planner());
 	}
 
 	/**
@@ -119,89 +121,6 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
-	 * Update the status of all Tasks, switching from unavailable to available
-	 * or back if necessary.
-	 */
-	void updateTaskStatus() {
-		for (Task task : getAllTasks())
-			task.setStatus(calculateTaskStatus(task));
-	}
-
-	/**
-	 * Calculate's the status of a Task. If Task not Available or Unavailable
-	 * return the current state. Otherwise checks all the dependencies of a Task
-	 * and returns Available if all dependencies are met and Unavailable
-	 * otherwise.
-	 * 
-	 * @param task
-	 * @return The State of the Task
-	 */
-	TaskStatus calculateTaskStatus(Task task) {
-		if (task.getStatus() != TaskStatus.AVAILABLE
-				&& task.getStatus() != TaskStatus.UNAVAILABLE)
-			return task.getStatus();
-		if (task.getPlanning() == null) {
-			return TaskStatus.UNAVAILABLE;
-		}
-		if (!task.checkDependenciesFinished()) {
-			return TaskStatus.UNAVAILABLE;
-		}
-		for (Developer developer : task.getPlanning().getDevelopers()) {
-			if (isDeveloperBusy(developer))
-				return TaskStatus.UNAVAILABLE;
-		}
-		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
-			if (numAvailableRessources(type) < task.getRequiredResourceTypes()
-					.get(type))
-				return TaskStatus.UNAVAILABLE;
-		}
-		return TaskStatus.AVAILABLE;
-	}
-
-	/**
-	 * 
-	 * @param type
-	 * @return The number of resources of this type not in use by executing
-	 *         Tasks
-	 */
-	private int numAvailableRessources(ResourceType type) {
-		int count = 0;
-		for (Resource resource : type.getAllResources()) {
-			if (!isRessourceUsed(resource))
-				count++;
-		}
-		return count;
-	}
-
-	/**
-	 * 
-	 * @param resource
-	 * @return true if resource is already being used
-	 */
-	private boolean isRessourceUsed(Resource resource) {
-		for (Task task : getAllTasks()) {
-			if (task.getStatus() == TaskStatus.EXECUTING)
-				if (task.getPlanning().getResources().containsValue(resource))
-					return true;
-		}
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param developer
-	 * @return true if developer is assigned to a Task in execution
-	 */
-	private boolean isDeveloperBusy(Developer developer) {
-		for (Task task : getAllTasks()) {
-			if (task.getStatus() == TaskStatus.EXECUTING)
-				if (task.getPlanning().getDevelopers().contains(developer))
-					return true;
-		}
-		return false;
-	}
-
-	/**
 	 * 
 	 * @return All the tasks in all projects
 	 */
@@ -247,5 +166,13 @@ public class ProjectExpert implements TimeObserver {
 			pe.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
+	public Planner getPlanner() {
+		return planner;
+	}
+
+	public void setPlanner(Planner planningExpert) {
+		this.planner = planningExpert;
+	}
+
 	
 }

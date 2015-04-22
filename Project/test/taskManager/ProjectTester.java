@@ -27,9 +27,9 @@ public class ProjectTester {
 	private void setUpBaseProject() {
 		project.taskBuilder("desc", Duration.ofHours(8), 0.5).build();
 		baseTask = getNewestTask(project);
-		controler.getPlanningExpert()
+		controler.getPlanner()
 				.createPlanning(time, baseTask, new Developer("Jef"))
-				.build(controler.getPlanningExpert());
+				.build(controler.getPlanner());
 	}
 
 	/**
