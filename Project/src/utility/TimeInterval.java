@@ -86,4 +86,8 @@ public class TimeInterval {
 	public String toString(){
 		return "from: " + getBegin().toString() + "to: " +  getEnd().toString();
 	}
+	
+	public boolean isTimeInInterval(LocalTime time) {
+		return time.equals(beginTime) || (time.isAfter(beginTime) && time.isBefore(endTime));
+	}
 }
