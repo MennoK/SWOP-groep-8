@@ -38,21 +38,15 @@ public class Planner {
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
 		LocalDateTime time, Set<Developer> developers) {
+		
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
-		Set<ResourceType> requiredResourceTypes = task
-				.getRequiredResourceTypes().keySet();
-		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(requiredResourceTypes);
+		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
+		
 		while (possibleStartTimes.size() < 3) {
-			Map<ResourceType, Set<Resource>> tempResourceMap = resourceMap;
-			Set<Developer> tempDevelopers = new LinkedHashSet<>(developers);
-			Set<Planning> plannings = new LinkedHashSet<>(
-					this.getAllPlannings());
-			for (Planning planning : plannings) {
-				if (overLap(planning, time, task)) {
-					tempDevelopers = removeDevelopers(planning, tempDevelopers);
-					tempResourceMap = removeResources(planning, tempResourceMap);
-				}
-			}
+		
+			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, time, task);
+			Set<Developer> tempDevelopers = getAvailableDevelopers(new LinkedHashSet<>(developers), time, task);
+			
 			if (tempDevelopers.size() > 0
 					&& enoughResourcesAreAvailable(tempResourceMap, task)) {
 				possibleStartTimes.add(time);
@@ -64,6 +58,26 @@ public class Planner {
 		return possibleStartTimes;
 	}
 
+	private Set<Developer> getAvailableDevelopers(Set<Developer> developers, LocalDateTime time, Task task){
+		for (Planning planning : this.getAllPlannings()) {
+			if(overLap(planning,time,task)){
+				developers.removeAll(planning.getDevelopers());
+			}
+		}
+		return developers;
+	}
+	private Map<ResourceType, Set<Resource>>  getAvailableResources( Map<ResourceType, Set<Resource>> resources, LocalDateTime time, Task task){
+		for (Planning planning : this.getAllPlannings()) {
+			if(overLap(planning,time,task)){
+				for (ResourceType type : planning.getResources().keySet()) {
+					Set<Resource> resourceTypes = resources.get(type);
+					resourceTypes.removeAll(planning.getResources().get(type));
+					resources.put(type, resourceTypes);
+				}
+			}
+		}
+		return resources;
+	}
 	private boolean enoughResourcesAreAvailable(
 			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
 
@@ -77,7 +91,7 @@ public class Planner {
 
 	}
 
-	private Map<ResourceType, Set<Resource>> removeResources(Planning planning,
+	/*private Map<ResourceType, Set<Resource>> removeResources(Planning planning,
 			Map<ResourceType, Set<Resource>> tempResourceMap) {
 
 		for (ResourceType type : planning.getResources().keySet()) {
@@ -94,7 +108,7 @@ public class Planner {
 		tempDevelopers.removeAll(planning.getDevelopers());
 		return tempDevelopers;
 
-	}
+	}*/
 
 	/**
 	 * creates a map with as key the resource types required by the tasks that
@@ -103,8 +117,9 @@ public class Planner {
 	 * @param requiredResourceTypes
 	 * @return
 	 */
-	private Map<ResourceType, Set<Resource>> getResourceMap(
-			Set<ResourceType> requiredResourceTypes) {
+	private Map<ResourceType, Set<Resource>> getResourceMap(Task task) {
+		Set<ResourceType> requiredResourceTypes = task
+				.getRequiredResourceTypes().keySet();
 		Map<ResourceType, Set<Resource>> resourceMap = new LinkedHashMap<ResourceType, Set<Resource>>();
 
 		for (ResourceType resourceType : requiredResourceTypes) {
