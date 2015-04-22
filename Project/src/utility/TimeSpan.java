@@ -20,7 +20,8 @@ public class TimeSpan {
 	}
 
 	public boolean overlaps(TimeSpan other) {
-		return other.contains(begin) || other.contains(end);
+		return other.contains(begin) || other.contains(end)
+				|| contains(other.begin) || contains(other.end);
 	}
 
 	public boolean contains(LocalDateTime time) {
