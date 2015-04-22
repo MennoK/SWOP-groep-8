@@ -74,15 +74,21 @@ public class ResourceExpert {
 		return resourcetypes;
 	}
 
-	public void save() {
+	void save() {
 		this.memento = new Memento(this);
+		for(ResourceType rt : this.resourcetypes) {
+			rt.save();
+		}
 	}
 
-	public boolean load() {
+	boolean load() {
 		if (this.memento == null) {
 			return false;
 		} else {
 			this.memento.load(this);
+			for(ResourceType rt : this.resourcetypes) {
+				rt.load();
+			}
 			return true;
 		}
 	}

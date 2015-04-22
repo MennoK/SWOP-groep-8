@@ -23,6 +23,8 @@ public class ResourceType implements Summarizable {
 	private Set<ResourceType> conflictedResourceTypes = new LinkedHashSet<ResourceType>();;
 	private Set<Resource> resources = new LinkedHashSet<Resource>();
 	private TimeInterval dailyAvailability;
+	
+	private Memento memento;
 
 	/**
 	 * The ResourceTypeBuilder is an inner class builder for constructing
@@ -342,5 +344,43 @@ public class ResourceType implements Summarizable {
 
 	public String toSummary() {
 		return getName() + " (" + getAllResources().size() + " availlable)";
+	}
+	
+	
+	void save() {
+		this.memento = new Memento(this);
+	}
+
+	boolean load() {
+		if (this.memento == null) {
+			return false;
+		} else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+
+	private class Memento {
+		private String name;
+		private Set<ResourceType> requiredResourceTypes;
+		private Set<ResourceType> conflictedResourceTypes;
+		private Set<Resource> resources;
+		private TimeInterval dailyAvailability;
+
+		public Memento(ResourceType rt) {
+			this.name = new String(rt.name);
+			this.requiredResourceTypes = new LinkedHashSet<ResourceType>(rt.requiredResourceTypes);
+			this.conflictedResourceTypes = new LinkedHashSet<ResourceType>(rt.conflictedResourceTypes);
+			this.resources = new LinkedHashSet<Resource>(rt.resources);;
+			this.dailyAvailability = rt.dailyAvailability;
+		}
+
+		public void load(ResourceType rt) {
+			rt.name = this.name;
+			rt.conflictedResourceTypes = this.conflictedResourceTypes;
+			rt.requiredResourceTypes = this.requiredResourceTypes;
+			rt.resources = this.resources;
+			rt.dailyAvailability = this.dailyAvailability;
+		}
 	}
 }

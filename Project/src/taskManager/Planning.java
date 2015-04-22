@@ -133,11 +133,11 @@ public class Planning {
 		this.resources = resources;
 	}
 	
-	public void save() {
+	void save() {
 		this.memento = new Memento(this);
 	}
 	
-	public boolean load() {
+	boolean load() {
 		if(this.memento == null) {
 			return false;
 		}

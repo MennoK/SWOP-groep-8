@@ -243,14 +243,14 @@ public class PlanningExpert {
 	}
 	
 	
-	public void save() {
+	void save() {
 		this.memento = new Memento(this);
 		for(Planning planning: this.planningSet) {
 			planning.save();
 		}
 	}
 	
-	public boolean load() {
+	boolean load() {
 		if(this.memento == null) {
 			return false;
 		}
