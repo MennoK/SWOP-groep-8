@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
+import utility.TimeSpan;
 
 public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
@@ -43,13 +44,13 @@ public class Planner {
 		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
 		
 		while (possibleStartTimes.size() < 3) {
-		
-			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, time, task);
-			Set<Developer> tempDevelopers = getAvailableDevelopers(new LinkedHashSet<>(developers), time, task);
+			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
+			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, timeSpan, task);
+			Set<Developer> tempDevelopers = getAvailableDevelopers(new LinkedHashSet<>(developers), timeSpan, task);
 			
 			if (tempDevelopers.size() > 0
 					&& enoughResourcesAreAvailable(tempResourceMap, task)) {
-				possibleStartTimes.add(time);
+				possibleStartTimes.add(timeSpan.getBegin());
 
 			}
 			time = time.plusHours(1);
@@ -58,17 +59,17 @@ public class Planner {
 		return possibleStartTimes;
 	}
 
-	private Set<Developer> getAvailableDevelopers(Set<Developer> developers, LocalDateTime time, Task task){
+	Set<Developer> getAvailableDevelopers(Set<Developer> developers, TimeSpan timeSpan, Task task){
 		for (Planning planning : this.getAllPlannings()) {
-			if(overLap(planning,time,task)){
+			if(timeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))){
 				developers.removeAll(planning.getDevelopers());
 			}
 		}
 		return developers;
 	}
-	private Map<ResourceType, Set<Resource>>  getAvailableResources( Map<ResourceType, Set<Resource>> resources, LocalDateTime time, Task task){
+	Map<ResourceType, Set<Resource>>  getAvailableResources( Map<ResourceType, Set<Resource>> resources, TimeSpan timeSpan, Task task){
 		for (Planning planning : this.getAllPlannings()) {
-			if(overLap(planning,time,task)){
+			if(timeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))){
 				for (ResourceType type : planning.getResources().keySet()) {
 					Set<Resource> resourceTypes = resources.get(type);
 					resourceTypes.removeAll(planning.getResources().get(type));
@@ -91,24 +92,6 @@ public class Planner {
 
 	}
 
-	/*private Map<ResourceType, Set<Resource>> removeResources(Planning planning,
-			Map<ResourceType, Set<Resource>> tempResourceMap) {
-
-		for (ResourceType type : planning.getResources().keySet()) {
-			Set<Resource> resources = tempResourceMap.get(type);
-			resources.removeAll(planning.getResources().get(type));
-			tempResourceMap.put(type, resources);
-		}
-
-		return tempResourceMap;
-	}
-
-	private Set<Developer> removeDevelopers(Planning planning,
-			Set<Developer> tempDevelopers) {
-		tempDevelopers.removeAll(planning.getDevelopers());
-		return tempDevelopers;
-
-	}*/
 
 	/**
 	 * creates a map with as key the resource types required by the tasks that
@@ -128,29 +111,7 @@ public class Planner {
 		return resourceMap;
 	}
 
-	/**
-	 * checks if there is overlap in the reservations of resources/developers
-	 * and a task
-	 * 
-	 * @param planning
-	 * @param time
-	 * @param task
-	 * @return
-	 */
-	private boolean overLap(Planning planning, LocalDateTime time, Task task) {
 
-		if (planning.getEndTime().isAfter(time)
-				&& planning.getStartTime().isBefore(time.plus(task.getDuration()))) {
-			return true;
-		}
-		if (planning.getStartTime().isAfter(time)
-				&& planning.getStartTime().isBefore(
-						time.plus(task.getDuration()))) {
-			return true;
-		}
-
-		return false;
-	}
 
 	/**
 	 * 
@@ -214,8 +175,9 @@ public class Planner {
 	 * @return
 	 */
 	public boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time) {
+		TimeSpan taskTimeSpan = new TimeSpan(time, task.getDuration());
 		for (Planning planning : planningSet) {
-			if (overLap(planning, time, task)) {
+			if (taskTimeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))) {
 				return true;
 			}
 		}
@@ -241,7 +203,9 @@ public class Planner {
 		for (Task conflictingTask : tasks) {
 
 			if (conflictingTask.hasPlanning()) {
-				if (overLap(conflictingTask.getPlanning(), time, task)) {
+				TimeSpan planningTimeSpan = new TimeSpan(conflictingTask.getPlanning().getStartTime(), conflictingTask.getPlanning().getEndTime());
+				
+				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
 					conflictingTasks.add(conflictingTask);
 				}
 			}
