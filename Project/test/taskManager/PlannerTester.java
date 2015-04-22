@@ -15,7 +15,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PlanningExpertTester {
+public class PlannerTester {
 
 
 	public TaskManController tmController;
@@ -77,8 +77,6 @@ public class PlanningExpertTester {
 	public void testGetUnplannedTasks() {
 
 
-		assertEquals(0, planningExpert.getAllPlannings().size());
-		
 		//create planning for task1
 		planningExpert.createPlanning(time1, task1, developer1).addDeveloper(developer2).build(planningExpert);
 		
