@@ -77,13 +77,4 @@ public class TimeInterval {
 	public LocalTime getEnd(){
 		return endTime;
 	}
-	
-	/**
-	 * Returns the time interval as a string
-	 * 
-	 * @return time interval as a string
-	 */
-	public String toString(){
-		return "from: " + getBegin().toString() + "to: " +  getEnd().toString();
-	}
 }

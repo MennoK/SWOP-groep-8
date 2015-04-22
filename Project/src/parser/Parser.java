@@ -89,7 +89,7 @@ public class Parser {
 		// create all resource types
 		constructResourceTypes(
 				(List<LinkedHashMap<String, Object>>) objects
-						.get("resourceTypes"),
+				.get("resourceTypes"),
 				controller.getResourceExpert());
 
 		// create all resources
@@ -207,7 +207,7 @@ public class Parser {
 
 			resourceTypeOfResource.createResource(name);
 		}
-		
+
 		for(ResourceType type : resourceExpert.getAllResourceTypes()){
 			for(Resource resource : type.getAllResources()){
 				allresources.add(resource);
@@ -284,13 +284,13 @@ public class Parser {
 							taskNr - 1));
 				}
 			}
-
+/*
 			// add alternative task if there is any
 			if (task.get("alternativeFor") != null) {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				builder.setOriginalTask(projectOfTask.getAllTasks().get(
 						alternativeTaskNr - 1));
-			}
+			}*/
 
 			// add required resource types
 			if (task.get("requiredTypes") != null) {
@@ -309,7 +309,7 @@ public class Parser {
 			Task newTask = projectOfTask.getAllTasks().get(
 					projectOfTask.getAllTasks().size() - 1);
 
-			// if status is failed or finished, update the status and set start
+		/*	// if status is failed or finished, update the status and set start
 			// en end time
 			if (task.get("status") != null) {
 				String status = (String) task.get("status");
@@ -327,16 +327,15 @@ public class Parser {
 					}
 				}
 				// TODO new status: executing
-
-			}
+			}*/
 		}
-		
+
 		for(Project project : projectExpert.getAllProjects()){
 			for(Task task : project.getAllTasks()){
 				alltasks.add(task);
 			}
 		}
-	
+
 	}
 
 	/**
@@ -356,7 +355,7 @@ public class Parser {
 
 			int taskNr = (int) (planning.get("task"));
 			PlanningBuilder pbuilder = controller.getPlanningExpert().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
-			
+
 			for (int i = 1; i < assignedDevs.size(); i++) {
 				pbuilder.addDeveloper(assignedDevs.get(i));
 			}
@@ -364,13 +363,13 @@ public class Parser {
 
 			if(planning.get("resources") != null){		
 				List<ResourceType> resourceList =  new ArrayList<ResourceType>(controller.getResourceExpert().getAllResourceTypes());
-						for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) planning.get("resources")) {
-							Set<Resource> resourceSet = new LinkedHashSet<Resource>();
-							for(Integer resourceNr: (ArrayList<Integer>) pair.get("resource")){
-								resourceSet.add(allresources.get(resourceNr));
-							}
-							pbuilder.addResources(resourceList.get((int) pair.get("type")), resourceSet);
-						}		
+				for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) planning.get("resources")) {
+					Set<Resource> resourceSet = new LinkedHashSet<Resource>();
+					for(Integer resourceNr: (ArrayList<Integer>) pair.get("resource")){
+						resourceSet.add(allresources.get(resourceNr));
+					}
+					pbuilder.addResources(resourceList.get((int) pair.get("type")), resourceSet);
+				}		
 			}
 			pbuilder.build(controller.getPlanningExpert());
 		}
