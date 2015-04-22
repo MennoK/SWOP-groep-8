@@ -146,4 +146,5 @@ public class TaskManController {
 		task.setFailed(endTime);
 		// TODO update status of all tasks
 	}
+	
 }

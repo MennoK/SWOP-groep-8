@@ -77,8 +77,8 @@ public class TimeInterval {
 	public LocalTime getEnd(){
 		return endTime;
 	}
-	}
 	
 	public boolean isTimeInInterval(LocalTime time) {
 		return time.equals(beginTime) || (time.isAfter(beginTime) && time.isBefore(endTime));
+	}
 }
