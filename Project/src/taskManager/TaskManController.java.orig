@@ -152,25 +152,8 @@ public class TaskManController {
 		task.setFailed(endTime);
 		// TODO update status of all tasks
 	}
-	
-		private void updateStatus(Task task) {
-		if (task.getStatus() == TaskStatus.EXECUTING
-				|| task.getStatus() == TaskStatus.FINISHED
-				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
-				|| !task.checkDependenciesFinished())
-			// task status remains unchanged
-			return;
-		for (Developer developer : task.getPlanning().getDevelopers()) {
-			if (!isAvailableFor(developer, task,
-					new TimeSpan(getTime(), task.getDuration()))) {
-				task.setStatus(TaskStatus.UNAVAILABLE);
-				return;
-			}
-		}
-		// TODO check ressources
-	}
 
-	
+<<<<<<< HEAD
 	boolean resourcesAvailableFor(Task task, TimeSpan timeSpan){
 		for (ResourceType resourceType : task.getRequiredResourceTypes().keySet()) {
 			if(!isAvailableFor(resourceType, task, timeSpan)){
@@ -195,7 +178,6 @@ public class TaskManController {
 		}
 	}
 	
-	
 	private boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan){
 		Set<Planning> otherPlannings = getPlanner().getAllPlannings();
 		otherPlannings.remove(task.getPlanning());
@@ -207,6 +189,23 @@ public class TaskManController {
 			}
 		}
 		return true;
+=======
+	private void updateStatus(Task task) {
+		if (task.getStatus() == TaskStatus.EXECUTING
+				|| task.getStatus() == TaskStatus.FINISHED
+				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
+				|| !task.checkDependenciesFinished())
+			// task status remains unchanged
+			return;
+		for (Developer developer : task.getPlanning().getDevelopers()) {
+			if (!isAvailableFor(developer, task,
+					new TimeSpan(getTime(), task.getDuration()))) {
+				task.setStatus(TaskStatus.UNAVAILABLE);
+				return;
+			}
+		}
+		// TODO check ressources
+>>>>>>> d72bd7c3a8ce5ba33884d7eb20fb47709e54f133
 	}
 
 	private boolean isAvailableFor(Developer developer, Task task,
