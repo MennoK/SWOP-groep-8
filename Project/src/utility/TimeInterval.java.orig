@@ -77,8 +77,20 @@ public class TimeInterval {
 	public LocalTime getEnd(){
 		return endTime;
 	}
+<<<<<<< HEAD:Project/src/taskManager/TimeInterval.java
+=======
+	
+	/**
+	 * Returns the time interval as a string
+	 * 
+	 * @return time interval as a string
+	 */
+	public String toString(){
+		return "from: " + getBegin().toString() + "to: " +  getEnd().toString();
 	}
 	
 	public boolean isTimeInInterval(LocalTime time) {
 		return time.equals(beginTime) || (time.isAfter(beginTime) && time.isBefore(endTime));
+	}
+>>>>>>> 1f48b1eaaf86599cf0f44ac85d1a3b29c7952bef:Project/src/utility/TimeInterval.java
 }
