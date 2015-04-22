@@ -20,12 +20,15 @@ public class TimeSpan {
 	}
 
 	public boolean overlaps(TimeSpan other) {
-		return other.contains(begin) || other.contains(end)
-				|| contains(other.begin) || contains(other.end);
+		return !isBefore(other) && !isAfter(other);
 	}
 
-	public boolean contains(LocalDateTime time) {
-		return time.isAfter(begin) && time.isBefore(end);
+	public boolean isBefore(TimeSpan other) {
+		return !other.begin.isBefore(end);
+	}
+
+	public boolean isAfter(TimeSpan other) {
+		return !other.end.isAfter(begin);
 	}
 
 	private boolean isValid(LocalDateTime begin, LocalDateTime end) {
