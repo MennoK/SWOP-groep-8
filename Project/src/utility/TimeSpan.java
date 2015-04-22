@@ -3,8 +3,6 @@ package utility;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import taskManager.WorkTime;
-
 public class TimeSpan {
 	private LocalDateTime begin;
 	private LocalDateTime end;

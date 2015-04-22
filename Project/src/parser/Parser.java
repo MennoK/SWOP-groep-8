@@ -33,9 +33,9 @@ import taskManager.ResourceType;
 import taskManager.Planning.PlanningBuilder;
 import taskManager.ResourceType.ResourceTypeBuilder;
 import taskManager.Task;
-import taskManager.TimeInterval;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
+import utility.TimeInterval;
 
 /**
  * The Parser class implements a YAML parser for TaskMan We are using the

@@ -1,4 +1,4 @@
-package taskManager;
+package utility;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
