@@ -150,6 +150,23 @@ public class TaskManController {
 		// TODO update status of all tasks
 	}
 
+	private void updateStatus(Task task) {
+		if (task.getStatus() == TaskStatus.EXECUTING
+				|| task.getStatus() == TaskStatus.FINISHED
+				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
+				|| !task.checkDependenciesFinished())
+			// task status remains unchanged
+			return;
+		for (Developer developer : task.getPlanning().getDevelopers()) {
+			if (!isAvailableFor(developer, task,
+					new TimeSpan(getTime(), task.getDuration()))) {
+				task.setStatus(TaskStatus.UNAVAILABLE);
+				return;
+			}
+		}
+		// TODO check ressources
+	}
+
 	private boolean isAvailableFor(Developer developer, Task task,
 			TimeSpan timeSpan) {
 		Set<Planning> otherPlanings = getPlanner().getAllPlannings();
