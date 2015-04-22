@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import utility.Summarizable;
+import utility.TimeInterval;
 
 /**
  * Each resource has a specific type, and for each type of resource, numerous

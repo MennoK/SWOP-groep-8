@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import utility.Summarizable;
+import utility.WorkTime;
 
 /**
  * A task is a unit of work that can be performed by a user of the system. A

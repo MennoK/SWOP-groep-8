@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import utility.TimeInterval;
+
 public class ResourceExpertTester {
 
 	private ResourceExpert resourceExpert;

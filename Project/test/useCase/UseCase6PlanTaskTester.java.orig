@@ -12,12 +12,20 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.*;
+import taskManager.Developer;
+import taskManager.DeveloperExpert;
+import taskManager.PlanningExpert;
+import taskManager.Project;
+import taskManager.ProjectExpert;
+import taskManager.ResourceExpert;
+import taskManager.ResourceType;
+import taskManager.Task;
+import taskManager.TaskManController;
 
 public class UseCase6PlanTaskTester {
 
 	public TaskManController tmController;
-	public Planner planningExpert;
+	public PlanningExpert planningExpert;
 	public LocalDateTime time1;
 	public LocalDateTime time2;
 	public Project project;
@@ -37,7 +45,7 @@ public class UseCase6PlanTaskTester {
 		this.time2 = LocalDateTime.of(2015, 03, 10, 15, 00);
 		TaskManController tmController = new TaskManController(time1);
 		// create planning expert
-		this.planningExpert = tmController.getPlanner();
+		this.planningExpert = tmController.getPlanningExpert();
 		// create some resources
 		resourceExpert = tmController.getResourceExpert();
 		resourceExpert.resourceTypeBuilder("type").build();
@@ -68,18 +76,16 @@ public class UseCase6PlanTaskTester {
 
 	@Test
 	public void planTask() {
+
 		// user gets list with all unplanned tasks (task1 and task2)
 
-		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
-				project.getAllTasks();
-		//user selects task1 and receives 3 possible start times
-		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
-		possibleStartTimes.add(time1);
-		possibleStartTimes.add(time1.plusHours(1));
-		possibleStartTimes.add(time1.plusHours(2));
-		assertEquals(possibleStartTimes,planningExpert.getPossibleStartTimes(task1, time1, developers));
-		
-		//user selects time1
-		
+		Set<Task> unplannedTasks = new LinkedHashSet<Task>(
+				project.getAllTasks());
+		assertEquals(unplannedTasks,
+				planningExpert.getUnplannedTasks(new LinkedHashSet<Task>(
+						project.getAllTasks())));
+		// user selects task1
+		Set<LocalDateTime> possibleStartTimes = planningExpert
+				.getPossibleStartTimes(task1, time1, developers);
 	}
 }

@@ -1,15 +1,15 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
+import utility.TimeSpan;
 
-public class PlanningExpert {
+public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
 
 	/**
@@ -38,25 +38,19 @@ public class PlanningExpert {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
-			LocalDateTime time, Set<Developer> developers) {
+		LocalDateTime time, Set<Developer> developers) {
+		
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
-		Set<ResourceType> requiredResourceTypes = task
-				.getRequiredResourceTypes().keySet();
-		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(requiredResourceTypes);
+		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
+		
 		while (possibleStartTimes.size() < 3) {
-			Map<ResourceType, Set<Resource>> tempResourceMap = resourceMap;
-			Set<Developer> tempDevelopers = new LinkedHashSet<>(developers);
-			Set<Planning> plannings = new LinkedHashSet<>(
-					this.getAllPlannings());
-			for (Planning planning : plannings) {
-				if (overLap(planning, time, task)) {
-					tempDevelopers = removeDevelopers(planning, tempDevelopers);
-					tempResourceMap = removResources(planning, tempResourceMap);
-				}
-			}
+			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
+			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, timeSpan, task);
+			Set<Developer> tempDevelopers = getAvailableDevelopers(new LinkedHashSet<>(developers), timeSpan, task);
+			
 			if (tempDevelopers.size() > 0
 					&& enoughResourcesAreAvailable(tempResourceMap, task)) {
-				possibleStartTimes.add(time);
+				possibleStartTimes.add(timeSpan.getBegin());
 
 			}
 			time = time.plusHours(1);
@@ -65,6 +59,26 @@ public class PlanningExpert {
 		return possibleStartTimes;
 	}
 
+	Set<Developer> getAvailableDevelopers(Set<Developer> developers, TimeSpan timeSpan, Task task){
+		for (Planning planning : this.getAllPlannings()) {
+			if(timeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))){
+				developers.removeAll(planning.getDevelopers());
+			}
+		}
+		return developers;
+	}
+	Map<ResourceType, Set<Resource>>  getAvailableResources( Map<ResourceType, Set<Resource>> resources, TimeSpan timeSpan, Task task){
+		for (Planning planning : this.getAllPlannings()) {
+			if(timeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))){
+				for (ResourceType type : planning.getResources().keySet()) {
+					Set<Resource> resourceTypes = resources.get(type);
+					resourceTypes.removeAll(planning.getResources().get(type));
+					resources.put(type, resourceTypes);
+				}
+			}
+		}
+		return resources;
+	}
 	private boolean enoughResourcesAreAvailable(
 			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
 
@@ -78,24 +92,6 @@ public class PlanningExpert {
 
 	}
 
-	private Map<ResourceType, Set<Resource>> removResources(Planning planning,
-			Map<ResourceType, Set<Resource>> tempResourceMap) {
-
-		for (ResourceType type : planning.getResources().keySet()) {
-			Set<Resource> resources = tempResourceMap.get(type);
-			resources.removeAll(planning.getResources().get(type));
-			tempResourceMap.put(type, resources);
-		}
-
-		return tempResourceMap;
-	}
-
-	private Set<Developer> removeDevelopers(Planning planning,
-			Set<Developer> tempDevelopers) {
-		tempDevelopers.removeAll(tempDevelopers);
-		return tempDevelopers;
-
-	}
 
 	/**
 	 * creates a map with as key the resource types required by the tasks that
@@ -104,8 +100,9 @@ public class PlanningExpert {
 	 * @param requiredResourceTypes
 	 * @return
 	 */
-	private Map<ResourceType, Set<Resource>> getResourceMap(
-			Set<ResourceType> requiredResourceTypes) {
+	private Map<ResourceType, Set<Resource>> getResourceMap(Task task) {
+		Set<ResourceType> requiredResourceTypes = task
+				.getRequiredResourceTypes().keySet();
 		Map<ResourceType, Set<Resource>> resourceMap = new LinkedHashMap<ResourceType, Set<Resource>>();
 
 		for (ResourceType resourceType : requiredResourceTypes) {
@@ -114,29 +111,7 @@ public class PlanningExpert {
 		return resourceMap;
 	}
 
-	/**
-	 * checks if there is overlap in the reservations of resources/developers
-	 * and a task
-	 * 
-	 * @param planning
-	 * @param time
-	 * @param task
-	 * @return
-	 */
-	private boolean overLap(Planning planning, LocalDateTime time, Task task) {
 
-		if (planning.getEndTime().isAfter(time)
-				&& planning.getStartTime().isBefore(time.plus(task.getDuration()))) {
-			return true;
-		}
-		if (planning.getStartTime().isAfter(time)
-				&& planning.getStartTime().isBefore(
-						time.plus(task.getDuration()))) {
-			return true;
-		}
-
-		return false;
-	}
 
 	/**
 	 * 
@@ -200,8 +175,9 @@ public class PlanningExpert {
 	 * @return
 	 */
 	public boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time) {
+		TimeSpan taskTimeSpan = new TimeSpan(time, task.getDuration());
 		for (Planning planning : planningSet) {
-			if (overLap(planning, time, task)) {
+			if (taskTimeSpan.overlaps(new TimeSpan(planning.getStartTime(), planning.getEndTime()))) {
 				return true;
 			}
 		}
@@ -227,7 +203,9 @@ public class PlanningExpert {
 		for (Task conflictingTask : tasks) {
 
 			if (conflictingTask.hasPlanning()) {
-				if (overLap(conflictingTask.getPlanning(), time, task)) {
+				TimeSpan planningTimeSpan = new TimeSpan(conflictingTask.getPlanning().getStartTime(), conflictingTask.getPlanning().getEndTime());
+				
+				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
 					conflictingTasks.add(conflictingTask);
 				}
 			}

@@ -13,7 +13,6 @@ public class TaskManController {
 	private DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
 	private ProjectExpert projectExpert;
-	private PlanningExpert planningExpert;
 
 	private TaskManClock taskManClock;
 
@@ -27,14 +26,6 @@ public class TaskManController {
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
-		createPlanningExpert();
-	}
-
-	/**
-	 * Creates a new planning expert
-	 */
-	private void createPlanningExpert() {
-		this.planningExpert = new PlanningExpert();
 	}
 
 	/**
@@ -92,8 +83,8 @@ public class TaskManController {
 	 * 
 	 * @return planningExpert : planning expert
 	 */
-	public PlanningExpert getPlanningExpert() {
-		return planningExpert;
+	public Planner getPlanner() {
+		return getProjectExpert().getPlanner();
 	}
 
 	/**
@@ -129,7 +120,7 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		getProjectExpert().updateTaskStatus();
+		// TODO update status of all tasks
 	}
 
 	/**
@@ -141,7 +132,7 @@ public class TaskManController {
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
-		getProjectExpert().updateTaskStatus();
+		// TODO update status of all tasks
 	}
 
 	/**
@@ -153,6 +144,6 @@ public class TaskManController {
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
-		getProjectExpert().updateTaskStatus();
+		// TODO update status of all tasks
 	}
 }

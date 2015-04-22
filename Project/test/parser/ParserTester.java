@@ -43,7 +43,7 @@ public class ParserTester {
 			new Parser().parse("./input2.tman", taskManController);
 			resourceTypeList = new ArrayList<ResourceType>(taskManController
 					.getResourceExpert().getAllResourceTypes());
-			planningsList = new ArrayList<Planning>(taskManController.getPlanningExpert().getAllPlannings());
+			planningsList = new ArrayList<Planning>(taskManController.getPlanner().getAllPlannings());
 		} catch (FileNotFoundException | RuntimeException e) {
 			e.printStackTrace();
 		}
@@ -472,7 +472,7 @@ public class ParserTester {
 
 	@Test
 	public void testThreePlanningisMade() {
-		assertEquals(3, taskManController.getPlanningExpert().getAllPlannings().size());
+		assertEquals(3, taskManController.getPlanner().getAllPlannings().size());
 	}
 
 	@Test
