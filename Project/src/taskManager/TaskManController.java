@@ -152,8 +152,8 @@ public class TaskManController {
 		task.setFailed(endTime);
 		// TODO update status of all tasks
 	}
-	
-		private void updateStatus(Task task) {
+
+	private void updateStatus(Task task) {
 		if (task.getStatus() == TaskStatus.EXECUTING
 				|| task.getStatus() == TaskStatus.FINISHED
 				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
@@ -170,7 +170,7 @@ public class TaskManController {
 		// TODO check ressources
 	}
 
-	
+
 	boolean resourcesAvailableFor(Task task, TimeSpan timeSpan){
 		for (ResourceType resourceType : task.getRequiredResourceTypes().keySet()) {
 			if(!isAvailableFor(resourceType, task, timeSpan)){
@@ -179,7 +179,7 @@ public class TaskManController {
 		}
 		return true;
 	}
-	
+
 	private boolean isAvailableFor(ResourceType resourcetype, Task task, TimeSpan timeSpan){
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
 		for(Resource resource : resourcetype.getAllResources()){
@@ -194,8 +194,8 @@ public class TaskManController {
 			return false;
 		}
 	}
-	
-	
+
+
 	private boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan){
 		Set<Planning> otherPlannings = getPlanner().getAllPlannings();
 		otherPlannings.remove(task.getPlanning());
