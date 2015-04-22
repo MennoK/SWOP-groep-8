@@ -354,8 +354,13 @@ public class Parser {
 			}
 
 			int taskNr = (int) (planning.get("task"));
-			PlanningBuilder pbuilder = controller.getPlanner().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
+<<<<<<< HEAD
+			PlanningBuilder pbuilder = controller.getPlanningExpert().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
 
+=======
+			PlanningBuilder pbuilder = controller.getPlanner().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
+			
+>>>>>>> 1f48b1eaaf86599cf0f44ac85d1a3b29c7952bef
 			for (int i = 1; i < assignedDevs.size(); i++) {
 				pbuilder.addDeveloper(assignedDevs.get(i));
 			}
