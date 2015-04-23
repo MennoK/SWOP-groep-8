@@ -62,8 +62,8 @@ public class PlannerTester {
 		projectExpert = tmController.getProjectExpert();
 		projectExpert.createProject("name", "des", time2.plusDays(13));
 		project = projectExpert.getAllProjects().get(0);
-		project.taskBuilder("a task", Duration.ofHours(1), 1).build();
-		project.taskBuilder("a task", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
+		project.taskBuilder("task 1", Duration.ofHours(1), 1).build();
+		project.taskBuilder("task 2", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
 		task1 = project.getAllTasks().get(0);
 		task2 = project.getAllTasks().get(1);
 		

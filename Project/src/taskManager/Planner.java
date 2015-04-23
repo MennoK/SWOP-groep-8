@@ -1,6 +1,8 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -40,13 +42,15 @@ public class Planner {
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
 		LocalDateTime time, Set<Developer> developers) {
 		
-		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
+		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();		
 		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
-		System.out.println(resourceMap);
+
+		System.out.println("resourceMap  " + resourceMap);
 		while (possibleStartTimes.size() < 3) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
-			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, timeSpan, task);
-			Set<Developer> tempDevelopers = getAvailableDevelopers(new LinkedHashSet<>(developers), timeSpan, task);
+			System.out.println("resourceMap  " + resourceMap);
+			Map<ResourceType, Set<Resource>> tempResourceMap = new HashMap<>(getAvailableResources(resourceMap, timeSpan, task));
+			Set<Developer> tempDevelopers = new LinkedHashSet<Developer>(getAvailableDevelopers(developers, timeSpan, task));
 			
 			if (tempDevelopers.size() > 0
 					&& enoughResourcesAreAvailable(tempResourceMap, task)) {
@@ -67,7 +71,8 @@ public class Planner {
 		}
 		return developers;
 	}
-	Map<ResourceType, Set<Resource>>  getAvailableResources( Map<ResourceType, Set<Resource>> resources, TimeSpan timeSpan, Task task){
+	//TODO
+	Map<ResourceType, Set<Resource>>  getAvailableResources( ResourceType resourcetype, TimeSpan timeSpan, Task task){
 		for (Planning planning : this.getAllPlannings()) {
 			if(timeSpan.overlaps(planning.getTimeSpan())){
 				for (ResourceType type : planning.getResources().keySet()) {
@@ -77,9 +82,10 @@ public class Planner {
 				}
 			}
 		}
-		System.out.println(timeSpan.getBegin() + " "+ resources);
+		System.out.println("return " + task.getDescription() + " "+ timeSpan.getBegin() + " "+ resources);
 		return resources;
 	}
+	
 	private boolean enoughResourcesAreAvailable(
 			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
 
