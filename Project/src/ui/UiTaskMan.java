@@ -23,15 +23,9 @@ public class UiTaskMan {
 
 	UiTaskMan() {
 		reader = new Reader();
-		LocalDateTime now = LocalDateTime.of(2014, 1, 1, 8, 0);
-		try {
-			now = reader.getDate("Give the current time:");
-		} catch (ExitUseCaseException e) {
-		}
-
-		System.out.println("Current time initialized on:\n" + now + "\n");
-		taskManController = new TaskManController(now);
 		askInitialState();
+		if (taskManController == null)
+			initialiseEmptySystem();
 	}
 
 	private void askInitialState() {
@@ -42,27 +36,40 @@ public class UiTaskMan {
 						.getString("Give a file for initialisation of the system:\n"
 								+ "(press 2 to use ./input2.tman)");
 			} catch (ExitUseCaseException e1) {
-				System.out.println("Starting with an empty system");
 				return;
 			}
 			if (fileName.equals("2"))
 				fileName = "./input2.tman";
 			try {
 				Parser parser = new Parser();
-				parser.parse(fileName, taskManController);
+				taskManController = parser.parse(fileName);
 				System.out.println("Starting with system initialised from "
 						+ fileName);
 				return;
-			} catch (IllegalArgumentException | FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
 
+	private void initialiseEmptySystem() {
+		System.out.println("Starting with an empty system");
+		LocalDateTime now = LocalDateTime.of(2014, 1, 1, 8, 0);
+		try {
+			now = reader.getDate("Give the current time:");
+		} catch (ExitUseCaseException e) {
+			System.out.println("The standard time will be used.");
+		}
+
+		System.out.println("Current time initialized on:\n" + now + "\n");
+		taskManController = new TaskManController(now);
+	}
+
 	private void showProjects() throws ExitUseCaseException {
-		System.out.println(Printer.listProjects(taskManController.getProjectExpert()
-				.getAllProjects()));
-		Project project = reader.select(taskManController.getProjectExpert().getAllProjects());
+		System.out.println(Printer.listProjects(taskManController
+				.getProjectExpert().getAllProjects()));
+		Project project = reader.select(taskManController.getProjectExpert()
+				.getAllProjects());
 		System.out.println(Printer.full(project));
 		Task task = reader.select(project.getAllTasks());
 		System.out.println(Printer.full(task));
@@ -78,7 +85,8 @@ public class UiTaskMan {
 			System.out.println("Project creation aborted.");
 			return;
 		}
-		taskManController.getProjectExpert().createProject(name, description, dueTime);
+		taskManController.getProjectExpert().createProject(name, description,
+				dueTime);
 	}
 
 	private void createTask() throws ExitUseCaseException {
@@ -86,9 +94,10 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			System.out.println(Printer.listProjects(taskManController.getProjectExpert()
-					.getAllProjects()));
-			Project project = reader.select(taskManController.getProjectExpert().getAllProjects());
+			System.out.println(Printer.listProjects(taskManController
+					.getProjectExpert().getAllProjects()));
+			Project project = reader.select(taskManController
+					.getProjectExpert().getAllProjects());
 			TaskBuilder builder = project.taskBuilder(reader
 					.getString("Give a description:"), reader
 					.getDuration("Give an estimate for the task duration:"),
@@ -115,7 +124,8 @@ public class UiTaskMan {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
 		ArrayList<Task> allTasks = new ArrayList<Task>();
-		for (Project project : taskManController.getProjectExpert().getAllProjects()) {
+		for (Project project : taskManController.getProjectExpert()
+				.getAllProjects()) {
 			System.out.println(Printer.oneLine(project));
 			System.out.println(Printer.listTasks(project.getAllTasks(),
 					allTasks.size() + 1));
@@ -153,40 +163,36 @@ public class UiTaskMan {
 	}
 
 	private void selectDeveloper() throws ExitUseCaseException {
-		List<Developer> developerslist = new ArrayList<Developer>(taskManController.getDeveloperExpert().getAllDevelopers());
+		List<Developer> developerslist = new ArrayList<Developer>(
+				taskManController.getDeveloperExpert().getAllDevelopers());
 		System.out.println(Printer.listDevelopers(developerslist));
 		activeDeveloper = reader.select(developerslist);
 	}
 
-	private void printSwitchUserMenu(){
+	private void printSwitchUserMenu() {
 		System.out.println("\nSwitch user menu:\n" + "1: Projectmanager\t"
-				+ "2: Developer\t"
-				+ "9: Exit");
+				+ "2: Developer\t" + "9: Exit");
 	}
 
-	private void printProjectManagerMenu(){
-		System.out
-		.println("\nProject Manager Main menu:\n" + "1: Show projects\t"
-				+ "2: Create project\t" + "3: Create task\n"
-				+ "4: Plan task\t\t" + "5: Advance time\n" 
-				+ "6: Run simulation\t"
-				+ "9: Exit");
+	private void printProjectManagerMenu() {
+		System.out.println("\nProject Manager Main menu:\n"
+				+ "1: Show projects\t" + "2: Create project\t"
+				+ "3: Create task\n" + "4: Plan task\t\t" + "5: Advance time\n"
+				+ "6: Run simulation\t" + "9: Return to user menu");
 	}
 
-	private void printDeveloperMenu(){
-		System.out
-		.println("\nDeveloper Main menu:\n" + "1: Show projects\t"
-				+"2: Update task status\t" + "3: Advance time\t"
-				+ "9: Exit");
+	private void printDeveloperMenu() {
+		System.out.println("\nDeveloper Main menu:\n" + "1: Show projects\t"
+				+ "2: Update task status\t" + "3: Advance time\t"
+				+ "9: Return to user menu");
 	}
 
-
-	void switchUserMenu(){
-		while(true){
-			try{
+	void switchUserMenu() {
+		while (true) {
+			try {
 				printSwitchUserMenu();
 				String choice = reader.getString("select user:");
-				switch(choice){
+				switch (choice) {
 				case "1":
 					projectManagerMenu();
 					break;
@@ -198,22 +204,23 @@ public class UiTaskMan {
 					reader.close();
 					return;
 				default:
-					System.out.println("Invalid choice. (9 to exit)");
+					System.out
+							.println("Invalid choice, try again. (9 to exit)");
+					break;
 				}
+			} catch (ExitUseCaseException e) {
+				System.out
+						.println("Use case exited, returning to the main menu.");
 			}
-			catch(Exception e){
-
-			}
-		}		
+		}
 	}
 
-	void projectManagerMenu(){
+	void projectManagerMenu() {
 		try {
 			printProjectManagerMenu();
 			String choice = reader.getString("Select an option");
 			switch (choice) {
 			case "9":
-				reader.close();
 				return;
 			case "1":
 				showProjects();
@@ -234,24 +241,21 @@ public class UiTaskMan {
 				runSimulation();
 				break;
 			default:
-				System.out
-				.println("Invalid choice, try again. (9 to exit)");
+				System.out.println("Invalid choice, try again.");
 				break;
 			}
 		} catch (ExitUseCaseException e) {
-			System.out
-			.println("Use case exited, returning to the main menu.");
+			System.out.println("Use case exited, returning to the main menu.");
 		}
 		switchUserMenu();
 	}
 
-	void developerMenu(){
+	void developerMenu() {
 		try {
 			printDeveloperMenu();
 			String choice = reader.getString("Select an option");
 			switch (choice) {
 			case "9":
-				reader.close();
 				return;
 			case "1":
 				showProjects();
@@ -263,13 +267,11 @@ public class UiTaskMan {
 				advanceTime();
 				break;
 			default:
-				System.out
-				.println("Invalid choice, try again. (9 to exit)");
+				System.out.println("Invalid choice, try again.");
 				break;
 			}
 		} catch (ExitUseCaseException e) {
-			System.out
-			.println("Use case exited, returning to the main menu.");
+			System.out.println("Use case exited, returning to the main menu.");
 		}
 		switchUserMenu();
 	}
