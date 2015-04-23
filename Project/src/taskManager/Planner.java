@@ -11,6 +11,7 @@ import utility.TimeSpan;
 
 public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
+	private static final int TOTAL_POSSIBLE_START_TIMES = 3;
 
 	/**
 	 * Return all the tasks that do not have a planning yet
@@ -43,7 +44,7 @@ public class Planner {
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
 		
-		while (possibleStartTimes.size() < 3) {
+		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			Map<ResourceType, Set<Resource>> tempResourceMap = getAvailableResources(resourceMap, timeSpan, task);
 			Set<Developer> tempDevelopers = getAvailableDevelopers(new LinkedHashSet<>(developers), timeSpan, task);
