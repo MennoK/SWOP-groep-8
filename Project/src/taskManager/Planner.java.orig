@@ -45,8 +45,14 @@ public class Planner {
 		
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();		
 		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
+<<<<<<< HEAD
 
+		System.out.println("resourceMap  " + resourceMap);
+		while (possibleStartTimes.size() < 3) {
+=======
+		
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
+>>>>>>> 19e3c58711458f82135e2e860aeefc87e152a2e8
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			System.out.println("resourceMap  " + resourceMap);
 			Map<ResourceType, Set<Resource>> tempResourceMap = new HashMap<>(getAvailableResources(resourceMap, timeSpan, task));
