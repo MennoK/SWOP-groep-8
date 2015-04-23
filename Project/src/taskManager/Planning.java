@@ -11,11 +11,10 @@ import utility.TimeSpan;
 
 public class Planning {
 
-
 	private TimeSpan timeSpan;
 	private Task task;
-	private Set<Developer> developers;
-	private Map<ResourceType, Set<Resource>> resources;
+	private Set<Developer> developers = new LinkedHashSet<Developer>();
+	private Map<ResourceType, Set<Resource>> resources = new LinkedHashMap<ResourceType, Set<Resource>>();
 	/**
 	 * The TaskBuilder is an inner class builder for constructing new tasks. The
 	 * description, estimated duration and acceptable deviation of a task are
@@ -44,9 +43,9 @@ public class Planning {
 				Task task, Developer developer) {
 			this.timespan = new TimeSpan(startTime, startTime.plus(task.getDuration()));	
 			this.task = task;
-			this.developers = new LinkedHashSet<>();
+			this.developers = new LinkedHashSet<Developer>();
 			this.developers.add(developer);
-			resources = new LinkedHashMap<>();
+			this.resources = new LinkedHashMap<ResourceType, Set<Resource>>();
 		}
 
 		/**
@@ -84,12 +83,8 @@ public class Planning {
 	public Planning(PlanningBuilder planningBuilder){
 		setDevelopers(planningBuilder.developers);
 		setTimeSpan(planningBuilder.timespan);
-		
 		setResources(planningBuilder.resources);
 	}
-	
-	
-
 	
 	public Task getTask() {
 		return task;
@@ -111,15 +106,9 @@ public class Planning {
 		this.resources = resources;
 	}
 
-
-
-
 	public TimeSpan getTimeSpan() {
 		return timeSpan;
 	}
-
-
-
 
 	public void setTimeSpan(TimeSpan timeSpan) {
 		this.timeSpan = timeSpan;

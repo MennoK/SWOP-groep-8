@@ -58,7 +58,7 @@ public class PlannerTester {
 		resource = new HashSet<Resource>();
 		resource.add(resources.get(0));
 		resource2 = new HashSet<Resource>();
-		resource.add(resources.get(1));
+		resource2.add(resources.get(1));
 		//create a project with a task
 	
 		projectExpert = tmController.getProjectExpert();
@@ -281,12 +281,73 @@ public class PlannerTester {
 	}
 	
 	@Test
-	public void testDeveloperUnavailable2(){
+	public void testDeveloperBothUnavailable(){
+		planner.createPlanning(time1, task2, developer1).addDeveloper(developer2).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(0, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
+	}
+	
+	@Test
+	public void testDeveloperOneOutOfTwoUnavailable(){
 		planner.createPlanning(time1.plusMinutes(30), task2, developer1).build(planner);
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(1, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
 	}
 	
+	@Test
+	public void testDeveloperAvailableWithOtherPlanning(){
+		planner.createPlanning(time2, task2, developer1).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(2, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
+	}
 	
+	@Test
+	public void testResourcesAvailableSimple(){
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(1, planner.resourcesAvailableFor(task2, timeSpan).size());
+		Map.Entry<ResourceType, Set<Resource>> map = planner.resourcesAvailableFor(task2, timeSpan).entrySet().iterator().next();
+		assertEquals(2, map.getValue().size());
+	}
+	
+	@Test
+	public void testResourcesAvailableForPlannedTask(){
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(1, planner.resourcesAvailableFor(task2, timeSpan).size());
+		Map.Entry<ResourceType, Set<Resource>> map = planner.resourcesAvailableFor(task2, timeSpan).entrySet().iterator().next();
+		assertEquals(2, map.getValue().size());
+	}
+	
+	@Test
+	public void testResourceUnavailable(){
+		project.taskBuilder("task 3", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
+		Task task3 = project.getAllTasks().get(2);		
+		planner.createPlanning(time1, task2, developer1).addResources(resourceType,resource).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1, task3.getDuration());
+		Map.Entry<ResourceType, Set<Resource>> map = planner.resourcesAvailableFor(task3, timeSpan).entrySet().iterator().next();
+		assertEquals(1, map.getValue().size());
+	}
+	
+	@Test 
+	public void testResourceBothUnavailable(){
+		project.taskBuilder("task 3", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 2).build();
+		Task task3 = project.getAllTasks().get(2);	
+		project.taskBuilder("task 4", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 2).build();
+		Task task4 = project.getAllTasks().get(3);	
+		Set<Resource> resourcesset = new LinkedHashSet<Resource>(resources);
+		planner.createPlanning(time1, task3, developer1).addResources(resourceType,resourcesset).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1, task4.getDuration());
+		Map.Entry<ResourceType, Set<Resource>> map = planner.resourcesAvailableFor(task4, timeSpan).entrySet().iterator().next();
+		assertEquals(0, map.getValue().size());
+	}
+	
+	@Test
+	public void testResourceAvailableWithOtherPlanning(){
+		project.taskBuilder("task 3", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build();
+		Task task3 = project.getAllTasks().get(2);		
+		planner.createPlanning(time1, task2, developer1).addResources(resourceType,resource).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1.plusHours(3), task3.getDuration());
+		Map.Entry<ResourceType, Set<Resource>> map = planner.resourcesAvailableFor(task3, timeSpan).entrySet().iterator().next();
+		assertEquals(2, map.getValue().size());
+	}
 
 }

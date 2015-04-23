@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -186,7 +187,7 @@ public class Planner {
 		return conflictingTasks;
 
 	}
-	
+
 	/**
 	 * returns if a task will have a conflict if planned on a certain time
 	 * 
@@ -215,12 +216,12 @@ public class Planner {
 	Map<ResourceType, Set<Resource>> resourcesAvailableFor(Task task, TimeSpan timeSpan){
 		Map<ResourceType, Set<Resource>> availableResourcesForEachResourceType = new LinkedHashMap<ResourceType,Set<Resource>>();
 		for (ResourceType resourceType : task.getRequiredResourceTypes().keySet()) {
-			availableResourcesForEachResourceType.put(resourceType, resourcesAvailableFor(resourceType, task, timeSpan));
+			availableResourcesForEachResourceType.put(resourceType, resourcesOfTypeAvailableFor(resourceType, task, timeSpan));
 		}
 		return availableResourcesForEachResourceType;
 	}
 
-	Set<Resource> resourcesAvailableFor(ResourceType resourcetype, Task task, TimeSpan timeSpan){
+	private Set<Resource> resourcesOfTypeAvailableFor(ResourceType resourcetype, Task task, TimeSpan timeSpan){
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
 		for(Resource resource : resourcetype.getAllResources()){
 			if(isAvailableFor(resource, task, timeSpan)){
@@ -233,11 +234,15 @@ public class Planner {
 
 	private boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan){
 		Set<Planning> otherPlannings = this.getAllPlannings();
-		otherPlannings.remove(task.getPlanning());
+		if(task.hasPlanning()){
+			otherPlannings.remove(task.getPlanning());
+		}
 		for(Planning otherPlanning : otherPlannings){
-			if(otherPlanning.getDevelopers().contains(resource)){
-				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
-					return false;
+			for (Set<Resource> setResource : otherPlanning.getResources().values()) {
+				if(setResource.contains(resource)){
+					if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
+						return false;
+					}
 				}
 			}
 		}
