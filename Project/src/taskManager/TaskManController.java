@@ -192,7 +192,7 @@ public class TaskManController {
 				availableResources.add(resource);
 			}
 		}
-		if(availableResources.size() == task.getRequiredResourceTypes().get(resourcetype)){
+		if(availableResources.size() >= task.getRequiredResourceTypes().get(resourcetype)){
 			return true;
 		}
 		else {

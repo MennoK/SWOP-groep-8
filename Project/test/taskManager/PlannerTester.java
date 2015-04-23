@@ -15,6 +15,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import utility.TimeSpan;
+
 public class PlannerTester {
 
 
@@ -231,5 +233,19 @@ public class PlannerTester {
 	public void testResolveConflictingTasks() {
 
 	}
+	
+	@Test
+	public void testDeveloperAvailableForSimple(){
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(2, planningExpert.developersAvailableFor(developerExpert.getAllDevelopers(), task1, timeSpan).size());
+	}
+	
+	@Test
+	public void testDeveloperAvailableForPlannedTask(){
+		planningExpert.createPlanning(time1.plusHours(1), task1, developer1);
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(2, planningExpert.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
+	}
+	
 
 }
