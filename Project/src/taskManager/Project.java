@@ -30,7 +30,7 @@ import utility.WorkTime;
  * 
  */
 
-public class Project implements Summarizable {
+public class Project implements Summarizable, Visitable {
 
 	private List<Task> tasks;
 	private String name;
@@ -373,5 +373,9 @@ public class Project implements Summarizable {
 		str += ")\n";
 		str += Summarizable.listSummaries(getAllTasks(), 1);
 		return str;
+	}
+
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }

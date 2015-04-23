@@ -34,7 +34,7 @@ import utility.WorkTime;
  * 
  * @author Groep 8
  */
-public class Task implements Summarizable {
+public class Task implements Summarizable, Visitable {
 
 	private String description;
 	private Duration estimatedDuration;
@@ -797,4 +797,7 @@ public class Task implements Summarizable {
 		return str;
 	}
 
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+	}
 }

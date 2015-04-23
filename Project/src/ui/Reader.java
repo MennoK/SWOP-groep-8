@@ -7,23 +7,24 @@ import java.util.Scanner;
 import java.util.Set;
 
 import taskManager.Developer;
+import taskManager.Visitable;
 import ui.exception.ExitUseCaseException;
 
 public class Reader {
 	private Scanner scan;
-	
+
 	Reader() {
 		setScan(new Scanner(System.in));
 	}
-	
+
 	private void setScan(Scanner scan) {
 		this.scan = scan;
 	}
-	
+
 	private Scanner getScan() {
 		return scan;
 	}
-	
+
 	private String getData() throws ExitUseCaseException {
 		System.out.println("Type enter to skip/return to main menu.");
 		String str = getScan().nextLine();
@@ -31,13 +32,14 @@ public class Reader {
 			throw new ExitUseCaseException("Exit signal caught.");
 		return str;
 	}
-	
+
 	void close() {
 		getScan().close();
 	}
-	
-	<T> T select(List<T> options) throws ExitUseCaseException {
+
+	<T extends Visitable> T select(List<T> options) throws ExitUseCaseException {
 		while (true) {
+			System.out.println(Printer.list(options, 1));
 			System.out.println("select one:");
 			try {
 				return options.get(Integer.parseInt(getData()) - 1);
@@ -48,12 +50,12 @@ public class Reader {
 			}
 		}
 	}
-	
+
 	String getString(String querry) throws ExitUseCaseException {
 		System.out.println(querry + ":");
 		return getData();
 	}
-	
+
 	boolean getBoolean(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + " (y/n)");
@@ -74,6 +76,7 @@ public class Reader {
 			}
 		}
 	}
+
 	double getDouble(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + " (double)");
@@ -84,7 +87,7 @@ public class Reader {
 			}
 		}
 	}
-	
+
 	Duration getDuration(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + " (hours)");
@@ -95,7 +98,7 @@ public class Reader {
 			}
 		}
 	}
-	
+
 	LocalDateTime getDate(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + "\n(format: 'yyyy-mm-ddThh:mm:ss')\n"
@@ -109,7 +112,7 @@ public class Reader {
 					return LocalDateTime.parse(answer);
 				} catch (java.time.format.DateTimeParseException e2) {
 					System.out
-					.println("The given date was invalid, try again.");
+							.println("The given date was invalid, try again.");
 				}
 			}
 		}
