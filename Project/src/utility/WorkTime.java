@@ -1,11 +1,14 @@
 package utility;
 
 import java.time.DayOfWeek;
+import java.time.temporal.TemporalUnit;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,14 +17,6 @@ import java.util.Set;
  * 
  */
 public class WorkTime {
-
-	private static final int STARTHOUR = 8;
-	private static final int ENDHOUR = 16;
-	private static final Set<DayOfWeek> WORKDAYS = Collections
-			.unmodifiableSet(new HashSet<DayOfWeek>(Arrays
-					.asList(new DayOfWeek[] { DayOfWeek.MONDAY,
-							DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-							DayOfWeek.THURSDAY, DayOfWeek.FRIDAY })));
 
 	/**
 	 * Returns the time that is a duration after the given time, counting only
@@ -101,6 +96,49 @@ public class WorkTime {
 		}
 
 		return hoursWorked;
+	}
+	
+	private class WorkTimeSimulation {
+		private LocalDateTime currentTime;
+		private Duration timeLeft;
+		
+		public WorkTimeSimulation(LocalDateTime startTime, Duration hoursToWork) {
+			this.currentTime = startTime;
+			this.timeLeft = hoursToWork;
+		}
+		
+		private void workInterval(WorkTimeInterval interval) {
+			
+			switch(interval.getType()) {
+			case WORK:
+				this.timeLeft = this.timeLeft.minus(interval.getDuration());
+				//NO BREAK
+			case FREE:
+				//current time = end of interval
+				this.currentTime = this.currentTime.withHour(interval.getEnd().getHour()).withMinute(interval.getEnd().getMinute());
+				break;
+			default:
+				break;
+			}
+		}
+		
+		private void workDay(List<WorkTimeInterval> intervals) {
+			for(WorkTimeInterval interval : intervals) {
+				this.workInterval(interval);
+			}
+		}
+		
+		public LocalDateTime workUntilFinished() {
+			while(!this.timeLeft.isZero() && !this.timeLeft.isNegative()) {
+				List<WorkTimeInterval> intervals = WorkDay.getScheduleOfDate(this.currentTime.toLocalDate());
+				this.workDay(intervals);
+				currentTime = this.currentTime.plusDays(1);
+				currentTime = this.currentTime.withHour(0).withMinute(0);
+			}
+			return currentTime;
+		}
+		
+		
 	}
 
 }
