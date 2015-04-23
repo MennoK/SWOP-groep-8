@@ -6,12 +6,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import utility.TimeSpan;
+
 
 public class Planning {
 
 
-	private LocalDateTime startTime;
-	private LocalDateTime endTime;
+	private TimeSpan timeSpan;
 	private Task task;
 	private Set<Developer> developers;
 	private Map<ResourceType, Set<Resource>> resources;
@@ -23,8 +24,7 @@ public class Planning {
 	 */
 	public static class PlanningBuilder {
 
-		private LocalDateTime startTime;
-		private LocalDateTime endTime;
+		private TimeSpan timespan;
 		private Task task;
 		private Set<Developer> developers;
 		private Map<ResourceType, Set<Resource>> resources;
@@ -42,8 +42,7 @@ public class Planning {
 		 	*/
 		public PlanningBuilder(LocalDateTime startTime,
 				Task task, Developer developer) {
-			this.startTime = startTime;
-			this.endTime = startTime.plus(task.getDuration());
+			this.timespan = new TimeSpan(startTime, startTime.plus(task.getDuration()));	
 			this.task = task;
 			this.developers = new LinkedHashSet<>();
 			this.developers.add(developer);
@@ -84,30 +83,14 @@ public class Planning {
 	 */
 	public Planning(PlanningBuilder planningBuilder){
 		setDevelopers(planningBuilder.developers);
-		setStartTime(planningBuilder.startTime);
-		setEndTime(planningBuilder.endTime);
+		setTimeSpan(planningBuilder.timespan);
 		
 		setResources(planningBuilder.resources);
 	}
 	
 	
 
-	public LocalDateTime getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(LocalDateTime startTime) {
-		this.startTime = startTime;
-	}
-
-	public LocalDateTime getEndTime() {
-		return this.endTime;
-	}
-
-	public void setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
-	}
-
+	
 	public Task getTask() {
 		return task;
 	}
@@ -126,5 +109,19 @@ public class Planning {
 
 	public void setResources(Map<ResourceType, Set<Resource>> resources) {
 		this.resources = resources;
+	}
+
+
+
+
+	public TimeSpan getTimeSpan() {
+		return timeSpan;
+	}
+
+
+
+
+	public void setTimeSpan(TimeSpan timeSpan) {
+		this.timeSpan = timeSpan;
 	}
 }
