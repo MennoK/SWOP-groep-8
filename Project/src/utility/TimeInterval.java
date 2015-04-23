@@ -49,7 +49,7 @@ public class TimeInterval {
 	 * 
 	 * @param beginTime
 	 */
-	private void setBeginTime(LocalTime beginTime){
+	void setBeginTime(LocalTime beginTime){
 		this.beginTime = beginTime;
 	}
 	
