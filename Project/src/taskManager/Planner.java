@@ -1,7 +1,6 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -43,12 +42,11 @@ public class Planner {
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
 			LocalDateTime time, Set<Developer> developers) {
 
-		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();		
+		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if(isPlannableForTimeSpan(task, developers, timeSpan)){
-			Set<Developer> tempDevelopers = new LinkedHashSet<Developer>(getAvailableDevelopers(developers, timeSpan, task));
 				possibleStartTimes.add(timeSpan.getBegin());
 			}
 			time = time.plusHours(1);
@@ -58,12 +56,11 @@ public class Planner {
 
 	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,TimeSpan timeSpan){
 		if(enoughDevelopersAvalaible(developersAvailableFor(developers, task, timeSpan)) && enoughResourcesAvailable(resourcesAvailableFor(task, timeSpan), task)){
-			if(timeSpan.overlaps(planning.getTimeSpan())){
+			return true;
 		}
 		else {
 			return false;
 		}
-	Map<ResourceType, Set<Resource>>  getAvailableResources( ResourceType resourcetype, TimeSpan timeSpan, Task task){
 	}
 
 	private boolean enoughDevelopersAvalaible(
@@ -74,9 +71,7 @@ public class Planner {
 		else{
 			return false;
 		}
-		System.out.println("return " + task.getDescription() + " "+ timeSpan.getBegin() + " "+ resources);
 	}
-	
 
 	private boolean enoughResourcesAvailable(
 			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
@@ -162,6 +157,36 @@ public class Planner {
 		return (!getAllPlannings().contains(planning) && planning != null);
 	}
 
+
+	/**
+	 * returns all tasks that would conflict if a task would be planned at a
+	 * certain time
+	 * 
+	 * @param task
+	 *            : the task for which we want to get all the conflicts
+	 * @param time
+	 *            : the time for the task to be planned
+	 * @param tasks
+	 *            : all tasks where there is possible a conflict with
+	 * @return
+	 */
+	public Set<Task> getConflictingTasks(Task task, LocalDateTime time,
+			Set<Task> tasks) {
+		Set<Task> conflictingTasks = new LinkedHashSet<>();
+		for (Task conflictingTask : tasks) {
+
+			if (conflictingTask.hasPlanning()) {
+				TimeSpan planningTimeSpan = conflictingTask.getPlanning().getTimeSpan();
+
+				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
+					conflictingTasks.add(conflictingTask);
+				}
+			}
+		}
+		return conflictingTasks;
+
+	}
+	
 	/**
 	 * returns if a task will have a conflict if planned on a certain time
 	 * 
@@ -182,34 +207,6 @@ public class Planner {
 
 	}
 
-	/**
-	 * returns all tasks that would conflict if a task would be planned at a
-	 * certain time
-	 * 
-	 * @param task
-	 *            : the task for which we want to get all the conflicts
-	 * @param time
-	 *            : the time for the task to be planned
-	 * @param tasks
-	 *            : all tasks where there is possible a conflict with
-	 * @return
-	 */
-	public Set<Task> getConflictingTasks(Task task, LocalDateTime time,
-			Set<Task> tasks) {
-		Set<Task> conflictingTasks = new LinkedHashSet<>();
-		for (Task conflictingTask : tasks) {
-
-			if (conflictingTask.hasPlanning()) {
-				if (conflictingTask.getPlanning().getTimeSpan().overlaps(new TimeSpan(time, task.getDuration()))) {
-
-				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
-					conflictingTasks.add(conflictingTask);
-				}
-			}
-		}
-		return conflictingTasks;
-
-	}
 
 	public Set<Planning> getAllPlannings() {
 		return this.planningSet;
@@ -239,7 +236,7 @@ public class Planner {
 		otherPlannings.remove(task.getPlanning());
 		for(Planning otherPlanning : otherPlannings){
 			if(otherPlanning.getDevelopers().contains(resource)){
-				if (timeSpan.overlaps(new TimeSpan(otherPlanning.getStartTime(), otherPlanning.getEndTime()))){
+				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
 					return false;
 				}
 			}
@@ -265,10 +262,9 @@ public class Planner {
 		}
 		for (Planning otherPlanning : otherPlanings) {
 			if (otherPlanning.getDevelopers().contains(developer)) {
-				if (timeSpan.overlaps(new TimeSpan(
-						otherPlanning.getStartTime(), otherPlanning
-						.getEndTime())))
+				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
 					return false;
+				}
 			}
 		}
 		return true;

@@ -263,15 +263,30 @@ public class PlannerTester {
 	@Test
 	public void testDeveloperAvailableForSimple(){
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
-		assertEquals(2, planningExpert.developersAvailableFor(developerExpert.getAllDevelopers(), task1, timeSpan).size());
+		assertEquals(2, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1, timeSpan).size());
 	}
 	
 	@Test
 	public void testDeveloperAvailableForPlannedTask(){
-		planningExpert.createPlanning(time1.plusHours(1), task1, developer1);
+		planner.createPlanning(time1.plusHours(1), task1, developer1).build(planner);
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
-		assertEquals(2, planningExpert.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
+		assertEquals(2, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
 	}
+	
+	@Test
+	public void testDeveloperUnavailable(){
+		planner.createPlanning(time1, task2, developer1).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(1, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
+	}
+	
+	@Test
+	public void testDeveloperUnavailable2(){
+		planner.createPlanning(time1.plusMinutes(30), task2, developer1).build(planner);
+		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		assertEquals(1, planner.developersAvailableFor(developerExpert.getAllDevelopers(), task1,timeSpan).size());
+	}
+	
 	
 
 }

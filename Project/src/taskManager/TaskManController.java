@@ -206,7 +206,7 @@ public class TaskManController {
 		otherPlannings.remove(task.getPlanning());
 		for(Planning otherPlanning : otherPlannings){
 			if(otherPlanning.getDevelopers().contains(resource)){
-				if (timeSpan.overlaps(new TimeSpan(otherPlanning.getStartTime(), otherPlanning.getEndTime()))){
+				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
 					return false;
 				}
 			}
@@ -220,9 +220,7 @@ public class TaskManController {
 		otherPlanings.remove(task.getPlanning());
 		for (Planning otherPlanning : otherPlanings) {
 			if (otherPlanning.getDevelopers().contains(developer)) {
-				if (timeSpan.overlaps(new TimeSpan(
-						otherPlanning.getStartTime(), otherPlanning
-						.getEndTime())))
+				if (timeSpan.overlaps(otherPlanning.getTimeSpan()))
 					return false;
 			}
 		}
