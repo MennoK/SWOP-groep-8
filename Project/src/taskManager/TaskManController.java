@@ -126,7 +126,7 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class TaskManController {
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class TaskManController {
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	private void updateStatusAll() {
@@ -165,14 +165,12 @@ public class TaskManController {
 				|| !task.checkDependenciesFinished())
 			// task status remains unchanged
 			return;
-		for (Developer developer : task.getPlanning().getDevelopers()) {
-			if (!isAvailableFor(developer, task,
-					new TimeSpan(getTime(), task.getDuration()))) {
-				task.setStatus(TaskStatus.UNAVAILABLE);
-				return;
-			}
+		if (getPlanner().isPlannableForTimeSpan(task,
+				getDeveloperExpert().getAllDevelopers(),
+				new TimeSpan(getTime(), task.getDuration()))) {
+			task.setStatus(TaskStatus.AVAILABLE);
+		} else {
+			task.setStatus(TaskStatus.UNAVAILABLE);
 		}
-		// TODO check ressources
 	}
-
 }
