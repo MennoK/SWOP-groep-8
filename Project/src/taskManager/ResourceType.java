@@ -3,7 +3,6 @@ package taskManager;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import utility.Summarizable;
 import utility.TimeInterval;
 
 /**
@@ -17,7 +16,7 @@ import utility.TimeInterval;
  * @author Groep 8
  * 
  */
-public class ResourceType implements Summarizable {
+public class ResourceType {
 
 	private String name;
 	private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
@@ -339,9 +338,5 @@ public class ResourceType implements Summarizable {
 	 */
 	public Set<ResourceType> getConflictedResourceTypes() {
 		return conflictedResourceTypes;
-	}
-
-	public String toSummary() {
-		return getName() + " (" + getAllResources().size() + " availlable)";
 	}
 }

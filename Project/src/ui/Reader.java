@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
-import taskManager.Developer;
 import taskManager.Visitable;
 import ui.exception.ExitUseCaseException;
 

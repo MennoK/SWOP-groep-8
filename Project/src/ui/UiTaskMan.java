@@ -3,8 +3,6 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import parser.Parser;
 import taskManager.Developer;
@@ -13,7 +11,6 @@ import taskManager.Task;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
 import ui.exception.ExitUseCaseException;
-import utility.Summarizable;
 
 public class UiTaskMan {
 
