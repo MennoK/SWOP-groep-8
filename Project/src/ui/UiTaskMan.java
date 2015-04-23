@@ -3,8 +3,6 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import parser.Parser;
 import taskManager.Developer;
@@ -13,7 +11,6 @@ import taskManager.Task;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
 import ui.exception.ExitUseCaseException;
-import utility.Summarizable;
 
 public class UiTaskMan {
 
@@ -66,8 +63,6 @@ public class UiTaskMan {
 	}
 
 	private void showProjects() throws ExitUseCaseException {
-		System.out.println(Printer.listProjects(taskManController
-				.getProjectExpert().getAllProjects()));
 		Project project = reader.select(taskManController.getProjectExpert()
 				.getAllProjects());
 		System.out.println(Printer.full(project));
@@ -94,8 +89,6 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			System.out.println(Printer.listProjects(taskManController
-					.getProjectExpert().getAllProjects()));
 			Project project = reader.select(taskManController
 					.getProjectExpert().getAllProjects());
 			TaskBuilder builder = project.taskBuilder(reader
@@ -104,11 +97,9 @@ public class UiTaskMan {
 					reader.getDouble("Give an acceptable deviation:"));
 			while (reader
 					.getBoolean("Is this task dependent on an other task?")) {
-				System.out.println(Printer.listTasks(project.getAllTasks()));
 				builder.addDependencies(reader.select(project.getAllTasks()));
 			}
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
-				System.out.println(Printer.listTasks(project.getAllTasks()));
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
 			}
 			builder.build();
@@ -127,7 +118,7 @@ public class UiTaskMan {
 		for (Project project : taskManController.getProjectExpert()
 				.getAllProjects()) {
 			System.out.println(Printer.oneLine(project));
-			System.out.println(Printer.listTasks(project.getAllTasks(),
+			System.out.println(Printer.list(project.getAllTasks(),
 					allTasks.size() + 1));
 			allTasks.addAll(project.getAllTasks());
 		}
@@ -163,10 +154,8 @@ public class UiTaskMan {
 	}
 
 	private void selectDeveloper() throws ExitUseCaseException {
-		List<Developer> developerslist = new ArrayList<Developer>(
-				taskManController.getDeveloperExpert().getAllDevelopers());
-		System.out.println(Printer.listDevelopers(developerslist));
-		activeDeveloper = reader.select(developerslist);
+		activeDeveloper = reader.select(taskManController.getDeveloperExpert()
+				.getAllDevelopers());
 	}
 
 	private void printSwitchUserMenu() {

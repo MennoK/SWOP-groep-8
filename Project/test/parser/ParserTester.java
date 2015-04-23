@@ -489,8 +489,9 @@ public class ParserTester {
 	public void testPlanningOneisMade() {
 		LocalDateTime time = LocalDateTime.parse(("2014-01-01 09:00"),
 				dateTimeFormatter);
-		assertEquals(time, planningsList.get(0).getStartTime());
-		assertEquals(time.plusHours(500), planningsList.get(0).getEndTime());
+		assertEquals(time, planningsList.get(0).getTimeSpan().getBegin());
+		assertEquals(time.plusHours(500), planningsList.get(0).getTimeSpan()
+				.getEnd());
 
 		List<Developer> developers = new ArrayList<Developer>(planningsList
 				.get(0).getDevelopers());
@@ -503,8 +504,9 @@ public class ParserTester {
 	public void testPlanningTwoisMade() {
 		LocalDateTime time = LocalDateTime.parse(("2014-01-02 17:00"),
 				dateTimeFormatter);
-		assertEquals(time, planningsList.get(1).getStartTime());
-		assertEquals(time.plusHours(50), planningsList.get(1).getEndTime());
+		assertEquals(time, planningsList.get(1).getTimeSpan().getBegin());
+		assertEquals(time.plusHours(50), planningsList.get(1).getTimeSpan()
+				.getEnd());
 
 		List<Developer> developers = new ArrayList<Developer>(planningsList
 				.get(1).getDevelopers());
@@ -517,8 +519,9 @@ public class ParserTester {
 	public void testPlanningThreeisMade() {
 		LocalDateTime time = LocalDateTime.parse(("2014-03-01 09:00"),
 				dateTimeFormatter);
-		assertEquals(time, planningsList.get(2).getStartTime());
-		assertEquals(time.plusHours(50), planningsList.get(2).getEndTime());
+		assertEquals(time, planningsList.get(2).getTimeSpan().getBegin());
+		assertEquals(time.plusHours(50), planningsList.get(2).getTimeSpan()
+				.getEnd());
 
 		List<Developer> developers = new ArrayList<Developer>(planningsList
 				.get(2).getDevelopers());

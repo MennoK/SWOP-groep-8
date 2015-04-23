@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import taskManager.Task.TaskBuilder;
-import utility.Summarizable;
 import utility.WorkTime;
 
 /**
@@ -30,7 +29,7 @@ import utility.WorkTime;
  * 
  */
 
-public class Project implements Summarizable {
+public class Project implements Visitable {
 
 	private List<Task> tasks;
 	private String name;
@@ -348,30 +347,7 @@ public class Project implements Summarizable {
 		return lastUpdateTime;
 	}
 
-	/**
-	 * Partial toString method
-	 * 
-	 * @return a summary of the main information defining a Project
-	 */
-	public String toSummary() {
-		return "project '" + getName() + "': " + getStatus();
-	}
-
-	/**
-	 * Full toString method
-	 * 
-	 * @return a complete description of a project
-	 */
-	public String toString() {
-		String str = toSummary();
-		str += ", " + getDescription();
-		str += ", " + finishedOnTime();
-		str += " (Created " + getCreationTime();
-		str += ", Due " + getDueTime();
-		if (finishedOnTime() == ProjectFinishingStatus.OVER_TIME)
-			str += "(" + getCurrentDelay().toHours() + " working hours short)";
-		str += ")\n";
-		str += Summarizable.listSummaries(getAllTasks(), 1);
-		return str;
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }

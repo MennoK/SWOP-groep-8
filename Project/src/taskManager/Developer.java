@@ -8,7 +8,7 @@ package taskManager;
  * 
  * @author Groep 8
  */
-public class Developer {
+public class Developer implements Visitable {
 
 	private String name;
 
@@ -38,5 +38,9 @@ public class Developer {
 	 */
 	public String getName(){
 		return name;
+	}
+
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }

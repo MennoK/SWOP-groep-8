@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import utility.Summarizable;
 import utility.WorkTime;
 
 /**
@@ -34,7 +33,7 @@ import utility.WorkTime;
  * 
  * @author Groep 8
  */
-public class Task implements Summarizable {
+public class Task implements Visitable {
 
 	private String description;
 	private Duration estimatedDuration;
@@ -762,39 +761,7 @@ public class Task implements Summarizable {
 		return (planning != null);
 	}
 
-	/**
-	 * Partial toString method
-	 * 
-	 * @return a summary of the main information defining a Task
-	 */
-	public String toSummary() {
-		return "Task " + getId() + " " + getCalculatedStatus();
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
-
-	/**
-	 * Full toString method
-	 * 
-	 * @return a complete description of a Task
-	 */
-	public String toString() {
-		String str = toSummary() + ": ";
-		str += getDescription() + ", ";
-		str += getEstimatedDuration().toHours() + " hours, ";
-		str += getAcceptableDeviation() * 100 + "% margin";
-		if (!getDependencies().isEmpty()) {
-			str += ", depends on {";
-			for (Task dep : getDependencies())
-				str += " task " + dep.getId();
-			str += " }";
-		}
-		if (getOriginal() != null)
-			str += ", alternative for task " + getOriginal().getId();
-		if (this.getCalculatedStatus() == TaskStatus.FINISHED) {
-			str += ", started " + getStartTime();
-			str += ", finished " + getEndTime();
-			str += " (" + getFinishStatus() + ")";
-		}
-		return str;
-	}
-
 }
