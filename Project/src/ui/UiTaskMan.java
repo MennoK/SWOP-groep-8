@@ -65,9 +65,9 @@ public class UiTaskMan {
 	private void showProjects() throws ExitUseCaseException {
 		Project project = reader.select(taskManController.getProjectExpert()
 				.getAllProjects());
-		System.out.println(Printer.full(project));
+		System.out.println(new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks());
-		System.out.println(Printer.full(task));
+		System.out.println(new ToStringVisitor().create(task));
 	}
 
 	private void createProject() throws ExitUseCaseException {

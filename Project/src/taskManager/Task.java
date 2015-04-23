@@ -614,7 +614,7 @@ public class Task implements Visitable {
 	 */
 	public TaskFinishedStatus getFinishStatus() {
 		if (this.getCalculatedStatus() != TaskStatus.FINISHED) {
-			throw new IllegalArgumentException("The task is not finished yet");
+			throw new IllegalStateException("The task is not finished yet");
 		} else {
 			if (wasFinishedEarly()) {
 				return TaskFinishedStatus.EARLY;
