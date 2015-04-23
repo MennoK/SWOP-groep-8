@@ -66,11 +66,12 @@ public class Parser {
 	 * @throws RuntimeException
 	 */
 	@SuppressWarnings("unchecked")
-	public void parse(String pathToFile, TaskManController controller)
+	public TaskManController parse(String pathToFile)
 			throws FileNotFoundException, RuntimeException {
 
 		// check if the given input file is valid for taskman
-		TaskManInitFileChecker checker = new TaskManInitFileChecker(new FileReader(pathToFile));
+		TaskManInitFileChecker checker = new TaskManInitFileChecker(
+				new FileReader(pathToFile));
 		checker.checkFile();
 
 		// create new yaml
@@ -79,8 +80,8 @@ public class Parser {
 		Map<String, Object> objects = (Map<String, Object>) yaml.load(input);
 
 		// create system time
-		constructSystemTime((CharSequence) objects.get("systemTime"),
-				controller);
+		TaskManController controller = constructController((CharSequence) objects
+				.get("systemTime"));
 
 		// create daily availability
 		constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) objects
@@ -89,7 +90,7 @@ public class Parser {
 		// create all resource types
 		constructResourceTypes(
 				(List<LinkedHashMap<String, Object>>) objects
-				.get("resourceTypes"),
+						.get("resourceTypes"),
 				controller.getResourceExpert());
 
 		// create all resources
@@ -118,12 +119,12 @@ public class Parser {
 				(List<LinkedHashMap<String, Object>>) objects.get("plannings"),
 				controller);
 
+		return controller;
 	}
 
-	private void constructSystemTime(CharSequence time,
-			TaskManController controller) {
+	private TaskManController constructController(CharSequence time) {
 		LocalDateTime systemTime = LocalDateTime.parse(time, dateTimeFormatter);
-		controller.advanceTime(systemTime);
+		return new TaskManController(systemTime);
 	}
 
 	/**
@@ -208,8 +209,8 @@ public class Parser {
 			resourceTypeOfResource.createResource(name);
 		}
 
-		for(ResourceType type : resourceExpert.getAllResourceTypes()){
-			for(Resource resource : type.getAllResources()){
+		for (ResourceType type : resourceExpert.getAllResourceTypes()) {
+			for (Resource resource : type.getAllResources()) {
 				allresources.add(resource);
 			}
 		}
@@ -226,7 +227,8 @@ public class Parser {
 			String name = (String) developer.get("name");
 			developerExpert.createDeveloper(name);
 		}
-		alldevelopers = new ArrayList<Developer>(developerExpert.getAllDevelopers());
+		alldevelopers = new ArrayList<Developer>(
+				developerExpert.getAllDevelopers());
 	}
 
 	/**
@@ -284,13 +286,13 @@ public class Parser {
 							taskNr - 1));
 				}
 			}
-/*
-			// add alternative task if there is any
-			if (task.get("alternativeFor") != null) {
-				int alternativeTaskNr = (int) task.get("alternativeFor");
-				builder.setOriginalTask(projectOfTask.getAllTasks().get(
-						alternativeTaskNr - 1));
-			}*/
+			/*
+			 * // add alternative task if there is any if
+			 * (task.get("alternativeFor") != null) { int alternativeTaskNr =
+			 * (int) task.get("alternativeFor");
+			 * builder.setOriginalTask(projectOfTask.getAllTasks().get(
+			 * alternativeTaskNr - 1)); }
+			 */
 
 			// add required resource types
 			if (task.get("requiredTypes") != null) {
@@ -309,29 +311,22 @@ public class Parser {
 			Task newTask = projectOfTask.getAllTasks().get(
 					projectOfTask.getAllTasks().size() - 1);
 
-		/*	// if status is failed or finished, update the status and set start
-			// en end time
-			if (task.get("status") != null) {
-				String status = (String) task.get("status");
-				if (!status.equals("executing")) {
-					LocalDateTime startTime = LocalDateTime.parse(
-							(CharSequence) task.get("startTime"),
-							dateTimeFormatter);
-					LocalDateTime endTime = LocalDateTime.parse(
-							(CharSequence) task.get("endTime"),
-							dateTimeFormatter);
-					if (status.equals("failed")) {
-						newTask.updateStatus(startTime, endTime, true);
-					} else {
-						newTask.updateStatus(startTime, endTime, false);
-					}
-				}
-				// TODO new status: executing
-			}*/
+			/*
+			 * // if status is failed or finished, update the status and set
+			 * start // en end time if (task.get("status") != null) { String
+			 * status = (String) task.get("status"); if
+			 * (!status.equals("executing")) { LocalDateTime startTime =
+			 * LocalDateTime.parse( (CharSequence) task.get("startTime"),
+			 * dateTimeFormatter); LocalDateTime endTime = LocalDateTime.parse(
+			 * (CharSequence) task.get("endTime"), dateTimeFormatter); if
+			 * (status.equals("failed")) { newTask.updateStatus(startTime,
+			 * endTime, true); } else { newTask.updateStatus(startTime, endTime,
+			 * false); } } // TODO new status: executing }
+			 */
 		}
 
-		for(Project project : projectExpert.getAllProjects()){
-			for(Task task : project.getAllTasks()){
+		for (Project project : projectExpert.getAllProjects()) {
+			for (Task task : project.getAllTasks()) {
 				alltasks.add(task);
 			}
 		}
@@ -345,31 +340,39 @@ public class Parser {
 			List<LinkedHashMap<String, Object>> plannings,
 			TaskManController controller) {
 		for (LinkedHashMap<String, Object> planning : plannings) {
-			LocalDateTime startTime = LocalDateTime.parse((CharSequence) planning.get("plannedStartTime"), dateTimeFormatter);
-			ArrayList<Integer> developersNr = (ArrayList<Integer>) planning.get("developers");
+			LocalDateTime startTime = LocalDateTime.parse(
+					(CharSequence) planning.get("plannedStartTime"),
+					dateTimeFormatter);
+			ArrayList<Integer> developersNr = (ArrayList<Integer>) planning
+					.get("developers");
 			List<Developer> assignedDevs = new ArrayList<Developer>();
 
-			for(Integer devNr: developersNr){
+			for (Integer devNr : developersNr) {
 				assignedDevs.add(alldevelopers.get(devNr));
 			}
 
 			int taskNr = (int) (planning.get("task"));
-			PlanningBuilder pbuilder = controller.getPlanner().createPlanning(startTime, alltasks.get(taskNr), assignedDevs.get(0));
+			PlanningBuilder pbuilder = controller.getPlanner().createPlanning(
+					startTime, alltasks.get(taskNr), assignedDevs.get(0));
 
 			for (int i = 1; i < assignedDevs.size(); i++) {
 				pbuilder.addDeveloper(assignedDevs.get(i));
 			}
 
-
-			if(planning.get("resources") != null){		
-				List<ResourceType> resourceList =  new ArrayList<ResourceType>(controller.getResourceExpert().getAllResourceTypes());
-				for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) planning.get("resources")) {
+			if (planning.get("resources") != null) {
+				List<ResourceType> resourceList = new ArrayList<ResourceType>(
+						controller.getResourceExpert().getAllResourceTypes());
+				for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) planning
+						.get("resources")) {
 					Set<Resource> resourceSet = new LinkedHashSet<Resource>();
-					for(Integer resourceNr: (ArrayList<Integer>) pair.get("resource")){
+					for (Integer resourceNr : (ArrayList<Integer>) pair
+							.get("resource")) {
 						resourceSet.add(allresources.get(resourceNr));
 					}
-					pbuilder.addResources(resourceList.get((int) pair.get("type")), resourceSet);
-				}		
+					pbuilder.addResources(
+							resourceList.get((int) pair.get("type")),
+							resourceSet);
+				}
 			}
 			pbuilder.build(controller.getPlanner());
 		}
