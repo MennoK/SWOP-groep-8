@@ -1,7 +1,10 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+<<<<<<< HEAD
+=======
 import java.util.HashMap;
+>>>>>>> 6248fa0a972dcf2ff7a150f9f1ad2e26d3d03f2f
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -41,14 +44,29 @@ public class Planner {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
+<<<<<<< HEAD
 			LocalDateTime time, Set<Developer> developers) {
 
-		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();		
+		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if(isPlannableForTimeSpan(task, developers, timeSpan)){
+=======
+		LocalDateTime time, Set<Developer> developers) {
+		
+		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();		
+		Map<ResourceType, Set<Resource>> resourceMap = getResourceMap(task);
+
+		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
+			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
+			System.out.println("resourceMap  " + resourceMap);
+			Map<ResourceType, Set<Resource>> tempResourceMap = new HashMap<>(getAvailableResources(resourceMap, timeSpan, task));
 			Set<Developer> tempDevelopers = new LinkedHashSet<Developer>(getAvailableDevelopers(developers, timeSpan, task));
+			
+			if (tempDevelopers.size() > 0
+					&& enoughResourcesAreAvailable(tempResourceMap, task)) {
+>>>>>>> 6248fa0a972dcf2ff7a150f9f1ad2e26d3d03f2f
 				possibleStartTimes.add(timeSpan.getBegin());
 			}
 			time = time.plusHours(1);
@@ -56,15 +74,23 @@ public class Planner {
 		return possibleStartTimes;
 	}
 
+<<<<<<< HEAD
 	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,TimeSpan timeSpan){
 		if(enoughDevelopersAvalaible(developersAvailableFor(developers, task, timeSpan)) && enoughResourcesAvailable(resourcesAvailableFor(task, timeSpan), task)){
-			if(timeSpan.overlaps(planning.getTimeSpan())){
+			return true;
 		}
 		else {
 			return false;
+=======
+	Set<Developer> getAvailableDevelopers(Set<Developer> developers, TimeSpan timeSpan, Task task){
+		for (Planning planning : this.getAllPlannings()) {
+			if(timeSpan.overlaps(planning.getTimeSpan())){
+				developers.removeAll(planning.getDevelopers());
+			}
+>>>>>>> 6248fa0a972dcf2ff7a150f9f1ad2e26d3d03f2f
 		}
-	Map<ResourceType, Set<Resource>>  getAvailableResources( ResourceType resourcetype, TimeSpan timeSpan, Task task){
 	}
+<<<<<<< HEAD
 
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {
@@ -74,9 +100,26 @@ public class Planner {
 		else{
 			return false;
 		}
+	}
+=======
+	//TODO
+	Map<ResourceType, Set<Resource>>  getAvailableResources( ResourceType resourcetype, TimeSpan timeSpan, Task task){
+		for (Planning planning : this.getAllPlannings()) {
+			if(timeSpan.overlaps(planning.getTimeSpan())){
+				for (ResourceType type : planning.getResources().keySet()) {
+					Set<Resource> resourceTypes = resources.get(type);
+					resourceTypes.removeAll(planning.getResources().get(type));
+					resources.put(type, resourceTypes);
+				}
+			}
+		}
 		System.out.println("return " + task.getDescription() + " "+ timeSpan.getBegin() + " "+ resources);
+		return resources;
 	}
 	
+	private boolean enoughResourcesAreAvailable(
+			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
+>>>>>>> 6248fa0a972dcf2ff7a150f9f1ad2e26d3d03f2f
 
 	private boolean enoughResourcesAvailable(
 			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
@@ -200,9 +243,13 @@ public class Planner {
 		for (Task conflictingTask : tasks) {
 
 			if (conflictingTask.hasPlanning()) {
-				if (conflictingTask.getPlanning().getTimeSpan().overlaps(new TimeSpan(time, task.getDuration()))) {
+<<<<<<< HEAD
+				TimeSpan planningTimeSpan = new TimeSpan(conflictingTask.getPlanning().getStartTime(), conflictingTask.getPlanning().getEndTime());
 
 				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
+=======
+				if (conflictingTask.getPlanning().getTimeSpan().overlaps(new TimeSpan(time, task.getDuration()))) {
+>>>>>>> 6248fa0a972dcf2ff7a150f9f1ad2e26d3d03f2f
 					conflictingTasks.add(conflictingTask);
 				}
 			}
