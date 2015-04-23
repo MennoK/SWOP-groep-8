@@ -153,6 +153,11 @@ public class TaskManController {
 		// TODO update status of all tasks
 	}
 
+	private void updateStatusAll() {
+		for (Task task : getProjectExpert().getAllTasks())
+			updateStatus(task);
+	}
+
 	private void updateStatus(Task task) {
 		if (task.getStatus() == TaskStatus.EXECUTING
 				|| task.getStatus() == TaskStatus.FINISHED
