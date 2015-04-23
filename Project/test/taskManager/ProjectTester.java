@@ -330,7 +330,7 @@ public class ProjectTester {
 		// To delay task finish time with 8 work hours add 3*24.
 		// 8 work hours = 24 real hours
 		// + 2 days of weekend
-		baseTask.updateStatus(time, time.plusHours(8 + 3 * 24), false);
+		baseTask.updateStatus(time, time.plusHours(9).plusDays(3), false);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}

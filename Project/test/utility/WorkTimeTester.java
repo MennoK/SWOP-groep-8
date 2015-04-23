@@ -27,5 +27,11 @@ public class WorkTimeTester {
 		LocalDateTime second = LocalDateTime.of(2015, 04, 23, 17, 0);
 		assertEquals(Duration.ofHours(15), WorkTime.durationBetween(first, second));
 	}
+	
+	@Test
+	public void testEstimatedFinishTimeLong() {
+		LocalDateTime finishtime = WorkTime.getFinishTime(LocalDateTime.of(2015, 04, 22, 15, 0), Duration.ofHours(3));
+		assertEquals(LocalDateTime.of(2015, 04, 23, 9, 0), finishtime);
+	}
 
 }
