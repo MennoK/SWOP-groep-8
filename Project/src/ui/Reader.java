@@ -2,6 +2,8 @@ package ui;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -37,12 +39,14 @@ public class Reader {
 		getScan().close();
 	}
 
-	<T extends Visitable> T select(List<T> options) throws ExitUseCaseException {
+	<T extends Visitable> T select(Collection<T> options)
+			throws ExitUseCaseException {
+		List<T> listedOptions = new ArrayList<T>(options);
 		while (true) {
-			System.out.println(Printer.list(options, 1));
+			System.out.println(Printer.list(listedOptions));
 			System.out.println("select one:");
 			try {
-				return options.get(Integer.parseInt(getData()) - 1);
+				return listedOptions.get(Integer.parseInt(getData()) - 1);
 			} catch (java.lang.IndexOutOfBoundsException e) {
 				System.out.println(e.getMessage());
 			} catch (java.lang.NumberFormatException e) {
