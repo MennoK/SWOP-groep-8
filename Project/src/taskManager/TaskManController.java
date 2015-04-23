@@ -1,11 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.PrimitiveIterator.OfDouble;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import sun.util.locale.provider.AvailableLanguageTags;
 import utility.TimeSpan;
 
 /**
@@ -166,7 +162,7 @@ public class TaskManController {
 			// task status remains unchanged
 			return;
 		if (getPlanner().isPlannableForTimeSpan(task,
-				getDeveloperExpert().getAllDevelopers(),
+				task.getPlanning().getDevelopers(),
 				new TimeSpan(getTime(), task.getDuration()))) {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
