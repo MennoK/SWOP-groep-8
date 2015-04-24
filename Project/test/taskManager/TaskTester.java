@@ -37,7 +37,8 @@ public class TaskTester {
 				.addDependencies(baseTask).build();
 		dependentTask = project.getAllTasks().get(1);
 
-		project.taskBuilder("a finished task", Duration.ofHours(8), 0.2).build();
+		project.taskBuilder("a finished task", Duration.ofHours(8), 0.2)
+				.build();
 		finishedTask = project.getAllTasks().get(2);
 		finishedTask.updateStatus(now, now.plusHours(2), false);
 
@@ -65,7 +66,8 @@ public class TaskTester {
 
 	@Test
 	public void getStatusUnavailableTask() {
-		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE,
+				dependentTask.getCalculatedStatus());
 	}
 
 	@Test
@@ -80,7 +82,8 @@ public class TaskTester {
 
 	@Test
 	public void getStatusLevel2DependentTask() {
-		assertEquals(TaskStatus.UNAVAILABLE, level2DependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.UNAVAILABLE,
+				level2DependentTask.getCalculatedStatus());
 	}
 
 	@Test
@@ -179,7 +182,7 @@ public class TaskTester {
 		assertEquals(baseTask.getFinishStatus(), TaskFinishedStatus.ON_TIME);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalStateException.class)
 	public void taskIsNotFinishedYet() throws InvalidActivityException {
 		baseTask.getFinishStatus();
 	}

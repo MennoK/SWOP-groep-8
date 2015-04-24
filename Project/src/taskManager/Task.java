@@ -503,7 +503,7 @@ public class Task implements Visitable {
 	 * 
 	 * @param startTime
 	 */
-	public void setExecuting(LocalDateTime startTime) {
+	void setExecuting(LocalDateTime startTime) {
 		if (getStatus() != TaskStatus.AVAILABLE)
 			throw new IllegalStateException(
 					"Task needs to be availlable to become executing");
@@ -516,7 +516,7 @@ public class Task implements Visitable {
 	 * 
 	 * @param endTime
 	 */
-	public void setFinished(LocalDateTime endTime) {
+	void setFinished(LocalDateTime endTime) {
 		if (getStatus() != TaskStatus.EXECUTING)
 			throw new IllegalStateException(
 					"Task needs to be executing to become finished");
@@ -532,7 +532,7 @@ public class Task implements Visitable {
 	 * 
 	 * @param endTime
 	 */
-	public void setFailed(LocalDateTime endTime) {
+	void setFailed(LocalDateTime endTime) {
 		if (getStatus() != TaskStatus.EXECUTING)
 			throw new IllegalStateException(
 					"Task needs to be executing to become failed");
