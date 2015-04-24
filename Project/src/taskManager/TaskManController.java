@@ -151,22 +151,6 @@ public class TaskManController {
 
 	private void updateStatusAll() {
 		for (Task task : getProjectExpert().getAllTasks())
-			updateStatus(task);
-	}
-
-	private void updateStatus(Task task) {
-		if (task.getStatus() == TaskStatus.EXECUTING
-				|| task.getStatus() == TaskStatus.FINISHED
-				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
-				|| !task.checkDependenciesFinished())
-			// task status remains unchanged
-			return;
-		if (getPlanner().isPlannableForTimeSpan(task,
-				task.getPlanning().getDevelopers(),
-				new TimeSpan(getTime(), task.getDuration()))) {
-			task.setStatus(TaskStatus.AVAILABLE);
-		} else {
-			task.setStatus(TaskStatus.UNAVAILABLE);
-		}
+			getPlanner().updateStatus(task);
 	}
 }

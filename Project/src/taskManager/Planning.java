@@ -70,6 +70,7 @@ public class Planning {
 			Planning planning = new Planning(this);
 			planningExpert.addPlanning(planning);
 			task.setPlanning(planning);
+			planningExpert.updateStatus(task);
 			return planning;
 		}
 	}
