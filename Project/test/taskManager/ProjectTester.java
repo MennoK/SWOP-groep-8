@@ -52,9 +52,8 @@ public class ProjectTester {
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
 		controler = new TaskManController(time);
-		controler.getProjectExpert().createProject("project", "desc",
+		project = controler.getProjectExpert().createProject("project", "desc",
 				time.plusDays(4));
-		project = controler.getProjectExpert().getAllProjects().get(0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

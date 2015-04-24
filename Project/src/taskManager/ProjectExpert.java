@@ -46,11 +46,12 @@ public class ProjectExpert implements TimeObserver {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
-	public void createProject(String name, String description,
+	public Project createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
 		project.handleTimeChange(lastUpdateTime);
-		this.addProject(project);
+		addProject(project);
+		return project;
 	}
 
 	/**
@@ -64,9 +65,9 @@ public class ProjectExpert implements TimeObserver {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
-	public void createProject(String name, String description,
+	public Project createProject(String name, String description,
 			LocalDateTime dueTime) {
-		this.createProject(name, description, lastUpdateTime, dueTime);
+		return createProject(name, description, lastUpdateTime, dueTime);
 	}
 
 	/**

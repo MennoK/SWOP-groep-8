@@ -117,7 +117,7 @@ public class UiTaskMan {
 		ArrayList<Task> allTasks = new ArrayList<Task>();
 		for (Project project : taskManController.getProjectExpert()
 				.getAllProjects()) {
-			System.out.println(Printer.oneLine(project));
+			System.out.println(new ToStringVisitor().create(project));
 			System.out.println(Printer.list(project.getAllTasks(),
 					allTasks.size() + 1));
 			allTasks.addAll(project.getAllTasks());
