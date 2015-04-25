@@ -35,7 +35,6 @@ public class ResourceType {
 	public static class ResourceTypeBuilder {
 
 		private final String name;
-		private final ResourceExpert resourceExpert;
 		private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
 		private Set<ResourceType> conflictedResourceTypes = new LinkedHashSet<ResourceType>();;
 		private TimeInterval dailyAvailability;
@@ -49,9 +48,8 @@ public class ResourceType {
 		 * @param resourceExpert
 		 *            : resource expert
 		 */
-		public ResourceTypeBuilder(String name, ResourceExpert resourceExpert) {
+		public ResourceTypeBuilder(String name) {
 			this.name = name;
-			this.resourceExpert = resourceExpert;
 		}
 
 		/**
@@ -84,13 +82,24 @@ public class ResourceType {
 		/**
 		 * Builds a resource type after all the optional values have been set.
 		 */
-		public ResourceType build() {
+		public ResourceType build(ResourceExpert resourceExpert) {
 			ResourceType resourceType = new ResourceType(this);
 			resourceExpert.addResourceType(resourceType);
 			return resourceType;
 		}
 	}
 
+	/**
+	 * Returns a new resource type builder to add extra parameters such as
+	 * other required resource types and other conflicted resource types
+	 * 
+	 * @param name : required name of a resource type
+	 * @return resourceTypeBuilder : new builder for creating resource types
+	 */
+	public static ResourceTypeBuilder builder(String name){
+		return new ResourceTypeBuilder(name);
+	}
+	
 	/**
 	 * 
 	 * @param builder

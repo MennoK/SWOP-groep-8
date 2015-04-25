@@ -25,6 +25,7 @@ import org.yaml.snakeyaml.Yaml;
 import parser.TaskManInitFileChecker.IntPair;
 import taskManager.Developer;
 import taskManager.DeveloperExpert;
+import taskManager.Planning;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.Resource;
@@ -156,8 +157,8 @@ public class Parser {
 
 			String name = (String) resourceType.get("name");
 
-			ResourceTypeBuilder builder = resourceExpert
-					.resourceTypeBuilder(name);
+			ResourceTypeBuilder builder = ResourceType
+					.builder(name);
 			List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
 					resourceExpert.getAllResourceTypes());
 
@@ -186,7 +187,7 @@ public class Parser {
 						.get(dailyAvailability));
 			}
 
-			builder.build();
+			builder.build(resourceExpert);
 		}
 	}
 
@@ -274,7 +275,7 @@ public class Parser {
 			Project projectOfTask = projectExpert.getAllProjects().get(
 					projectNumber);
 
-			TaskBuilder builder = projectOfTask.taskBuilder(description,
+			TaskBuilder builder = Task.builder(description,
 					estimatedDuration, acceptableDeviation);
 
 			// add dependencies if there are any
@@ -307,7 +308,7 @@ public class Parser {
 			}
 
 			// build the new task
-			builder.build();
+			builder.build(projectOfTask);
 			Task newTask = projectOfTask.getAllTasks().get(
 					projectOfTask.getAllTasks().size() - 1);
 
@@ -352,7 +353,7 @@ public class Parser {
 			}
 
 			int taskNr = (int) (planning.get("task"));
-			PlanningBuilder pbuilder = controller.getPlanner().createPlanning(
+			PlanningBuilder pbuilder = Planning.builder(
 					startTime, alltasks.get(taskNr), assignedDevs.get(0));
 
 			for (int i = 1; i < assignedDevs.size(); i++) {

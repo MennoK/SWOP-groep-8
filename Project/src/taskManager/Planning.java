@@ -74,6 +74,29 @@ public class Planning {
 			return planning;
 		}
 	}
+	
+	/**
+	 * 
+	 * Returns a new planning builder to add extra parameters such as resources
+	 * 
+	 * @param startTime
+	 *            : planned start time
+	 * @param endTime
+	 *            : planned end time
+	 * @param task
+	 *            : task that is being planned
+	 * @param developers
+	 *            : assigned developers
+	 * 
+	 * @return planningBuilder : new builder for creating planning
+	 */
+	public static PlanningBuilder builder(LocalDateTime startTime, Task task,
+			Developer developer) {
+		return new PlanningBuilder(startTime, task, developer);
+	}
+	
+	
+	
 	/**
 	 * The constructor of planning has a planning builder as argument. The planning builder
 	 * contains all the required parameters and possible optional parameters

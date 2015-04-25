@@ -20,33 +20,6 @@ public class ProjectTester {
 	private Task baseTask;
 	private Task dependentTask;
 
-	private Task createStandardTask(Duration taskDuration) {
-		Task task = project.taskBuilder("desc", taskDuration, 0.5).build();
-		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		controler.getPlanner().createPlanning(time, task, dev)
-				.build(controler.getPlanner());
-		return task;
-	}
-
-	private Task createDependentTask(Duration taskDuration, Task dependency) {
-		Task task = project.taskBuilder("desc", taskDuration, 0.5)
-				.addDependencies(dependency).build();
-		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
-				dependency.getDuration());
-		controler.getPlanner().createPlanning(depFinishTime, task, dev)
-				.build(controler.getPlanner());
-		return task;
-	}
-
-	private Task createAlternativeTask(Duration taskDuration, Task original) {
-		Task task = project.taskBuilder("desc", taskDuration, 0.5)
-				.setOriginalTask(original).build();
-		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		controler.getPlanner().createPlanning(time, task, dev)
-				.build(controler.getPlanner());
-		return task;
-	}
 
 	@Before
 	public void setUp() {
@@ -54,6 +27,34 @@ public class ProjectTester {
 		controler = new TaskManController(time);
 		project = controler.getProjectExpert().createProject("project", "desc",
 				time.plusDays(4));
+	}
+	
+	private Task createStandardTask(Duration taskDuration) {
+		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
+		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
+		Planning.builder(time, task, dev)
+				.build(controler.getPlanner());
+		return task;
+	}
+
+	private Task createDependentTask(Duration taskDuration, Task dependency) {
+		Task task = Task.builder("desc", taskDuration, 0.5)
+				.addDependencies(dependency).build(project);
+		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
+		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
+				dependency.getDuration());
+		Planning.builder(depFinishTime, task, dev)
+				.build(controler.getPlanner());
+		return task;
+	}
+
+	private Task createAlternativeTask(Duration taskDuration, Task original) {
+		Task task = Task.builder("desc", taskDuration, 0.5)
+				.setOriginalTask(original).build(project);
+		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
+		Planning.builder(time, task, dev)
+				.build(controler.getPlanner());
+		return task;
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -311,8 +312,8 @@ public class ProjectTester {
 	@Test
 	public void testDelayToMuchWork() {
 		baseTask = createStandardTask(Duration.ofHours(8));
-		project.taskBuilder("bla", Duration.ofHours(2 * 8), 0.5)
-				.addDependencies(baseTask).build();
+		Task.builder("bla", Duration.ofHours(2 * 8), 0.5)
+				.addDependencies(baseTask).build(project);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
@@ -320,8 +321,8 @@ public class ProjectTester {
 	@Test
 	public void testDelayBaseTaskDelayed() {
 		baseTask = createStandardTask(Duration.ofHours(8));
-		project.taskBuilder("bla", Duration.ofHours(8), 0.5)
-				.addDependencies(baseTask).build();
+		Task.builder("bla", Duration.ofHours(8), 0.5)
+				.addDependencies(baseTask).build(project);
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// To delay task finish time with 8 work hours add 3*24.
@@ -335,8 +336,8 @@ public class ProjectTester {
 
 	@Test
 	public void testGetCurrentDelayTwoTasks() {
-		project.taskBuilder("desc", Duration.ofHours(5 * 8), 0.5).build();
-		project.taskBuilder("desc", Duration.ofHours(4 * 8), 0.5).build();
+		Task.builder("desc", Duration.ofHours(5 * 8), 0.5).build(project);
+		Task.builder("desc", Duration.ofHours(4 * 8), 0.5).build(project);
 		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
 	}
 

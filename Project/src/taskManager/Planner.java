@@ -8,7 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import taskManager.Planning.PlanningBuilder;
 import utility.TimeSpan;
 
 public class Planner {
@@ -103,27 +102,6 @@ public class Planner {
 			resourceMap.put(resourceType, resourceType.getAllResources());
 		}
 		return resourceMap;
-	}
-
-	/**
-	 * 
-	 * Returns a new planning builder to add extra parameters such as resources
-	 * 
-	 * @param startTime
-	 *            : planned start time
-	 * @param endTime
-	 *            : planned end time
-	 * @param task
-	 *            : task that is being planned
-	 * @param developers
-	 *            : assigned developers
-	 * 
-	 * @return planningBuilder : new builder for creating planning
-	 */
-	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
-			Developer developer) {
-
-		return new PlanningBuilder(startTime, task, developer);
 	}
 
 	/**

@@ -91,7 +91,7 @@ public class UiTaskMan {
 					+ "Adding task to which project?");
 			Project project = reader.select(taskManController
 					.getProjectExpert().getAllProjects());
-			TaskBuilder builder = project.taskBuilder(reader
+			TaskBuilder builder = Task.builder(reader
 					.getString("Give a description:"), reader
 					.getDuration("Give an estimate for the task duration:"),
 					reader.getDouble("Give an acceptable deviation:"));
@@ -102,7 +102,7 @@ public class UiTaskMan {
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
 			}
-			builder.build();
+			builder.build(project);
 			return;
 		}
 	}

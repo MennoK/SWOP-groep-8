@@ -64,7 +64,6 @@ public class Task implements Visitable {
 		private String description;
 		private Duration estimatedDuration;
 		private double acceptableDeviation;
-		private Project project;
 		private LocalDateTime now;
 		private Task originalTask = null;
 
@@ -83,12 +82,10 @@ public class Task implements Visitable {
 		 *            : acceptable deviation of a task
 		 */
 		public TaskBuilder(String description, Duration estimatedDuration,
-				double acceptableDeviation, Project project) {
+				double acceptableDeviation) {
 			this.description = description;
 			this.estimatedDuration = estimatedDuration;
 			this.acceptableDeviation = acceptableDeviation;
-			this.project = project;
-			this.now = project.getLastUpdateTime();
 		}
 
 		/**
@@ -126,12 +123,18 @@ public class Task implements Visitable {
 		/**
 		 * Build a Task after all the optional values have been set.
 		 */
-		public Task build() {
+		public Task build(Project project) {
 			Task task = new Task(this);
+			this.now = project.getLastUpdateTime();
 			project.updateDependencies(task, originalTask);
 			project.addTask(task);
 			return task;
 		}
+	}
+	
+	public static TaskBuilder builder(String description,
+			Duration estimatedDuration, double acceptableDeviation){
+		return new TaskBuilder(description, estimatedDuration, acceptableDeviation);
 	}
 
 	/**
