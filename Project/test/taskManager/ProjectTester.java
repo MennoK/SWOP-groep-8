@@ -331,7 +331,7 @@ public class ProjectTester {
 		controler.setExecuting(baseTask, time);
 		controler.setFinished(baseTask, time.plusHours(8).plusDays(3));
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
-		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
+		assertEquals(Duration.ofHours(7), project.getCurrentDelay());
 	}
 
 	@Test

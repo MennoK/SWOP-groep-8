@@ -1,5 +1,6 @@
 package taskManager;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -73,7 +74,7 @@ public class DeveloperExpert {
 	 * @return developers : set of all developers
 	 */
 	public Set<Developer> getAllDevelopers() {
-		return developers;
+		return Collections.unmodifiableSet(developers);
 	}
 
 }

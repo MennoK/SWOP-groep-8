@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -85,24 +86,6 @@ public class Planner {
 	}
 
 	/**
-	 * creates a map with as key the resource types required by the tasks that
-	 * maps to the list of resources of that type
-	 * 
-	 * @param requiredResourceTypes
-	 * @return
-	 */
-	private Map<ResourceType, Set<Resource>> getResourceMap(Task task) {
-		Set<ResourceType> requiredResourceTypes = task
-				.getRequiredResourceTypes().keySet();
-		Map<ResourceType, Set<Resource>> resourceMap = new LinkedHashMap<ResourceType, Set<Resource>>();
-
-		for (ResourceType resourceType : requiredResourceTypes) {
-			resourceMap.put(resourceType, resourceType.getAllResources());
-		}
-		return resourceMap;
-	}
-
-	/**
 	 * This method adds a given planning to the planningExpert
 	 * 
 	 * @param planning
@@ -115,7 +98,7 @@ public class Planner {
 			throw new IllegalArgumentException(
 					"The given planning is already in the planningExpert.");
 		} else {
-			this.getAllPlannings().add(planning);
+			planningSet.add(planning);
 		}
 	}
 
@@ -184,8 +167,13 @@ public class Planner {
 
 	}
 
+	/**
+	 * returns all plannings for all tasks
+	 * 
+	 * @return all the plannings in the system
+	 */
 	public Set<Planning> getAllPlannings() {
-		return this.planningSet;
+		return Collections.unmodifiableSet(this.planningSet);
 	}
 
 	Map<ResourceType, Set<Resource>> resourcesAvailableFor(Task task,
@@ -199,7 +187,7 @@ public class Planner {
 		return availableResourcesForEachResourceType;
 	}
 
-	private Set<Resource> resourcesOfTypeAvailableFor(
+	public Set<Resource> resourcesOfTypeAvailableFor(
 			ResourceType resourcetype, Task task, TimeSpan timeSpan) {
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
 		for (Resource resource : resourcetype.getAllResources()) {
