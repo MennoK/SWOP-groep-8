@@ -109,10 +109,6 @@ public class Planning {
 		setTimeSpan(planningBuilder.timespan);
 		setResources(planningBuilder.resources);
 	}
-	
-	public Task getTask() {
-		return task;
-	}
 
 	public Set<Developer> getDevelopers() {
 		return developers;
