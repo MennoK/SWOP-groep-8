@@ -66,11 +66,11 @@ public class Planning {
 		/**
 		 * Build a Planning after all the optional values have been set.
 		 */
-		public Planning build(Planner planningExpert) {
+		public Planning build(Planner planner) {
 			Planning planning = new Planning(this);
-			planningExpert.addPlanning(planning);
+			planner.addPlanning(planning);
 			task.setPlanning(planning);
-			planningExpert.updateStatus(task);
+			planner.updateStatus(task);
 			return planning;
 		}
 	}

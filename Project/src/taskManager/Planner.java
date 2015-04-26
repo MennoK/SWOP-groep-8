@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 import utility.TimeSpan;
 
@@ -214,7 +215,7 @@ public class Planner {
 
 	private boolean isAvailableFor(Resource resource, Task task,
 			TimeSpan timeSpan) {
-		Set<Planning> otherPlannings = this.getAllPlannings();
+		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(this.getAllPlannings());
 		if (task.hasPlanning()) {
 			otherPlannings.remove(task.getPlanning());
 		}
@@ -244,7 +245,7 @@ public class Planner {
 
 	private boolean isAvailableFor(Developer developer, Task task,
 			TimeSpan timeSpan) {
-		Set<Planning> otherPlanings = this.getAllPlannings();
+		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(this.getAllPlannings());
 		if (task.hasPlanning()) {
 			otherPlanings.remove(task.getPlanning());
 		}
