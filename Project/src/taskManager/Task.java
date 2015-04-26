@@ -546,6 +546,9 @@ public class Task implements Visitable {
 		setEndTime(endTime);
 		setStatus(TaskStatus.FAILED);
 
+		if (this.hasPlanning()){
+			getPlanning().setEndTime(endTime);
+		}
 		// TODO remove after refactoring
 		setOldFailed();
 	}

@@ -130,7 +130,21 @@ public class Planning {
 		return timeSpan;
 	}
 
+	/**
+	 * sets the timespan of the planning
+	 * 
+	 * @param timeSpan the new timespan of the planning
+	 */
 	public void setTimeSpan(TimeSpan timeSpan) {
 		this.timeSpan = timeSpan;
+	}
+	
+	/**
+	 * allow to edit the end time of the planning
+	 * 
+	 * @param endTime the new end time of the planning 
+	 */
+	public void setEndTime(LocalDateTime endTime){
+		this.getTimeSpan().setEnd(endTime);
 	}
 }
