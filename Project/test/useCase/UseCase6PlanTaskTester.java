@@ -13,8 +13,7 @@ import org.junit.Test;
 
 import taskManager.*;
 import utility.TimeSpan;
-<<<<<<< HEAD
-=======
+
 import taskManager.Developer;
 import taskManager.DeveloperExpert;
 import taskManager.Planner;
@@ -24,7 +23,7 @@ import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
->>>>>>> daaf6b8908c294dbae253fa05ce84574e70a23b5
+
 
 public class UseCase6PlanTaskTester {
 
