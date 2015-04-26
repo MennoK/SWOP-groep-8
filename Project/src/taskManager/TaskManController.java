@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import utility.TimeSpan;
 
@@ -163,4 +164,25 @@ public class TaskManController {
 		for (Task task : getProjectExpert().getAllTasks())
 			getPlanner().updateStatus(task);
 	}
+
+	/**
+	 * Return all the tasks that do not have a planning yet.
+	 * 
+	 * @return set of tasks without a planning
+	 */
+	public Set<Task> getUnplannedTasks() {
+		return getPlanner().getUnplannedTasks(getProjectExpert().getAllTasks());
+	}
+
+	/**
+	 * returns 3 times at which a task could be planned so that all required
+	 * developers and resources are available
+	 * 
+	 * @return A set of localdateTimes
+	 */
+	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
+		return getPlanner().getPossibleStartTimes(task, getTime(),
+				getDeveloperExpert().getAllDevelopers());
+	}
+
 }

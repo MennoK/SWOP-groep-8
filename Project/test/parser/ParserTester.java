@@ -3,6 +3,7 @@ package parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.time.Duration;
@@ -11,6 +12,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -320,7 +323,7 @@ public class ParserTester {
 		assertEquals(task1.getAcceptableDeviation(), 0.50, 0.001);
 		assertEquals(0, task1.getDependencies().size());
 		assertEquals(taskManager.TaskStatus.FINISHED,
-				task1.getCalculatedStatus());
+				task1.getStatus());
 		assertEquals(task1.getStartTime(),
 				LocalDateTime.parse(("2014-01-01 10:00"), dateTimeFormatter));
 		assertEquals(task1.getEndTime(),
@@ -359,9 +362,9 @@ public class ParserTester {
 		assertNull(task1.getStartTime());
 		assertNull(task1.getEndTime());
 		assertNotEquals(taskManager.TaskStatus.FAILED,
-				task1.getCalculatedStatus());
+				task1.getStatus());
 		assertNotEquals(taskManager.TaskStatus.FINISHED,
-				task1.getCalculatedStatus());
+				task1.getStatus());
 	}
 
 	@Test
@@ -379,9 +382,9 @@ public class ParserTester {
 		assertNull(task2.getStartTime());
 		assertNull(task2.getEndTime());
 		assertNotEquals(taskManager.TaskStatus.FAILED,
-				task2.getCalculatedStatus());
+				task2.getStatus());
 		assertNotEquals(taskManager.TaskStatus.FINISHED,
-				task2.getCalculatedStatus());
+				task2.getStatus());
 	}
 
 	@Test
@@ -396,7 +399,7 @@ public class ParserTester {
 		assertNull(task3.getOriginal());
 
 		assertEquals(2, task3.getDependencies().size());
-		assertEquals(taskManager.TaskStatus.FAILED, task3.getCalculatedStatus());
+		assertEquals(taskManager.TaskStatus.FAILED, task3.getStatus());
 		assertEquals(
 				LocalDateTime.parse(("2014-01-02 09:00"), dateTimeFormatter),
 				task3.getStartTime());
@@ -422,9 +425,10 @@ public class ParserTester {
 		assertNull(task4.getStartTime());
 		assertNull(task4.getEndTime());
 		assertNotEquals(taskManager.TaskStatus.FAILED,
-				task4.getCalculatedStatus());
+				task4.getStatus());
 		assertNotEquals(taskManager.TaskStatus.FINISHED,
-				task4.getCalculatedStatus());
+				task4.getStatus());
+		assertEquals(taskManager.TaskStatus.EXECUTING, task4.getStatus());
 
 		assertEquals(1, task4.getRequiredResourceTypes().size());
 		ResourceType type = (ResourceType) task4.getRequiredResourceTypes()
@@ -454,9 +458,9 @@ public class ParserTester {
 		assertNull(task1.getStartTime());
 		assertNull(task1.getEndTime());
 		assertNotEquals(taskManager.TaskStatus.FAILED,
-				task1.getCalculatedStatus());
+				task1.getStatus());
 		assertNotEquals(taskManager.TaskStatus.FINISHED,
-				task1.getCalculatedStatus());
+				task1.getStatus());
 	}
 
 	@Test
@@ -475,9 +479,9 @@ public class ParserTester {
 		assertNull(task2.getStartTime());
 		assertNull(task2.getEndTime());
 		assertNotEquals(taskManager.TaskStatus.FAILED,
-				task2.getCalculatedStatus());
+				task2.getStatus());
 		assertNotEquals(taskManager.TaskStatus.FINISHED,
-				task2.getCalculatedStatus());
+				task2.getStatus());
 	}
 
 	@Test
@@ -497,7 +501,15 @@ public class ParserTester {
 				.get(0).getDevelopers());
 		assertEquals("John Deere", developers.get(0).getName());
 		assertEquals("Tom Hawk", developers.get(1).getName());
-		// TODO add other
+		
+		Map.Entry<ResourceType, Set<Resource>> map = planningsList.get(0).getResources().entrySet().iterator().next();
+		List<Resource> resources = new ArrayList<Resource>(map.getValue());
+		assertEquals(2, resources.size());
+		assertEquals("Car 1", resources.get(0).getName());
+		assertEquals("Car 2", resources.get(1).getName());
+
+		assertTrue(taskManController.getProjectExpert().getAllProjects().get(1).getAllTasks().get(2).hasPlanning());
+
 	}
 
 	@Test
@@ -511,7 +523,10 @@ public class ParserTester {
 		List<Developer> developers = new ArrayList<Developer>(planningsList
 				.get(1).getDevelopers());
 		assertEquals("Tom Hawk", developers.get(0).getName());
-		// TODO add other
+		
+		assertEquals(0, planningsList.get(1).getResources().size());
+		
+		assertTrue(taskManController.getProjectExpert().getAllProjects().get(1).getAllTasks().get(3).hasPlanning());
 
 	}
 
@@ -526,7 +541,12 @@ public class ParserTester {
 		List<Developer> developers = new ArrayList<Developer>(planningsList
 				.get(2).getDevelopers());
 		assertEquals("Bob Grylls", developers.get(0).getName());
-		// TODO add other
 
+		Map.Entry<ResourceType, Set<Resource>> map = planningsList.get(2).getResources().entrySet().iterator().next();
+		List<Resource> resources = new ArrayList<Resource>(map.getValue());
+		assertEquals(1, resources.size());
+		assertEquals("Data Center Y", resources.get(0).getName());
+
+		assertTrue(taskManController.getProjectExpert().getAllProjects().get(0).getAllTasks().get(0).hasPlanning());
 	}
 }

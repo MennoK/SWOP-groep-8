@@ -23,6 +23,9 @@ public class UiTaskMan {
 		askInitialState();
 		if (taskManController == null)
 			initialiseEmptySystem();
+
+		System.out.println("Current time initialized on:\n"
+				+ taskManController.getTime() + "\n");
 	}
 
 	private void askInitialState() {
@@ -57,8 +60,6 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("The standard time will be used.");
 		}
-
-		System.out.println("Current time initialized on:\n" + now + "\n");
 		taskManController = new TaskManController(now);
 	}
 
@@ -66,7 +67,7 @@ public class UiTaskMan {
 		Project project = reader.select(taskManController.getProjectExpert()
 				.getAllProjects());
 		System.out.println(new ToStringVisitor().create(project));
-		Task task = reader.select(project.getAllTasks());
+		Task task = reader.select(project.getAllTasks(), false);
 		System.out.println(new ToStringVisitor().create(task));
 	}
 
@@ -108,7 +109,9 @@ public class UiTaskMan {
 	}
 
 	private void planTask() throws ExitUseCaseException {
-		System.out.println("TODO implement plan task");
+		Task task = reader.select(taskManController.getUnplannedTasks());
+		LocalDateTime time = reader.selectDate(taskManController
+				.getPossibleStartTimes(task));
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
