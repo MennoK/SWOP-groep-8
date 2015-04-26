@@ -1,13 +1,10 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collections;
 
 import utility.TimeSpan;
 
@@ -21,7 +18,7 @@ public class Planner {
 	 * @param tasks
 	 * @return set of tasks without a planning
 	 */
-	public Set<Task> getUnplannedTasks(Set<Task> tasks) {
+	Set<Task> getUnplannedTasks(Set<Task> tasks) {
 
 		Set<Task> modifiableTaskSet = new LinkedHashSet<Task>(tasks);
 
@@ -215,7 +212,8 @@ public class Planner {
 
 	private boolean isAvailableFor(Resource resource, Task task,
 			TimeSpan timeSpan) {
-		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(this.getAllPlannings());
+		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(
+				this.getAllPlannings());
 		if (task.hasPlanning()) {
 			otherPlannings.remove(task.getPlanning());
 		}
@@ -245,7 +243,8 @@ public class Planner {
 
 	private boolean isAvailableFor(Developer developer, Task task,
 			TimeSpan timeSpan) {
-		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(this.getAllPlannings());
+		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(
+				this.getAllPlannings());
 		if (task.hasPlanning()) {
 			otherPlanings.remove(task.getPlanning());
 		}

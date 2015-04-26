@@ -1,10 +1,13 @@
 package ui;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import taskManager.Developer;
 import taskManager.Project;
 import taskManager.ProjectFinishingStatus;
+import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
 import taskManager.TaskStatus;
@@ -22,6 +25,22 @@ public class Printer {
 		for (int i = 0; i < options.size(); i++) {
 			str += (i + startingIndex) + ": "
 					+ summarizingVisitor.createSummary(options.get(i)) + "\n";
+		}
+		return str.trim();
+	}
+
+	static String listDates(List<LocalDateTime> options) {
+		String str = "";
+		for (int i = 0; i < options.size(); i++) {
+			str += (1 + i) + ": " + options.get(i) + "\n";
+		}
+		return str.trim();
+	}
+
+	static String print(Map<ResourceType, Integer> requirredRessources) {
+		String str = "Requirrements:\n";
+		for (ResourceType type : requirredRessources.keySet()) {
+			str += type.getName() + " " + requirredRessources.get(type) + "\n";
 		}
 		return str.trim();
 	}
@@ -97,7 +116,7 @@ public class Printer {
 		}
 		if (task.getOriginal() != null)
 			str += ", alternative for task " + task.getOriginal().getId();
-		if(task.getCalculatedStatus() == TaskStatus.FINISHED) {
+		if (task.getCalculatedStatus() == TaskStatus.FINISHED) {
 			TaskFinishedStatus finishStatus = task.getFinishStatus();
 			str += ", started " + task.getStartTime();
 			str += ", finished " + task.getEndTime();

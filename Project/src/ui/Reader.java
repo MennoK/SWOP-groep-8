@@ -39,9 +39,34 @@ public class Reader {
 
 	<T extends Visitable> T select(Collection<T> options)
 			throws ExitUseCaseException {
+		return select(options, true);
+	}
+
+	<T extends Visitable> T select(Collection<T> options, boolean printList)
+			throws ExitUseCaseException {
 		List<T> listedOptions = new ArrayList<T>(options);
 		while (true) {
-			System.out.println(Printer.list(listedOptions));
+			if (printList) {
+				System.out.println(Printer.list(listedOptions));
+			}
+			System.out.println("select one:");
+			try {
+				return listedOptions.get(Integer.parseInt(getData()) - 1);
+			} catch (java.lang.IndexOutOfBoundsException e) {
+				System.out.println(e.getMessage());
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give an integer");
+			}
+		}
+	}
+
+	// TODO try to merge with select<Visitable>
+	LocalDateTime selectDate(Collection<LocalDateTime> options)
+			throws ExitUseCaseException {
+		List<LocalDateTime> listedOptions = new ArrayList<LocalDateTime>(
+				options);
+		while (true) {
+			System.out.println(Printer.listDates(listedOptions));
 			System.out.println("select one:");
 			try {
 				return listedOptions.get(Integer.parseInt(getData()) - 1);
