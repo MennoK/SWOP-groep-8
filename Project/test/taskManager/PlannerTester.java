@@ -162,9 +162,9 @@ public class PlannerTester {
 		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
 		Task task3 = project.getAllTasks().get(2);
 		Set<LocalDateTime> possibleStartTimes121617 = new LinkedHashSet<>();
-		possibleStartTimes121617.add(time1.plusHours(1));
 		possibleStartTimes121617.add(time1.plusHours(5));
 		possibleStartTimes121617.add(time1.plusHours(6));
+		possibleStartTimes121617.add(time1.plusHours(7));
 
 		assertEquals(possibleStartTimes121617,planner.getPossibleStartTimes(task3, time1, this.developerExpert.getAllDevelopers()));
 		
@@ -220,7 +220,7 @@ public class PlannerTester {
 		Task task3 = project.getAllTasks().get(2);
 		assertTrue(planner.hasConflictWithAPlannedTask(task3, time1));
 
-		assertFalse(planner.hasConflictWithAPlannedTask(task3, time1.plusHours(1)));
+		assertTrue(planner.hasConflictWithAPlannedTask(task3, time1.plusHours(1)));
 
 		assertTrue(planner.hasConflictWithAPlannedTask(task3, time1.plusHours(2)));
 	}
