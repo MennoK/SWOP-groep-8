@@ -529,6 +529,8 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setEndTime(endTime);
 		setStatus(TaskStatus.FINISHED);
+		
+		setEndTimePlanning(endTime);
 	}
 
 	/**
@@ -545,10 +547,8 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setEndTime(endTime);
 		setStatus(TaskStatus.FAILED);
-
-		if (this.hasPlanning()){
-			getPlanning().setEndTime(endTime);
-		}
+		setEndTimePlanning(endTime);
+	
 		// TODO remove after refactoring
 		setOldFailed();
 	}
@@ -768,6 +768,11 @@ public class Task implements Visitable {
 		return (planning != null);
 	}
 
+	private void setEndTimePlanning(LocalDateTime endTime){
+		if (this.hasPlanning()){
+			getPlanning().setEndTime(endTime);
+		}
+	}
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}

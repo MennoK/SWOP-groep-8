@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.*;
+import utility.TimeSpan;
 
 public class UseCase6PlanTaskTester {
 
@@ -47,7 +48,7 @@ public class UseCase6PlanTaskTester {
 		resourceType.createResource("resource");
 		resourceType.createResource("resource2");
 
-		// create a project with a task
+		// create a project with 2 tasks
 
 		projectExpert = tmController.getProjectExpert();
 		projectExpert.createProject("name", "des", time2.plusDays(13));
@@ -72,14 +73,16 @@ public class UseCase6PlanTaskTester {
 
 		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
 				project.getAllTasks();
-		//user selects task1 and receives 3 possible start times
+		//user selects task2 and receives 3 possible start times
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);
 		possibleStartTimes.add(time1.plusHours(1));
 		possibleStartTimes.add(time1.plusHours(2));
-		assertEquals(possibleStartTimes,planningExpert.getPossibleStartTimes(task1, time1, developers));
+		assertEquals(possibleStartTimes,planningExpert.getPossibleStartTimes(task2, time1, developers));
 		
 		//user selects time1
+		//the system shows possible available resources
+		assertEquals(resourceType.getAllResources(), planningExpert.resourcesOfTypeAvailableFor(resourceType, task2, new TimeSpan(time1, task1.getDuration())));
 		
 	}
 }

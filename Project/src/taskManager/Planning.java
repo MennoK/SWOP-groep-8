@@ -148,7 +148,7 @@ public class Planning {
 		if(endTime.isAfter(getTimeSpan().getBegin()) && endTime.isBefore(getTimeSpan().getEnd())){
 			this.getTimeSpan().setEnd(endTime);
 		}else{
-			throw new IllegalStateException("given endTime is not allowed");
+			throw new IllegalStateException("given end time is not allowed, it has to fall in the original timespan");
 		}
 			
 	}

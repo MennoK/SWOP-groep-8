@@ -187,7 +187,7 @@ public class Planner {
 		return availableResourcesForEachResourceType;
 	}
 
-	private Set<Resource> resourcesOfTypeAvailableFor(
+	public Set<Resource> resourcesOfTypeAvailableFor(
 			ResourceType resourcetype, Task task, TimeSpan timeSpan) {
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
 		for (Resource resource : resourcetype.getAllResources()) {
