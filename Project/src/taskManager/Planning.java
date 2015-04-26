@@ -114,7 +114,7 @@ public class Planning {
 		return developers;
 	}
 
-	public void setDevelopers(Set<Developer> developers) {
+	void setDevelopers(Set<Developer> developers) {
 		this.developers = developers;
 	}
 
@@ -122,7 +122,7 @@ public class Planning {
 		return resources;
 	}
 
-	public void setResources(Map<ResourceType, Set<Resource>> resources) {
+	void setResources(Map<ResourceType, Set<Resource>> resources) {
 		this.resources = resources;
 	}
 
