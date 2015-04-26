@@ -124,8 +124,8 @@ public class Task implements Visitable {
 		 * Build a Task after all the optional values have been set.
 		 */
 		public Task build(Project project) {
-			Task task = new Task(this);
 			this.now = project.getLastUpdateTime();
+			Task task = new Task(this);
 			project.updateDependencies(task, originalTask);
 			project.addTask(task);
 			return task;
