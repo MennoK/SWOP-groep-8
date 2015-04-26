@@ -1,5 +1,6 @@
 package taskManager;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -52,6 +53,6 @@ public class ResourceExpert {
 	 * @return resourcetypes : set of all resource types
 	 */
 	public Set<ResourceType> getAllResourceTypes(){
-		return resourcetypes;
+		return Collections.unmodifiableSet(resourcetypes);
 	}
 }

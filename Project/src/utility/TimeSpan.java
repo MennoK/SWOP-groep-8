@@ -47,7 +47,7 @@ public class TimeSpan {
 		return end;
 	}
 
-	private void setEnd(LocalDateTime end) {
+	public void setEnd(LocalDateTime end) {
 		this.end = end;
 	}
 

@@ -1,6 +1,9 @@
 package taskManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -162,9 +165,9 @@ public class PlannerTester {
 		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
 		Task task3 = project.getAllTasks().get(2);
 		Set<LocalDateTime> possibleStartTimes121617 = new LinkedHashSet<>();
-		possibleStartTimes121617.add(time1.plusHours(1));
 		possibleStartTimes121617.add(time1.plusHours(5));
 		possibleStartTimes121617.add(time1.plusHours(6));
+		possibleStartTimes121617.add(time1.plusHours(7));
 
 		assertEquals(possibleStartTimes121617,planner.getPossibleStartTimes(task3, time1, this.developerExpert.getAllDevelopers()));
 		
@@ -190,9 +193,7 @@ public class PlannerTester {
 		Task task6 = project.getAllTasks().get(5);
 		
 		Planning.builder(time1.plusHours(2), task5, developer1).addDeveloper(developer2).addResources(resourceType,resource).build(planner);
-		for (Planning planning : planner.getAllPlannings()) {
-			System.out.println(planning.getTimeSpan().getBegin() +  " - " + planning.getTimeSpan().getEnd());
-		}
+	
 		assertEquals(possibleStartTimes121617,planner.getPossibleStartTimes(task6, time1, this.developerExpert.getAllDevelopers()));
 		
 		
@@ -220,7 +221,7 @@ public class PlannerTester {
 		Task task3 = project.getAllTasks().get(2);
 		assertTrue(planner.hasConflictWithAPlannedTask(task3, time1));
 
-		assertFalse(planner.hasConflictWithAPlannedTask(task3, time1.plusHours(1)));
+		assertTrue(planner.hasConflictWithAPlannedTask(task3, time1.plusHours(1)));
 
 		assertTrue(planner.hasConflictWithAPlannedTask(task3, time1.plusHours(2)));
 	}

@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -12,7 +13,6 @@ import utility.TimeSpan;
 public class Planning {
 
 	private TimeSpan timeSpan;
-	private Task task;
 	private Set<Developer> developers = new LinkedHashSet<Developer>();
 	private Map<ResourceType, Set<Resource>> resources = new LinkedHashMap<ResourceType, Set<Resource>>();
 	/**
@@ -111,7 +111,7 @@ public class Planning {
 	}
 
 	public Set<Developer> getDevelopers() {
-		return developers;
+		return Collections.unmodifiableSet(developers);
 	}
 
 	void setDevelopers(Set<Developer> developers) {
@@ -119,7 +119,7 @@ public class Planning {
 	}
 
 	public Map<ResourceType, Set<Resource>> getResources() {
-		return resources;
+		return Collections.unmodifiableMap(resources);
 	}
 
 	void setResources(Map<ResourceType, Set<Resource>> resources) {
@@ -130,7 +130,26 @@ public class Planning {
 		return timeSpan;
 	}
 
+	/**
+	 * sets the timespan of the planning
+	 * 
+	 * @param timeSpan the new timespan of the planning
+	 */
 	public void setTimeSpan(TimeSpan timeSpan) {
 		this.timeSpan = timeSpan;
+	}
+	
+	/**
+	 * allow to edit the end time of the planning
+	 * 
+	 * @param endTime the new end time of the planning 
+	 */
+	public void setEndTime(LocalDateTime endTime){
+		if(endTime.isAfter(getTimeSpan().getBegin()) && endTime.isBefore(getTimeSpan().getEnd())){
+			this.getTimeSpan().setEnd(endTime);
+		}else{
+			throw new IllegalStateException("given end time is not allowed, it has to fall in the original timespan");
+		}
+			
 	}
 }
