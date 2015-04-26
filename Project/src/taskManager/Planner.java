@@ -218,7 +218,7 @@ public class Planner {
 		return true;
 	}
 
-	Set<Developer> developersAvailableFor(Set<Developer> developers, Task task,
+	public Set<Developer> developersAvailableFor(Set<Developer> developers, Task task,
 			TimeSpan timeSpan) {
 		Set<Developer> availableDevelopers = new LinkedHashSet<Developer>();
 		for (Developer developer : developers) {
