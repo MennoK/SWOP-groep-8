@@ -11,20 +11,8 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-<<<<<<< HEAD
 import taskManager.*;
 import utility.TimeSpan;
-=======
-import taskManager.Developer;
-import taskManager.DeveloperExpert;
-import taskManager.Planner;
-import taskManager.Project;
-import taskManager.ProjectExpert;
-import taskManager.ResourceExpert;
-import taskManager.ResourceType;
-import taskManager.Task;
-import taskManager.TaskManController;
->>>>>>> 3809f37b505361f36f9996f2a7ed897d459bafc8
 
 public class UseCase6PlanTaskTester {
 

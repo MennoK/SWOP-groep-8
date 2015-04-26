@@ -2,6 +2,8 @@ package taskManager;
 
 import java.time.LocalDateTime;
 
+import utility.TimeSpan;
+
 
 /**
  * The taskManController class controls every expert
@@ -129,6 +131,7 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
+		task.getPlanning().setTimeSpan(new TimeSpan(startTime, task.getDuration()));
 		updateStatusAll();
 	}
 

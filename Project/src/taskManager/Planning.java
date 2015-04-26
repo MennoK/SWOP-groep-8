@@ -38,7 +38,7 @@ public class Planning {
 		 *            : task that is being planned
 		 * @param developers
 		 * 		      : assigned developers 
-		 	*/
+		 */
 		public PlanningBuilder(LocalDateTime startTime,
 				Task task, Developer developer) {
 			this.timespan = new TimeSpan(startTime, startTime.plus(task.getDuration()));	
@@ -74,7 +74,7 @@ public class Planning {
 			return planning;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Returns a new planning builder to add extra parameters such as resources
@@ -94,9 +94,9 @@ public class Planning {
 			Developer developer) {
 		return new PlanningBuilder(startTime, task, developer);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The constructor of planning has a planning builder as argument. The planning builder
 	 * contains all the required parameters and possible optional parameters
@@ -138,18 +138,21 @@ public class Planning {
 	public void setTimeSpan(TimeSpan timeSpan) {
 		this.timeSpan = timeSpan;
 	}
-	
+
 	/**
 	 * allow to edit the end time of the planning
 	 * 
 	 * @param endTime the new end time of the planning 
 	 */
 	public void setEndTime(LocalDateTime endTime){
-		if(endTime.isAfter(getTimeSpan().getBegin()) && endTime.isBefore(getTimeSpan().getEnd())){
-			this.getTimeSpan().setEnd(endTime);
-		}else{
-			throw new IllegalStateException("given end time is not allowed, it has to fall in the original timespan");
+		if(!endTime.isAfter(getTimeSpan().getBegin())){
+			throw new IllegalStateException("given end time is before the start time");
 		}
-			
+		if(endTime.isBefore(this.getTimeSpan().getEnd())){
+			this.getTimeSpan().setEnd(endTime);
+		}
+
 	}
+
 }
+
