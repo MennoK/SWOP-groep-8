@@ -11,10 +11,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-<<<<<<< HEAD
-import taskManager.*;
-import utility.TimeSpan;
-=======
 import taskManager.Developer;
 import taskManager.DeveloperExpert;
 import taskManager.Planner;
@@ -24,7 +20,6 @@ import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
->>>>>>> 3809f37b505361f36f9996f2a7ed897d459bafc8
 
 public class UseCase6PlanTaskTester {
 
@@ -59,7 +54,7 @@ public class UseCase6PlanTaskTester {
 		resourceType.createResource("resource");
 		resourceType.createResource("resource2");
 
-		// create a project with 2 tasks
+		// create a project with a task
 
 		projectExpert = tmController.getProjectExpert();
 		projectExpert.createProject("name", "des", time2.plusDays(13));
@@ -84,16 +79,14 @@ public class UseCase6PlanTaskTester {
 
 		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
 				project.getAllTasks();
-		//user selects task2 and receives 3 possible start times
+		//user selects task1 and receives 3 possible start times
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);
 		possibleStartTimes.add(time1.plusHours(1));
 		possibleStartTimes.add(time1.plusHours(2));
-		assertEquals(possibleStartTimes,planningExpert.getPossibleStartTimes(task2, time1, developers));
+		assertEquals(possibleStartTimes,planningExpert.getPossibleStartTimes(task1, time1, developers));
 		
 		//user selects time1
-		//the system shows possible available resources
-		assertEquals(resourceType.getAllResources(), planningExpert.resourcesOfTypeAvailableFor(resourceType, task2, new TimeSpan(time1, task1.getDuration())));
 		
 	}
 }

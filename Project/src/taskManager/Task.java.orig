@@ -552,8 +552,15 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setEndTime(endTime);
 		setStatus(TaskStatus.FAILED);
+<<<<<<< HEAD
 		setEndTimePlanning(endTime);
 	
+=======
+
+		if (this.hasPlanning()) {
+			getPlanning().setEndTime(endTime);
+		}
+>>>>>>> 3809f37b505361f36f9996f2a7ed897d459bafc8
 		// TODO remove after refactoring
 		setOldFailed();
 	}

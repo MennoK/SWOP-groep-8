@@ -1,6 +1,6 @@
 package useCase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.DeveloperExpert;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
