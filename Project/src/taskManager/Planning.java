@@ -145,6 +145,11 @@ public class Planning {
 	 * @param endTime the new end time of the planning 
 	 */
 	public void setEndTime(LocalDateTime endTime){
-		this.getTimeSpan().setEnd(endTime);
+		if(endTime.isAfter(getTimeSpan().getBegin()) && endTime.isBefore(getTimeSpan().getEnd())){
+			this.getTimeSpan().setEnd(endTime);
+		}else{
+			throw new IllegalStateException("given endTime is not allowed");
+		}
+			
 	}
 }
