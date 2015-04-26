@@ -1,6 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -12,7 +13,6 @@ import utility.TimeSpan;
 public class Planning {
 
 	private TimeSpan timeSpan;
-	private Task task;
 	private Set<Developer> developers = new LinkedHashSet<Developer>();
 	private Map<ResourceType, Set<Resource>> resources = new LinkedHashMap<ResourceType, Set<Resource>>();
 	/**
@@ -111,7 +111,7 @@ public class Planning {
 	}
 
 	public Set<Developer> getDevelopers() {
-		return developers;
+		return Collections.unmodifiableSet(developers);
 	}
 
 	void setDevelopers(Set<Developer> developers) {
@@ -119,7 +119,7 @@ public class Planning {
 	}
 
 	public Map<ResourceType, Set<Resource>> getResources() {
-		return resources;
+		return Collections.unmodifiableMap(resources);
 	}
 
 	void setResources(Map<ResourceType, Set<Resource>> resources) {

@@ -1,5 +1,6 @@
 package taskManager;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -326,7 +327,7 @@ public class ResourceType {
 	 * @return resources : set with resources
 	 */
 	public Set<Resource> getAllResources() {
-		return resources;
+		return Collections.unmodifiableSet(resources);
 	}
 
 	/**
@@ -336,7 +337,7 @@ public class ResourceType {
 	 * @return requiredResourceTypes : set of required resource types
 	 */
 	public Set<ResourceType> getRequiredResourceTypes() {
-		return requiredResourceTypes;
+		return Collections.unmodifiableSet(requiredResourceTypes);
 	}
 
 	/**
@@ -346,6 +347,6 @@ public class ResourceType {
 	 * @return conflictedResourceTypes : set of conflicted resource types
 	 */
 	public Set<ResourceType> getConflictedResourceTypes() {
-		return conflictedResourceTypes;
+		return Collections.unmodifiableSet(conflictedResourceTypes);
 	}
 }

@@ -190,9 +190,7 @@ public class PlannerTester {
 		Task task6 = project.getAllTasks().get(5);
 		
 		Planning.builder(time1.plusHours(2), task5, developer1).addDeveloper(developer2).addResources(resourceType,resource).build(planner);
-		for (Planning planning : planner.getAllPlannings()) {
-			System.out.println(planning.getTimeSpan().getBegin() +  " - " + planning.getTimeSpan().getEnd());
-		}
+	
 		assertEquals(possibleStartTimes121617,planner.getPossibleStartTimes(task6, time1, this.developerExpert.getAllDevelopers()));
 		
 		
