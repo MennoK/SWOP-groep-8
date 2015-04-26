@@ -1,18 +1,25 @@
 package useCase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.*;
+import taskManager.Developer;
+import taskManager.DeveloperExpert;
+import taskManager.Planner;
+import taskManager.Project;
+import taskManager.ProjectExpert;
+import taskManager.ResourceExpert;
+import taskManager.ResourceType;
+import taskManager.Task;
+import taskManager.TaskManController;
 
 public class UseCase6PlanTaskTester {
 
