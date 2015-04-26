@@ -148,8 +148,11 @@ public class Task implements Visitable {
 	 *            : task builder with parameters
 	 */
 	public Task(TaskBuilder taskBuilder) {
-		if ((taskBuilder.dependencies != null || !taskBuilder.dependencies
-				.isEmpty()) && taskBuilder.originalTask != null) {
+		if (
+				(taskBuilder.dependencies != null && !taskBuilder.dependencies
+				.isEmpty()) 
+				&& taskBuilder.originalTask != null
+				) {
 			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -548,7 +551,7 @@ public class Task implements Visitable {
 		setEndTime(endTime);
 		setStatus(TaskStatus.FAILED);
 
-		if (this.hasPlanning()){
+		if (this.hasPlanning()) {
 			getPlanning().setEndTime(endTime);
 		}
 		// TODO remove after refactoring
