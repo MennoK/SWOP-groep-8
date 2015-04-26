@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import taskManager.Task.TaskBuilder;
 import utility.WorkTime;
 
 /**
@@ -58,27 +57,6 @@ public class Project implements Visitable {
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
 		this.handleTimeChange(creationTime);
-	}
-
-	/**
-	 * 
-	 * Returns a new task builder to add extra parameters such as other
-	 * dependency task, the original task if you want to create an alternative
-	 * task and required resource types
-	 * 
-	 * @param description
-	 *            : required description of a task
-	 * @param estimatedDuration
-	 *            : required estimatedDuration of a task
-	 * @param acceptableDeviation
-	 *            : required acceptableDeviation of a task
-	 * 
-	 * @return taskBuilder : new builder for creating task
-	 */
-	public TaskBuilder taskBuilder(String description,
-			Duration estimatedDuration, double acceptableDeviation) {
-		return new TaskBuilder(description, estimatedDuration,
-				acceptableDeviation, this);
 	}
 
 	/**

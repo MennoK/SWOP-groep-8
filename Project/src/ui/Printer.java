@@ -7,6 +7,7 @@ import taskManager.Project;
 import taskManager.ProjectFinishingStatus;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
+import taskManager.TaskStatus;
 import taskManager.Visitable;
 
 public class Printer {
@@ -25,22 +26,27 @@ public class Printer {
 		return str.trim();
 	}
 
+	@Deprecated
 	static String oneLine(Task task) {
 		return "Task " + task.getId() + " " + task.getStatus();
 	}
 
+	@Deprecated
 	static String oneLine(Project project) {
 		return "project '" + project.getName() + "': " + project.getStatus();
 	}
 
+	@Deprecated
 	static String oneLine(Developer developer) {
 		return developer.getName();
 	}
 
+	@Deprecated
 	static String listTasks(List<Task> options) {
 		return listTasks(options, 1);
 	}
 
+	@Deprecated
 	static String listTasks(List<Task> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
@@ -49,10 +55,12 @@ public class Printer {
 		return str.trim();
 	}
 
+	@Deprecated
 	static String listProjects(List<Project> options) {
 		return listProjects(options, 1);
 	}
 
+	@Deprecated
 	static String listProjects(List<Project> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
@@ -61,10 +69,12 @@ public class Printer {
 		return str.trim();
 	}
 
+	@Deprecated
 	static String listDevelopers(List<Developer> options) {
 		return listDevelopers(options, 1);
 	}
 
+	@Deprecated
 	static String listDevelopers(List<Developer> options, int startingIndex) {
 		String str = "";
 		for (int i = 0; i < options.size(); i++) {
@@ -73,6 +83,7 @@ public class Printer {
 		return str.trim();
 	}
 
+	@Deprecated
 	static String full(Task task) {
 		String str = oneLine(task) + ": ";
 		str += task.getDescription() + ", ";
@@ -86,17 +97,16 @@ public class Printer {
 		}
 		if (task.getOriginal() != null)
 			str += ", alternative for task " + task.getOriginal().getId();
-		try {
+		if(task.getCalculatedStatus() == TaskStatus.FINISHED) {
 			TaskFinishedStatus finishStatus = task.getFinishStatus();
 			str += ", started " + task.getStartTime();
 			str += ", finished " + task.getEndTime();
 			str += " (" + finishStatus + ")";
-		} catch (IllegalArgumentException e) {
-			// If not finished
 		}
 		return str;
 	}
 
+	@Deprecated
 	static String full(Project project) {
 		String str = oneLine(project);
 		str += ", " + project.getDescription();

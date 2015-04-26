@@ -1,13 +1,14 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
-import taskManager.Planning.PlanningBuilder;
 import utility.TimeSpan;
 
 public class Planner {
@@ -46,7 +47,7 @@ public class Planner {
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
-			if(isPlannableForTimeSpan(task, developers, timeSpan)){
+			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
 				possibleStartTimes.add(timeSpan.getBegin());
 			}
 			time = time.plusHours(1);
@@ -54,21 +55,23 @@ public class Planner {
 		return possibleStartTimes;
 	}
 
-	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,TimeSpan timeSpan){
-		if(enoughDevelopersAvalaible(developersAvailableFor(developers, task, timeSpan)) && enoughResourcesAvailable(resourcesAvailableFor(task, timeSpan), task)){
+	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,
+			TimeSpan timeSpan) {
+		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
+				timeSpan))
+				&& enoughResourcesAvailable(
+						resourcesAvailableFor(task, timeSpan), task)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {
-		if(developersAvailableFor.size() >= 1){
+		if (developersAvailableFor.size() >= 1) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
@@ -83,7 +86,6 @@ public class Planner {
 		}
 		return true;
 	}
-
 
 	/**
 	 * creates a map with as key the resource types required by the tasks that
@@ -101,29 +103,6 @@ public class Planner {
 			resourceMap.put(resourceType, resourceType.getAllResources());
 		}
 		return resourceMap;
-	}
-
-
-
-	/**
-	 * 
-	 * Returns a new planning builder to add extra parameters such as resources
-	 * 
-	 * @param startTime
-	 *            : planned start time
-	 * @param endTime
-	 *            : planned end time
-	 * @param task
-	 *            : task that is being planned
-	 * @param developers
-	 *            : assigned developers
-	 * 
-	 * @return planningBuilder : new builder for creating planning
-	 */
-	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
-			Developer developer) {
-
-		return new PlanningBuilder(startTime, task, developer);
 	}
 
 	/**
@@ -157,7 +136,6 @@ public class Planner {
 		return (!getAllPlannings().contains(planning) && planning != null);
 	}
 
-
 	/**
 	 * returns all tasks that would conflict if a task would be planned at a
 	 * certain time
@@ -176,9 +154,11 @@ public class Planner {
 		for (Task conflictingTask : tasks) {
 
 			if (conflictingTask.hasPlanning()) {
-				TimeSpan planningTimeSpan = conflictingTask.getPlanning().getTimeSpan();
+				TimeSpan planningTimeSpan = conflictingTask.getPlanning()
+						.getTimeSpan();
 
-				if (planningTimeSpan.overlaps(new TimeSpan(time, task.getDuration()))) {
+				if (planningTimeSpan.overlaps(new TimeSpan(time, task
+						.getDuration()))) {
 					conflictingTasks.add(conflictingTask);
 				}
 			}
@@ -186,7 +166,7 @@ public class Planner {
 		return conflictingTasks;
 
 	}
-	
+
 	/**
 	 * returns if a task will have a conflict if planned on a certain time
 	 * 
@@ -207,47 +187,56 @@ public class Planner {
 
 	}
 
-
 	public Set<Planning> getAllPlannings() {
 		return this.planningSet;
 	}
 
-	Map<ResourceType, Set<Resource>> resourcesAvailableFor(Task task, TimeSpan timeSpan){
-		Map<ResourceType, Set<Resource>> availableResourcesForEachResourceType = new LinkedHashMap<ResourceType,Set<Resource>>();
-		for (ResourceType resourceType : task.getRequiredResourceTypes().keySet()) {
-			availableResourcesForEachResourceType.put(resourceType, resourcesAvailableFor(resourceType, task, timeSpan));
+	Map<ResourceType, Set<Resource>> resourcesAvailableFor(Task task,
+			TimeSpan timeSpan) {
+		Map<ResourceType, Set<Resource>> availableResourcesForEachResourceType = new LinkedHashMap<ResourceType, Set<Resource>>();
+		for (ResourceType resourceType : task.getRequiredResourceTypes()
+				.keySet()) {
+			availableResourcesForEachResourceType.put(resourceType,
+					resourcesOfTypeAvailableFor(resourceType, task, timeSpan));
 		}
 		return availableResourcesForEachResourceType;
 	}
 
-	Set<Resource> resourcesAvailableFor(ResourceType resourcetype, Task task, TimeSpan timeSpan){
+	private Set<Resource> resourcesOfTypeAvailableFor(
+			ResourceType resourcetype, Task task, TimeSpan timeSpan) {
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
-		for(Resource resource : resourcetype.getAllResources()){
-			if(isAvailableFor(resource, task, timeSpan)){
+		for (Resource resource : resourcetype.getAllResources()) {
+			if (isAvailableFor(resource, task, timeSpan)) {
 				availableResources.add(resource);
 			}
 		}
 		return availableResources;
 	}
 
-
-	private boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan){
-		Set<Planning> otherPlannings = this.getAllPlannings();
-		otherPlannings.remove(task.getPlanning());
-		for(Planning otherPlanning : otherPlannings){
-			if(otherPlanning.getDevelopers().contains(resource)){
-				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
-					return false;
+	private boolean isAvailableFor(Resource resource, Task task,
+			TimeSpan timeSpan) {
+		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(this.getAllPlannings());
+		if (task.hasPlanning()) {
+			otherPlannings.remove(task.getPlanning());
+		}
+		for (Planning otherPlanning : otherPlannings) {
+			for (Set<Resource> setResource : otherPlanning.getResources()
+					.values()) {
+				if (setResource.contains(resource)) {
+					if (timeSpan.overlaps(otherPlanning.getTimeSpan())) {
+						return false;
+					}
 				}
 			}
 		}
 		return true;
 	}
 
-	Set<Developer> developersAvailableFor(Set<Developer> developers, Task task, TimeSpan timeSpan){
+	Set<Developer> developersAvailableFor(Set<Developer> developers, Task task,
+			TimeSpan timeSpan) {
 		Set<Developer> availableDevelopers = new LinkedHashSet<Developer>();
-		for(Developer developer : developers ){
-			if(isAvailableFor(developer, task, timeSpan)){
+		for (Developer developer : developers) {
+			if (isAvailableFor(developer, task, timeSpan)) {
 				availableDevelopers.add(developer);
 			}
 		}
@@ -256,13 +245,13 @@ public class Planner {
 
 	private boolean isAvailableFor(Developer developer, Task task,
 			TimeSpan timeSpan) {
-		Set<Planning> otherPlanings = this.getAllPlannings();
-		if(task.hasPlanning()){
+		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(this.getAllPlannings());
+		if (task.hasPlanning()) {
 			otherPlanings.remove(task.getPlanning());
 		}
 		for (Planning otherPlanning : otherPlanings) {
 			if (otherPlanning.getDevelopers().contains(developer)) {
-				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
+				if (timeSpan.overlaps(otherPlanning.getTimeSpan())) {
 					return false;
 				}
 			}
@@ -270,4 +259,18 @@ public class Planner {
 		return true;
 	}
 
+	void updateStatus(Task task) {
+		if (task.getStatus() == TaskStatus.EXECUTING
+				|| task.getStatus() == TaskStatus.FINISHED
+				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
+				|| !task.checkDependenciesFinished())
+			// task status remains unchanged
+			return;
+		if (isPlannableForTimeSpan(task, task.getPlanning().getDevelopers(),
+				new TimeSpan(task.getLastUpdateTime(), task.getDuration()))) {
+			task.setStatus(TaskStatus.AVAILABLE);
+		} else {
+			task.setStatus(TaskStatus.UNAVAILABLE);
+		}
+	}
 }

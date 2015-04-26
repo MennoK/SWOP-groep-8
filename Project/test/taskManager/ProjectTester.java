@@ -7,10 +7,10 @@ import static org.junit.Assert.assertTrue;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import javax.sound.midi.ControllerEventListener;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import utility.WorkTime;
 
 public class ProjectTester {
 
@@ -19,51 +19,42 @@ public class ProjectTester {
 	private Project project;
 	private Task baseTask;
 	private Task dependentTask;
-	private Task alternativeTask;
 
-	/**
-	 * create a project with one generic Task
-	 */
-	private void setUpBaseProject() {
-		project.taskBuilder("desc", Duration.ofHours(8), 0.5).build();
-		baseTask = getNewestTask(project);
-		controler.getPlanner()
-				.createPlanning(time, baseTask, new Developer("Jef"))
-				.build(controler.getPlanner());
-	}
-
-	/**
-	 * create a project with dependentTask dependent on baseTask
-	 */
-	private void setUpProjectWithDependence() {
-		setUpBaseProject();
-		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
-				.addDependencies(baseTask).build();
-		dependentTask = getNewestTask(project);
-	}
-
-	/**
-	 * Helper method to extract a Task from a project just after creating it.
-	 * 
-	 * This is intentionally not trivial, such that user would not miss-use it,
-	 * but is very handy for writting tests.
-	 * 
-	 * @param project
-	 *            : The project to which the task was added
-	 * @return The last Task added to the project
-	 */
-	private Task getNewestTask(Project project) {
-		int numTasks = project.getAllTasks().size();
-		return project.getAllTasks().get(numTasks - 1);
-	}
 
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
 		controler = new TaskManController(time);
-		controler.getProjectExpert().createProject("project", "desc",
+		project = controler.getProjectExpert().createProject("project", "desc",
 				time.plusDays(4));
-		project = controler.getProjectExpert().getAllProjects().get(0);
+	}
+	
+	private Task createStandardTask(Duration taskDuration) {
+		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
+		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
+		Planning.builder(time, task, dev)
+				.build(controler.getPlanner());
+		return task;
+	}
+
+	private Task createDependentTask(Duration taskDuration, Task dependency) {
+		Task task = Task.builder("desc", taskDuration, 0.5)
+				.addDependencies(dependency).build(project);
+		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
+		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
+				dependency.getDuration());
+		Planning.builder(depFinishTime, task, dev)
+				.build(controler.getPlanner());
+		return task;
+	}
+
+	private Task createAlternativeTask(Duration taskDuration, Task original) {
+		Task task = Task.builder("desc", taskDuration, 0.5)
+				.setOriginalTask(original).build(project);
+		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
+		Planning.builder(time, task, dev)
+				.build(controler.getPlanner());
+		return task;
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -83,7 +74,7 @@ public class ProjectTester {
 
 	@Test
 	public void testBaseProject() {
-		setUpBaseProject();
+		baseTask = createStandardTask(Duration.ofHours(8));
 
 		// Check the base data
 		assertEquals("project", project.getName());
@@ -97,24 +88,24 @@ public class ProjectTester {
 		assertEquals(0, baseTask.getDependencies().size());
 
 		// Check the status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// finish Task
-		baseTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(baseTask, time);
+		controler.setFinished(baseTask, time.plusHours(8));
 
 		// Check the status
-		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
 
 	@Test
 	public void testTwoTaskproject() {
-		setUpBaseProject();
-		project.taskBuilder("desc", Duration.ofHours(8), 50).build();
-		Task task2 = getNewestTask(project);
+		baseTask = createStandardTask(Duration.ofHours(8));
+		Task task2 = createStandardTask(Duration.ofHours(8));
 
 		// Check project structure
 		assertEquals(2, project.getAllTasks().size());
@@ -124,36 +115,38 @@ public class ProjectTester {
 		assertEquals(0, task2.getDependencies().size());
 
 		// check status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set baseTask finished
-		baseTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(baseTask, time);
+		controler.setFinished(baseTask, time.plusHours(8));
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set task2 finished
-		task2.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(task2, time);
+		controler.setFinished(task2, time.plusHours(8));
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.FINISHED, task2.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, task2.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 	}
 
 	@Test
 	public void testAlternativeTaskProject() {
-		setUpBaseProject();
+		baseTask = createStandardTask(Duration.ofHours(8));
 		// Set baseTask to failed
-		baseTask.updateStatus(time, time.plusHours(2), true);
+		controler.setExecuting(baseTask, time);
+		controler.setFailed(baseTask, time.plusHours(2));
 		// Create alternativeTask
-		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
-				.setOriginalTask(baseTask).build();
-		alternativeTask = getNewestTask(project);
+		Task alternativeTask = createAlternativeTask(Duration.ofHours(8),
+				baseTask);
 
 		// check structure
 		assertEquals(2, project.getAllTasks().size());
@@ -163,25 +156,26 @@ public class ProjectTester {
 		assertEquals(0, alternativeTask.getDependencies().size());
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE,
-				alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set alternativeTask to finished
-		alternativeTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(alternativeTask, time);
+		controler.setFinished(alternativeTask, time.plusHours(8));
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
 
 	@Test
 	public void testDependentTaskProject() {
-		setUpProjectWithDependence();
+		baseTask = createStandardTask(Duration.ofHours(8));
+		dependentTask = createDependentTask(Duration.ofHours(8), baseTask);
 
 		// check structure
 		assertEquals(2, project.getAllTasks().size());
@@ -192,40 +186,43 @@ public class ProjectTester {
 		assertEquals(baseTask, dependentTask.getDependencies().get(0));
 
 		// check status
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.UNAVAILABLE,
-				dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set baseTask to finished
-		baseTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(baseTask, time);
+		controler.setFinished(baseTask, time.plusHours(8));
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set dependentTask to finished
-		dependentTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(dependentTask, time);
+		controler.setFinished(dependentTask, time.plusHours(8));
 
 		// check status
-		assertEquals(TaskStatus.FINISHED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.FINISHED, dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
 
 	@Test
 	public void testProjectWithDependencyAndAlternativeTask() {
-		setUpProjectWithDependence();
+		baseTask = createStandardTask(Duration.ofHours(8));
+		dependentTask = createDependentTask(Duration.ofHours(8), baseTask);
+
 		// Set baseTask to failed
-		baseTask.updateStatus(time, time.plusHours(2), true);
+		controler.setExecuting(baseTask, time);
+		controler.setFailed(baseTask, time.plusHours(2));
 		// Create alternativeTask
-		project.taskBuilder("desc", Duration.ofHours(8), 0.5)
-				.setOriginalTask(baseTask).build();
-		alternativeTask = getNewestTask(project);
+		Task alternativeTask = createAlternativeTask(Duration.ofHours(8),
+				baseTask);
 
 		// check structure
 		assertEquals(3, project.getAllTasks().size());
@@ -242,37 +239,37 @@ public class ProjectTester {
 		assertTrue(dependentTask.hasDependency(alternativeTask));
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE,
-				alternativeTask.getCalculatedStatus());
-		assertEquals(TaskStatus.UNAVAILABLE,
-				dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, alternativeTask.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, dependentTask.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set to finished
-		alternativeTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(alternativeTask, time);
+		controler.setFinished(alternativeTask, time.plusHours(8));
 
 		// check status
-		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE, dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, dependentTask.getStatus());
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set to finished
-		dependentTask.updateStatus(time, time.plusHours(8), false);
+		controler.setExecuting(dependentTask, time);
+		controler.setFinished(dependentTask, time.plusHours(8));
 
-		assertEquals(TaskStatus.FAILED, baseTask.getCalculatedStatus());
-		assertEquals(TaskStatus.FINISHED, alternativeTask.getCalculatedStatus());
-		assertEquals(TaskStatus.FINISHED, dependentTask.getCalculatedStatus());
+		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
+		assertEquals(TaskStatus.FINISHED, dependentTask.getStatus());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddTaskThatIsAlreadyInList() {
-		setUpBaseProject();
+		baseTask = createStandardTask(Duration.ofHours(8));
 		project.addTask(baseTask);
 	}
 
@@ -283,7 +280,7 @@ public class ProjectTester {
 
 	@Test
 	public void testUpdate() {
-		setUpBaseProject();
+		baseTask = createStandardTask(Duration.ofHours(8));
 
 		project.handleTimeChange(time.plusHours(5));
 		assertEquals(time.plusHours(5), project.getLastUpdateTime());
@@ -293,13 +290,14 @@ public class ProjectTester {
 	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
-		project.taskBuilder("task2 (dep task1)", Duration.ofHours(3 * 8), 0.5)
-				.build();
+		Task task = createStandardTask(Duration.ofHours(3 * 8));
+
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 
 		// Let the task finish to late
-		getNewestTask(project).updateStatus(time, time.plusDays(10), false);
+		controler.setExecuting(task, time);
+		controler.setFinished(task, time.plusDays(10));
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
@@ -307,38 +305,39 @@ public class ProjectTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetCurrentDelayOnTime() {
-		setUpBaseProject();
+		baseTask = createStandardTask(Duration.ofHours(8));
 		project.getCurrentDelay();
 	}
 
 	@Test
 	public void testDelayToMuchWork() {
-		setUpBaseProject();
-		project.taskBuilder("bla", Duration.ofHours(2 * 8), 0.5)
-				.addDependencies(baseTask).build();
+		baseTask = createStandardTask(Duration.ofHours(8));
+		Task.builder("bla", Duration.ofHours(2 * 8), 0.5)
+				.addDependencies(baseTask).build(project);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 	}
 
 	@Test
 	public void testDelayBaseTaskDelayed() {
-		setUpBaseProject();
-		project.taskBuilder("bla", Duration.ofHours(8), 0.5)
-				.addDependencies(baseTask).build();
+		baseTask = createStandardTask(Duration.ofHours(8));
+		Task.builder("bla", Duration.ofHours(8), 0.5)
+				.addDependencies(baseTask).build(project);
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// To delay task finish time with 8 work hours add 3*24.
 		// 8 work hours = 24 real hours
 		// + 2 days of weekend
-		baseTask.updateStatus(time, time.plusHours(9).plusDays(3), false);
+		controler.setExecuting(baseTask, time);
+		controler.setFinished(baseTask, time.plusHours(8).plusDays(3));
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
-		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
+		assertEquals(Duration.ofHours(7), project.getCurrentDelay());
 	}
 
 	@Test
 	public void testGetCurrentDelayTwoTasks() {
-		project.taskBuilder("desc", Duration.ofHours(5 * 8), 0.5).build();
-		project.taskBuilder("desc", Duration.ofHours(4 * 8), 0.5).build();
+		Task.builder("desc", Duration.ofHours(5 * 8), 0.5).build(project);
+		Task.builder("desc", Duration.ofHours(4 * 8), 0.5).build(project);
 		assertEquals(Duration.ofHours(3 * 8), project.getCurrentDelay());
 	}
 

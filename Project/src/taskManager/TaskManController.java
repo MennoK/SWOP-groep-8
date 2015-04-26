@@ -1,11 +1,7 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.PrimitiveIterator.OfDouble;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import sun.util.locale.provider.AvailableLanguageTags;
 import utility.TimeSpan;
 
 /**
@@ -126,7 +122,7 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	/**
@@ -138,7 +134,7 @@ public class TaskManController {
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	/**
@@ -150,81 +146,11 @@ public class TaskManController {
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	private void updateStatusAll() {
 		for (Task task : getProjectExpert().getAllTasks())
-			updateStatus(task);
+			getPlanner().updateStatus(task);
 	}
-
-	private void updateStatus(Task task) {
-		if (task.getStatus() == TaskStatus.EXECUTING
-				|| task.getStatus() == TaskStatus.FINISHED
-				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
-				|| !task.checkDependenciesFinished())
-			// task status remains unchanged
-			return;
-		for (Developer developer : task.getPlanning().getDevelopers()) {
-			if (!isAvailableFor(developer, task,
-					new TimeSpan(getTime(), task.getDuration()))) {
-				task.setStatus(TaskStatus.UNAVAILABLE);
-				return;
-			}
-		}
-		// TODO check ressources
-	}
-
-
-	boolean resourcesAvailableFor(Task task, TimeSpan timeSpan){
-		for (ResourceType resourceType : task.getRequiredResourceTypes().keySet()) {
-			if(!isAvailableFor(resourceType, task, timeSpan)){
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean isAvailableFor(ResourceType resourcetype, Task task, TimeSpan timeSpan){
-		Set<Resource> availableResources = new LinkedHashSet<Resource>();
-		for(Resource resource : resourcetype.getAllResources()){
-			if(isAvailableFor(resource, task, timeSpan)){
-				availableResources.add(resource);
-			}
-		}
-		if(availableResources.size() >= task.getRequiredResourceTypes().get(resourcetype)){
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-
-	private boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan){
-		Set<Planning> otherPlannings = getPlanner().getAllPlannings();
-		otherPlannings.remove(task.getPlanning());
-		for(Planning otherPlanning : otherPlannings){
-			if(otherPlanning.getDevelopers().contains(resource)){
-				if (timeSpan.overlaps(otherPlanning.getTimeSpan())){
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	private boolean isAvailableFor(Developer developer, Task task,
-			TimeSpan timeSpan) {
-		Set<Planning> otherPlanings = getPlanner().getAllPlannings();
-		otherPlanings.remove(task.getPlanning());
-		for (Planning otherPlanning : otherPlanings) {
-			if (otherPlanning.getDevelopers().contains(developer)) {
-				if (timeSpan.overlaps(otherPlanning.getTimeSpan()))
-					return false;
-			}
-		}
-		return true;
-	}
-
 }

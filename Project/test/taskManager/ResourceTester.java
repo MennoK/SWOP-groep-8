@@ -14,7 +14,7 @@ public class ResourceTester {
 	@Before
 	public void setUp() {
 		ResourceExpert resourceExpert = new ResourceExpert();
-		resourceType = resourceExpert.resourceTypeBuilder("name").build();
+		resourceType = ResourceType.builder("name").build(resourceExpert);
 	}
 	
 	@Test

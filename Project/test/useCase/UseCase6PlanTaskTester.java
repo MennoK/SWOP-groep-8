@@ -40,7 +40,7 @@ public class UseCase6PlanTaskTester {
 		this.planningExpert = tmController.getPlanner();
 		// create some resources
 		resourceExpert = tmController.getResourceExpert();
-		resourceExpert.resourceTypeBuilder("type").build();
+		ResourceType.builder("type").build(resourceExpert);
 		resourceTypeList = new ArrayList<ResourceType>(
 				resourceExpert.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);
@@ -52,9 +52,9 @@ public class UseCase6PlanTaskTester {
 		projectExpert = tmController.getProjectExpert();
 		projectExpert.createProject("name", "des", time2.plusDays(13));
 		project = projectExpert.getAllProjects().get(0);
-		project.taskBuilder("a task", Duration.ofHours(1), 1).build();
-		project.taskBuilder("a task", Duration.ofHours(2), 1)
-				.addRequiredResourceType(resourceType, 1).build();
+		Task.builder("a task", Duration.ofHours(1), 1).build(project);
+		Task.builder("a task", Duration.ofHours(2), 1)
+				.addRequiredResourceType(resourceType, 1).build(project);
 		task1 = project.getAllTasks().get(0);
 		task2 = project.getAllTasks().get(1);
 

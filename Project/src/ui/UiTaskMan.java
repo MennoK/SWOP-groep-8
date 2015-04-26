@@ -65,9 +65,9 @@ public class UiTaskMan {
 	private void showProjects() throws ExitUseCaseException {
 		Project project = reader.select(taskManController.getProjectExpert()
 				.getAllProjects());
-		System.out.println(Printer.full(project));
+		System.out.println(new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks());
-		System.out.println(Printer.full(task));
+		System.out.println(new ToStringVisitor().create(task));
 	}
 
 	private void createProject() throws ExitUseCaseException {
@@ -91,7 +91,7 @@ public class UiTaskMan {
 					+ "Adding task to which project?");
 			Project project = reader.select(taskManController
 					.getProjectExpert().getAllProjects());
-			TaskBuilder builder = project.taskBuilder(reader
+			TaskBuilder builder = Task.builder(reader
 					.getString("Give a description:"), reader
 					.getDuration("Give an estimate for the task duration:"),
 					reader.getDouble("Give an acceptable deviation:"));
@@ -102,7 +102,7 @@ public class UiTaskMan {
 			if (reader.getBoolean("Is this an alternative to a failled task?")) {
 				builder.setOriginalTask(reader.select(project.getAllTasks()));
 			}
-			builder.build();
+			builder.build(project);
 			return;
 		}
 	}
@@ -117,7 +117,7 @@ public class UiTaskMan {
 		ArrayList<Task> allTasks = new ArrayList<Task>();
 		for (Project project : taskManController.getProjectExpert()
 				.getAllProjects()) {
-			System.out.println(Printer.oneLine(project));
+			System.out.println(new ToStringVisitor().create(project));
 			System.out.println(Printer.list(project.getAllTasks(),
 					allTasks.size() + 1));
 			allTasks.addAll(project.getAllTasks());
