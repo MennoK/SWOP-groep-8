@@ -131,10 +131,11 @@ public class Task implements Visitable {
 			return task;
 		}
 	}
-	
+
 	public static TaskBuilder builder(String description,
-			Duration estimatedDuration, double acceptableDeviation){
-		return new TaskBuilder(description, estimatedDuration, acceptableDeviation);
+			Duration estimatedDuration, double acceptableDeviation) {
+		return new TaskBuilder(description, estimatedDuration,
+				acceptableDeviation);
 	}
 
 	/**
@@ -616,7 +617,7 @@ public class Task implements Visitable {
 	 *             : thrown when the task is not finished yet
 	 */
 	public TaskFinishedStatus getFinishStatus() {
-		if (this.getCalculatedStatus() != TaskStatus.FINISHED) {
+		if (this.getStatus() != TaskStatus.FINISHED) {
 			throw new IllegalStateException("The task is not finished yet");
 		} else {
 			if (wasFinishedEarly()) {

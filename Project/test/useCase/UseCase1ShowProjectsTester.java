@@ -98,7 +98,7 @@ public class UseCase1ShowProjectsTester {
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME,
 				project2.finishedOnTime());
-		assertEquals(Duration.ofHours(2), project2.getCurrentDelay());
+		assertEquals(Duration.ofHours(3), project2.getCurrentDelay());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 
