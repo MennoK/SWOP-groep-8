@@ -19,7 +19,7 @@ import java.util.Set;
 public class ProjectExpert implements TimeObserver {
 
 	private ArrayList<Project> projects;
-	
+
 	private Memento memento;
 	private LocalDateTime lastUpdateTime;
 
@@ -130,40 +130,58 @@ public class ProjectExpert implements TimeObserver {
 		}
 		return Collections.unmodifiableSet(tasks);
 	}
-	
+
+	/**
+	 * 
+	 * @param dev
+	 *            the active Developer
+	 * @return All the tasks to which this developer is assigned.
+	 */
+	public Set<Task> getAllTasks(Developer dev) {
+		Set<Task> tasks = new HashSet<Task>();
+		for (Project project : getAllProjects()) {
+			for (Task task : project.getAllTasks()) {
+				if (task.hasPlanning()
+						&& task.getPlanning().getDevelopers().contains(dev)) {
+					tasks.add(task);
+				}
+			}
+		}
+		return Collections.unmodifiableSet(tasks);
+	}
+
 	public void save() {
 		this.memento = new Memento(this);
-		for(Project project: this.projects) {
+		for (Project project : this.projects) {
 			project.save();
 		}
 	}
-	
+
 	public boolean load() {
-		if(this.memento == null) {
+		if (this.memento == null) {
 			return false;
-		}
-		else {
+		} else {
 			this.memento.load(this);
-			for(Project project: this.projects) {
+			for (Project project : this.projects) {
 				project.load();
 			}
 			return true;
 		}
 	}
-	
+
 	private class Memento {
 		private ArrayList<Project> projects;
 		private LocalDateTime lastUpdateTime;
-		
+
 		public Memento(ProjectExpert pe) {
 			this.projects = new ArrayList<Project>(pe.projects);
 			this.lastUpdateTime = pe.lastUpdateTime;
 		}
-		
+
 		public void load(ProjectExpert pe) {
 			pe.projects = this.projects;
 			pe.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
-	
+
 }
