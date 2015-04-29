@@ -118,7 +118,7 @@ public class UiTaskMan {
 				.getPossibleStartTimes(task)), task.getDuration());
 		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
 				task, reader.select(taskManController.getDeveloperExpert()
-						.getAllDevelopers()));
+						.getAllDevelopers()), taskManController.getPlanner());
 		while (reader.getBoolean("Do you want to assign an extra Developer?")) {
 			plan.addDeveloper(reader.select(taskManController
 					.getDeveloperExpert().getAllDevelopers()));
@@ -130,7 +130,7 @@ public class UiTaskMan {
 			Printer.list(ressources);
 			plan.addAllResources(ressources);
 		}
-		plan.build(taskManController.getPlanner());
+		plan.build();
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
