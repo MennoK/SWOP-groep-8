@@ -27,7 +27,8 @@ public class Planning {
 	 */
 	public static class PlanningBuilder {
 
-		private TimeSpan timespan;
+		private Planner planner;
+		private TimeSpan timeSpan;
 		private Task task;
 		private Set<Developer> developers;
 		private Set<Resource> resources;
@@ -45,20 +46,25 @@ public class Planning {
 		 *            : assigned developers
 		 */
 		public PlanningBuilder(LocalDateTime startTime, Task task,
-				Developer developer) {
-			this.timespan = new TimeSpan(startTime, startTime.plus(task
+				Developer developer, Planner planner) {
+			this.timeSpan = new TimeSpan(startTime, startTime.plus(task
 					.getDuration()));
 			this.task = task;
-			this.developers = new LinkedHashSet<Developer>();
-			this.developers.add(developer);
 			this.resources = new HashSet<Resource>();
+			this.planner = planner;
+			this.developers = new LinkedHashSet<Developer>();
+			this.addDeveloper(developer);
 		}
 
 		/**
 		 * a planning may require resources
 		 */
 		public PlanningBuilder addResources(Resource resource) {
-			this.resources.add(resource);
+			if(planner.isAvailableFor(resource, task, timeSpan)){
+				this.resources.add(resource);
+			}else{
+				throw new IllegalArgumentException("there is a conflict with an other task");  
+			}
 			return this;
 		}
 
@@ -76,14 +82,18 @@ public class Planning {
 		 * a planning may require more developers
 		 */
 		public PlanningBuilder addDeveloper(Developer developer) {
-			this.developers.add(developer);
+			if(planner.isAvailableFor(developer, task, timeSpan)){
+				this.developers.add(developer);
+			}else{
+				throw new IllegalArgumentException("there is a conflict with an other task");  
+			}
 			return this;
 		}
 
 		/**
 		 * Build a Planning after all the optional values have been set.
 		 */
-		public Planning build(Planner planner) {
+		public Planning build() {
 			Planning planning = new Planning(this);
 			planner.addPlanning(planning);
 			task.setPlanning(planning);
@@ -108,8 +118,8 @@ public class Planning {
 	 * @return planningBuilder : new builder for creating planning
 	 */
 	public static PlanningBuilder builder(LocalDateTime startTime, Task task,
-			Developer developer) {
-		return new PlanningBuilder(startTime, task, developer);
+			Developer developer, Planner planner) {
+		return new PlanningBuilder(startTime, task, developer, planner);
 	}
 
 	/**
@@ -122,7 +132,7 @@ public class Planning {
 	 */
 	public Planning(PlanningBuilder planningBuilder) {
 		setDevelopers(planningBuilder.developers);
-		setTimeSpan(planningBuilder.timespan);
+		setTimeSpan(planningBuilder.timeSpan);
 		setResources(planningBuilder.resources);
 	}
 
