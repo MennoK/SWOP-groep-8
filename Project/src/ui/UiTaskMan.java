@@ -2,9 +2,6 @@ package ui;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import parser.Parser;
@@ -12,10 +9,10 @@ import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Project;
 import taskManager.Resource;
-import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
+import taskManager.TaskStatus;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
@@ -119,10 +116,6 @@ public class UiTaskMan {
 		Task task = reader.select(taskManController.getUnplannedTasks());
 		TimeSpan timeSpan = new TimeSpan(reader.selectDate(taskManController
 				.getPossibleStartTimes(task)), task.getDuration());
-		Set<Resource> ressources = taskManController.selectResources(task,
-				timeSpan);
-		System.out.println("The system proposes the following ressources:");
-		Printer.list(ressources);
 		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
 				task, reader.select(taskManController.getDeveloperExpert()
 						.getAllDevelopers()));
@@ -130,28 +123,37 @@ public class UiTaskMan {
 			plan.addDeveloper(reader.select(taskManController
 					.getDeveloperExpert().getAllDevelopers()));
 		}
-		plan.addAllResources(ressources).build(taskManController.getPlanner());
+		if (task.requiresRessources()) {
+			Set<Resource> ressources = taskManController.selectResources(task,
+					timeSpan);
+			System.out.println("The system proposes the following ressources:");
+			Printer.list(ressources);
+			plan.addAllResources(ressources);
+		}
+		plan.build(taskManController.getPlanner());
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
-		ArrayList<Task> allTasks = new ArrayList<Task>();
-		for (Project project : taskManController.getProjectExpert()
-				.getAllProjects()) {
-			System.out.println(new ToStringVisitor().create(project));
-			System.out.println(Printer.list(project.getAllTasks(),
-					allTasks.size() + 1));
-			allTasks.addAll(project.getAllTasks());
-		}
-		Task task = reader.select(allTasks);
+		Task task = reader.select(taskManController.getProjectExpert()
+				.getAllTasks());
 
 		while (true) {
 			try {
-				task.updateStatus(
-						reader.getDate("When did you start this task?"),
-						reader.getDate("When did you finish this task?"),
-						reader.getBoolean("Was this task failed?"));
+				if (task.getStatus() == TaskStatus.AVAILABLE) {
+					taskManController.setExecuting(task,
+							reader.getDate("When did you start this task?"));
+				} else if (task.getStatus() == TaskStatus.EXECUTING) {
+					if (reader
+							.getBoolean("Was this task finished succesfully?")) {
+						taskManController.setFinished(task, reader
+								.getDate("When did you finish this task?"));
+					} else {
+						taskManController.setFailed(task,
+								reader.getDate("When did you fail this task?"));
+					}
+				}
 				return;
 			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());

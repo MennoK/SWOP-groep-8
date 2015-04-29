@@ -121,7 +121,7 @@ public class Printer {
 		}
 		if (task.getOriginal() != null)
 			str += ", alternative for task " + task.getOriginal().getId();
-		if (task.getCalculatedStatus() == TaskStatus.FINISHED) {
+		if (task.getStatus() == TaskStatus.FINISHED) {
 			TaskFinishedStatus finishStatus = task.getFinishStatus();
 			str += ", started " + task.getStartTime();
 			str += ", finished " + task.getEndTime();

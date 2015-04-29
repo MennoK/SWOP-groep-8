@@ -148,11 +148,8 @@ public class Task implements Visitable {
 	 *            : task builder with parameters
 	 */
 	public Task(TaskBuilder taskBuilder) {
-		if (
-				(taskBuilder.dependencies != null && !taskBuilder.dependencies
-				.isEmpty()) 
-				&& taskBuilder.originalTask != null
-				) {
+		if ((taskBuilder.dependencies != null && !taskBuilder.dependencies
+				.isEmpty()) && taskBuilder.originalTask != null) {
 			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -412,17 +409,6 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Sets a failed boolean to true or false
-	 * 
-	 * @param failed
-	 *            : true if failed
-	 */
-	@Deprecated
-	private void setOldFailed() {
-		this.failed = true;
-	}
-
-	/**
 	 * Sets the alternative task if and only if the original task is failed
 	 * 
 	 * @param original
@@ -432,7 +418,7 @@ public class Task implements Visitable {
 	 */
 	private void setAlternativeTask(Task original)
 			throws IllegalArgumentException {
-		if (original.getCalculatedStatus() != TaskStatus.FAILED) {
+		if (original.getStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
 					"Task cannot be alternative to a task that has not failed");
 		}
@@ -456,45 +442,6 @@ public class Task implements Visitable {
 	 */
 	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
-	}
-
-	/**
-	 * Allows the user to update the status of a Task to finished or failed
-	 * 
-	 * @param startTime
-	 *            : the time at which the user started working on the task.
-	 * @param endTime
-	 *            : the time at which the user stopped working on the task.
-	 * @param setToFail
-	 *            : true if the task failed, false if the task was successfully
-	 *            finished.
-	 * @throws IllegalArgumentException
-	 *             : if the startTime was after the endTime.
-	 */
-	@Deprecated
-	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
-			boolean setToFail) {
-		if (!isValidStartTimeAndEndTime(startTime, endTime))
-			throw new IllegalArgumentException(
-					"the given end time is before the start time");
-
-		if (getCalculatedStatus() == TaskStatus.FAILED)
-			throw new IllegalStateException("Can not update failed task");
-
-		if (getCalculatedStatus() == TaskStatus.FINISHED)
-			throw new IllegalStateException("Can not update finished task");
-
-		if (getCalculatedStatus() == TaskStatus.UNAVAILABLE)
-			throw new IllegalStateException(
-					"Can not finish an unavailable task");
-
-		if (setToFail) {
-			status = TaskStatus.FAILED;
-			this.setOldFailed();
-		} else
-			status = TaskStatus.FINISHED;
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
 	}
 
 	private TaskStatus status = TaskStatus.UNAVAILABLE;
@@ -534,7 +481,7 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setEndTime(endTime);
 		setStatus(TaskStatus.FINISHED);
-		
+
 		setEndTimePlanning(endTime);
 	}
 
@@ -553,9 +500,6 @@ public class Task implements Visitable {
 		setEndTime(endTime);
 		setStatus(TaskStatus.FAILED);
 		setEndTimePlanning(endTime);
-	
-		// TODO remove after refactoring
-		setOldFailed();
 	}
 
 	/**
@@ -585,33 +529,11 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Gets the status of task. There are four different statuses for a task:
-	 * Available, unavailable, finished or failed.
-	 * 
-	 * A task is failed when the boolean isFailed is true A task is finished
-	 * when the task has an end time The task availability is dependent on the
-	 * dependencies of the task
-	 * 
-	 * @return the status of the task
-	 */
-	@Deprecated
-	public TaskStatus getCalculatedStatus() {
-		if (isFailed()) {
-			return TaskStatus.FAILED;
-		} else if (getEndTime() != null) {
-			return TaskStatus.FINISHED;
-		}
-		if (checkDependenciesFinished())
-			return TaskStatus.AVAILABLE;
-		return TaskStatus.UNAVAILABLE;
-	}
-
-	/**
 	 * Check whether the dependencies of this Task are finished
 	 */
 	boolean checkDependenciesFinished() {
 		for (Task dependency : getDependencies()) {
-			if (dependency.getCalculatedStatus() != TaskStatus.FINISHED)
+			if (dependency.getStatus() != TaskStatus.FINISHED)
 				return false;
 		}
 		return true;
@@ -706,6 +628,14 @@ public class Task implements Visitable {
 	}
 
 	/**
+	 * 
+	 * @return true if the Task requires resources
+	 */
+	public boolean requiresRessources() {
+		return !getRequiredResourceTypes().isEmpty();
+	}
+
+	/**
 	 * Remove task from the dependency list
 	 */
 	void removeDependency(Task task) {
@@ -773,11 +703,12 @@ public class Task implements Visitable {
 		return (planning != null);
 	}
 
-	private void setEndTimePlanning(LocalDateTime endTime){
-		if (this.hasPlanning()){
+	private void setEndTimePlanning(LocalDateTime endTime) {
+		if (this.hasPlanning()) {
 			getPlanning().setEndTime(endTime);
 		}
 	}
+
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
