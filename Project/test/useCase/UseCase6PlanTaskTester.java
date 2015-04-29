@@ -115,24 +115,38 @@ public class UseCase6PlanTaskTester {
 		assertTrue(planningList.get(0).getResources().isEmpty());
 
 	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void extensionUserSelectsTime(){
+		Planning.builder(time1, task1, developerList.get(0), planner).build();
+		//the user selects a time for task2 that will conflict with task1		
+		Planning.builder(time1, task2, developerList.get(0), planner).build();
+		//use case resolve conflict starts
+	}
+	
 	@Test
 	public void resolveConflict() {
 		Planning.builder(time1, task1, developerList.get(0), planner).build();
-		//the user selects a time for task2 that will conflict with task1		
-		assertTrue(planner.hasConflictWithAPlannedTask(task2, time1));
-		
 		//use case resolveconflict starts
 		//user chooses to move conflicting task
-		//step 4 of use case plan task:
+		//step 4 of use case plan task for the task that must be moved:
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);
 		possibleStartTimes.add(time1.plusHours(1));
 		possibleStartTimes.add(time1.plusHours(2));
 		assertEquals(possibleStartTimes,planner.getPossibleStartTimes(task1, time1, developers));
 		
-		//user selects time1 +1 
+		//user selects time1 +2
+		task1.getPlanning().setTimeSpan(new TimeSpan(time1.plusHours(2), task1.getDuration()));
 		
+		//resolve conflict ends -> back to original planning of the task
 		
+		Planning.builder(time1, task2, developerList.get(0), planner).build();
+		
+		ArrayList<Planning> planningList = new ArrayList<Planning>();
+		planningList.addAll(planner.getAllPlannings());
+		assertEquals(this.time1.plusHours(2), planningList.get(0).getTimeSpan().getBegin());
+		assertEquals(this.time1, planningList.get(1).getTimeSpan().getBegin());
 	}
 
 }
