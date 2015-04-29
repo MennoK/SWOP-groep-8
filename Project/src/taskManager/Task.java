@@ -395,20 +395,6 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Checks whether the end time is after the start time
-	 * 
-	 * @param startTime
-	 *            : the startTime of a task
-	 * @param endTime
-	 *            : the endTime of a task
-	 * @return true if and only if the start time is before the endtime
-	 */
-	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
-			LocalDateTime endTime) {
-		return endTime.isAfter(startTime);
-	}
-
-	/**
 	 * Sets the alternative task if and only if the original task is failed
 	 * 
 	 * @param original
