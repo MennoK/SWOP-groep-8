@@ -14,9 +14,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.naming.ConfigurationException;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import taskManager.Planning.PlanningBuilder;
+import taskManager.exception.ConlictingPlanningException;
 import utility.TimeSpan;
 
 public class PlannerTester {
@@ -396,6 +400,26 @@ public class PlannerTester {
 				.resourcesAvailableFor(task3, timeSpan).entrySet().iterator()
 				.next();
 		assertEquals(2, map.getValue().size());
+	}	
+	
+	@Test
+	public void testGetConflictingPlanningsForBuilder(){
+
+		Planning.builder(time1, task1, developer1, planner).build();
+		Set<Planning> conflictingPlannings = new HashSet<>();
+		Set<Planning> conflictingPlanningsFromException = new HashSet<>();
+		conflictingPlannings.addAll(planner.getAllPlannings());
+		PlanningBuilder builder = null;
+		try{
+		builder = Planning.builder(time1, task2, developer1, planner).addResources(resources.get(0));
+		}
+		catch (ConlictingPlanningException e){
+			builder = e.getPlanningBuilder();
+			conflictingPlanningsFromException = e.getConflictingPlannings();
+		}
+		
+		assertEquals(conflictingPlannings, planner.getConflictingPlanningsForBuilder(builder));
+		assertEquals(conflictingPlannings, conflictingPlanningsFromException);
 	}
 
 	@Test
@@ -416,6 +440,7 @@ public class PlannerTester {
 
 	}
 
+	
 	@Test
 	public void testMementoPlanningConflicts() {
 

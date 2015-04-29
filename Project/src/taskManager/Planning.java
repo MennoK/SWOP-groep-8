@@ -9,10 +9,10 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import taskManager.exception.*;
 import utility.TimeSpan;
 
 public class Planning {
-
 
 	private Memento memento;
 	private TimeSpan timeSpan;
@@ -33,6 +33,7 @@ public class Planning {
 		private Set<Developer> developers;
 		private Set<Resource> resources;
 
+		
 		/**
 		 * Creates a PlanningBuilder with the required information for the
 		 * creation of a Planning
@@ -44,6 +45,7 @@ public class Planning {
 		 *            : task that is being planned
 		 * @param developers
 		 *            : assigned developers
+		 * @throws ConlictingPlanningException 
 		 */
 		public PlanningBuilder(LocalDateTime startTime, Task task,
 				Developer developer, Planner planner) {
@@ -58,18 +60,20 @@ public class Planning {
 
 		/**
 		 * a planning may require resources
+		 * @throws ConlictingPlanningException 
 		 */
 		public PlanningBuilder addResources(Resource resource) {
-			if(planner.isAvailableFor(resource, task, timeSpan)){
-				this.resources.add(resource);
-			}else{
-				throw new IllegalArgumentException("there is a conflict with an other task");  
+			this.resources.add(resource);
+			if(!planner.isAvailableFor(resource, task, timeSpan)){
+				Set<Planning> conflictingPlannings = planner.getConflictingPlanningsForBuilder(this);
+				throw new ConlictingPlanningException(conflictingPlannings, this);
 			}
 			return this;
 		}
 
 		/**
 		 * a planning may require resources
+		 * @throws ConlictingPlanningException 
 		 */
 		public PlanningBuilder addAllResources(Set<Resource> resources) {
 			for (Resource resource : resources) {
@@ -80,26 +84,42 @@ public class Planning {
 
 		/**
 		 * a planning may require more developers
+		 * @throws ConlictingPlanningException 
 		 */
 		public PlanningBuilder addDeveloper(Developer developer) {
-			if(planner.isAvailableFor(developer, task, timeSpan)){
-				this.developers.add(developer);
-			}else{
-				throw new IllegalArgumentException("there is a conflict with an other task");  
+			this.developers.add(developer);
+			if (!planner.isAvailableFor(developer, task, timeSpan)){
+				Set<Planning> conflictingPlannings = planner.getConflictingPlanningsForBuilder(this);
+				throw new ConlictingPlanningException(conflictingPlannings, this);
 			}
 			return this;
 		}
-
+		Set<Resource> getResources() {
+			return this.resources;
+		}
+		TimeSpan getTimeSpan(){
+			return this.timeSpan;
+		}
+		Set<Developer> getDevelopers(){
+			return this.developers;
+		}
 		/**
 		 * Build a Planning after all the optional values have been set.
 		 */
 		public Planning build() {
-			Planning planning = new Planning(this);
-			planner.addPlanning(planning);
-			task.setPlanning(planning);
-			planner.updateStatus(task);
-			return planning;
+			if (planner.isAvailableForDevelopers(developers, task, timeSpan)
+					&& planner.isAvailableForResources(resources, task,
+							timeSpan)) {
+				Planning planning = new Planning(this);
+				planner.addPlanning(planning);
+				task.setPlanning(planning);
+				planner.updateStatus(task);
+				return planning;
+			} else {
+				throw new IllegalStateException();
+			}
 		}
+		
 	}
 
 	/**
@@ -116,9 +136,10 @@ public class Planning {
 	 *            : assigned developers
 	 * 
 	 * @return planningBuilder : new builder for creating planning
+	 * @throws ConlictingPlanningException 
 	 */
 	public static PlanningBuilder builder(LocalDateTime startTime, Task task,
-			Developer developer, Planner planner) {
+			Developer developer, Planner planner){
 		return new PlanningBuilder(startTime, task, developer, planner);
 	}
 
@@ -182,32 +203,31 @@ public class Planning {
 		}
 
 	}
-	
+
 	void save() {
 		this.memento = new Memento(this);
 	}
-	
+
 	boolean load() {
-		if(this.memento == null) {
+		if (this.memento == null) {
 			return false;
-		}
-		else {
+		} else {
 			this.memento.load(this);
 			return true;
 		}
 	}
-	
+
 	private class Memento {
 		private TimeSpan timeSpan;
 		private Set<Developer> developers;
 		private Set<Resource> resources;
-		
+
 		public Memento(Planning planning) {
 			this.timeSpan = planning.timeSpan;
 			this.developers = new LinkedHashSet<Developer>(planning.developers);
 			this.resources = new LinkedHashSet<Resource>(planning.resources);
 		}
-		
+
 		public void load(Planning planning) {
 			planning.timeSpan = this.timeSpan;
 			planning.developers = this.developers;
