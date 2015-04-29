@@ -75,7 +75,7 @@ public class UseCase3CreateTaskTester {
 		Task task = project1.getAllTasks().get(0);
 		Developer dev = taskManController.getDeveloperExpert().createDeveloper(
 				"dev");
-		Planning.builder(now, task, dev).build(taskManController.getPlanner());
+		Planning.builder(now, task, dev, taskManController.getPlanner()).build();
 		taskManController.setExecuting(task,
 				LocalDateTime.of(2015, 03, 07, 02, 00));
 		taskManController.setFailed(task,

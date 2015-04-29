@@ -66,13 +66,12 @@ public class UseCase1ShowProjectsTester {
 
 		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
 				.build(project1);
-		Planning.builder(now, task1, jef).build(taskManController.getPlanner());
+		Planning.builder(now, task1, jef, taskManController.getPlanner()).build();
 		taskManController.setExecuting(task1, now);
 		taskManController.setFinished(task1, now.plusDays(1));
 		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4)
 				.build(project2);
-		Planning.builder(now.plusHours(5), task2, jos).build(
-				taskManController.getPlanner());
+		Planning.builder(now.plusHours(5), task2, jos, taskManController.getPlanner()).build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build(project2);
 		task4 = Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);

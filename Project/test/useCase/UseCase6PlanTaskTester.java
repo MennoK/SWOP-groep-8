@@ -93,7 +93,6 @@ public class UseCase6PlanTaskTester {
 		assertEquals(possibleStartTimes,
 				planner.getPossibleStartTimes(task2, time1, developers));
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
-<<<<<<< HEAD
 		//user selects time1
 		//the system shows possible available resources
 		assertEquals(resourceType.getAllResources(), planner.resourcesOfTypeAvailableFor(resourceType, task2,timeSpan));
@@ -104,22 +103,6 @@ public class UseCase6PlanTaskTester {
 		
 		//system makes reservation
 		Planning.builder(time1, task2, developerList.get(0), planner).build();
-		
-=======
-		// user selects time1
-		// the system shows possible available resources
-		assertEquals(resourceType.getAllResources(),
-				planner.resourcesOfTypeAvailableFor(resourceType, task2,
-						timeSpan));
-		// user selects a resource
-		// system shows developers
-		assertEquals(developers,
-				planner.developersAvailableFor(developers, task2, timeSpan));
-		// user selects a developer
-
-		// system makes reservation
-		Planning.builder(time1, task2, developerList.get(0)).build(planner);
->>>>>>> cb5c296b169d7b136b79ff425838b7655cd21bc9
 
 		ArrayList<Planning> planningList = new ArrayList<Planning>();
 		planningList.addAll(planner.getAllPlannings());

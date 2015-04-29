@@ -31,15 +31,9 @@ public class ProjectTester {
 	
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
-<<<<<<< HEAD
-		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev,controler.getPlanner())
-				.build();
-=======
 		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev)
-				.build(controller.getPlanner());
->>>>>>> cb5c296b169d7b136b79ff425838b7655cd21bc9
+		Planning.builder(time, task, dev,controller.getPlanner())
+				.build();
 		return task;
 	}
 
@@ -49,28 +43,17 @@ public class ProjectTester {
 		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
 		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
 				dependency.getDuration());
-<<<<<<< HEAD
-		Planning.builder(depFinishTime, task, dev,controler.getPlanner())
+		Planning.builder(depFinishTime, task, dev,controller.getPlanner())
 				.build();
-=======
-		Planning.builder(depFinishTime, task, dev)
-				.build(controller.getPlanner());
->>>>>>> cb5c296b169d7b136b79ff425838b7655cd21bc9
 		return task;
 	}
 
 	private Task createAlternativeTask(Duration taskDuration, Task original) {
 		Task task = Task.builder("desc", taskDuration, 0.5)
 				.setOriginalTask(original).build(project);
-<<<<<<< HEAD
-		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev,controler.getPlanner())
-				.build();
-=======
 		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev)
-				.build(controller.getPlanner());
->>>>>>> cb5c296b169d7b136b79ff425838b7655cd21bc9
+		Planning.builder(time, task, dev,controller.getPlanner())
+				.build();
 		return task;
 	}
 

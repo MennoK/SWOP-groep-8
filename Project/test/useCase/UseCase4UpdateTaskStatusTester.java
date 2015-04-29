@@ -47,29 +47,29 @@ public class UseCase4UpdateTaskStatusTester {
 				.build(project1);
 		Developer dev1 = taskManController.getDeveloperExpert()
 				.createDeveloper("dev1");
-		Planning.builder(now, task1, dev1)
-				.build(taskManController.getPlanner());
+		Planning.builder(now, task1, dev1, taskManController.getPlanner())
+				.build();
 		task2 = Task.builder("Task 2", Duration.ofHours(8), 0.4)
 				.build(project1);
 		Developer dev2 = taskManController.getDeveloperExpert()
 				.createDeveloper("dev2");
-		Planning.builder(now, task2, dev2)
-				.build(taskManController.getPlanner());
+		Planning.builder(now, task2, dev2,taskManController.getPlanner())
+				.build();
 
 		// task 3 has dependency on task2
 		task3 = Task.builder("Task 3", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build(project1);
 		Developer dev3 = taskManController.getDeveloperExpert()
 				.createDeveloper("dev3");
-		Planning.builder(now, task3, dev3)
-				.build(taskManController.getPlanner());
+		Planning.builder(now, task3, dev3,taskManController.getPlanner())
+				.build();
 		// task 4 had dependency on task 2
 		task4 = Task.builder("Task 4", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build(project1);
 		Developer dev4 = taskManController.getDeveloperExpert()
 				.createDeveloper("dev4");
-		Planning.builder(now, task4, dev4)
-				.build(taskManController.getPlanner());
+		Planning.builder(now, task4, dev4,taskManController.getPlanner())
+				.build();
 	}
 
 	@Test

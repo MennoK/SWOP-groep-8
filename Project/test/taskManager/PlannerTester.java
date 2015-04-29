@@ -404,8 +404,8 @@ public class PlannerTester {
 		planner.save();
 
 		// create planning for task1
-		Planning.builder(time1, task1, developer1).addDeveloper(developer2)
-				.build(planner);
+		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
+				.build();
 
 		// check if the planning has been created
 		assertEquals(1, planner.getAllPlannings().size());
@@ -419,8 +419,8 @@ public class PlannerTester {
 	@Test
 	public void testMementoPlanningConflicts() {
 
-		Planning.builder(time1, task1, developer1).addDeveloper(developer2)
-				.build(planner);
+		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
+				.build();
 
 		Set<Task> allTasks = new LinkedHashSet<>(project.getAllTasks());
 		Set<Task> conflictSet = new LinkedHashSet<>();
@@ -431,8 +431,8 @@ public class PlannerTester {
 		tmController.saveSystem();
 		Set<Task> conflictSetOriginal = new LinkedHashSet<>(conflictSet);
 		
-		Planning.builder(time1.plusHours(3), task2, developer1)
-				.addDeveloper(developer2).build(planner);
+		Planning.builder(time1.plusHours(3), task2, developer1, planner)
+				.addDeveloper(developer2).build();
 		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
 		Task.builder("task4", Duration.ofHours(4), 2).build(project);
 		conflictSet.add(task2);
