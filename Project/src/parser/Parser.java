@@ -260,8 +260,6 @@ public class Parser {
 			int taskNr = (int) (planning.get("task"));
 			taskNrSet.add(taskNr);
 		}
-		System.out.println(taskNrSet);
-
 
 		int counter = 0;
 		int planningCounter = 0;
@@ -315,13 +313,12 @@ public class Parser {
 			builder.build(projectOfTask);
 			Task newTask = projectOfTask.getAllTasks().get(
 					projectOfTask.getAllTasks().size() - 1);
-			
+
 			alltasks.add(newTask);
 
 			if(taskNrSet.contains(counter)){
 				LinkedHashMap<String, Object> planningOfTask = plannings.get(planningCounter);
-				System.out.println(planningOfTask);
-				constructPlannings(plannings.get(planningCounter), controller);
+				constructPlannings(planningOfTask, controller);
 				if (task.get("status") != null){
 					String status = (String) task.get("status");
 					if (status.equals("executing")){
@@ -344,7 +341,6 @@ public class Parser {
 				}
 				planningCounter++;
 			}
-			System.out.println(newTask.getStatus());
 
 			counter++;
 		}

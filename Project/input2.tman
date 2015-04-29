@@ -84,7 +84,7 @@ projects:
 tasks:
   - project            : 0
     description        : "task description"
-    estimatedDuration  : 500
+    estimatedDuration  : 500 
     acceptableDeviation: 50
     alternativeFor     :
     requiredTypes      : [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
@@ -100,7 +100,9 @@ tasks:
     alternativeFor     :
     requiredTypes      : []
     prerequisiteTasks  :
-    status             :
+    status             : finished
+    startTime          : "2014-01-02 17:10"
+    endTime            : "2014-01-02 17:20"
 
   - project            : 1
     description        : "yet another task description"
@@ -117,7 +119,7 @@ tasks:
     acceptableDeviation: 0
     alternativeFor     :
     requiredTypes      : []
-    prerequisiteTasks  : [ 1, 2 ]
+    prerequisiteTasks  : [1]
     status             : failed
     startTime          : "2014-01-02 18:00"
     endTime            : "2014-03-25 18:00"
@@ -128,7 +130,7 @@ tasks:
     acceptableDeviation: 0
     alternativeFor     : 3
     requiredTypes      : [{type: 5,  quantity: 1}]
-    prerequisiteTasks  : [ 1, 2 ]
+    prerequisiteTasks  : [1]
     status             : executing
 
   - project            : 2
@@ -154,11 +156,15 @@ plannings:
     developers       : [0, 1]
     task             : 0
     resources        : [{type: 0,  resource: [0, 1]}, {type: 2,  resource: [6]}]
+  - plannedStartTime : "2014-01-02 17:10"
+    developers       : [1]
+    task             : 1
+    resources        : []
   - plannedStartTime : "2014-01-02 18:00"
     developers       : [1]
     task             : 3
     resources        : []
-  - plannedStartTime : "2014-03-01 09:00"
+  - plannedStartTime : "2014-03-26 09:00"
     developers       : [2]
     task             : 4
     resources        : [{type: 5,  resource: [11]}]
