@@ -36,7 +36,7 @@ public class Project implements Visitable {
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
 	private LocalDateTime lastUpdateTime;
-	
+
 	private Memento memento;
 
 	/**
@@ -233,6 +233,7 @@ public class Project implements Visitable {
 				latestFinishingTask = task;
 			}
 		}
+			
 		return WorkTime.durationBetween(dueTime,
 				latestFinishingTask.getEstimatedFinishTime());
 	}
@@ -330,14 +331,14 @@ public class Project implements Visitable {
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	public void save() {
 		this.memento = new Memento(this);
 		for(Task task: this.tasks) {
 			task.save();
 		}
 	}
-	
+
 	public boolean load() {
 		if(this.memento == null) {
 			return false;
@@ -350,7 +351,7 @@ public class Project implements Visitable {
 			return true;
 		}
 	}
-	
+
 	private class Memento {
 		private List<Task> tasks;
 		private String name;
@@ -358,22 +359,22 @@ public class Project implements Visitable {
 		private LocalDateTime dueTime;
 
 		private LocalDateTime lastUpdateTime;
-		
+
 		public Memento(Project project) {
 			this.tasks = new ArrayList<Task>(project.tasks);
 			this.name = new String(project.name);
 			this.description = new String(project.description);
 			this.dueTime = project.dueTime;
-			
+
 			this.lastUpdateTime = project.lastUpdateTime;
 		}
-		
+
 		public void load(Project project) {
 			project.tasks = this.tasks;
 			project.name = this.name;
 			project.description = this.description;
 			project.dueTime = this.dueTime;
-			
+
 			project.lastUpdateTime = this.lastUpdateTime;
 		}
 	}

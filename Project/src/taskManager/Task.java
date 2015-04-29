@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
 
+import com.sun.org.apache.xerces.internal.util.Status;
+
 import utility.WorkTime;
 
 /**
@@ -40,6 +42,8 @@ public class Task implements Visitable {
 	private String description;
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
+	private TaskStatus status = TaskStatus.UNAVAILABLE;
+
 
 	private List<Task> dependencies = new ArrayList<>();
 	private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
@@ -300,7 +304,7 @@ public class Task implements Visitable {
 	 * 
 	 * @return true if and only if the task was finished early
 	 */
-	private boolean wasFinishedEarly() {
+	 boolean wasFinishedEarly() {
 		long hours = (long) ((int) getEstimatedDuration().toHours() - (int) getEstimatedDuration()
 				.toHours() * getAcceptableDeviation());
 		LocalDateTime earlyTime = getStartTime().plusHours(hours);
@@ -314,7 +318,7 @@ public class Task implements Visitable {
 	 * 
 	 * @return true if and only if the task was finished on a delay
 	 */
-	private boolean wasFinishedWithADelay() {
+	 boolean wasFinishedWithADelay() {
 		long hours = (long) ((int) getEstimatedDuration().toHours() + (int) getEstimatedDuration()
 				.toHours() * getAcceptableDeviation());
 		LocalDateTime delayTime = getStartTime().plusHours(hours);
@@ -322,17 +326,6 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * String str = toSummary() + ": "; str += getDescription() + ", "; str +=
-	 * getEstimatedDuration().toHours() + " hours, "; str +=
-	 * getAcceptableDeviation() * 100 + "% margin"; if
-	 * (!getDependencies().isEmpty()) { str += ", depends on {"; for (Task dep :
-	 * getDependencies()) str += " task " + dep.getId(); str += " }"; } if
-	 * (getOriginal() != null) str += ", alternative for task " +
-	 * getOriginal().getId(); if (this.getStatus() == TaskStatus.FINISHED) { str
-	 * += ", started " + getStartTime(); str += ", finished " + getEndTime();
-	 * str += " (" + getFinishStatus() + ")"; } return str; This method returns
-	 * true if and only if the given dependency is not yet in the dependency
-	 * list
 	 * 
 	 * @param dependency
 	 * @return true if and only if the given task dependency is valid
@@ -441,8 +434,6 @@ public class Task implements Visitable {
 		this.lastUpdateTime = time;
 	}
 
-	private TaskStatus status = TaskStatus.UNAVAILABLE;
-
 	public TaskStatus getStatus() {
 		return status;
 	}
@@ -457,11 +448,8 @@ public class Task implements Visitable {
 	 * @param startTime
 	 */
 	void setExecuting(LocalDateTime startTime) {
-		if (getStatus() != TaskStatus.AVAILABLE)
-			throw new IllegalStateException(
-					"Task needs to be availlable to become executing");
+		setStatus(getStatus().goExecuting());
 		setStartTime(startTime);
-		setStatus(TaskStatus.EXECUTING);
 	}
 
 	/**
@@ -470,15 +458,11 @@ public class Task implements Visitable {
 	 * @param endTime
 	 */
 	void setFinished(LocalDateTime endTime) {
-		if (getStatus() != TaskStatus.EXECUTING)
-			throw new IllegalStateException(
-					"Task needs to be executing to become finished");
 		if (endTime.isBefore(getStartTime()))
 			throw new IllegalArgumentException(
 					"End time can not be before start time");
+		setStatus(getStatus().goFinished());
 		setEndTime(endTime);
-		setStatus(TaskStatus.FINISHED);
-
 		setEndTimePlanning(endTime);
 	}
 
@@ -488,14 +472,11 @@ public class Task implements Visitable {
 	 * @param endTime
 	 */
 	void setFailed(LocalDateTime endTime) {
-		if (getStatus() != TaskStatus.EXECUTING)
-			throw new IllegalStateException(
-					"Task needs to be executing to become failed");
 		if (endTime.isBefore(getStartTime()))
 			throw new IllegalArgumentException(
 					"End time can not be before start time");
+		setStatus(getStatus().goFailed());
 		setEndTime(endTime);
-		setStatus(TaskStatus.FAILED);
 		setEndTimePlanning(endTime);
 	}
 
@@ -544,17 +525,7 @@ public class Task implements Visitable {
 	 *             : thrown when the task is not finished yet
 	 */
 	public TaskFinishedStatus getFinishStatus() {
-		if (this.getStatus() != TaskStatus.FINISHED) {
-			throw new IllegalStateException("The task is not finished yet");
-		} else {
-			if (wasFinishedEarly()) {
-				return TaskFinishedStatus.EARLY;
-			} else if (wasFinishedWithADelay()) {
-				return TaskFinishedStatus.WITH_A_DELAY;
-			} else {
-				return TaskFinishedStatus.ON_TIME;
-			}
-		}
+		return status.getFinishStatus(this);
 	}
 
 	/**
