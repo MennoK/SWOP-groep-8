@@ -121,8 +121,7 @@ public class UiTaskMan {
 				.getPossibleStartTimes(task)), task.getDuration());
 		Set<Resource> ressources = taskManController.selectResources(task,
 				timeSpan);
-		System.out
-				.println("The system proposes the following ressources:");
+		System.out.println("The system proposes the following ressources:");
 		Printer.list(ressources);
 		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
 				task, reader.select(taskManController.getDeveloperExpert()
@@ -131,6 +130,7 @@ public class UiTaskMan {
 			plan.addDeveloper(reader.select(taskManController
 					.getDeveloperExpert().getAllDevelopers()));
 		}
+		plan.addAllResources(ressources).build(taskManController.getPlanner());
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
