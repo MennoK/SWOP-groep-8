@@ -12,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -317,6 +316,7 @@ public class Parser {
 
 			if (taskNrSet.contains(counter)) {
 				LinkedHashMap<String, Object> planningOfTask = plannings
+						.get(planningCounter);
 				constructPlannings(planningOfTask, controller);
 				if (task.get("status") != null) {
 					String status = (String) task.get("status");
