@@ -50,6 +50,8 @@ public class Task implements Visitable {
 	private LocalDateTime startTime;
 	private LocalDateTime lastUpdateTime;
 
+	private Memento memento;
+
 	private Planning planning;
 
 	private static AtomicInteger idCounter = new AtomicInteger(1);
@@ -148,11 +150,8 @@ public class Task implements Visitable {
 	 *            : task builder with parameters
 	 */
 	public Task(TaskBuilder taskBuilder) {
-		if (
-				(taskBuilder.dependencies != null && !taskBuilder.dependencies
-				.isEmpty()) 
-				&& taskBuilder.originalTask != null
-				) {
+		if ((taskBuilder.dependencies != null && !taskBuilder.dependencies
+				.isEmpty()) && taskBuilder.originalTask != null) {
 			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -323,8 +322,17 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * This method returns true if and only if the given dependency is not yet
-	 * in the dependency list
+	 * String str = toSummary() + ": "; str += getDescription() + ", "; str +=
+	 * getEstimatedDuration().toHours() + " hours, "; str +=
+	 * getAcceptableDeviation() * 100 + "% margin"; if
+	 * (!getDependencies().isEmpty()) { str += ", depends on {"; for (Task dep :
+	 * getDependencies()) str += " task " + dep.getId(); str += " }"; } if
+	 * (getOriginal() != null) str += ", alternative for task " +
+	 * getOriginal().getId(); if (this.getStatus() == TaskStatus.FINISHED) { str
+	 * += ", started " + getStartTime(); str += ", finished " + getEndTime();
+	 * str += " (" + getFinishStatus() + ")"; } return str; This method returns
+	 * true if and only if the given dependency is not yet in the dependency
+	 * list
 	 * 
 	 * @param dependency
 	 * @return true if and only if the given task dependency is valid
@@ -398,31 +406,6 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Checks whether the end time is after the start time
-	 * 
-	 * @param startTime
-	 *            : the startTime of a task
-	 * @param endTime
-	 *            : the endTime of a task
-	 * @return true if and only if the start time is before the endtime
-	 */
-	private boolean isValidStartTimeAndEndTime(LocalDateTime startTime,
-			LocalDateTime endTime) {
-		return endTime.isAfter(startTime);
-	}
-
-	/**
-	 * Sets a failed boolean to true or false
-	 * 
-	 * @param failed
-	 *            : true if failed
-	 */
-	@Deprecated
-	private void setOldFailed() {
-		this.failed = true;
-	}
-
-	/**
 	 * Sets the alternative task if and only if the original task is failed
 	 * 
 	 * @param original
@@ -432,7 +415,7 @@ public class Task implements Visitable {
 	 */
 	private void setAlternativeTask(Task original)
 			throws IllegalArgumentException {
-		if (original.getCalculatedStatus() != TaskStatus.FAILED) {
+		if (original.getStatus() != TaskStatus.FAILED) {
 			throw new IllegalArgumentException(
 					"Task cannot be alternative to a task that has not failed");
 		}
@@ -456,45 +439,6 @@ public class Task implements Visitable {
 	 */
 	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
-	}
-
-	/**
-	 * Allows the user to update the status of a Task to finished or failed
-	 * 
-	 * @param startTime
-	 *            : the time at which the user started working on the task.
-	 * @param endTime
-	 *            : the time at which the user stopped working on the task.
-	 * @param setToFail
-	 *            : true if the task failed, false if the task was successfully
-	 *            finished.
-	 * @throws IllegalArgumentException
-	 *             : if the startTime was after the endTime.
-	 */
-	@Deprecated
-	public void updateStatus(LocalDateTime startTime, LocalDateTime endTime,
-			boolean setToFail) {
-		if (!isValidStartTimeAndEndTime(startTime, endTime))
-			throw new IllegalArgumentException(
-					"the given end time is before the start time");
-
-		if (getCalculatedStatus() == TaskStatus.FAILED)
-			throw new IllegalStateException("Can not update failed task");
-
-		if (getCalculatedStatus() == TaskStatus.FINISHED)
-			throw new IllegalStateException("Can not update finished task");
-
-		if (getCalculatedStatus() == TaskStatus.UNAVAILABLE)
-			throw new IllegalStateException(
-					"Can not finish an unavailable task");
-
-		if (setToFail) {
-			status = TaskStatus.FAILED;
-			this.setOldFailed();
-		} else
-			status = TaskStatus.FINISHED;
-		this.setStartTime(startTime);
-		this.setEndTime(endTime);
 	}
 
 	private TaskStatus status = TaskStatus.UNAVAILABLE;
@@ -534,7 +478,7 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setEndTime(endTime);
 		setStatus(TaskStatus.FINISHED);
-		
+
 		setEndTimePlanning(endTime);
 	}
 
@@ -553,9 +497,6 @@ public class Task implements Visitable {
 		setEndTime(endTime);
 		setStatus(TaskStatus.FAILED);
 		setEndTimePlanning(endTime);
-	
-		// TODO remove after refactoring
-		setOldFailed();
 	}
 
 	/**
@@ -585,33 +526,11 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Gets the status of task. There are four different statuses for a task:
-	 * Available, unavailable, finished or failed.
-	 * 
-	 * A task is failed when the boolean isFailed is true A task is finished
-	 * when the task has an end time The task availability is dependent on the
-	 * dependencies of the task
-	 * 
-	 * @return the status of the task
-	 */
-	@Deprecated
-	public TaskStatus getCalculatedStatus() {
-		if (isFailed()) {
-			return TaskStatus.FAILED;
-		} else if (getEndTime() != null) {
-			return TaskStatus.FINISHED;
-		}
-		if (checkDependenciesFinished())
-			return TaskStatus.AVAILABLE;
-		return TaskStatus.UNAVAILABLE;
-	}
-
-	/**
 	 * Check whether the dependencies of this Task are finished
 	 */
 	boolean checkDependenciesFinished() {
 		for (Task dependency : getDependencies()) {
-			if (dependency.getCalculatedStatus() != TaskStatus.FINISHED)
+			if (dependency.getStatus() != TaskStatus.FINISHED)
 				return false;
 		}
 		return true;
@@ -706,6 +625,14 @@ public class Task implements Visitable {
 	}
 
 	/**
+	 * 
+	 * @return true if the Task requires resources
+	 */
+	public boolean requiresRessources() {
+		return !getRequiredResourceTypes().isEmpty();
+	}
+
+	/**
 	 * Remove task from the dependency list
 	 */
 	void removeDependency(Task task) {
@@ -773,12 +700,94 @@ public class Task implements Visitable {
 		return (planning != null);
 	}
 
-	private void setEndTimePlanning(LocalDateTime endTime){
-		if (this.hasPlanning()){
+	private void setEndTimePlanning(LocalDateTime endTime) {
+		if (this.hasPlanning()) {
 			getPlanning().setEndTime(endTime);
 		}
 	}
+
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
+	}
+
+	void save() {
+		this.memento = new Memento(this);
+	}
+
+	boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+
+	private class Memento {
+
+		private String description;
+		private Duration estimatedDuration;
+		private double acceptableDeviation;
+
+		private List<Task> dependencies;
+		private Map<ResourceType, Integer> requiredResourceTypes;
+		private Task originalTask;
+		private boolean failed = false;
+
+		private LocalDateTime endTime;
+		private LocalDateTime startTime;
+		private LocalDateTime lastUpdateTime;
+
+		private Planning planning;
+
+		private int id;
+		
+		private TaskStatus status;
+
+		// Het aanmaken van het memento object
+		// Alles moet gekopieerd worden, behalve referenties naar objecten in
+		// ons domein
+		// bv. de dependencies worden shallow gekopieerd
+		public Memento(Task task) {
+			this.description = new String(task.description);
+			this.estimatedDuration = task.estimatedDuration.plusSeconds(0);
+			this.acceptableDeviation = new Double(task.acceptableDeviation);
+
+			this.dependencies = new ArrayList<Task>(task.dependencies);
+			this.requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>(
+					task.requiredResourceTypes);
+			this.originalTask = task.originalTask;
+			this.failed = task.failed;
+
+			this.endTime = task.endTime;
+			this.startTime = task.startTime;
+			this.lastUpdateTime = task.lastUpdateTime;
+
+			this.planning = task.planning;
+			this.id = task.id;
+			
+			this.status = task.status;
+		}
+
+		public void load(Task task) {
+			task.description = this.description;
+			task.estimatedDuration = this.estimatedDuration;
+			task.acceptableDeviation = this.acceptableDeviation;
+
+			task.dependencies = this.dependencies;
+			task.requiredResourceTypes = this.requiredResourceTypes;
+			task.originalTask = this.originalTask;
+			task.failed = this.failed;
+
+			task.endTime = this.endTime;
+			task.startTime = this.startTime;
+			task.lastUpdateTime = this.lastUpdateTime;
+
+			task.planning = this.planning;
+			task.id = this.id;
+			
+			task.status = this.status;
+		}
 	}
 }

@@ -102,6 +102,29 @@ public class TaskManController {
 	}
 
 	/**
+	 * Saves the current state of the system. Only the last state is remembered
+	 */
+	public void saveSystem() {
+		this.getProjectExpert().save();
+		this.getDeveloperExpert().save();
+		this.getPlanner().save();
+		this.getResourceExpert().save();
+		this.taskManClock.save();
+	}
+
+	/**
+	 * Loads the last saved state of the system
+	 */
+	public void loadSystem() {
+		if (!(this.getProjectExpert().load()
+				&& this.getDeveloperExpert().load() && this.getPlanner().load()
+				&& this.getResourceExpert().load() && this.taskManClock.load())) {
+			throw new IllegalStateException(
+					"You need to save the system before loading");
+		}
+	}
+
+	/**
 	 * 
 	 * Advances the time of TaskMan. This will update the status of every task
 	 * in every project of the project controller

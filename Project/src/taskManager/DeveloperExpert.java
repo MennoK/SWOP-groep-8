@@ -15,6 +15,8 @@ public class DeveloperExpert {
 
 	private Set<Developer> developers;
 
+	private Memento memento;
+	
 	/**
 	 * Default constructor of the developer expert. It initializes a new set of
 	 * developers.
@@ -76,5 +78,31 @@ public class DeveloperExpert {
 	public Set<Developer> getAllDevelopers() {
 		return Collections.unmodifiableSet(developers);
 	}
-
+	
+	void save() {
+		this.memento = new Memento(this);
+	}
+	
+	boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+	
+	private class Memento {
+		private Set<Developer> developers;
+		
+		public Memento(DeveloperExpert de) {
+			this.developers = new LinkedHashSet<Developer>(de.developers);
+		}
+		
+		public void load(DeveloperExpert de) {
+			de.developers = this.developers;
+		}
+	}
+	
 }

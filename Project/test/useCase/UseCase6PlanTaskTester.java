@@ -12,7 +12,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.*;
 import utility.TimeSpan;
 import taskManager.Developer;
 import taskManager.DeveloperExpert;
@@ -24,7 +23,6 @@ import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
-
 
 public class UseCase6PlanTaskTester {
 
@@ -76,7 +74,8 @@ public class UseCase6PlanTaskTester {
 		developerExpert.createDeveloper("person1");
 		developerExpert.createDeveloper("person2");
 		developers = new LinkedHashSet<>(developerExpert.getAllDevelopers());
-		developerList = new ArrayList<Developer>(developerExpert.getAllDevelopers());
+		developerList = new ArrayList<Developer>(
+				developerExpert.getAllDevelopers());
 	}
 
 	@Test
@@ -84,15 +83,17 @@ public class UseCase6PlanTaskTester {
 		// user gets list with all unplanned tasks (task1 and task2)
 
 		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
-				project.getAllTasks();
+		project.getAllTasks();
 		assertEquals(unplannedTasks, tmController.getUnplannedTasks());
-		//user selects task2 and receives 3 possible start times
+		// user selects task2 and receives 3 possible start times
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);
 		possibleStartTimes.add(time1.plusHours(1));
 		possibleStartTimes.add(time1.plusHours(2));
-		assertEquals(possibleStartTimes,planner.getPossibleStartTimes(task2, time1, developers));
+		assertEquals(possibleStartTimes,
+				planner.getPossibleStartTimes(task2, time1, developers));
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+<<<<<<< HEAD
 		//user selects time1
 		//the system shows possible available resources
 		assertEquals(resourceType.getAllResources(), planner.resourcesOfTypeAvailableFor(resourceType, task2,timeSpan));
@@ -104,15 +105,32 @@ public class UseCase6PlanTaskTester {
 		//system makes reservation
 		Planning.builder(time1, task2, developerList.get(0), planner).build();
 		
+=======
+		// user selects time1
+		// the system shows possible available resources
+		assertEquals(resourceType.getAllResources(),
+				planner.resourcesOfTypeAvailableFor(resourceType, task2,
+						timeSpan));
+		// user selects a resource
+		// system shows developers
+		assertEquals(developers,
+				planner.developersAvailableFor(developers, task2, timeSpan));
+		// user selects a developer
+
+		// system makes reservation
+		Planning.builder(time1, task2, developerList.get(0)).build(planner);
+>>>>>>> cb5c296b169d7b136b79ff425838b7655cd21bc9
 
 		ArrayList<Planning> planningList = new ArrayList<Planning>();
 		planningList.addAll(planner.getAllPlannings());
-		assertEquals(this.time1,planningList.get(0).getTimeSpan().getBegin());
-		assertEquals(time1.plus(task2.getDuration()),planningList.get(0).getTimeSpan().getEnd());
-		assertTrue(planningList.get(0).getDevelopers().contains(developerList.get(0)));
-		assertEquals(1,planningList.get(0).getDevelopers().size());
+		assertEquals(this.time1, planningList.get(0).getTimeSpan().getBegin());
+		assertEquals(time1.plus(task2.getDuration()), planningList.get(0)
+				.getTimeSpan().getEnd());
+		assertTrue(planningList.get(0).getDevelopers()
+				.contains(developerList.get(0)));
+		assertEquals(1, planningList.get(0).getDevelopers().size());
 		assertTrue(planningList.get(0).getResources().isEmpty());
-		
+
 	}
 	@Test
 	public void resolveConflict() {

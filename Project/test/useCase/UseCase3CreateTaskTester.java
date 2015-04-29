@@ -10,6 +10,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskManager.Developer;
+import taskManager.Planning;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.ResourceExpert;
@@ -28,7 +30,7 @@ public class UseCase3CreateTaskTester {
 	public void setUp() {
 		// create a controller
 		now = LocalDateTime.of(2015, 03, 07, 01, 00);
-		
+
 		taskManController = new TaskManController(now);
 		controller = taskManController.getProjectExpert();
 		resourceExpert = taskManController.getResourceExpert();
@@ -51,8 +53,7 @@ public class UseCase3CreateTaskTester {
 		Project project1 = controller.getAllProjects().get(0);
 
 		// create a simple task
-		Task.builder("simple descr", Duration.ofHours(20), 50)
-				.build(project1);
+		Task.builder("simple descr", Duration.ofHours(20), 50).build(project1);
 		assertEquals(1, project1.getAllTasks().size());
 		assertEquals("simple descr", project1.getAllTasks().get(0)
 				.getDescription());
@@ -62,8 +63,8 @@ public class UseCase3CreateTaskTester {
 				project1.getAllTasks().get(0).getAcceptableDeviation(), 0.001);
 
 		// create a new task dependent on the simple task
-		Task.builder("task with dependency", Duration.ofHours(20),
-				50).addDependencies(project1.getAllTasks().get(0)).build(project1);
+		Task.builder("task with dependency", Duration.ofHours(20), 50)
+				.addDependencies(project1.getAllTasks().get(0)).build(project1);
 
 		assertEquals(2, project1.getAllTasks().size());
 		assertEquals(project1.getAllTasks().get(0),
@@ -71,10 +72,14 @@ public class UseCase3CreateTaskTester {
 
 		// create an alternative task for a failed task
 		// first we let the simple task fail
-		project1.getAllTasks()
-				.get(0)
-				.updateStatus(LocalDateTime.of(2015, 03, 07, 02, 00),
-						LocalDateTime.of(2015, 03, 07, 05, 00), true);
+		Task task = project1.getAllTasks().get(0);
+		Developer dev = taskManController.getDeveloperExpert().createDeveloper(
+				"dev");
+		Planning.builder(now, task, dev).build(taskManController.getPlanner());
+		taskManController.setExecuting(task,
+				LocalDateTime.of(2015, 03, 07, 02, 00));
+		taskManController.setFailed(task,
+				LocalDateTime.of(2015, 03, 07, 05, 00));
 
 		// we create an alternative task for the simple task
 		Task.builder("alternative task", Duration.ofHours(20), 50)

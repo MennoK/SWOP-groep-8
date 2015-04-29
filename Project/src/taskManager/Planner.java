@@ -11,6 +11,9 @@ import utility.TimeSpan;
 
 public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
+	
+	private Memento memento;
+	
 	private static final int TOTAL_POSSIBLE_START_TIMES = 3;
 
 	/**
@@ -255,6 +258,39 @@ public class Planner {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
 			task.setStatus(TaskStatus.UNAVAILABLE);
+		}
+	}
+	
+	
+	void save() {
+		this.memento = new Memento(this);
+		for(Planning planning: this.planningSet) {
+			planning.save();
+		}
+	}
+	
+	boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			for(Planning planning: this.planningSet) {
+				planning.load();
+			}
+			return true;
+		}
+	}
+	
+	private class Memento {
+		Set<Planning> planningSet;
+		
+		public Memento(Planner pe) {
+			this.planningSet = new LinkedHashSet<Planning>(pe.planningSet);
+		}
+		
+		public void load(Planner pe) {
+			pe.planningSet = this.planningSet;
 		}
 	}
 }
