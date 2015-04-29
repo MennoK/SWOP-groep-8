@@ -23,6 +23,7 @@ import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
+import taskManager.exception.ConlictingPlanningException;
 
 public class UseCase6PlanTaskTester {
 
@@ -116,7 +117,7 @@ public class UseCase6PlanTaskTester {
 
 	}
 	
-	@Test (expected = IllegalArgumentException.class)
+	@Test (expected = ConlictingPlanningException.class)
 	public void extensionUserSelectsTime(){
 		Planning.builder(time1, task1, developerList.get(0), planner).build();
 		//the user selects a time for task2 that will conflict with task1		
