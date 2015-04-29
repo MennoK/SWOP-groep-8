@@ -24,6 +24,7 @@ import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
+import taskManager.exception.ConlictingPlanningException;
 
 public class PlanningTester {
 
@@ -124,14 +125,14 @@ public class PlanningTester {
 				.get(1).getDevelopers());
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = ConlictingPlanningException.class)
 	public void createPlanningInvalidResources(){
 		Task.builder("task 3", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build(project);
 		Task task3 = project.getAllTasks().get(2);
 		Planning.builder(time1, task3, developer1, planner).addAllResources(resource).build();
 		Planning.builder(time1, task2, developer2, planner).addAllResources(resource).build();
 	}
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = ConlictingPlanningException.class)
 	public void createPlanningInvalidDeveloper(){
 		Planning.builder(time1, task1, developer1, planner).build();
 		Planning.builder(time1, task2, developer1, planner).addAllResources(resource).build();
