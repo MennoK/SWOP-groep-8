@@ -113,7 +113,7 @@ public class ProjectExpertTester {
 		
 		taskManController.saveSystem();
 		
-		taskManController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
+		taskManController.advanceTime(LocalDateTime.of(2020, 03, 06, 00, 00));
 		
 		taskManController.loadSystem();
 		

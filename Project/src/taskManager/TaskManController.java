@@ -5,7 +5,6 @@ import java.util.Set;
 
 import utility.TimeSpan;
 
-
 /**
  * The taskManController class controls every expert
  * 
@@ -55,13 +54,14 @@ public class TaskManController {
 	private void createDeveloperExpert() {
 		this.developerExpert = new DeveloperExpert();
 	}
+
 	/**
 	 * creates a new planner
 	 */
-	public void createPlanner(){
+	public void createPlanner() {
 		this.planner = new Planner();
 	}
-	
+
 	/**
 	 * Returns the developer expert
 	 * 
@@ -70,8 +70,7 @@ public class TaskManController {
 	public DeveloperExpert getDeveloperExpert() {
 		return developerExpert;
 	}
-	
-	
+
 	/**
 	 * Returns the resource expert
 	 * 
@@ -112,14 +111,14 @@ public class TaskManController {
 
 	/**
 	 * Loads the last saved state of the system
-	 * 
-	 * @return true if loaded, false if no previous state is found
 	 */
-	public boolean loadSystem() {
-		return this.getProjectExpert().load()
-				&& this.getDeveloperExpert().load()
-				&& this.getPlanner().load()
-				&& this.getResourceExpert().load() && this.taskManClock.load();
+	public void loadSystem() {
+		if (!(this.getProjectExpert().load()
+				&& this.getDeveloperExpert().load() && this.getPlanner().load()
+				&& this.getResourceExpert().load() && this.taskManClock.load())) {
+			throw new IllegalStateException(
+					"You need to save the system before loading");
+		}
 	}
 
 	/**
@@ -155,7 +154,8 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		task.getPlanning().setTimeSpan(new TimeSpan(startTime, task.getDuration()));
+		task.getPlanning().setTimeSpan(
+				new TimeSpan(startTime, task.getDuration()));
 		updateStatusAll();
 	}
 

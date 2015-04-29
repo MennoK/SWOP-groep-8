@@ -39,6 +39,8 @@ public class PlannerTester {
 	private ArrayList<Resource> resources;
 	private HashSet<Resource> resource;
 	private HashSet<Resource> resource2;
+	
+	
 	@Before
 	public void setUp() {
 		//2 default times
@@ -348,6 +350,23 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1.plusHours(3), task3.getDuration());
 		Map.Entry<ResourceType, Set<Resource>> map = planner.resourcesAvailableFor(task3, timeSpan).entrySet().iterator().next();
 		assertEquals(2, map.getValue().size());
+	}
+	
+	@Test
+	public void testMementoRollbackRemovesPlannings() {
+		
+		planner.save();
+		
+		//create planning for task1
+		Planning.builder(time1, task1, developer1).addDeveloper(developer2).build(planner);
+		
+		//check if the planning has been created
+		assertEquals(1, planner.getAllPlannings().size());
+		
+		planner.load();
+		
+		assertEquals(0, planner.getAllPlannings().size());
+		
 	}
 
 }

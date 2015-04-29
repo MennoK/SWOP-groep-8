@@ -3,7 +3,6 @@ package taskManager;
 import java.time.LocalDateTime;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -179,7 +178,6 @@ public class Planning {
 	
 	private class Memento {
 		private TimeSpan timeSpan;
-		private Task task;
 		private Set<Developer> developers;
 		private Map<ResourceType, Set<Resource>> resources;
 		
