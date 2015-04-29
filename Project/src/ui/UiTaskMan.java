@@ -6,14 +6,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import parser.Parser;
-import taskManager.Developer;
-import taskManager.Planning;
-import taskManager.Project;
-import taskManager.Resource;
-import taskManager.Task;
+import taskManager.*;
 import taskManager.Task.TaskBuilder;
-import taskManager.TaskManController;
-import taskManager.TaskStatus;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
@@ -230,10 +224,8 @@ public class UiTaskMan {
 					break;
 				}
 			} catch (ExitUseCaseException e) {
-				taskManController.loadSystem();
 				System.out
-						.println("Use case exited, returning to the main menu (with no changes to the system).");
-				return;
+						.println("Use case exited, returning to simulation menu.");
 			}
 		}
 	}
@@ -265,7 +257,7 @@ public class UiTaskMan {
 		while (true) {
 			try {
 				printSwitchUserMenu();
-				String choice = reader.getString("select user:");
+				String choice = reader.getString("select user");
 				switch (choice) {
 				case "1":
 					projectManagerMenu();

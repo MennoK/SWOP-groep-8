@@ -8,5 +8,8 @@ package taskManager;
  * @author Groep 8
  */
 public enum ProjectFinishingStatus {
-	ON_TIME, OVER_TIME
+	ON_TIME, 
+	OVER_TIME
 }
+
+

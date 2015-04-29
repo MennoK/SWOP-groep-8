@@ -372,7 +372,7 @@ public class Parser {
 
 		int taskNr = (int) (planning.get("task"));
 		PlanningBuilder pbuilder = Planning.builder(startTime,
-				alltasks.get(taskNr), assignedDevs.get(0));
+				alltasks.get(taskNr), assignedDevs.get(0),controller.getPlanner());
 
 		for (int i = 1; i < assignedDevs.size(); i++) {
 			pbuilder.addDeveloper(assignedDevs.get(i));
@@ -387,7 +387,7 @@ public class Parser {
 				}
 			}
 		}
-		pbuilder.build(controller.getPlanner());
+		pbuilder.build();
 
 	}
 }

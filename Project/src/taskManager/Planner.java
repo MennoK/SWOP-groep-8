@@ -2,11 +2,13 @@ package taskManager;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import taskManager.Planning.PlanningBuilder;
 import utility.TimeSpan;
 
 public class Planner {
@@ -201,7 +203,7 @@ public class Planner {
 		return availableResources;
 	}
 
-	public boolean isAvailableFor(Resource resource, Task task,
+	boolean isAvailableFor(Resource resource, Task task,
 			TimeSpan timeSpan) {
 		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
@@ -229,7 +231,7 @@ public class Planner {
 		return availableDevelopers;
 	}
 
-	public boolean isAvailableFor(Developer developer, Task task,
+	boolean isAvailableFor(Developer developer, Task task,
 			TimeSpan timeSpan) {
 		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
@@ -246,6 +248,48 @@ public class Planner {
 		return true;
 	}
 
+	boolean isAvailableForDevelopers(Set<Developer> developers, Task task, TimeSpan timeSpan){
+		for (Developer developer : developers) {
+			if(!isAvailableFor(developer, task, timeSpan)){
+				return false;
+			}
+		}
+		return true;
+	}
+	boolean isAvailableForResources(Set<Resource> resources, Task task, TimeSpan timeSpan){
+		for (Resource resource : resources) {
+			if(!isAvailableFor(resource, task, timeSpan)){
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 * returns conlicting plannings based on the information of a planningbuilder 
+	 * @param planningBuilder
+	 * 					: the planningbuilder that contains the information for a planning that would conflict
+	 * @return
+	 * 					: set of conflicting plannings
+	 */
+	Set<Planning> getConflictingPlanningsForBuilder(PlanningBuilder planningBuilder){
+		Set<Planning> conflictingPlannings = new HashSet<>();
+		
+		for (Planning planning : this.getAllPlannings()) {
+			if(planning.getTimeSpan().overlaps(planningBuilder.getTimeSpan())){
+				for (Developer developer : planningBuilder.getDevelopers()) {
+					if(planning.getDevelopers().contains(developer)){
+						conflictingPlannings.add(planning);
+					}
+				}
+				for (Resource resource : planningBuilder.getResources()) {
+					if(planning.getResources().contains(resource) && !conflictingPlannings.contains(planning)){
+						conflictingPlannings.add(planning);
+					}
+				}
+			}
+		}
+		return conflictingPlannings;
+	}
 	void updateStatus(Task task) {
 		if (task.getStatus() == TaskStatus.EXECUTING
 				|| task.getStatus() == TaskStatus.FINISHED
