@@ -2,6 +2,7 @@ package ui;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Set;
 
 import parser.Parser;
@@ -114,23 +115,46 @@ public class UiTaskMan {
 
 	private void planTask() throws ExitUseCaseException {
 		Task task = reader.select(taskManController.getUnplannedTasks());
-		TimeSpan timeSpan = new TimeSpan(reader.selectDate(taskManController
-				.getPossibleStartTimes(task)), task.getDuration());
-		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
-				task, reader.select(taskManController.getDeveloperExpert()
-						.getAllDevelopers()), taskManController.getPlanner());
-		while (reader.getBoolean("Do you want to assign an extra Developer?")) {
-			plan.addDeveloper(reader.select(taskManController
-					.getDeveloperExpert().getAllDevelopers()));
+		plan(task);
+	}
+
+	private void plan(Task task) throws ExitUseCaseException {
+		Printer.listDates(new ArrayList<LocalDateTime>(taskManController
+				.getPossibleStartTimes(task)));
+		TimeSpan timeSpan;
+		if (reader
+				.getBoolean("Do you want to start the planning on one of those times?")) {
+			timeSpan = new TimeSpan(reader.selectDate(taskManController
+					.getPossibleStartTimes(task)), task.getDuration());
+		} else {
+			timeSpan = new TimeSpan(
+					reader.getDate("When do you want to start the planning of this Task?"),
+					task.getDuration());
 		}
-		if (task.requiresRessources()) {
-			Set<Resource> ressources = taskManController.selectResources(task,
-					timeSpan);
-			System.out.println("The system proposes the following ressources:");
-			Printer.list(ressources);
-			plan.addAllResources(ressources);
+		Planning.PlanningBuilder plan;
+		try {
+			plan = Planning.builder(timeSpan.getBegin(), task, reader
+					.select(taskManController.getDeveloperExpert()
+							.getAllDevelopers()), taskManController
+					.getPlanner());
+			while (reader
+					.getBoolean("Do you want to assign an extra Developer?")) {
+				plan.addDeveloper(reader.select(taskManController
+						.getDeveloperExpert().getAllDevelopers()));
+			}
+			if (task.requiresRessources()) {
+				Set<Resource> ressources = taskManController.selectResources(
+						task, timeSpan);
+				System.out
+						.println("The system proposes the following ressources:");
+				Printer.list(ressources);
+				plan.addAllResources(ressources);
+			}
+			plan.build();
+		} catch (IllegalArgumentException e) {
+			// TODO Resolve conflict
+			plan(task);
 		}
-		plan.build();
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
