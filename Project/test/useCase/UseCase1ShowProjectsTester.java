@@ -10,6 +10,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskManager.Developer;
+import taskManager.Planning;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
@@ -22,6 +24,8 @@ public class UseCase1ShowProjectsTester {
 
 	private ProjectExpert controller;
 	private TaskManController taskManController;
+	private Developer jef;
+	private Developer jos;
 	private Project project1;
 	private Project project2;
 	private Project project0;
@@ -46,7 +50,10 @@ public class UseCase1ShowProjectsTester {
 
 		taskManController = new TaskManController(now);
 		controller = taskManController.getProjectExpert();
-		
+
+		jef = taskManController.getDeveloperExpert().createDeveloper("Jef");
+		jos = taskManController.getDeveloperExpert().createDeveloper("Jos");
+
 		controller.createProject("Project 1", "Desc 1", now.plusDays(2));
 		controller.createProject("Project 2", "Desc 2", now.plusHours(3));
 		controller.createProject("Project 0", "Desc 3", now.plusDays(2));
@@ -57,9 +64,15 @@ public class UseCase1ShowProjectsTester {
 		project2 = controller.getAllProjects().get(1);
 		project3 = controller.getAllProjects().get(3);
 
-		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4).build(project1);
-		task1.updateStatus(now, now.plusDays(1), false);
-		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4).build(project2);
+		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
+				.build(project1);
+		Planning.builder(now, task1, jef).build(taskManController.getPlanner());
+		taskManController.setExecuting(task1, now);
+		taskManController.setFinished(task1, now.plusDays(1));
+		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4)
+				.build(project2);
+		Planning.builder(now.plusHours(5), task2, jos).build(
+				taskManController.getPlanner());
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build(project2);
 		task4 = Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
@@ -102,7 +115,8 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 
-		Task task5 = Task.builder("task5", Duration.ofHours(1), 0.4).addDependencies(task4).build(project3);
+		Task.builder("task5", Duration.ofHours(1), 0.4).addDependencies(task4)
+				.build(project3);
 
 		// project 3 has 2 dependent tasks -> should still finish on time
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
@@ -136,9 +150,9 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(1, task3.getDependencies().size());
 
 		// show task status
-		assertEquals(TaskStatus.FINISHED, task1.getCalculatedStatus());
-		assertEquals(TaskStatus.AVAILABLE, task2.getCalculatedStatus());
-		assertEquals(TaskStatus.UNAVAILABLE, task3.getCalculatedStatus());
+		assertEquals(TaskStatus.FINISHED, task1.getStatus());
+		assertEquals(TaskStatus.AVAILABLE, task2.getStatus());
+		assertEquals(TaskStatus.UNAVAILABLE, task3.getStatus());
 	}
 
 }

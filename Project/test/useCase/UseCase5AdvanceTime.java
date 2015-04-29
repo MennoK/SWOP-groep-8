@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskManager.Developer;
+import taskManager.Planning;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
@@ -34,7 +36,7 @@ public class UseCase5AdvanceTime {
 		// project2 has 2 tasks (1 task is dependent on the other)
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
-		
+
 		taskManController = new TaskManController(now);
 		controller = taskManController.getProjectExpert();
 
@@ -50,8 +52,12 @@ public class UseCase5AdvanceTime {
 		Task.builder("Task 1", Duration.ofHours(5), 0.4).build(project1);
 
 		task1 = project1.getAllTasks().get(0);
-		task1.updateStatus(LocalDateTime.of(2015, 03, 04, 00, 00),
-				LocalDateTime.of(2015, 03, 05, 00, 00), false);
+		Developer dev1 = taskManController.getDeveloperExpert()
+				.createDeveloper("dev1");
+		Planning.builder(now, task1, dev1)
+				.build(taskManController.getPlanner());
+		taskManController.setExecuting(task1, now.minusDays(6));
+		taskManController.setFinished(task1, now.minusDays(5));
 	}
 
 	@Test

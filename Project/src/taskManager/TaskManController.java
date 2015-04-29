@@ -1,10 +1,12 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import utility.TimeSpan;
-
 
 /**
  * The taskManController class controls every expert
@@ -55,13 +57,14 @@ public class TaskManController {
 	private void createDeveloperExpert() {
 		this.developerExpert = new DeveloperExpert();
 	}
+
 	/**
 	 * creates a new planner
 	 */
-	public void createPlanner(){
+	public void createPlanner() {
 		this.planner = new Planner();
 	}
-	
+
 	/**
 	 * Returns the developer expert
 	 * 
@@ -70,8 +73,7 @@ public class TaskManController {
 	public DeveloperExpert getDeveloperExpert() {
 		return developerExpert;
 	}
-	
-	
+
 	/**
 	 * Returns the resource expert
 	 * 
@@ -112,6 +114,7 @@ public class TaskManController {
 	public void advanceTime(LocalDateTime time) {
 		this.taskManClock.setTime(time);
 		this.getProjectExpert().handleTimeChange(this.taskManClock.getTime());
+		updateStatusAll();
 	}
 
 	/**
@@ -132,7 +135,8 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		task.getPlanning().setTimeSpan(new TimeSpan(startTime, task.getDuration()));
+		task.getPlanning().setTimeSpan(
+				new TimeSpan(startTime, task.getDuration()));
 		updateStatusAll();
 	}
 
@@ -185,4 +189,20 @@ public class TaskManController {
 				getDeveloperExpert().getAllDevelopers());
 	}
 
+	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
+		Map<ResourceType, Integer> requirements = task
+				.getRequiredResourceTypes();
+		Set<Resource> selected = new HashSet<Resource>();
+		if (requirements.isEmpty()) {
+			return selected;
+		} else {
+			for (ResourceType type : requirements.keySet()) {
+				ArrayList<Resource> available = new ArrayList<Resource>(
+						getPlanner().resourcesOfTypeAvailableFor(type, task,
+								timeSpan));
+				selected.addAll(available.subList(0, requirements.get(type) - 1));
+			}
+		}
+		return selected;
+	}
 }

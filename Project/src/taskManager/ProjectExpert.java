@@ -121,12 +121,12 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return All the tasks in all projects
 	 */
-	Set<Task> getAllTasks() {
+	public Set<Task> getAllTasks() {
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			tasks.addAll(project.getAllTasks());
 		}
-		return tasks;
+		return Collections.unmodifiableSet(tasks);
 	}
 
 }
