@@ -5,7 +5,7 @@ package taskManager;
  * 
  * @author Groep 8
  */
-public class Resource {
+public class Resource implements Visitable {
 
 	private String name;
 	
@@ -35,5 +35,10 @@ public class Resource {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }

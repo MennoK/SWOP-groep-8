@@ -12,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,7 +86,7 @@ public class Parser {
 		// create all resource types
 		constructResourceTypes(
 				(List<LinkedHashMap<String, Object>>) objects
-				.get("resourceTypes"),
+						.get("resourceTypes"),
 				controller.getResourceExpert());
 
 		// create all resources
@@ -107,13 +106,13 @@ public class Parser {
 
 		// create all tasks
 		constructTasks(
-				(List<LinkedHashMap<String, Object>>) objects.get("tasks"),(List<LinkedHashMap<String, Object>>) objects.get("plannings"),controller.getProjectExpert(), controller.getResourceExpert(),
+				(List<LinkedHashMap<String, Object>>) objects.get("tasks"),
+				(List<LinkedHashMap<String, Object>>) objects.get("plannings"),
+				controller.getProjectExpert(), controller.getResourceExpert(),
 				controller);
 
 		return controller;
 	}
-
-
 
 	private TaskManController constructController(CharSequence time) {
 		LocalDateTime systemTime = LocalDateTime.parse(time, dateTimeFormatter);
@@ -150,8 +149,7 @@ public class Parser {
 
 			String name = (String) resourceType.get("name");
 
-			ResourceTypeBuilder builder = ResourceType
-					.builder(name);
+			ResourceTypeBuilder builder = ResourceType.builder(name);
 			List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
 					resourceExpert.getAllResourceTypes());
 
@@ -252,7 +250,8 @@ public class Parser {
 	 */
 	@SuppressWarnings("unchecked")
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
-			List<LinkedHashMap<String, Object>> plannings, ProjectExpert projectExpert, ResourceExpert resourceExpert,
+			List<LinkedHashMap<String, Object>> plannings,
+			ProjectExpert projectExpert, ResourceExpert resourceExpert,
 			TaskManController controller) {
 
 		Set<Integer> taskNrSet = new HashSet<Integer>();
@@ -260,9 +259,6 @@ public class Parser {
 			int taskNr = (int) (planning.get("task"));
 			taskNrSet.add(taskNr);
 		}
-		System.out.println(taskNrSet);
-
-
 		int counter = 0;
 		int planningCounter = 0;
 		for (LinkedHashMap<String, Object> task : tasks) {
@@ -279,8 +275,8 @@ public class Parser {
 			Project projectOfTask = projectExpert.getAllProjects().get(
 					projectNumber);
 
-			TaskBuilder builder = Task.builder(description,
-					estimatedDuration, acceptableDeviation);
+			TaskBuilder builder = Task.builder(description, estimatedDuration,
+					acceptableDeviation);
 
 			// add dependencies if there are any
 			if (task.get("prerequisiteTasks") != null) {
@@ -292,12 +288,12 @@ public class Parser {
 				}
 			}
 
-			// add alternative task if there is any 
-			if(task.get("alternativeFor") != null) { 
-				int alternativeTaskNr =(int) task.get("alternativeFor");
+			// add alternative task if there is any
+			if (task.get("alternativeFor") != null) {
+				int alternativeTaskNr = (int) task.get("alternativeFor");
 				builder.setOriginalTask(projectOfTask.getAllTasks().get(
-						alternativeTaskNr - 1)); }
-
+						alternativeTaskNr - 1));
+			}
 
 			// add required resource types
 			if (task.get("requiredTypes") != null) {
@@ -315,36 +311,40 @@ public class Parser {
 			builder.build(projectOfTask);
 			Task newTask = projectOfTask.getAllTasks().get(
 					projectOfTask.getAllTasks().size() - 1);
-			
+
 			alltasks.add(newTask);
 
-			if(taskNrSet.contains(counter)){
-				LinkedHashMap<String, Object> planningOfTask = plannings.get(planningCounter);
-				System.out.println(planningOfTask);
-				constructPlannings(plannings.get(planningCounter), controller);
-				if (task.get("status") != null){
+			if (taskNrSet.contains(counter)) {
+				LinkedHashMap<String, Object> planningOfTask = plannings
+						.get(planningCounter);
+				constructPlannings(planningOfTask, controller);
+				if (task.get("status") != null) {
 					String status = (String) task.get("status");
-					if (status.equals("executing")){
-						LocalDateTime startTime = LocalDateTime.parse( (CharSequence)  plannings.get(planningCounter).get("plannedStartTime"),dateTimeFormatter);
-						controller.setExecuting(newTask,startTime  );
-					}
-					else {
-						LocalDateTime startTime = LocalDateTime.parse( (CharSequence) task.get("startTime"),dateTimeFormatter); 
-						LocalDateTime endTime = LocalDateTime.parse((CharSequence) task.get("endTime"), dateTimeFormatter);
-						if(status.equals("failed")){
-							controller.setExecuting(newTask,startTime);
-							controller.setFailed(newTask,endTime);
-						}
-						else{
-							controller.setExecuting(newTask,startTime  );
-							controller.setFinished(newTask,endTime);
+					if (status.equals("executing")) {
+						LocalDateTime startTime = LocalDateTime.parse(
+								(CharSequence) plannings.get(planningCounter)
+										.get("plannedStartTime"),
+								dateTimeFormatter);
+						controller.setExecuting(newTask, startTime);
+					} else {
+						LocalDateTime startTime = LocalDateTime.parse(
+								(CharSequence) task.get("startTime"),
+								dateTimeFormatter);
+						LocalDateTime endTime = LocalDateTime.parse(
+								(CharSequence) task.get("endTime"),
+								dateTimeFormatter);
+						if (status.equals("failed")) {
+							controller.setExecuting(newTask, startTime);
+							controller.setFailed(newTask, endTime);
+						} else {
+							controller.setExecuting(newTask, startTime);
+							controller.setFinished(newTask, endTime);
 						}
 
 					}
 				}
 				planningCounter++;
 			}
-			System.out.println(newTask.getStatus());
 
 			counter++;
 		}
@@ -355,8 +355,7 @@ public class Parser {
 	 * Constructs the projects
 	 */
 	@SuppressWarnings("unchecked")
-	private void constructPlannings(
-			LinkedHashMap<String, Object> planning,
+	private void constructPlannings(LinkedHashMap<String, Object> planning,
 			TaskManController controller) {
 
 		LocalDateTime startTime = LocalDateTime.parse(
@@ -372,26 +371,20 @@ public class Parser {
 		}
 
 		int taskNr = (int) (planning.get("task"));
-		PlanningBuilder pbuilder = Planning.builder(
-				startTime, alltasks.get(taskNr), assignedDevs.get(0));
+		PlanningBuilder pbuilder = Planning.builder(startTime,
+				alltasks.get(taskNr), assignedDevs.get(0));
 
 		for (int i = 1; i < assignedDevs.size(); i++) {
 			pbuilder.addDeveloper(assignedDevs.get(i));
 		}
 
 		if (planning.get("resources") != null) {
-			List<ResourceType> resourceList = new ArrayList<ResourceType>(
-					controller.getResourceExpert().getAllResourceTypes());
 			for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) planning
 					.get("resources")) {
-				Set<Resource> resourceSet = new LinkedHashSet<Resource>();
 				for (Integer resourceNr : (ArrayList<Integer>) pair
 						.get("resource")) {
-					resourceSet.add(allresources.get(resourceNr));
+					pbuilder.addResources(allresources.get(resourceNr));
 				}
-				pbuilder.addResources(
-						resourceList.get((int) pair.get("type")),
-						resourceSet);
 			}
 		}
 		pbuilder.build(controller.getPlanner());

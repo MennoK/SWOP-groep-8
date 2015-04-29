@@ -1,6 +1,9 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import utility.TimeSpan;
@@ -134,6 +137,7 @@ public class TaskManController {
 	public void advanceTime(LocalDateTime time) {
 		this.taskManClock.setTime(time);
 		this.getProjectExpert().handleTimeChange(this.taskManClock.getTime());
+		updateStatusAll();
 	}
 
 	/**
@@ -208,4 +212,20 @@ public class TaskManController {
 				getDeveloperExpert().getAllDevelopers());
 	}
 
+	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
+		Map<ResourceType, Integer> requirements = task
+				.getRequiredResourceTypes();
+		Set<Resource> selected = new HashSet<Resource>();
+		if (requirements.isEmpty()) {
+			return selected;
+		} else {
+			for (ResourceType type : requirements.keySet()) {
+				ArrayList<Resource> available = new ArrayList<Resource>(
+						getPlanner().resourcesOfTypeAvailableFor(type, task,
+								timeSpan));
+				selected.addAll(available.subList(0, requirements.get(type) - 1));
+			}
+		}
+		return selected;
+	}
 }

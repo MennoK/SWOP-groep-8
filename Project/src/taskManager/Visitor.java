@@ -6,4 +6,6 @@ public interface Visitor {
 	public void visit(Project project);
 
 	public void visit(Developer developer);
+
+	public void visit(Resource resource);
 }
