@@ -8,6 +8,7 @@ import java.util.Set;
 import parser.Parser;
 import taskManager.*;
 import taskManager.Task.TaskBuilder;
+import taskManager.exception.ConlictingPlanningException;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
@@ -113,8 +114,8 @@ public class UiTaskMan {
 	}
 
 	private void plan(Task task) throws ExitUseCaseException {
-		Printer.listDates(new ArrayList<LocalDateTime>(taskManController
-				.getPossibleStartTimes(task)));
+		System.out.println(Printer.listDates(new ArrayList<LocalDateTime>(
+				taskManController.getPossibleStartTimes(task))));
 		TimeSpan timeSpan;
 		if (reader
 				.getBoolean("Do you want to start the planning on one of those times?")) {
@@ -145,8 +146,18 @@ public class UiTaskMan {
 				plan.addAllResources(ressources);
 			}
 			plan.build();
-		} catch (IllegalArgumentException e) {
-			// TODO Resolve conflict
+		} catch (ConlictingPlanningException conflict) {
+			System.out.println("A conflict occured with the following Tasks:");
+			for (Planning planning : conflict.getConflictingPlannings()) {
+				System.out.println(new ToStringVisitor()
+						.create(taskManController.getTask(planning)));
+			}
+			if (!reader
+					.getBoolean("Do you want to restart planning the original Task?")) {
+				for (Planning planning : conflict.getConflictingPlannings()) {
+					plan(taskManController.getTask(planning));
+				}
+			}
 			plan(task);
 		}
 	}
