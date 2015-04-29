@@ -22,7 +22,6 @@ public class ProjectExpert implements TimeObserver {
 	
 	private Memento memento;
 	private LocalDateTime lastUpdateTime;
-	private Planner planner;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -32,7 +31,6 @@ public class ProjectExpert implements TimeObserver {
 	 */
 	ProjectExpert() {
 		projects = new ArrayList<>();
-		this.setPlanner(new Planner());
 	}
 
 	/**
@@ -48,11 +46,12 @@ public class ProjectExpert implements TimeObserver {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
-	public void createProject(String name, String description,
+	public Project createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
 		project.handleTimeChange(lastUpdateTime);
-		this.addProject(project);
+		addProject(project);
+		return project;
 	}
 
 	/**
@@ -66,9 +65,9 @@ public class ProjectExpert implements TimeObserver {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
-	public void createProject(String name, String description,
+	public Project createProject(String name, String description,
 			LocalDateTime dueTime) {
-		this.createProject(name, description, lastUpdateTime, dueTime);
+		return createProject(name, description, lastUpdateTime, dueTime);
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return All the tasks in all projects
 	 */
-	private Set<Task> getAllTasks() {
+	Set<Task> getAllTasks() {
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			tasks.addAll(project.getAllTasks());
@@ -166,13 +165,5 @@ public class ProjectExpert implements TimeObserver {
 			pe.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
-	public Planner getPlanner() {
-		return planner;
-	}
-
-	public void setPlanner(Planner planningExpert) {
-		this.planner = planningExpert;
-	}
-
 	
 }

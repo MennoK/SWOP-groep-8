@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import taskManager.Task.TaskBuilder;
-import utility.Summarizable;
 import utility.WorkTime;
 
 /**
@@ -30,7 +28,7 @@ import utility.WorkTime;
  * 
  */
 
-public class Project implements Summarizable {
+public class Project implements Visitable {
 
 	private List<Task> tasks;
 	private String name;
@@ -61,27 +59,6 @@ public class Project implements Summarizable {
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
 		this.handleTimeChange(creationTime);
-	}
-
-	/**
-	 * 
-	 * Returns a new task builder to add extra parameters such as other
-	 * dependency task, the original task if you want to create an alternative
-	 * task and required resource types
-	 * 
-	 * @param description
-	 *            : required description of a task
-	 * @param estimatedDuration
-	 *            : required estimatedDuration of a task
-	 * @param acceptableDeviation
-	 *            : required acceptableDeviation of a task
-	 * 
-	 * @return taskBuilder : new builder for creating task
-	 */
-	public TaskBuilder taskBuilder(String description,
-			Duration estimatedDuration, double acceptableDeviation) {
-		return new TaskBuilder(description, estimatedDuration,
-				acceptableDeviation, this);
 	}
 
 	/**
@@ -350,31 +327,8 @@ public class Project implements Summarizable {
 		return lastUpdateTime;
 	}
 
-	/**
-	 * Partial toString method
-	 * 
-	 * @return a summary of the main information defining a Project
-	 */
-	public String toSummary() {
-		return "project '" + getName() + "': " + getStatus();
-	}
-
-	/**
-	 * Full toString method
-	 * 
-	 * @return a complete description of a project
-	 */
-	public String toString() {
-		String str = toSummary();
-		str += ", " + getDescription();
-		str += ", " + finishedOnTime();
-		str += " (Created " + getCreationTime();
-		str += ", Due " + getDueTime();
-		if (finishedOnTime() == ProjectFinishingStatus.OVER_TIME)
-			str += "(" + getCurrentDelay().toHours() + " working hours short)";
-		str += ")\n";
-		str += Summarizable.listSummaries(getAllTasks(), 1);
-		return str;
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 	
 	public void save() {

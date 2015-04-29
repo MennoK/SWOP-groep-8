@@ -1,6 +1,10 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import utility.TimeSpan;
+
 
 /**
  * The taskManController class controls every expert
@@ -13,7 +17,7 @@ public class TaskManController {
 	private DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
 	private ProjectExpert projectExpert;
-
+	private Planner planner;
 	private TaskManClock taskManClock;
 
 	/**
@@ -26,6 +30,7 @@ public class TaskManController {
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
+		createPlanner();
 	}
 
 	/**
@@ -50,7 +55,13 @@ public class TaskManController {
 	private void createDeveloperExpert() {
 		this.developerExpert = new DeveloperExpert();
 	}
-
+	/**
+	 * creates a new planner
+	 */
+	public void createPlanner(){
+		this.planner = new Planner();
+	}
+	
 	/**
 	 * Returns the developer expert
 	 * 
@@ -59,7 +70,8 @@ public class TaskManController {
 	public DeveloperExpert getDeveloperExpert() {
 		return developerExpert;
 	}
-
+	
+	
 	/**
 	 * Returns the resource expert
 	 * 
@@ -84,7 +96,7 @@ public class TaskManController {
 	 * @return planningExpert : planning expert
 	 */
 	public Planner getPlanner() {
-		return getProjectExpert().getPlanner();
+		return this.planner;
 	}
 
 	/**
@@ -143,7 +155,8 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		// TODO update status of all tasks
+		task.getPlanning().setTimeSpan(new TimeSpan(startTime, task.getDuration()));
+		updateStatusAll();
 	}
 
 	/**
@@ -155,7 +168,7 @@ public class TaskManController {
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
 
 	/**
@@ -167,6 +180,32 @@ public class TaskManController {
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
-		// TODO update status of all tasks
+		updateStatusAll();
 	}
+
+	private void updateStatusAll() {
+		for (Task task : getProjectExpert().getAllTasks())
+			getPlanner().updateStatus(task);
+	}
+
+	/**
+	 * Return all the tasks that do not have a planning yet.
+	 * 
+	 * @return set of tasks without a planning
+	 */
+	public Set<Task> getUnplannedTasks() {
+		return getPlanner().getUnplannedTasks(getProjectExpert().getAllTasks());
+	}
+
+	/**
+	 * returns 3 times at which a task could be planned so that all required
+	 * developers and resources are available
+	 * 
+	 * @return A set of localdateTimes
+	 */
+	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
+		return getPlanner().getPossibleStartTimes(task, getTime(),
+				getDeveloperExpert().getAllDevelopers());
+	}
+
 }

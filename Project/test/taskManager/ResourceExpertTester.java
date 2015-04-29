@@ -1,6 +1,7 @@
 package taskManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ResourceExpertTester {
 
 	@Test
 	public void testCreateSimpleResourceType(){
-		resourceExpert.resourceTypeBuilder("simple").build();
+		ResourceType.builder("simple").build(resourceExpert);
 		assertEquals(1, resourceExpert.getAllResourceTypes().size());
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
 		resourceTypeList.addAll(resourceExpert.getAllResourceTypes());
@@ -36,10 +37,10 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithConflictedResourceTypes(){
-		resourceExpert.resourceTypeBuilder("conflict").build();
+		ResourceType.builder("conflict").build(resourceExpert);
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
-		resourceExpert.resourceTypeBuilder("resourcetype").addConflictedResourceTypes(resourceTypeList.get(0)).build();
+		ResourceType.builder("resourcetype").addConflictedResourceTypes(resourceTypeList.get(0)).build(resourceExpert);
 		resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 	
 		assertEquals(2, resourceExpert.getAllResourceTypes().size());
@@ -52,7 +53,7 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithRequiredResourceTypes(){
-		resourceExpert.resourceTypeBuilder("resourcetype").addRequiredResourceTypes(resourceExpert.resourceTypeBuilder("required").build()).build();
+		ResourceType.builder("resourcetype").addRequiredResourceTypes(ResourceType.builder("required").build(resourceExpert)).build(resourceExpert);
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 		assertEquals(2, resourceExpert.getAllResourceTypes().size());
@@ -65,7 +66,7 @@ public class ResourceExpertTester {
 
 	@Test 
 	public void testCreateResourceTypeWithRequiredAndConflictedResourceTypes(){
-		resourceExpert.resourceTypeBuilder("resourcetype").addRequiredResourceTypes(resourceExpert.resourceTypeBuilder("required").build()).addConflictedResourceTypes(resourceExpert.resourceTypeBuilder("conflict").build()).build();
+		ResourceType.builder("resourcetype").addRequiredResourceTypes(ResourceType.builder("required").build(resourceExpert)).addConflictedResourceTypes(ResourceType.builder("conflict").build(resourceExpert)).build(resourceExpert);
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 		assertEquals(3, resourceExpert.getAllResourceTypes().size());
@@ -81,7 +82,7 @@ public class ResourceExpertTester {
 	
 	@Test
 	public void testCreateResourceTypeWithDailyAvailability(){
-		resourceExpert.resourceTypeBuilder("resourcetype").addDailyAvailability(new TimeInterval(LocalTime.of(12, 00), LocalTime.of(17, 00))).build();
+		ResourceType.builder("resourcetype").addDailyAvailability(new TimeInterval(LocalTime.of(12, 00), LocalTime.of(17, 00))).build(resourceExpert);
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 		assertEquals(LocalTime.of(12, 00), resourceTypeList.get(0).getDailyAvailability().getBegin());
 		assertEquals(LocalTime.of(17, 00), resourceTypeList.get(0).getDailyAvailability().getEnd());
@@ -89,7 +90,7 @@ public class ResourceExpertTester {
 
 	@Test
 	public void cannotHaveNullResourceType(){
-		resourceExpert.resourceTypeBuilder("simple").build();
+		ResourceType.builder("simple").build(resourceExpert);
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(resourceExpert.getAllResourceTypes());
 
 		assertFalse(resourceExpert.canHaveResource(resourceTypeList.get(0)));

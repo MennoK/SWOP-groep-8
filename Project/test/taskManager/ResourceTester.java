@@ -1,6 +1,6 @@
 package taskManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class ResourceTester {
 	@Before
 	public void setUp() {
 		ResourceExpert resourceExpert = new ResourceExpert();
-		resourceType = resourceExpert.resourceTypeBuilder("name").build();
+		resourceType = ResourceType.builder("name").build(resourceExpert);
 	}
 	
 	@Test

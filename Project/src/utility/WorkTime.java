@@ -1,12 +1,7 @@
 package utility;
 
-import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 
@@ -14,14 +9,6 @@ import java.util.Set;
  * 
  */
 public class WorkTime {
-
-	private static final int STARTHOUR = 8;
-	private static final int ENDHOUR = 16;
-	private static final Set<DayOfWeek> WORKDAYS = Collections
-			.unmodifiableSet(new HashSet<DayOfWeek>(Arrays
-					.asList(new DayOfWeek[] { DayOfWeek.MONDAY,
-							DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-							DayOfWeek.THURSDAY, DayOfWeek.FRIDAY })));
 
 	/**
 	 * Returns the time that is a duration after the given time, counting only
@@ -35,46 +22,8 @@ public class WorkTime {
 	 */
 	public static LocalDateTime getFinishTime(LocalDateTime current,
 			Duration duration) {
-		long hoursLeft = duration.toHours();
-
-		// Set to start of day
-		if (current.getHour() < STARTHOUR) {
-			current = current.plusHours(STARTHOUR - current.getHour());
-		}
-
-		while (hoursLeft > 0) {
-			if (isWorkDay(current) && current.getHour() < ENDHOUR) {
-				long hoursWorked = work(current, hoursLeft);
-				hoursLeft -= hoursWorked;
-				current = current.plusHours(hoursWorked);
-			}
-			if (hoursLeft > 0) {
-				current = nextDay(current);
-			}
-		}
-
-		return current;
-	}
-
-	private static long work(LocalDateTime current, long hoursLeft) {
-		// Can finish today
-		if ((current.getHour() + hoursLeft) <= ENDHOUR) {
-			return hoursLeft;
-		}
-		return ENDHOUR - STARTHOUR;
-	}
-
-	private static LocalDateTime nextDay(LocalDateTime time) {
-		time = time.plusDays(1);
-		return time.plusHours(STARTHOUR - time.getHour());
-	}
-
-	private static boolean isWorkDay(LocalDateTime current) {
-
-		if (WORKDAYS.contains(current.getDayOfWeek())) {
-			return true;
-		}
-		return false;
+		WorkTimeSimulation wts = new WorkTimeSimulation(current, duration);
+		return wts.workUntilFinished();
 	}
 
 	/**
@@ -102,5 +51,4 @@ public class WorkTime {
 
 		return hoursWorked;
 	}
-
 }

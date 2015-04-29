@@ -1,9 +1,8 @@
 package taskManager;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import taskManager.ResourceType.ResourceTypeBuilder;
 
 /**
  * The ResourceExpert class is the information expert and creator of resource
@@ -23,18 +22,6 @@ public class ResourceExpert {
 	 */
 	ResourceExpert(){
 		this.resourcetypes = new LinkedHashSet<ResourceType>();
-	}
-
-	/**
-	 * Returns a new resource type builder to add extra parameters such as other
-	 * required resource types and other conflicted resource types
-	 * 
-	 * @param name
-	 *            : required name of a resource type
-	 * @return resourceTypeBuilder : new builder for creating resource types
-	 */
-	public ResourceTypeBuilder resourceTypeBuilder(String name){
-		return new ResourceTypeBuilder(name,this);
 	}
 
 	/**
@@ -70,8 +57,8 @@ public class ResourceExpert {
 	 * 
 	 * @return resourcetypes : set of all resource types
 	 */
-	public Set<ResourceType> getAllResourceTypes() {
-		return resourcetypes;
+	public Set<ResourceType> getAllResourceTypes(){
+		return Collections.unmodifiableSet(resourcetypes);
 	}
 
 	void save() {

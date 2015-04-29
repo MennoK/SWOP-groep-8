@@ -1,6 +1,6 @@
 package useCase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.DeveloperExpert;
 import taskManager.Project;
 import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
@@ -48,7 +47,7 @@ public class UseCase5AdvanceTime {
 		project1 = controller.getAllProjects().get(0);
 		project2 = controller.getAllProjects().get(1);
 
-		project1.taskBuilder("Task 1", Duration.ofHours(5), 0.4).build();
+		Task.builder("Task 1", Duration.ofHours(5), 0.4).build(project1);
 
 		task1 = project1.getAllTasks().get(0);
 		task1.updateStatus(LocalDateTime.of(2015, 03, 04, 00, 00),

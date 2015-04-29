@@ -1,6 +1,8 @@
 package utility;
 
+import java.time.Duration;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Time Interval class implements a begin and end time
@@ -47,7 +49,7 @@ public class TimeInterval {
 	 * 
 	 * @param beginTime
 	 */
-	private void setBeginTime(LocalTime beginTime){
+	void setBeginTime(LocalTime beginTime){
 		this.beginTime = beginTime;
 	}
 	
@@ -78,16 +80,12 @@ public class TimeInterval {
 		return endTime;
 	}
 	
-	/**
-	 * Returns the time interval as a string
-	 * 
-	 * @return time interval as a string
-	 */
-	public String toString(){
-		return "from: " + getBegin().toString() + "to: " +  getEnd().toString();
-	}
-	
 	public boolean isTimeInInterval(LocalTime time) {
 		return time.equals(beginTime) || (time.isAfter(beginTime) && time.isBefore(endTime));
+	}
+	
+	
+	public Duration getDuration() {
+		return Duration.ofMinutes(ChronoUnit.MINUTES.between(this.getBegin(), this.getEnd()));
 	}
 }
