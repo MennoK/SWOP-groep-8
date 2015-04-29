@@ -436,4 +436,22 @@ public class PlannerTester {
 		assertEquals(2, map.getValue().size());
 	}
 
+	@Test
+	public void testMementoRollbackRemovesPlannings() {
+
+		planner.save();
+
+		// create planning for task1
+		Planning.builder(time1, task1, developer1).addDeveloper(developer2)
+				.build(planner);
+
+		// check if the planning has been created
+		assertEquals(1, planner.getAllPlannings().size());
+
+		planner.load();
+
+		assertEquals(0, planner.getAllPlannings().size());
+
+	}
+
 }

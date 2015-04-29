@@ -1,15 +1,20 @@
 package taskManager;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import utility.TimeSpan;
 
 public class Planning {
 
+
+	private Memento memento;
 	private TimeSpan timeSpan;
 	private Set<Developer> developers = new LinkedHashSet<Developer>();
 	private Set<Resource> resources = new HashSet<Resource>();
@@ -167,5 +172,36 @@ public class Planning {
 		}
 
 	}
-
+	
+	void save() {
+		this.memento = new Memento(this);
+	}
+	
+	boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+	
+	private class Memento {
+		private TimeSpan timeSpan;
+		private Set<Developer> developers;
+		private Set<Resource> resources;
+		
+		public Memento(Planning planning) {
+			this.timeSpan = planning.timeSpan;
+			this.developers = new LinkedHashSet<Developer>(planning.developers);
+			this.resources = new LinkedHashSet<Resource>(planning.resources);
+		}
+		
+		public void load(Planning planning) {
+			planning.timeSpan = this.timeSpan;
+			planning.developers = this.developers;
+			planning.resources = this.resources;
+		}
+	}
 }

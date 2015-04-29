@@ -79,4 +79,44 @@ public class ProjectExpertTester {
 		LocalDateTime newTime = LocalDateTime.of(1999, 03, 05, 00, 00);
 		taskManController.advanceTime(newTime);
 	}
+	
+	@Test
+	public void mementoCanRemoveProjects() {
+		projectController.createProject("name", "description",
+				LocalDateTime.of(2015, 03, 05, 00, 00),
+				LocalDateTime.of(2015, 03, 06, 00, 00));
+
+		assertEquals(1, projectController.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController
+				.getAllProjects().get(0).getLastUpdateTime());
+		
+		projectController.save();
+
+		projectController.createProject("name2", "description",
+				LocalDateTime.of(2015, 03, 06, 00, 00));
+
+		assertEquals(2, projectController.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController
+				.getAllProjects().get(1).getCreationTime());
+		
+		projectController.load();
+		
+		assertEquals(1, projectController.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController
+				.getAllProjects().get(0).getLastUpdateTime());
+		
+	}
+	
+	@Test
+	public void mementoRollsBackTime() {		
+		LocalDateTime time = taskManController.getTime();
+		
+		taskManController.saveSystem();
+		
+		taskManController.advanceTime(LocalDateTime.of(2020, 03, 06, 00, 00));
+		
+		taskManController.loadSystem();
+		
+		assertEquals(time, taskManController.getTime());
+	}
 }

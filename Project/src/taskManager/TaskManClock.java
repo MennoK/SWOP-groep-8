@@ -16,6 +16,8 @@ public class TaskManClock {
 	private LocalDateTime currentTime;
 	private ArrayList<TimeObserver> observers;
 
+	private Memento memento;
+
 	/**
 	 * The constructor of the class TaskManClock sets the current time to the
 	 * given time
@@ -43,7 +45,7 @@ public class TaskManClock {
 					"The given time is before the current time");
 		} else {
 			this.currentTime = newTime;
-			for(TimeObserver obs : this.observers) {
+			for (TimeObserver obs : this.observers) {
 				obs.handleTimeChange(newTime);
 			}
 		}
@@ -71,13 +73,42 @@ public class TaskManClock {
 	public LocalDateTime getTime() {
 		return currentTime;
 	}
-	
+
 	boolean register(TimeObserver observer) {
 		return this.observers.add(observer);
 	}
+
 	boolean unregister(TimeObserver observer) {
 		return this.observers.remove(observer);
 	}
-	
-	
+
+	public void save() {
+		this.memento = new Memento(this);
+	}
+
+	public boolean load() {
+		if (this.memento == null) {
+			return false;
+		} else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+
+	private class Memento {
+		private LocalDateTime currentTime;
+		private ArrayList<TimeObserver> observers;
+
+		public Memento(TaskManClock clock) {
+			this.currentTime = clock.currentTime;
+			this.observers = new ArrayList<TimeObserver>(clock.observers);
+		}
+
+		public void load(TaskManClock clock) {
+			clock.currentTime = this.currentTime;
+			clock.observers = this.observers;
+		}
+
+	}
+
 }

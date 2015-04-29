@@ -296,5 +296,6 @@ public class TaskTester {
 		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes()
 				.size());
 	}
+	
 
 }

@@ -19,6 +19,8 @@ import java.util.Set;
 public class ProjectExpert implements TimeObserver {
 
 	private ArrayList<Project> projects;
+	
+	private Memento memento;
 	private LocalDateTime lastUpdateTime;
 
 	/**
@@ -128,5 +130,40 @@ public class ProjectExpert implements TimeObserver {
 		}
 		return Collections.unmodifiableSet(tasks);
 	}
-
+	
+	public void save() {
+		this.memento = new Memento(this);
+		for(Project project: this.projects) {
+			project.save();
+		}
+	}
+	
+	public boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			for(Project project: this.projects) {
+				project.load();
+			}
+			return true;
+		}
+	}
+	
+	private class Memento {
+		private ArrayList<Project> projects;
+		private LocalDateTime lastUpdateTime;
+		
+		public Memento(ProjectExpert pe) {
+			this.projects = new ArrayList<Project>(pe.projects);
+			this.lastUpdateTime = pe.lastUpdateTime;
+		}
+		
+		public void load(ProjectExpert pe) {
+			pe.projects = this.projects;
+			pe.lastUpdateTime = this.lastUpdateTime;
+		}
+	}
+	
 }

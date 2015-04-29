@@ -50,6 +50,8 @@ public class Task implements Visitable {
 	private LocalDateTime startTime;
 	private LocalDateTime lastUpdateTime;
 
+	private Memento memento;
+
 	private Planning planning;
 
 	private static AtomicInteger idCounter = new AtomicInteger(1);
@@ -320,8 +322,17 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * This method returns true if and only if the given dependency is not yet
-	 * in the dependency list
+	 * String str = toSummary() + ": "; str += getDescription() + ", "; str +=
+	 * getEstimatedDuration().toHours() + " hours, "; str +=
+	 * getAcceptableDeviation() * 100 + "% margin"; if
+	 * (!getDependencies().isEmpty()) { str += ", depends on {"; for (Task dep :
+	 * getDependencies()) str += " task " + dep.getId(); str += " }"; } if
+	 * (getOriginal() != null) str += ", alternative for task " +
+	 * getOriginal().getId(); if (this.getStatus() == TaskStatus.FINISHED) { str
+	 * += ", started " + getStartTime(); str += ", finished " + getEndTime();
+	 * str += " (" + getFinishStatus() + ")"; } return str; This method returns
+	 * true if and only if the given dependency is not yet in the dependency
+	 * list
 	 * 
 	 * @param dependency
 	 * @return true if and only if the given task dependency is valid
@@ -697,5 +708,86 @@ public class Task implements Visitable {
 
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
+	}
+
+	void save() {
+		this.memento = new Memento(this);
+	}
+
+	boolean load() {
+		if(this.memento == null) {
+			return false;
+		}
+		else {
+			this.memento.load(this);
+			return true;
+		}
+	}
+
+	private class Memento {
+
+		private String description;
+		private Duration estimatedDuration;
+		private double acceptableDeviation;
+
+		private List<Task> dependencies;
+		private Map<ResourceType, Integer> requiredResourceTypes;
+		private Task originalTask;
+		private boolean failed = false;
+
+		private LocalDateTime endTime;
+		private LocalDateTime startTime;
+		private LocalDateTime lastUpdateTime;
+
+		private Planning planning;
+
+		private int id;
+		
+		private TaskStatus status;
+
+		// Het aanmaken van het memento object
+		// Alles moet gekopieerd worden, behalve referenties naar objecten in
+		// ons domein
+		// bv. de dependencies worden shallow gekopieerd
+		public Memento(Task task) {
+			this.description = new String(task.description);
+			this.estimatedDuration = task.estimatedDuration.plusSeconds(0);
+			this.acceptableDeviation = new Double(task.acceptableDeviation);
+
+			this.dependencies = new ArrayList<Task>(task.dependencies);
+			this.requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>(
+					task.requiredResourceTypes);
+			this.originalTask = task.originalTask;
+			this.failed = task.failed;
+
+			this.endTime = task.endTime;
+			this.startTime = task.startTime;
+			this.lastUpdateTime = task.lastUpdateTime;
+
+			this.planning = task.planning;
+			this.id = task.id;
+			
+			this.status = task.status;
+		}
+
+		public void load(Task task) {
+			task.description = this.description;
+			task.estimatedDuration = this.estimatedDuration;
+			task.acceptableDeviation = this.acceptableDeviation;
+
+			task.dependencies = this.dependencies;
+			task.requiredResourceTypes = this.requiredResourceTypes;
+			task.originalTask = this.originalTask;
+			task.failed = this.failed;
+
+			task.endTime = this.endTime;
+			task.startTime = this.startTime;
+			task.lastUpdateTime = this.lastUpdateTime;
+
+			task.planning = this.planning;
+			task.id = this.id;
+			
+			task.status = this.status;
+		}
 	}
 }
