@@ -2,6 +2,7 @@ package ui;
 
 import taskManager.Developer;
 import taskManager.Project;
+import taskManager.Resource;
 import taskManager.Task;
 import taskManager.Visitable;
 import taskManager.Visitor;
@@ -28,6 +29,11 @@ public class SummerizingVisitor implements Visitor {
 	@Override
 	public void visit(Developer developer) {
 		summary = developer.getName();
+	}
+
+	@Override
+	public void visit(Resource resource) {
+		summary = resource.getName();
 	}
 
 }

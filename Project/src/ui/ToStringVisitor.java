@@ -3,6 +3,7 @@ package ui;
 import taskManager.Developer;
 import taskManager.Project;
 import taskManager.ProjectFinishingStatus;
+import taskManager.Resource;
 import taskManager.Task;
 import taskManager.TaskFinishedStatus;
 import taskManager.TaskStatus;
@@ -56,6 +57,11 @@ public class ToStringVisitor implements Visitor {
 
 	@Override
 	public void visit(Developer developer) {
+		throw new UnsupportedOperationException("Not implemented!");
+	}
+
+	@Override
+	public void visit(Resource resource) {
 		throw new UnsupportedOperationException("Not implemented!");
 	}
 

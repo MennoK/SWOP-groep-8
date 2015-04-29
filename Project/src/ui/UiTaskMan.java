@@ -3,14 +3,21 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import parser.Parser;
 import taskManager.Developer;
+import taskManager.Planning;
 import taskManager.Project;
+import taskManager.Resource;
+import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.Task.TaskBuilder;
 import taskManager.TaskManController;
 import ui.exception.ExitUseCaseException;
+import utility.TimeSpan;
 
 public class UiTaskMan {
 
@@ -18,7 +25,7 @@ public class UiTaskMan {
 	private Reader reader;
 	private Developer activeDeveloper;
 
-	UiTaskMan() {
+	private UiTaskMan() {
 		reader = new Reader();
 		askInitialState();
 		if (taskManController == null)
@@ -110,8 +117,20 @@ public class UiTaskMan {
 
 	private void planTask() throws ExitUseCaseException {
 		Task task = reader.select(taskManController.getUnplannedTasks());
-		LocalDateTime time = reader.selectDate(taskManController
-				.getPossibleStartTimes(task));
+		TimeSpan timeSpan = new TimeSpan(reader.selectDate(taskManController
+				.getPossibleStartTimes(task)), task.getDuration());
+		Set<Resource> ressources = taskManController.selectResources(task,
+				timeSpan);
+		System.out
+				.println("The system proposes the following ressources:");
+		Printer.list(ressources);
+		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
+				task, reader.select(taskManController.getDeveloperExpert()
+						.getAllDevelopers()));
+		while (reader.getBoolean("Do you want to assign an extra Developer?")) {
+			plan.addDeveloper(reader.select(taskManController
+					.getDeveloperExpert().getAllDevelopers()));
+		}
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
@@ -179,7 +198,7 @@ public class UiTaskMan {
 				+ "9: Return to user menu");
 	}
 
-	void switchUserMenu() {
+	private void switchUserMenu() {
 		while (true) {
 			try {
 				printSwitchUserMenu();
@@ -207,7 +226,7 @@ public class UiTaskMan {
 		}
 	}
 
-	void projectManagerMenu() {
+	private void projectManagerMenu() {
 		try {
 			printProjectManagerMenu();
 			String choice = reader.getString("Select an option");
@@ -242,7 +261,7 @@ public class UiTaskMan {
 		switchUserMenu();
 	}
 
-	void developerMenu() {
+	private void developerMenu() {
 		try {
 			printDeveloperMenu();
 			String choice = reader.getString("Select an option");

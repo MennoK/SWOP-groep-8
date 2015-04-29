@@ -1,6 +1,8 @@
 package ui;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -15,16 +17,19 @@ import taskManager.Visitable;
 
 public class Printer {
 
-	static <T extends Visitable> String list(List<T> options) {
+	static <T extends Visitable> String list(Collection<T> options) {
 		return list(options, 1);
 	}
 
-	static <T extends Visitable> String list(List<T> options, int startingIndex) {
+	static <T extends Visitable> String list(Collection<T> options,
+			int startingIndex) {
+		List<T> optionsList = new ArrayList<T>(options);
 		SummerizingVisitor summarizingVisitor = new SummerizingVisitor();
 		String str = "";
-		for (int i = 0; i < options.size(); i++) {
+		for (int i = 0; i < optionsList.size(); i++) {
 			str += (i + startingIndex) + ": "
-					+ summarizingVisitor.createSummary(options.get(i)) + "\n";
+					+ summarizingVisitor.createSummary(optionsList.get(i))
+					+ "\n";
 		}
 		return str.trim();
 	}
