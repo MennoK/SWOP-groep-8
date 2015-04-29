@@ -118,7 +118,7 @@ public class UiTaskMan {
 				.getPossibleStartTimes(task)), task.getDuration());
 		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
 				task, reader.select(taskManController.getDeveloperExpert()
-						.getAllDevelopers()));
+						.getAllDevelopers()), taskManController.getPlanner());
 		while (reader.getBoolean("Do you want to assign an extra Developer?")) {
 			plan.addDeveloper(reader.select(taskManController
 					.getDeveloperExpert().getAllDevelopers()));
@@ -130,14 +130,14 @@ public class UiTaskMan {
 			Printer.list(ressources);
 			plan.addAllResources(ressources);
 		}
-		plan.build(taskManController.getPlanner());
+		plan.build();
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
 		Task task = reader.select(taskManController.getProjectExpert()
-				.getAllTasks());
+				.getAllTasks(activeDeveloper));
 
 		while (true) {
 			try {
@@ -173,8 +173,45 @@ public class UiTaskMan {
 		}
 	}
 
-	private void runSimulation() throws ExitUseCaseException {
-		System.out.println("TODO implement run simulation");
+	private void printSimMenu() {
+		System.out.println("\nSimulation menu:\n" + "1: Show projects\t"
+				+ "2: Create task\t" + "3: Plan task\n" + "9: Stop simulation");
+	}
+
+	private void runSimulation() {
+		taskManController.saveSystem();
+		while (true) {
+			try {
+				printSimMenu();
+				String choice = reader.getString("select option:");
+				switch (choice) {
+				case "1":
+					showProjects();
+					break;
+				case "2":
+					createTask();
+					break;
+				case "3":
+					planTask();
+					break;
+				case "9":
+					if (!reader
+							.getBoolean("Do you want to keep the simulation results?")) {
+						taskManController.loadSystem();
+					}
+					return;
+				default:
+					System.out
+							.println("Invalid choice, try again. (9 to exit)");
+					break;
+				}
+			} catch (ExitUseCaseException e) {
+				taskManController.loadSystem();
+				System.out
+						.println("Use case exited, returning to the main menu (with no changes to the system).");
+				return;
+			}
+		}
 	}
 
 	private void selectDeveloper() throws ExitUseCaseException {
@@ -260,7 +297,6 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("Use case exited, returning to the main menu.");
 		}
-		switchUserMenu();
 	}
 
 	private void developerMenu() {
@@ -286,7 +322,6 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("Use case exited, returning to the main menu.");
 		}
-		switchUserMenu();
 	}
 
 	public static void main(String[] args) {
