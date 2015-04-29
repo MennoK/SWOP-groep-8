@@ -200,10 +200,8 @@ public class UiTaskMan {
 					break;
 				}
 			} catch (ExitUseCaseException e) {
-				taskManController.loadSystem();
 				System.out
-						.println("Use case exited, returning to the main menu (with no changes to the system).");
-				return;
+						.println("Use case exited, returning to simulation menu.");
 			}
 		}
 	}

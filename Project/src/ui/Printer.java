@@ -43,7 +43,7 @@ public class Printer {
 	}
 
 	static String print(Map<ResourceType, Integer> requirredRessources) {
-		String str = "Requirrements:\n";
+		String str = "Requirements:\n";
 		for (ResourceType type : requirredRessources.keySet()) {
 			str += type.getName() + " " + requirredRessources.get(type) + "\n";
 		}
