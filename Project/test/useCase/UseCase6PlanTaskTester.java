@@ -102,7 +102,7 @@ public class UseCase6PlanTaskTester {
 		//user selects a developer
 		
 		//system makes reservation
-		Planning.builder(time1, task2, developerList.get(0)).build(planner);
+		Planning.builder(time1, task2, developerList.get(0), planner).build();
 		
 
 		ArrayList<Planning> planningList = new ArrayList<Planning>();
@@ -114,4 +114,24 @@ public class UseCase6PlanTaskTester {
 		assertTrue(planningList.get(0).getResources().isEmpty());
 		
 	}
+	@Test
+	public void resolveConflict() {
+		Planning.builder(time1, task1, developerList.get(0), planner).build();
+		//the user selects a time for task2 that will conflict with task1		
+		assertTrue(planner.hasConflictWithAPlannedTask(task2, time1));
+		
+		//use case resolveconflict starts
+		//user chooses to move conflicting task
+		//step 4 of use case plan task:
+		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
+		possibleStartTimes.add(time1);
+		possibleStartTimes.add(time1.plusHours(1));
+		possibleStartTimes.add(time1.plusHours(2));
+		assertEquals(possibleStartTimes,planner.getPossibleStartTimes(task1, time1, developers));
+		
+		//user selects time1 +1 
+		
+		
+	}
+
 }

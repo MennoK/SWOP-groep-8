@@ -32,8 +32,8 @@ public class ProjectTester {
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
 		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev)
-				.build(controler.getPlanner());
+		Planning.builder(time, task, dev,controler.getPlanner())
+				.build();
 		return task;
 	}
 
@@ -43,8 +43,8 @@ public class ProjectTester {
 		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
 		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
 				dependency.getDuration());
-		Planning.builder(depFinishTime, task, dev)
-				.build(controler.getPlanner());
+		Planning.builder(depFinishTime, task, dev,controler.getPlanner())
+				.build();
 		return task;
 	}
 
@@ -52,8 +52,8 @@ public class ProjectTester {
 		Task task = Task.builder("desc", taskDuration, 0.5)
 				.setOriginalTask(original).build(project);
 		Developer dev = controler.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev)
-				.build(controler.getPlanner());
+		Planning.builder(time, task, dev,controler.getPlanner())
+				.build();
 		return task;
 	}
 

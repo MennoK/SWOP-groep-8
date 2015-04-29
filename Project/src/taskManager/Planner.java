@@ -47,7 +47,7 @@ public class Planner {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
 				possibleStartTimes.add(timeSpan.getBegin());
-			}
+			}			
 			time = time.plusHours(1);
 		}
 		return possibleStartTimes;
@@ -198,7 +198,7 @@ public class Planner {
 		return availableResources;
 	}
 
-	private boolean isAvailableFor(Resource resource, Task task,
+	public boolean isAvailableFor(Resource resource, Task task,
 			TimeSpan timeSpan) {
 		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
@@ -226,7 +226,7 @@ public class Planner {
 		return availableDevelopers;
 	}
 
-	private boolean isAvailableFor(Developer developer, Task task,
+	public boolean isAvailableFor(Developer developer, Task task,
 			TimeSpan timeSpan) {
 		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
