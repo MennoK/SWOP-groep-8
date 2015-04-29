@@ -228,4 +228,13 @@ public class TaskManController {
 		}
 		return selected;
 	}
+	
+	public Task getTask(Planning planning) {
+		for(Task task : getProjectExpert().getAllTasks()) {
+			if (task.hasPlanning() && task.getPlanning() == planning) {
+				return task;
+			}
+		}
+		throw new IllegalArgumentException("This planning is not the planning of any Task!");
+	}
 }
