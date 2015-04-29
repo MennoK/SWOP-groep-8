@@ -235,7 +235,7 @@ public class UiTaskMan {
 		while (true) {
 			try {
 				printSwitchUserMenu();
-				String choice = reader.getString("select user:");
+				String choice = reader.getString("select user");
 				switch (choice) {
 				case "1":
 					projectManagerMenu();
