@@ -187,8 +187,8 @@ public class Planner {
 		return availableResourcesForEachResourceType;
 	}
 
-	public Set<Resource> resourcesOfTypeAvailableFor(
-			ResourceType resourcetype, Task task, TimeSpan timeSpan) {
+	public Set<Resource> resourcesOfTypeAvailableFor(ResourceType resourcetype,
+			Task task, TimeSpan timeSpan) {
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
 		for (Resource resource : resourcetype.getAllResources()) {
 			if (isAvailableFor(resource, task, timeSpan)) {
@@ -206,20 +206,17 @@ public class Planner {
 			otherPlannings.remove(task.getPlanning());
 		}
 		for (Planning otherPlanning : otherPlannings) {
-			for (Set<Resource> setResource : otherPlanning.getResources()
-					.values()) {
-				if (setResource.contains(resource)) {
-					if (timeSpan.overlaps(otherPlanning.getTimeSpan())) {
-						return false;
-					}
+			if (otherPlanning.getResources().contains(resource)) {
+				if (timeSpan.overlaps(otherPlanning.getTimeSpan())) {
+					return false;
 				}
 			}
 		}
 		return true;
 	}
 
-	public Set<Developer> developersAvailableFor(Set<Developer> developers, Task task,
-			TimeSpan timeSpan) {
+	public Set<Developer> developersAvailableFor(Set<Developer> developers,
+			Task task, TimeSpan timeSpan) {
 		Set<Developer> availableDevelopers = new LinkedHashSet<Developer>();
 		for (Developer developer : developers) {
 			if (isAvailableFor(developer, task, timeSpan)) {
