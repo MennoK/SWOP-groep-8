@@ -191,7 +191,6 @@ public class PlannerTester {
 
 		// subcase: 2 timeslots are available between planning of task 1 and
 		// task 2
-
 		Task.builder("task4 ", Duration.ofHours(1), 2).build(project);
 		Task task4 = project.getAllTasks().get(3);
 		Set<LocalDateTime> possibleStartTimes121316 = new LinkedHashSet<>();
@@ -291,7 +290,6 @@ public class PlannerTester {
 
 	}
 
-	// TODO:
 	public Set<Resource> getAvailableResourcesOfType(ResourceType resourceType) {
 		Set<Resource> resourceList = new LinkedHashSet<>();
 		return resourceList;
@@ -452,6 +450,33 @@ public class PlannerTester {
 
 		assertEquals(0, planner.getAllPlannings().size());
 
+	}
+
+	@Test
+	public void testMementoPlanningConflicts() {
+
+		Planning.builder(time1, task1, developer1).addDeveloper(developer2)
+				.build(planner);
+
+		Set<Task> allTasks = new LinkedHashSet<>(project.getAllTasks());
+		Set<Task> conflictSet = new LinkedHashSet<>();
+		conflictSet.add(task1);
+		assertEquals(conflictSet, planner.getConflictingTasks(task2,
+				time1.minusHours(1), allTasks));
+		
+		tmController.saveSystem();
+		Set<Task> conflictSetOriginal = new LinkedHashSet<>(conflictSet);
+		
+		Planning.builder(time1.plusHours(3), task2, developer1)
+				.addDeveloper(developer2).build(planner);
+		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
+		Task.builder("task4", Duration.ofHours(4), 2).build(project);
+		conflictSet.add(task2);
+
+		tmController.loadSystem();
+
+		assertEquals(conflictSetOriginal, planner.getConflictingTasks(task2,
+				time1.minusHours(1), allTasks));
 	}
 
 }
