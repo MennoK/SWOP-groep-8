@@ -124,9 +124,7 @@ public class TaskManController {
 	}
 
 	/**
-	 * 
-	 * Advances the time of TaskMan. This will update the status of every task
-	 * in every project of the project controller
+	 * Advances the time of TaskMan.
 	 * 
 	 * @param time
 	 *            : new time
@@ -136,7 +134,6 @@ public class TaskManController {
 	public void advanceTime(LocalDateTime time) {
 		this.taskManClock.setTime(time);
 		this.getProjectExpert().handleTimeChange(this.taskManClock.getTime());
-		updateStatusAll();
 	}
 
 	/**
@@ -186,6 +183,9 @@ public class TaskManController {
 		updateStatusAll();
 	}
 
+	/**
+	 * Update the status of all tasks
+	 */
 	private void updateStatusAll() {
 		for (Task task : getProjectExpert().getAllTasks())
 			getPlanner().updateStatus(task);
@@ -236,6 +236,12 @@ public class TaskManController {
 		return selected;
 	}
 
+	/**
+	 * Get the task of this planning
+	 * 
+	 * @param planning
+	 * @return
+	 */
 	public Task getTask(Planning planning) {
 		for (Task task : getProjectExpert().getAllTasks()) {
 			if (task.hasPlanning() && task.getPlanning() == planning) {
