@@ -61,7 +61,7 @@ public class TaskManController {
 	/**
 	 * creates a new planner
 	 */
-	public void createPlanner() {
+	void createPlanner() {
 		this.planner = new Planner();
 	}
 

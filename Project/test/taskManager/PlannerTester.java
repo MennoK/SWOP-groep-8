@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -18,6 +19,7 @@ import org.junit.Test;
 
 import taskManager.Planning.PlanningBuilder;
 import taskManager.exception.ConlictingPlanningException;
+import utility.TimeInterval;
 import utility.TimeSpan;
 
 public class PlannerTester {
@@ -419,6 +421,40 @@ public class PlannerTester {
 		assertEquals(conflictingPlannings, conflictingPlanningsFromException);
 	}
 
+	/*@Test
+	public void testResourceDailyAvailableIsAvailable(){
+		TimeInterval available13to17 = new TimeInterval(LocalTime.of(13, 0), LocalTime.of(17, 0));
+		TimeInterval available8to12= new TimeInterval(LocalTime.of(8, 0), LocalTime.of(12, 0));
+		TimeInterval available9to12= new TimeInterval(LocalTime.of(9, 0), LocalTime.of(12, 0));
+		
+		ResourceType.builder("available13to17").addDailyAvailability(available13to17).build(resourceExpert);
+		ResourceType.builder("available8to12").addDailyAvailability(available8to12).build(resourceExpert);
+		ResourceType.builder("available9to12").addDailyAvailability(available9to12).build(resourceExpert);
+		resourceTypeList = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
+		
+		resourceTypeList.get(1).createResource("a resource");
+		resourceTypeList.get(2).createResource("a resource");
+		resourceTypeList.get(3).createResource("a resource");
+		
+		
+		Task.builder("testTask for available13to17 ", Duration.ofHours(3), 1).addRequiredResourceType(resourceTypeList.get(1), 1).build(project);
+		Task.builder("testTask for available8to12 ", Duration.ofHours(3), 1).addRequiredResourceType(resourceTypeList.get(2), 1).build(project);
+		Task.builder("testTask for available9to12 ", Duration.ofHours(3), 1).addRequiredResourceType(resourceTypeList.get(3), 1).build(project);
+		
+		TimeSpan timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 10, 00), Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 11, 00), Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 13, 00), Duration.ofHours(3));
+	//	assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 14, 00), Duration.ofHours(3));
+//		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
+			
+	}*/
 	@Test
 	public void testMementoRollbackRemovesPlannings() {
 
