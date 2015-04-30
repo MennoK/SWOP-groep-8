@@ -272,7 +272,7 @@ public class Parser {
 					.get("acceptableDeviation")));
 			acceptableDeviation /= 100;
 
-			Project projectOfTask = projectExpert.getAllProjects().get(
+			Project projectOfTask = controller.getAllProjects().get(
 					projectNumber);
 
 			TaskBuilder builder = Task.builder(description, estimatedDuration,
@@ -372,7 +372,8 @@ public class Parser {
 
 		int taskNr = (int) (planning.get("task"));
 		PlanningBuilder pbuilder = Planning.builder(startTime,
-				alltasks.get(taskNr), assignedDevs.get(0),controller.getPlanner());
+				alltasks.get(taskNr), assignedDevs.get(0),
+				controller.getPlanner());
 
 		for (int i = 1; i < assignedDevs.size(); i++) {
 			pbuilder.addDeveloper(assignedDevs.get(i));

@@ -11,7 +11,6 @@ import org.junit.Test;
 import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
@@ -19,8 +18,7 @@ import taskManager.TaskManController;
 
 public class UseCase5AdvanceTime {
 
-	private TaskManController taskManController;
-	private ProjectExpert controller;
+	private TaskManController tmc;
 	private Project project1;
 	private Project project2;
 
@@ -37,38 +35,35 @@ public class UseCase5AdvanceTime {
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
-		taskManController = new TaskManController(now);
-		controller = taskManController.getProjectExpert();
+		tmc = new TaskManController(now);
 
-		controller.createProject("Project 1", "Description 1",
+		tmc.getProjectExpert().createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 10, 17, 00));
 
-		controller.createProject("Project 2", "Description 2",
+		tmc.getProjectExpert().createProject("Project 2", "Description 2",
 				LocalDateTime.of(2015, 03, 10, 13, 00));
 
-		project1 = controller.getAllProjects().get(0);
-		project2 = controller.getAllProjects().get(1);
+		project1 = tmc.getAllProjects().get(0);
+		project2 = tmc.getAllProjects().get(1);
 
 		Task.builder("Task 1", Duration.ofHours(5), 0.4).build(project1);
 
 		task1 = project1.getAllTasks().get(0);
-		Developer dev1 = taskManController.getDeveloperExpert()
-				.createDeveloper("dev1");
-		Planning.builder(now, task1, dev1,taskManController.getPlanner())
-				.build();
-		taskManController.setExecuting(task1, now.minusDays(6));
-		taskManController.setFinished(task1, now.minusDays(5));
+		Developer dev1 = tmc.getDeveloperExpert().createDeveloper("dev1");
+		Planning.builder(now, task1, dev1, tmc.getPlanner()).build();
+		tmc.setExecuting(task1, now.minusDays(6));
+		tmc.setFinished(task1, now.minusDays(5));
 	}
 
 	@Test
 	public void advanceTime() {
 
 		// advance time with 5 hours
-		taskManController.advanceTime(now.plusHours(5));
+		tmc.advanceTime(now.plusHours(5));
 
 		// check if the last update time has changed in every project and every
 		// task
-		assertEquals(now.plusHours(5), taskManController.getTime());
+		assertEquals(now.plusHours(5), tmc.getTime());
 		assertEquals(now.plusHours(5), project1.getLastUpdateTime());
 		assertEquals(now.plusHours(5), project2.getLastUpdateTime());
 
@@ -83,8 +78,8 @@ public class UseCase5AdvanceTime {
 		assertEquals(ProjectStatus.ONGOING, project2.getStatus());
 
 		// advance time with 2 hours, the project is still on time
-		taskManController.advanceTime(now.plusHours(7));
-		assertEquals(now.plusHours(7), taskManController.getTime());
+		tmc.advanceTime(now.plusHours(7));
+		assertEquals(now.plusHours(7), tmc.getTime());
 		assertEquals(now.plusHours(7), project1.getLastUpdateTime());
 		assertEquals(now.plusHours(7), project2.getLastUpdateTime());
 

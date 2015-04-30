@@ -13,7 +13,6 @@ import org.junit.Test;
 import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.ProjectFinishingStatus;
 import taskManager.ProjectStatus;
 import taskManager.Task;
@@ -22,8 +21,7 @@ import taskManager.TaskStatus;
 
 public class UseCase1ShowProjectsTester {
 
-	private ProjectExpert controller;
-	private TaskManController taskManController;
+	private TaskManController tmc;
 	private Developer jef;
 	private Developer jos;
 	private Project project1;
@@ -48,30 +46,34 @@ public class UseCase1ShowProjectsTester {
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
-		taskManController = new TaskManController(now);
-		controller = taskManController.getProjectExpert();
+		tmc = new TaskManController(now);
 
-		jef = taskManController.getDeveloperExpert().createDeveloper("Jef");
-		jos = taskManController.getDeveloperExpert().createDeveloper("Jos");
+		jef = tmc.getDeveloperExpert().createDeveloper("Jef");
+		jos = tmc.getDeveloperExpert().createDeveloper("Jos");
 
-		controller.createProject("Project 1", "Desc 1", now.plusDays(2));
-		controller.createProject("Project 2", "Desc 2", now.plusHours(3));
-		controller.createProject("Project 0", "Desc 3", now.plusDays(2));
-		controller.createProject("Project 3", "Desc 3", now.plusHours(5));
+		tmc.getProjectExpert().createProject("Project 1", "Desc 1",
+				now.plusDays(2));
+		tmc.getProjectExpert().createProject("Project 2", "Desc 2",
+				now.plusHours(3));
+		tmc.getProjectExpert().createProject("Project 0", "Desc 3",
+				now.plusDays(2));
+		tmc.getProjectExpert().createProject("Project 3", "Desc 3",
+				now.plusHours(5));
 
-		project0 = controller.getAllProjects().get(2);
-		project1 = controller.getAllProjects().get(0);
-		project2 = controller.getAllProjects().get(1);
-		project3 = controller.getAllProjects().get(3);
+		project0 = tmc.getAllProjects().get(2);
+		project1 = tmc.getAllProjects().get(0);
+		project2 = tmc.getAllProjects().get(1);
+		project3 = tmc.getAllProjects().get(3);
 
 		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
 				.build(project1);
-		Planning.builder(now, task1, jef, taskManController.getPlanner()).build();
-		taskManController.setExecuting(task1, now);
-		taskManController.setFinished(task1, now.plusDays(1));
+		Planning.builder(now, task1, jef, tmc.getPlanner()).build();
+		tmc.setExecuting(task1, now);
+		tmc.setFinished(task1, now.plusDays(1));
 		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4)
 				.build(project2);
-		Planning.builder(now.plusHours(5), task2, jos, taskManController.getPlanner()).build();
+		Planning.builder(now.plusHours(5), task2, jos, tmc.getPlanner())
+				.build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build(project2);
 		task4 = Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
@@ -82,7 +84,7 @@ public class UseCase1ShowProjectsTester {
 
 		// List all projects
 		List<Project> allProjectsActuals = new ArrayList<Project>();
-		allProjectsActuals = controller.getAllProjects();
+		allProjectsActuals = tmc.getAllProjects();
 		assertEquals(project1, allProjectsActuals.get(0));
 		assertEquals(project2, allProjectsActuals.get(1));
 		assertEquals(project0, allProjectsActuals.get(2));

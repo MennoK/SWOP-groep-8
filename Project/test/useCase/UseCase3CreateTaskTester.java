@@ -13,7 +13,6 @@ import org.junit.Test;
 import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
@@ -21,8 +20,7 @@ import taskManager.TaskManController;
 
 public class UseCase3CreateTaskTester {
 
-	private ProjectExpert controller;
-	private TaskManController taskManController;
+	private TaskManController tmc;
 	private LocalDateTime now;
 	private ResourceExpert resourceExpert;
 
@@ -31,15 +29,13 @@ public class UseCase3CreateTaskTester {
 		// create a controller
 		now = LocalDateTime.of(2015, 03, 07, 01, 00);
 
-		taskManController = new TaskManController(now);
-		controller = taskManController.getProjectExpert();
-		resourceExpert = taskManController.getResourceExpert();
+		tmc = new TaskManController(now);
+		resourceExpert = tmc.getResourceExpert();
 		ResourceType.builder("resourcetype").build(resourceExpert);
 
 		List<ResourceType> list = new ArrayList<ResourceType>(
 				resourceExpert.getAllResourceTypes());
 		list.get(0).createResource("res1");
-
 
 	}
 
@@ -47,10 +43,10 @@ public class UseCase3CreateTaskTester {
 	public void createTask() {
 
 		// create a project
-		controller.createProject("Project 1", "Description 1",
+		tmc.getProjectExpert().createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));
-		Project project1 = controller.getAllProjects().get(0);
+		Project project1 = tmc.getAllProjects().get(0);
 
 		// create a simple task
 		Task.builder("simple descr", Duration.ofHours(20), 50).build(project1);
@@ -73,13 +69,10 @@ public class UseCase3CreateTaskTester {
 		// create an alternative task for a failed task
 		// first we let the simple task fail
 		Task task = project1.getAllTasks().get(0);
-		Developer dev = taskManController.getDeveloperExpert().createDeveloper(
-				"dev");
-		Planning.builder(now, task, dev, taskManController.getPlanner()).build();
-		taskManController.setExecuting(task,
-				LocalDateTime.of(2015, 03, 07, 02, 00));
-		taskManController.setFailed(task,
-				LocalDateTime.of(2015, 03, 07, 05, 00));
+		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Planning.builder(now, task, dev, tmc.getPlanner()).build();
+		tmc.setExecuting(task, LocalDateTime.of(2015, 03, 07, 02, 00));
+		tmc.setFailed(task, LocalDateTime.of(2015, 03, 07, 05, 00));
 
 		// we create an alternative task for the simple task
 		Task.builder("alternative task", Duration.ofHours(20), 50)
@@ -93,9 +86,13 @@ public class UseCase3CreateTaskTester {
 		assertEquals(project1.getAllTasks().get(2),
 				project1.getAllTasks().get(1).getDependencies().get(0));
 
-		//task with required resourceType
-		Task.builder("desc", Duration.ofHours(2), 2).addRequiredResourceType(new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes()).get(0), 1).build(project1);
-		assertEquals(1, project1.getAllTasks().get(3).getRequiredResourceTypes().size());
+		// task with required resourceType
+		Task.builder("desc", Duration.ofHours(2), 2)
+				.addRequiredResourceType(
+						new ArrayList<ResourceType>(
+								resourceExpert.getAllResourceTypes()).get(0), 1)
+				.build(project1);
+		assertEquals(1, project1.getAllTasks().get(3)
+				.getRequiredResourceTypes().size());
 	}
 }

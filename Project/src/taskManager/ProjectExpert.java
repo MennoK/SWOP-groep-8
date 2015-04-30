@@ -103,8 +103,8 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
-	 * Handles time changes with changing time in 
-	 * every project of the projectExpert
+	 * Handles time changes with changing time in every project of the
+	 * projectExpert
 	 */
 	@Override
 	public void handleTimeChange(LocalDateTime time) {
@@ -119,12 +119,12 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return projects: list of projects
 	 */
-	public List<Project> getAllProjects() {
-		return Collections.unmodifiableList(projects);
+	List<Project> getAllProjects() {
+		return projects;
 	}
 
 	/**
-	 * Returns all tasks in all projects 
+	 * Returns all tasks in all projects
 	 * 
 	 * @return All the tasks in all projects
 	 */
@@ -138,8 +138,7 @@ public class ProjectExpert implements TimeObserver {
 
 	/**
 	 * 
-	 * Returns a set with all tasks of a given
-	 * developer
+	 * Returns a set with all tasks of a given developer
 	 * 
 	 * @param dev
 	 *            the active Developer
@@ -169,7 +168,7 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
-	 * Loads the last saved state 
+	 * Loads the last saved state
 	 * 
 	 * @return last state of project expert
 	 */
@@ -196,11 +195,12 @@ public class ProjectExpert implements TimeObserver {
 		private LocalDateTime lastUpdateTime;
 
 		/**
-		 * Constructor of the momento inner class of project expert.
-		 * Initialize a new set of project of the current state and
-		 * saves the last update time
+		 * Constructor of the momento inner class of project expert. Initialize
+		 * a new set of project of the current state and saves the last update
+		 * time
 		 * 
-		 * @param pe : projectExpert
+		 * @param pe
+		 *            : projectExpert
 		 */
 		public Memento(ProjectExpert pe) {
 			this.projects = new ArrayList<Project>(pe.projects);
@@ -208,10 +208,11 @@ public class ProjectExpert implements TimeObserver {
 		}
 
 		/**
-		 * Sets the project set of the project expert class
-		 * to the saved set of the momento class
+		 * Sets the project set of the project expert class to the saved set of
+		 * the momento class
 		 * 
-		 * @param pe : projectExpert
+		 * @param pe
+		 *            : projectExpert
 		 */
 		public void load(ProjectExpert pe) {
 			pe.projects = this.projects;
