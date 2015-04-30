@@ -5,66 +5,28 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import utility.WorkTime;
+public class ProjectTester extends TaskManTester {
 
-public class ProjectTester {
-
-	private LocalDateTime time;
-	private TaskManController controller;
 	private Project project;
-	private Task baseTask;
-	private Task dependentTask;
-
 
 	@Before
 	public void setUp() {
-		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		controller = new TaskManController(time);
-		project = controller.getProjectExpert().createProject("project", "desc",
-				time.plusDays(4));
-	}
-	
-	private Task createStandardTask(Duration taskDuration) {
-		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
-		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev,controller.getPlanner())
-				.build();
-		return task;
-	}
-
-	private Task createDependentTask(Duration taskDuration, Task dependency) {
-		Task task = Task.builder("desc", taskDuration, 0.5)
-				.addDependencies(dependency).build(project);
-		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
-		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
-				dependency.getDuration());
-		Planning.builder(depFinishTime, task, dev,controller.getPlanner())
-				.build();
-		return task;
-	}
-
-	private Task createAlternativeTask(Duration taskDuration, Task original) {
-		Task task = Task.builder("desc", taskDuration, 0.5)
-				.setOriginalTask(original).build(project);
-		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
-		Planning.builder(time, task, dev,controller.getPlanner())
-				.build();
-		return task;
+		super.setUp();
+		project = createStandardProject(time.plusDays(4));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDueTimeOnCreationTime() {
-		project = new Project("project", "desc", time, time);
+		new Project("project", "desc", time, time);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDueTimeBeforeCreationTime() {
-		project = new Project("project", "desc", time, time.minusHours(1));
+		new Project("project", "desc", time, time.minusHours(1));
 	}
 
 	@Test
@@ -74,7 +36,7 @@ public class ProjectTester {
 
 	@Test
 	public void testBaseProject() {
-		baseTask = createStandardTask(Duration.ofHours(8));
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
 
 		// Check the base data
 		assertEquals("project", project.getName());
@@ -93,8 +55,8 @@ public class ProjectTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// finish Task
-		controller.setExecuting(baseTask, time);
-		controller.setFinished(baseTask, time.plusHours(8));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFinished(baseTask, time.plusHours(8));
 
 		// Check the status
 		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
@@ -104,8 +66,8 @@ public class ProjectTester {
 
 	@Test
 	public void testTwoTaskproject() {
-		baseTask = createStandardTask(Duration.ofHours(8));
-		Task task2 = createStandardTask(Duration.ofHours(8));
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task task2 = createStandardTask(project, Duration.ofHours(8));
 
 		// Check project structure
 		assertEquals(2, project.getAllTasks().size());
@@ -120,8 +82,8 @@ public class ProjectTester {
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set baseTask finished
-		controller.setExecuting(baseTask, time);
-		controller.setFinished(baseTask, time.plusHours(8));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFinished(baseTask, time.plusHours(8));
 
 		// check status
 		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
@@ -129,8 +91,8 @@ public class ProjectTester {
 		assertEquals(ProjectStatus.ONGOING, project.getStatus());
 
 		// set task2 finished
-		controller.setExecuting(task2, time);
-		controller.setFinished(task2, time.plusHours(8));
+		tmc.setExecuting(task2, time);
+		tmc.setFinished(task2, time.plusHours(8));
 
 		// check status
 		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
@@ -140,13 +102,13 @@ public class ProjectTester {
 
 	@Test
 	public void testAlternativeTaskProject() {
-		baseTask = createStandardTask(Duration.ofHours(8));
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
 		// Set baseTask to failed
-		controller.setExecuting(baseTask, time);
-		controller.setFailed(baseTask, time.plusHours(2));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFailed(baseTask, time.plusHours(2));
 		// Create alternativeTask
-		Task alternativeTask = createAlternativeTask(Duration.ofHours(8),
-				baseTask);
+		Task alternativeTask = createAlternativeTask(project,
+				Duration.ofHours(8), baseTask);
 
 		// check structure
 		assertEquals(2, project.getAllTasks().size());
@@ -162,8 +124,8 @@ public class ProjectTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set alternativeTask to finished
-		controller.setExecuting(alternativeTask, time);
-		controller.setFinished(alternativeTask, time.plusHours(8));
+		tmc.setExecuting(alternativeTask, time);
+		tmc.setFinished(alternativeTask, time.plusHours(8));
 
 		// check status
 		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
@@ -174,8 +136,9 @@ public class ProjectTester {
 
 	@Test
 	public void testDependentTaskProject() {
-		baseTask = createStandardTask(Duration.ofHours(8));
-		dependentTask = createDependentTask(Duration.ofHours(8), baseTask);
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task dependentTask = createDependentTask(project, Duration.ofHours(8),
+				baseTask);
 
 		// check structure
 		assertEquals(2, project.getAllTasks().size());
@@ -192,8 +155,8 @@ public class ProjectTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set baseTask to finished
-		controller.setExecuting(baseTask, time);
-		controller.setFinished(baseTask, time.plusHours(8));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFinished(baseTask, time.plusHours(8));
 
 		// check status
 		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
@@ -202,8 +165,8 @@ public class ProjectTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set dependentTask to finished
-		controller.setExecuting(dependentTask, time);
-		controller.setFinished(dependentTask, time.plusHours(8));
+		tmc.setExecuting(dependentTask, time);
+		tmc.setFinished(dependentTask, time.plusHours(8));
 
 		// check status
 		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
@@ -214,15 +177,16 @@ public class ProjectTester {
 
 	@Test
 	public void testProjectWithDependencyAndAlternativeTask() {
-		baseTask = createStandardTask(Duration.ofHours(8));
-		dependentTask = createDependentTask(Duration.ofHours(8), baseTask);
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task dependentTask = createDependentTask(project, Duration.ofHours(8),
+				baseTask);
 
 		// Set baseTask to failed
-		controller.setExecuting(baseTask, time);
-		controller.setFailed(baseTask, time.plusHours(2));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFailed(baseTask, time.plusHours(2));
 		// Create alternativeTask
-		Task alternativeTask = createAlternativeTask(Duration.ofHours(8),
-				baseTask);
+		Task alternativeTask = createAlternativeTask(project,
+				Duration.ofHours(8), baseTask);
 
 		// check structure
 		assertEquals(3, project.getAllTasks().size());
@@ -246,8 +210,8 @@ public class ProjectTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set to finished
-		controller.setExecuting(alternativeTask, time);
-		controller.setFinished(alternativeTask, time.plusHours(8));
+		tmc.setExecuting(alternativeTask, time);
+		tmc.setFinished(alternativeTask, time.plusHours(8));
 
 		// check status
 		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
@@ -257,8 +221,8 @@ public class ProjectTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// set to finished
-		controller.setExecuting(dependentTask, time);
-		controller.setFinished(dependentTask, time.plusHours(8));
+		tmc.setExecuting(dependentTask, time);
+		tmc.setFinished(dependentTask, time.plusHours(8));
 
 		assertEquals(TaskStatus.FAILED, baseTask.getStatus());
 		assertEquals(TaskStatus.FINISHED, alternativeTask.getStatus());
@@ -269,7 +233,7 @@ public class ProjectTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddTaskThatIsAlreadyInList() {
-		baseTask = createStandardTask(Duration.ofHours(8));
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
 		project.addTask(baseTask);
 	}
 
@@ -280,7 +244,7 @@ public class ProjectTester {
 
 	@Test
 	public void testUpdate() {
-		baseTask = createStandardTask(Duration.ofHours(8));
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
 
 		project.handleTimeChange(time.plusHours(5));
 		assertEquals(time.plusHours(5), project.getLastUpdateTime());
@@ -290,14 +254,14 @@ public class ProjectTester {
 	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
-		Task task = createStandardTask(Duration.ofHours(3 * 8));
+		Task task = createStandardTask(project, Duration.ofHours(3 * 8));
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
 
 		// Let the task finish to late
-		controller.setExecuting(task, time);
-		controller.setFinished(task, time.plusDays(10));
+		tmc.setExecuting(task, time);
+		tmc.setFinished(task, time.plusDays(10));
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(ProjectStatus.FINISHED, project.getStatus());
@@ -305,13 +269,13 @@ public class ProjectTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetCurrentDelayOnTime() {
-		baseTask = createStandardTask(Duration.ofHours(8));
+		createStandardTask(project, Duration.ofHours(8));
 		project.getCurrentDelay();
 	}
 
 	@Test
 	public void testDelayToMuchWork() {
-		baseTask = createStandardTask(Duration.ofHours(8));
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
 		Task.builder("bla", Duration.ofHours(2 * 8), 0.5)
 				.addDependencies(baseTask).build(project);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
@@ -320,16 +284,16 @@ public class ProjectTester {
 
 	@Test
 	public void testDelayBaseTaskDelayed() {
-		baseTask = createStandardTask(Duration.ofHours(8));
-		Task.builder("bla", Duration.ofHours(8), 0.5)
-				.addDependencies(baseTask).build(project);
+		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task.builder("bla", Duration.ofHours(8), 0.5).addDependencies(baseTask)
+				.build(project);
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());
 
 		// To delay task finish time with 8 work hours add 3*24.
 		// 8 work hours = 24 real hours
 		// + 2 days of weekend
-		controller.setExecuting(baseTask, time);
-		controller.setFinished(baseTask, time.plusHours(8).plusDays(3));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFinished(baseTask, time.plusHours(8).plusDays(3));
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(7), project.getCurrentDelay());
 	}
