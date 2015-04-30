@@ -345,39 +345,5 @@ public class ProjectTester {
 	public void testGetCurrentDelayNoTask() {
 		project.getCurrentDelay();
 	}
-	
-	@Test
-	public void testProjectMemento() {
-		baseTask = createStandardTask(Duration.ofHours(8));
-		
-		//sanity
-		assertEquals(1, project.getAllTasks().size());
-		
-		//save memento
-		controller.saveSystem();
-		
-		// finish Tasks
-		Task baseTaskTwo = createStandardTask(Duration.ofHours(8));
-		controller.setExecuting(baseTask, time);
-		controller.setFinished(baseTask, time.plusHours(8));
-		controller.setExecuting(baseTaskTwo, time);
-		controller.setFinished(baseTaskTwo, time.plusHours(8));
-		
-		//sanity check
-		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
-		assertEquals(ProjectStatus.FINISHED, project.getStatus());
-		
-
-		assertEquals(2, project.getAllTasks().size());
-
-		
-		//load memento
-		controller.loadSystem();
-		
-		//statuses are different
-		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
-		assertEquals(ProjectStatus.ONGOING, project.getStatus());
-		assertEquals(1, project.getAllTasks().size());
-	}
 
 }
