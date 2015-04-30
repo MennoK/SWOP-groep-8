@@ -48,10 +48,25 @@ public enum TaskStatus {
 		}
 	};
 
+	/**
+	 * Returns the finish status of a task if and only
+	 * if the current state of the task is finished.
+	 * Other state throw illegalStateException
+	 * 
+	 * @param task: given task
+	 * @return taskFinishedStatus
+	 */
 	public TaskFinishedStatus getFinishStatus(Task task){
 		throw new IllegalStateException("The task is not finished yet");
 	}
 	
+	/**
+	 * Returns the executing status if and only if the
+	 * state of the task is available. Otherwise throws an IllegalState-
+	 * exception
+	 * 
+	 * @return executing : executing status
+	 */
 	public TaskStatus goExecuting(){
 		throw new IllegalStateException("Task is not available");
 	}
@@ -60,10 +75,24 @@ public enum TaskStatus {
 		return TaskStatus.UNAVAILABLE;
 	}
 	
+	/**
+	 * Returns the failed status if and only if the
+	 * state of the task is executing. Otherwise throws an IllegalState-
+	 * exception
+	 * 
+	 * @return failed : failed status
+	 */
 	public TaskStatus goFailed(){
 		throw new IllegalStateException("Task is not executing");
 	}
 	
+	/**
+	 * Returns the finished status if and only if the
+	 * state of the task is executing. Otherwise throws an IllegalState-
+	 * exception
+	 * 
+	 * @return finished : finished status
+	 */
 	public TaskStatus goFinished(){
 		throw new IllegalStateException("Task is not executing");
 	}

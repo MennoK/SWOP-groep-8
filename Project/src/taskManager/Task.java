@@ -773,7 +773,9 @@ public class Task implements Visitable {
 		// ons domein
 		// bv. de dependencies worden shallow gekopieerd
 		/**
-		 * Constructor of the momento inner class. It ini
+		 * Constructor of the momento inner class. It initialize all parameters
+		 * of the current state of the task.
+		 * 
 		 * @param task
 		 */
 		public Memento(Task task) {
@@ -796,6 +798,12 @@ public class Task implements Visitable {
 			this.status = task.status;
 		}
 
+		/**
+		 * Sets the parameters of the task to the saved
+		 * parameters
+		 * 
+		 * @param task : given task
+		 */
 		public void load(Task task) {
 			task.description = this.description;
 			task.estimatedDuration = this.estimatedDuration;
