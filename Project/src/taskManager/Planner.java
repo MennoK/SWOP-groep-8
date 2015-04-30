@@ -76,17 +76,25 @@ public class Planner {
 		}
 	}
 
-	/*
-	 * boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan){
-	 * for (ResourceType type : task.getRequiredResourceTypes().keySet()) { if
-	 * ((type.getDailyAvailability().getBegin() .isAfter(WorkDay.getStartTime())
-	 * || type .getDailyAvailability().getEnd() .isBefore(WorkDay.getEndTime()))
-	 * && timeSpan.getBegin().getHour() >
-	 * type.getDailyAvailability().getEnd().getHour() &&
-	 * timeSpan.getEnd().getHour() >
-	 * type.getDailyAvailability().getEnd().getHour()) { return true; } else{
-	 * return false; } } return true; }
-	 */
+	boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan) {
+		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
+				if ((type.getDailyAvailability().getBegin()
+					.isAfter(WorkDay.getStartTime()) || type
+					.getDailyAvailability().getEnd()
+					.isBefore(WorkDay.getEndTime()))) {
+				if (timeSpan.getBegin().getHour() >= type.getDailyAvailability()
+						.getBegin().getHour()
+						&& timeSpan.getEnd().getHour() <= type
+								.getDailyAvailability().getEnd().getHour()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
 
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {

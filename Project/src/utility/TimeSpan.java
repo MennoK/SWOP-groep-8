@@ -115,4 +115,9 @@ public class TimeSpan {
 	public Duration getDuration() {
 		return WorkTime.durationBetween(begin, end);
 	}
+	
+	@Override
+	public String toString() {
+		return begin.toString() + " to " + end.toString();
+	}
 }
