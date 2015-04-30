@@ -69,7 +69,7 @@ public class UseCase3CreateTaskTester {
 		// create an alternative task for a failed task
 		// first we let the simple task fail
 		Task task = project1.getAllTasks().get(0);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		Planning.builder(now, task, dev, tmc.getPlanner()).build();
 		tmc.setExecuting(task, LocalDateTime.of(2015, 03, 07, 02, 00));
 		tmc.setFailed(task, LocalDateTime.of(2015, 03, 07, 05, 00));

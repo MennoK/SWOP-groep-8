@@ -30,7 +30,7 @@ public class DeveloperExpert {
 	 * @param name
 	 *            : given name
 	 */
-	public Developer createDeveloper(String name) {
+	Developer createDeveloper(String name) {
 		Developer developer = new Developer(name);
 		this.addDeveloper(developer);
 		return developer;

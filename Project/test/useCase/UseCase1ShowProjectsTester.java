@@ -48,8 +48,8 @@ public class UseCase1ShowProjectsTester {
 
 		tmc = new TaskManController(now);
 
-		jef = tmc.getDeveloperExpert().createDeveloper("Jef");
-		jos = tmc.getDeveloperExpert().createDeveloper("Jos");
+		jef = tmc.createDeveloper("Jef");
+		jos = tmc.createDeveloper("Jos");
 
 		tmc.createProject("Project 1", "Desc 1", now.plusDays(2));
 		tmc.createProject("Project 2", "Desc 2", now.plusHours(3));

@@ -19,7 +19,6 @@ import java.util.Set;
 import org.yaml.snakeyaml.Yaml;
 
 import taskManager.Developer;
-import taskManager.DeveloperExpert;
 import taskManager.Planning;
 import taskManager.Planning.PlanningBuilder;
 import taskManager.Project;
@@ -96,7 +95,7 @@ public class Parser {
 		// create all developers
 		constructDevelopers(
 				(List<LinkedHashMap<String, Object>>) objects.get("developers"),
-				controller.getDeveloperExpert());
+				controller);
 
 		// create all projects
 		constructProjects(
@@ -212,11 +211,11 @@ public class Parser {
 	 */
 	private void constructDevelopers(
 			List<LinkedHashMap<String, Object>> developers,
-			DeveloperExpert developerExpert) {
+			TaskManController tmc) {
 		for (LinkedHashMap<String, Object> developer : developers) {
 			// get the developer name
 			String name = (String) developer.get("name");
-			developerExpert.createDeveloper(name);
+			tmc.createDeveloper(name);
 		}
 	}
 

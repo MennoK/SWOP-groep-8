@@ -49,7 +49,7 @@ public class UseCase5AdvanceTime {
 		Task.builder("Task 1", Duration.ofHours(5), 0.4).build(project1);
 
 		task1 = project1.getAllTasks().get(0);
-		Developer dev1 = tmc.getDeveloperExpert().createDeveloper("dev1");
+		Developer dev1 = tmc.createDeveloper("dev1");
 		Planning.builder(now, task1, dev1, tmc.getPlanner()).build();
 		tmc.setExecuting(task1, now.minusDays(6));
 		tmc.setFinished(task1, now.minusDays(5));

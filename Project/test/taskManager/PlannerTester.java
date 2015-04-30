@@ -31,7 +31,6 @@ public class PlannerTester {
 	public Project project;
 	public Task task1;
 	public Task task2;
-	public DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
 	private ArrayList<ResourceType> resourceTypeList;
 	private ResourceType resourceType;
@@ -74,12 +73,11 @@ public class PlannerTester {
 		task2 = project.getAllTasks().get(1);
 
 		// create some developers
-		developerExpert = tmController.getDeveloperExpert();
-		developerExpert.createDeveloper("person1resource2 = resources.get(1);");
-		developerExpert.createDeveloper("person2");
+		tmController.createDeveloper("person1resource2 = resources.get(1);");
+		tmController.createDeveloper("person2");
 
-		developer1 = (Developer) developerExpert.getAllDevelopers().toArray()[0];
-		developer2 = (Developer) developerExpert.getAllDevelopers().toArray()[1];
+		developer1 = (Developer) tmController.getAllDevelopers().toArray()[0];
+		developer2 = (Developer) tmController.getAllDevelopers().toArray()[1];
 
 	}
 
@@ -125,8 +123,10 @@ public class PlannerTester {
 		possibleStartTimes111213.add(time1);
 		possibleStartTimes111213.add(time1.plusHours(1));
 		possibleStartTimes111213.add(time1.plusHours(2));
-		assertEquals(possibleStartTimes111213, planner.getPossibleStartTimes(
-				task1, time1, this.developerExpert.getAllDevelopers()));
+		assertEquals(
+				possibleStartTimes111213,
+				planner.getPossibleStartTimes(task1, time1,
+						tmController.getAllDevelopers()));
 		Planning.builder(time1, task1, developer1, planner)
 				.addDeveloper(developer2).addAllResources(resource).build();
 
@@ -135,8 +135,10 @@ public class PlannerTester {
 		possibleStartTimes121314.add(time1.plusHours(1));
 		possibleStartTimes121314.add(time1.plusHours(2));
 		possibleStartTimes121314.add(time1.plusHours(3));
-		assertEquals(possibleStartTimes121314, planner.getPossibleStartTimes(
-				task2, time1, this.developerExpert.getAllDevelopers()));
+		assertEquals(
+				possibleStartTimes121314,
+				planner.getPossibleStartTimes(task2, time1,
+						tmController.getAllDevelopers()));
 		Planning.builder(time1.plusHours(3), task2, developer1, planner)
 				.addDeveloper(developer2).build();
 
@@ -151,8 +153,10 @@ public class PlannerTester {
 		possibleStartTimes121617.add(time1.plusHours(6));
 		possibleStartTimes121617.add(time1.plusHours(7));
 
-		assertEquals(possibleStartTimes121617, planner.getPossibleStartTimes(
-				task3, time1, this.developerExpert.getAllDevelopers()));
+		assertEquals(
+				possibleStartTimes121617,
+				planner.getPossibleStartTimes(task3, time1,
+						tmController.getAllDevelopers()));
 
 		// subcase: 2 timeslots are available between planning of task 1 and
 		// task 2
@@ -163,16 +167,20 @@ public class PlannerTester {
 		possibleStartTimes121316.add(time1.plusHours(2));
 		possibleStartTimes121316.add(time1.plusHours(5));
 
-		assertEquals(possibleStartTimes121316, planner.getPossibleStartTimes(
-				task4, time1, this.developerExpert.getAllDevelopers()));
+		assertEquals(
+				possibleStartTimes121316,
+				planner.getPossibleStartTimes(task4, time1,
+						tmController.getAllDevelopers()));
 		Planning.builder(time1.plusHours(1), task4, developer1, planner)
 				.build();
 
 		// CASE4: some developpers planned, some available -> same test as
 		// before for task3, task4 is planned on time1+1 and has 1 developer
 		// planned, 1 still available so result should be the same
-		assertEquals(possibleStartTimes121617, planner.getPossibleStartTimes(
-				task3, time1, this.developerExpert.getAllDevelopers()));
+		assertEquals(
+				possibleStartTimes121617,
+				planner.getPossibleStartTimes(task3, time1,
+						tmController.getAllDevelopers()));
 
 		// CASE5: some resources planned, some available ->
 		Task.builder("task5 ", Duration.ofHours(1), 2)
@@ -185,8 +193,10 @@ public class PlannerTester {
 		Planning.builder(time1.plusHours(2), task5, developer1, planner)
 				.addDeveloper(developer2).addAllResources(resource).build();
 
-		assertEquals(possibleStartTimes121617, planner.getPossibleStartTimes(
-				task6, time1, this.developerExpert.getAllDevelopers()));
+		assertEquals(
+				possibleStartTimes121617,
+				planner.getPossibleStartTimes(task6, time1,
+						tmController.getAllDevelopers()));
 
 	}
 
@@ -270,9 +280,8 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				2,
-				planner.developersAvailableFor(
-						developerExpert.getAllDevelopers(), task1, timeSpan)
-						.size());
+				planner.developersAvailableFor(tmController.getAllDevelopers(),
+						task1, timeSpan).size());
 	}
 
 	@Test
@@ -282,9 +291,8 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				2,
-				planner.developersAvailableFor(
-						developerExpert.getAllDevelopers(), task1, timeSpan)
-						.size());
+				planner.developersAvailableFor(tmController.getAllDevelopers(),
+						task1, timeSpan).size());
 	}
 
 	@Test
@@ -293,9 +301,8 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				1,
-				planner.developersAvailableFor(
-						developerExpert.getAllDevelopers(), task1, timeSpan)
-						.size());
+				planner.developersAvailableFor(tmController.getAllDevelopers(),
+						task1, timeSpan).size());
 	}
 
 	@Test
@@ -305,9 +312,8 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				0,
-				planner.developersAvailableFor(
-						developerExpert.getAllDevelopers(), task1, timeSpan)
-						.size());
+				planner.developersAvailableFor(tmController.getAllDevelopers(),
+						task1, timeSpan).size());
 	}
 
 	@Test
@@ -317,9 +323,8 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				1,
-				planner.developersAvailableFor(
-						developerExpert.getAllDevelopers(), task1, timeSpan)
-						.size());
+				planner.developersAvailableFor(tmController.getAllDevelopers(),
+						task1, timeSpan).size());
 	}
 
 	@Test
@@ -328,9 +333,8 @@ public class PlannerTester {
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				2,
-				planner.developersAvailableFor(
-						developerExpert.getAllDevelopers(), task1, timeSpan)
-						.size());
+				planner.developersAvailableFor(tmController.getAllDevelopers(),
+						task1, timeSpan).size());
 	}
 
 	@Test

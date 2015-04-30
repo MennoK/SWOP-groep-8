@@ -72,7 +72,7 @@ public class TaskManController {
 	 * 
 	 * @return developerExpert : developer expert
 	 */
-	public DeveloperExpert getDeveloperExpert() {
+	private DeveloperExpert getDeveloperExpert() {
 		return developerExpert;
 	}
 
@@ -301,5 +301,16 @@ public class TaskManController {
 			LocalDateTime dueTime) {
 		return getProjectExpert().createProject(name, description, getTime(),
 				dueTime);
+	}
+
+	/**
+	 * Creates a new developer with the given name. and adds the new developer
+	 * to the set of all developers
+	 * 
+	 * @param name
+	 *            : given name
+	 */
+	public Developer createDeveloper(String name) {
+		return getDeveloperExpert().createDeveloper(name);
 	}
 }

@@ -39,14 +39,14 @@ public class UseCase8RunSimulation {
 		projectController = tmc.getProjectExpert();
 
 		// new developerExpert and create a new developer
-		controller.getDeveloperExpert().createDeveloper("Bob");
+		controller.createDeveloper("Bob");
 		ArrayList<Developer> devList = new ArrayList<Developer>();
 		devList.addAll(tmc.getAllDevelopers());
 	}
 
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
-		Developer dev = controller.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = controller.createDeveloper("dev");
 		Planning.builder(time, task, dev, controller.getPlanner()).build();
 		return task;
 	}
@@ -126,7 +126,7 @@ public class UseCase8RunSimulation {
 	@Test
 	public void testMementoSavesDevelopers() {
 		tmc.saveSystem();
-		tmc.getDeveloperExpert().createDeveloper("Bob");
+		tmc.createDeveloper("Bob");
 		assertEquals(1, tmc.getAllDevelopers().size());
 		tmc.loadSystem();
 		assertEquals(0, tmc.getAllDevelopers().size());
