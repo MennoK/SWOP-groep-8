@@ -27,17 +27,26 @@ public class TaskManTester {
 		return tmc.getProjectExpert().createProject("project", "desc", dueDate);
 	}
 
-	protected Task createStandardTask(Project project, Duration taskDuration) {
-		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
+	protected Task createTask(Project project, Duration taskDuration) {
+		return Task.builder("desc", taskDuration, 0.5).build(project);
+	}
+
+	protected Task createPlannedTask(Project project, Duration taskDuration) {
+		Task task = createTask(project, taskDuration);
 		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
 		Planning.builder(time, task, dev, tmc.getPlanner()).build();
 		return task;
 	}
 
-	protected Task createDependentTask(Project project, Duration taskDuration,
+	protected Task createTask(Project project, Duration taskDuration,
 			Task dependency) {
-		Task task = Task.builder("desc", taskDuration, 0.5)
+		return Task.builder("desc", taskDuration, 0.5)
 				.addDependencies(dependency).build(project);
+	}
+
+	protected Task createPlannedTask(Project project, Duration taskDuration,
+			Task dependency) {
+		Task task = createTask(project, taskDuration, dependency);
 		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
 		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
 				dependency.getDuration());
@@ -45,12 +54,19 @@ public class TaskManTester {
 		return task;
 	}
 
-	protected Task createAlternativeTask(Project project,
+	protected Task createPlannedAlternativeTask(Project project,
 			Duration taskDuration, Task original) {
 		Task task = Task.builder("desc", taskDuration, 0.5)
 				.setOriginalTask(original).build(project);
 		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
 		Planning.builder(time, task, dev, tmc.getPlanner()).build();
+		return task;
+	}
+
+	protected Task createRessourceTask(Project project, Duration taskDuration,
+			ResourceType type) {
+		Task task = Task.builder("desc", taskDuration, 0.5)
+				.addRequiredResourceType(type, 1).build(project);
 		return task;
 	}
 }

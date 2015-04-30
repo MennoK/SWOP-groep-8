@@ -36,7 +36,7 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testBaseProject() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
 
 		// Check the base data
 		assertEquals("project", project.getName());
@@ -66,8 +66,8 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testTwoTaskproject() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
-		Task task2 = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
+		Task task2 = createPlannedTask(project, Duration.ofHours(8));
 
 		// Check project structure
 		assertEquals(2, project.getAllTasks().size());
@@ -102,12 +102,12 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testAlternativeTaskProject() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
 		// Set baseTask to failed
 		tmc.setExecuting(baseTask, time);
 		tmc.setFailed(baseTask, time.plusHours(2));
 		// Create alternativeTask
-		Task alternativeTask = createAlternativeTask(project,
+		Task alternativeTask = createPlannedAlternativeTask(project,
 				Duration.ofHours(8), baseTask);
 
 		// check structure
@@ -136,8 +136,8 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testDependentTaskProject() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
-		Task dependentTask = createDependentTask(project, Duration.ofHours(8),
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
+		Task dependentTask = createPlannedTask(project, Duration.ofHours(8),
 				baseTask);
 
 		// check structure
@@ -177,15 +177,15 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testProjectWithDependencyAndAlternativeTask() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
-		Task dependentTask = createDependentTask(project, Duration.ofHours(8),
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
+		Task dependentTask = createPlannedTask(project, Duration.ofHours(8),
 				baseTask);
 
 		// Set baseTask to failed
 		tmc.setExecuting(baseTask, time);
 		tmc.setFailed(baseTask, time.plusHours(2));
 		// Create alternativeTask
-		Task alternativeTask = createAlternativeTask(project,
+		Task alternativeTask = createPlannedAlternativeTask(project,
 				Duration.ofHours(8), baseTask);
 
 		// check structure
@@ -233,7 +233,7 @@ public class ProjectTester extends TaskManTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddTaskThatIsAlreadyInList() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
 		project.addTask(baseTask);
 	}
 
@@ -244,7 +244,7 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testUpdate() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
 
 		project.handleTimeChange(time.plusHours(5));
 		assertEquals(time.plusHours(5), project.getLastUpdateTime());
@@ -254,7 +254,7 @@ public class ProjectTester extends TaskManTester {
 	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
-		Task task = createStandardTask(project, Duration.ofHours(3 * 8));
+		Task task = createPlannedTask(project, Duration.ofHours(3 * 8));
 
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
 		assertEquals(Duration.ofHours(8), project.getCurrentDelay());
@@ -269,13 +269,13 @@ public class ProjectTester extends TaskManTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void testGetCurrentDelayOnTime() {
-		createStandardTask(project, Duration.ofHours(8));
+		createPlannedTask(project, Duration.ofHours(8));
 		project.getCurrentDelay();
 	}
 
 	@Test
 	public void testDelayToMuchWork() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
 		Task.builder("bla", Duration.ofHours(2 * 8), 0.5)
 				.addDependencies(baseTask).build(project);
 		assertEquals(ProjectFinishingStatus.OVER_TIME, project.finishedOnTime());
@@ -284,7 +284,7 @@ public class ProjectTester extends TaskManTester {
 
 	@Test
 	public void testDelayBaseTaskDelayed() {
-		Task baseTask = createStandardTask(project, Duration.ofHours(8));
+		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
 		Task.builder("bla", Duration.ofHours(8), 0.5).addDependencies(baseTask)
 				.build(project);
 		assertEquals(ProjectFinishingStatus.ON_TIME, project.finishedOnTime());

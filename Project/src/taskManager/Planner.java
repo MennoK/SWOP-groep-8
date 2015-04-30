@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
-import utility.TimeInterval;
 import utility.TimeSpan;
 import utility.WorkDay;
 
@@ -49,6 +48,11 @@ public class Planner {
 			LocalDateTime time, Set<Developer> developers) {
 
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
+
+		if (developers.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Requires at least one developer to find a start time");
+		}
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
