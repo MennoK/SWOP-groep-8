@@ -65,31 +65,32 @@ public class Planner {
 		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
 				timeSpan))
 				&& enoughResourcesAvailable(
-						resourcesAvailableFor(task, timeSpan), task)
-						) {
+						resourcesAvailableFor(task, timeSpan), task)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	/*boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan){
+	boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan) {
 		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
-			if ((type.getDailyAvailability().getBegin()
+				if ((type.getDailyAvailability().getBegin()
 					.isAfter(WorkDay.getStartTime()) || type
 					.getDailyAvailability().getEnd()
-					.isBefore(WorkDay.getEndTime()))
-					&& timeSpan.getBegin().getHour() > type.getDailyAvailability().getEnd().getHour()
-					&& timeSpan.getEnd().getHour() > type.getDailyAvailability().getEnd().getHour())
-					{
-				return true;
-			}
-			else{
-				return false;
+					.isBefore(WorkDay.getEndTime()))) {
+				if (timeSpan.getBegin().getHour() >= type.getDailyAvailability()
+						.getBegin().getHour()
+						&& timeSpan.getEnd().getHour() <= type
+								.getDailyAvailability().getEnd().getHour()) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		}
 		return true;
-	}*/
+
+	}
 
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {
