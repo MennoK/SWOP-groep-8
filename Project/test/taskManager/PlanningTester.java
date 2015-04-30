@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Developer;
-import taskManager.DeveloperExpert;
 import taskManager.Planner;
 import taskManager.Planning;
 import taskManager.Project;
@@ -34,7 +33,6 @@ public class PlanningTester {
 	public Project project;
 	public Task task1;
 	public Task task2;
-	public DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
 	private ArrayList<ResourceType> resourceTypeList;
 	private ResourceType resourceType;
@@ -77,12 +75,11 @@ public class PlanningTester {
 		task2 = project.getAllTasks().get(1);
 
 		// create some developers
-		developerExpert = tmController.getDeveloperExpert();
-		developerExpert.createDeveloper("person1resource2 = resources.get(1);");
-		developerExpert.createDeveloper("person2");
+		tmController.createDeveloper("person1resource2 = resources.get(1);");
+		tmController.createDeveloper("person2");
 
-		developer1 = (Developer) developerExpert.getAllDevelopers().toArray()[0];
-		developer2 = (Developer) developerExpert.getAllDevelopers().toArray()[1];
+		developer1 = (Developer) tmController.getAllDevelopers().toArray()[0];
+		developer2 = (Developer) tmController.getAllDevelopers().toArray()[1];
 
 	}
 
@@ -111,15 +108,15 @@ public class PlanningTester {
 		assertEquals(this.time1, planningList.get(0).getTimeSpan().getBegin());
 		assertEquals(time1.plus(task1.getDuration()), planningList.get(0)
 				.getTimeSpan().getEnd());
-		assertEquals(this.developerExpert.getAllDevelopers(),
-				planningList.get(0).getDevelopers());
+		assertEquals(tmController.getAllDevelopers(), planningList.get(0)
+				.getDevelopers());
 		assertTrue(planningList.get(0).getResources().isEmpty());
 
 		assertEquals(this.time2, planningList.get(1).getTimeSpan().getBegin());
 		assertEquals(time2.plus(task2.getDuration()), planningList.get(1)
 				.getTimeSpan().getEnd());
-		assertEquals((this.developerExpert.getAllDevelopers()), planningList
-				.get(1).getDevelopers());
+		assertEquals((tmController.getAllDevelopers()), planningList.get(1)
+				.getDevelopers());
 	}
 
 	@Test(expected = ConlictingPlanningException.class)

@@ -33,7 +33,7 @@ public class TaskManTester {
 
 	protected Task createPlannedTask(Project project, Duration taskDuration) {
 		Task task = createTask(project, taskDuration);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		Planning.builder(time, task, dev, tmc.getPlanner()).build();
 		return task;
 	}
@@ -47,7 +47,7 @@ public class TaskManTester {
 	protected Task createPlannedTask(Project project, Duration taskDuration,
 			Task dependency) {
 		Task task = createTask(project, taskDuration, dependency);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		LocalDateTime depFinishTime = WorkTime.getFinishTime(time,
 				dependency.getDuration());
 		Planning.builder(depFinishTime, task, dev, tmc.getPlanner()).build();
@@ -58,7 +58,7 @@ public class TaskManTester {
 			Duration taskDuration, Task original) {
 		Task task = Task.builder("desc", taskDuration, 0.5)
 				.setOriginalTask(original).build(project);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		Planning.builder(time, task, dev, tmc.getPlanner()).build();
 		return task;
 	}
@@ -74,7 +74,7 @@ public class TaskManTester {
 			Duration taskDuration, ResourceType type, Resource resource,
 			LocalDateTime startTime) {
 		Task task = createRessourceTask(project, taskDuration, type);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		Planning.builder(startTime, task, dev, tmc.getPlanner())
 				.addResources(resource).build();
 		return task;

@@ -18,7 +18,7 @@ public class TaskManControllerTester extends TaskManTester {
 	public void setUp() {
 		super.setUp();
 		project = createStandardProject(time.plusDays(5));
-		tmc.getDeveloperExpert().createDeveloper("dev");
+		tmc.createDeveloper("dev");
 	}
 
 	@Test

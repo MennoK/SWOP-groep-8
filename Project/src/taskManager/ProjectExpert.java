@@ -2,7 +2,6 @@ package taskManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +45,7 @@ public class ProjectExpert implements TimeObserver {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
-	public Project createProject(String name, String description,
+	Project createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		Project project = new Project(name, description, creationTime, dueTime);
 		project.handleTimeChange(lastUpdateTime);
@@ -112,12 +111,12 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return All the tasks in all projects
 	 */
-	public Set<Task> getAllTasks() {
+	Set<Task> getAllTasks() {
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			tasks.addAll(project.getAllTasks());
 		}
-		return Collections.unmodifiableSet(tasks);
+		return tasks;
 	}
 
 	/**

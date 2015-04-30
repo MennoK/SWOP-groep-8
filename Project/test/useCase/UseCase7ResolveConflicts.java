@@ -35,7 +35,7 @@ public class UseCase7ResolveConflicts {
 		project = tmc.createProject("proj", "proj description",
 				now.plusYears(1));
 
-		developer = tmc.getDeveloperExpert().createDeveloper("Jimmy Doge");
+		developer = tmc.createDeveloper("Jimmy Doge");
 
 		plannedConflictingTask = Task.builder("Already Planned Task",
 				Duration.ofHours(8), 0.2).build(project);

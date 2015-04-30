@@ -43,7 +43,7 @@ public class UseCase3CreateTaskTester {
 	public void createTask() {
 
 		// create a project
-		tmc.getProjectExpert().createProject("Project 1", "Description 1",
+		tmc.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));
 		Project project1 = tmc.getAllProjects().get(0);
@@ -69,7 +69,7 @@ public class UseCase3CreateTaskTester {
 		// create an alternative task for a failed task
 		// first we let the simple task fail
 		Task task = project1.getAllTasks().get(0);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		Planning.builder(now, task, dev, tmc.getPlanner()).build();
 		tmc.setExecuting(task, LocalDateTime.of(2015, 03, 07, 02, 00));
 		tmc.setFailed(task, LocalDateTime.of(2015, 03, 07, 05, 00));

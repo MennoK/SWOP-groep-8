@@ -32,14 +32,14 @@ public class UseCase8RunSimulation {
 		project = tmc.createProject("project", "desc", time.plusDays(4));
 
 		// new developerExpert and create a new developer
-		tmc.getDeveloperExpert().createDeveloper("Bob");
+		tmc.createDeveloper("Bob");
 		ArrayList<Developer> devList = new ArrayList<Developer>();
 		devList.addAll(tmc.getAllDevelopers());
 	}
 
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
-		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Developer dev = tmc.createDeveloper("dev");
 		Planning.builder(time, task, dev, tmc.getPlanner()).build();
 		return task;
 	}
@@ -78,7 +78,7 @@ public class UseCase8RunSimulation {
 
 	@Test
 	public void mementoCanRemoveProjects() {
-		tmc.getProjectExpert().createProject("name", "description",
+		tmc.createProject("name", "description",
 				LocalDateTime.of(2015, 03, 05, 00, 00),
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
@@ -119,7 +119,7 @@ public class UseCase8RunSimulation {
 	@Test
 	public void testMementoSavesDevelopers() {
 		tmc.saveSystem();
-		tmc.getDeveloperExpert().createDeveloper("Bob");
+		tmc.createDeveloper("Bob");
 		assertEquals(2, tmc.getAllDevelopers().size());
 		tmc.loadSystem();
 		assertEquals(1, tmc.getAllDevelopers().size());
