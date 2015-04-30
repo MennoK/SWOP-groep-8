@@ -46,7 +46,7 @@
 %   TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[Software ontwerp: iteratie 1]{Software ontwerp: iteratie 1 (groep 8)} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Software ontwerp: iteratie 2]{Software ontwerp: iteratie 2 (groep 8)} % The short title appears at the bottom of every slide, the full title is only on the title page
 
 \author[Groep 8]{\\
         Andr\'e Jacobs \\
@@ -85,9 +85,9 @@
 \begin{frame}
 \frametitle {Packages: overzicht}
 \begin{figure}
-\centering
-\includegraphics[width=1\textwidth]{figures/package_overview}
-\caption{Test}
+\begin{center}
+\includegraphics[scale=0.8]{figures/Package_Diagram1}
+\end{center}
 \end{figure}
 \end{frame}
 
@@ -130,48 +130,53 @@
 %
 %----------------------------------------------------------------------------------------
 
+
 \begin{frame}
-\frametitle {ProjectController: Grasp Patterns}
+\frametitle {Refactoring: veel constructoren}
+\textbf{Builders}
+\begin{figure}
+\includegraphics[scale=0.5]{figures/builder}
+\caption{Voorbeeld van builder in Task}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle {Refactoring: status opslaan}
 \begin{columns}
-    \begin{column}{.45\paperwidth}
-    \begin{itemize}
-        \item Information expert:
-            \begin{itemize}
-                \item Kent alle projecten
-                \item Kent de klok
-            \end{itemize}
-        \item Creator:
-            \begin{itemize}
-                \item Maakt de projecten aan
-            \end{itemize}
-        \item Controller:
-            \begin{itemize}
-                \item Aanspreekpunt voor alle UC
-            \end{itemize}
-    \end{itemize}
-    \end{column}
+	\begin{column}{0.3\textwidth}
+		\includegraphics[scale=0.7]{figures/statediagram}
+	\end{column}
+	\begin{column}{0.69\textwidth}
+		\begin{itemize}
+		\item \textbf{State pattern}
+		\item overgangen worden afgehandeld in enum klasse
+		
+		\end{itemize}
+	\end{column}
 \end{columns}
+
+
 \end{frame}
 
-%----------------------------------------------------------------------------------------
-
-
-%----------------------------------------------------------------------------------------
-%   Pure fabrication
-%
-%----------------------------------------------------------------------------------------
 
 \begin{frame}
-\frametitle{Pure fabrication}
-\begin{itemize}
-\item WorkTime
-\begin{itemize}
-\item Werkuren tussen twee dagen 
-\item Deadline berekening
-\item Configureerbaar
-\end{itemize}
-\end{itemize}
+\frametitle {Probleem: planningen}
+
+
+
 \end{frame}
+\begin{frame}
+\frametitle {Probleem: simulatie}
+
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
 
 %----------------------------------------------------------------------------------------
 %   Extensions
@@ -181,15 +186,15 @@
 \begin{frame}
 \frametitle{Extensions}
 \begin{itemize}
-\item Vanwege low coupling
-\begin{itemize}
-\item extra constraints makkelijk te implementeren
+\item WorkTime\newline
+\newline
+\item Developers\newline
+\newline
+\item Utility package\newline
+\newline
+\item Toepassing van GRASP-patterns
 \end{itemize}
-\item Vanwege high cohesion
-\begin{itemize}
-\item makkelijk om nieuwe domein elementen toe te voegen
-\end{itemize}
-\end{itemize}
+
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -218,13 +223,6 @@
 \begin{frame}
 \frametitle{Overview Projectmanagement}
 
-\begin{itemize}
-    \item Design co\"ordinator: Andr\'e
-    \item Domain co\"ordinator: Thomas
-    \item Test co\"ordinator: Bruno
-\end{itemize}
-
-Volgende iteratie:
 
 \begin{itemize}
     \item Design co\"ordinator: Bruno
@@ -232,9 +230,24 @@ Volgende iteratie:
     \item Test co\"ordinator: Thomas
 \end{itemize}
 
-\begin{figure}
+volgende iteratie:
 
-\end{figure}
+\begin{itemize}
+    \item Design co\"ordinator: Thomas
+    \item Domain co\"ordinator: Andr\'{e}
+    \item Test co\"ordinator: Menno
+\end{itemize}
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|}
+\hline
+       & Individueel werk & Study & Groepswerk \\ \hline
+Andre  &     15             &    5   &   56         \\ \hline
+Bruno  &      17            &   13    &   56         \\ \hline
+Menno  &          20        &     6  &       56     \\ \hline
+Thomas &            13      &     5  &        56    \\ \hline
+\end{tabular}
+\end{table}
 
 \end{frame}
 
