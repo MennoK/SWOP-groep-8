@@ -109,7 +109,7 @@ tasks:
     estimatedDuration  : 100
     acceptableDeviation: 10
     alternativeFor     :
-    requiredTypes      : [{type: 5,  quantity: 1}]
+    requiredTypes      : []
     prerequisiteTasks  :
     status             :
 
@@ -138,7 +138,7 @@ tasks:
     estimatedDuration  : 500
     acceptableDeviation: 50
     alternativeFor     :
-    requiredTypes      : []
+    requiredTypes      : [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
     prerequisiteTasks  :
     status             :
 

@@ -2,28 +2,32 @@ package ui;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import parser.Parser;
 import taskManager.*;
 import taskManager.Task.TaskBuilder;
+import taskManager.exception.ConlictingPlanningException;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
 public class UiTaskMan {
 
-	private TaskManController taskManController;
+	private TaskManController tmc;
 	private Reader reader;
 	private Developer activeDeveloper;
 
 	private UiTaskMan() {
 		reader = new Reader();
 		askInitialState();
-		if (taskManController == null)
+		if (tmc == null)
 			initialiseEmptySystem();
 
-		System.out.println("Current time initialized on:\n"
-				+ taskManController.getTime() + "\n");
+		System.out.println("Current time initialized on:\n" + tmc.getTime()
+				+ "\n");
 	}
 
 	private void askInitialState() {
@@ -40,7 +44,7 @@ public class UiTaskMan {
 				fileName = "./input2.tman";
 			try {
 				Parser parser = new Parser();
-				taskManController = parser.parse(fileName);
+				tmc = parser.parse(fileName);
 				System.out.println("Starting with system initialised from "
 						+ fileName);
 				return;
@@ -58,12 +62,12 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("The standard time will be used.");
 		}
-		taskManController = new TaskManController(now);
+		tmc = new TaskManController(now);
 	}
 
 	private void showProjects() throws ExitUseCaseException {
-		Project project = reader.select(taskManController.getProjectExpert()
-				.getAllProjects());
+		Project project = reader
+				.select(tmc.getProjectExpert().getAllProjects());
 		System.out.println(new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks(), false);
 		System.out.println(new ToStringVisitor().create(task));
@@ -79,8 +83,7 @@ public class UiTaskMan {
 			System.out.println("Project creation aborted.");
 			return;
 		}
-		taskManController.getProjectExpert().createProject(name, description,
-				dueTime);
+		tmc.getProjectExpert().createProject(name, description, dueTime);
 	}
 
 	private void createTask() throws ExitUseCaseException {
@@ -88,8 +91,8 @@ public class UiTaskMan {
 			System.out.println("Creating a task\n"
 					+ "Please fill in the following form:\n"
 					+ "Adding task to which project?");
-			Project project = reader.select(taskManController
-					.getProjectExpert().getAllProjects());
+			Project project = reader.select(tmc.getProjectExpert()
+					.getAllProjects());
 			TaskBuilder builder = Task.builder(reader
 					.getString("Give a description:"), reader
 					.getDuration("Give an estimate for the task duration:"),
@@ -107,44 +110,105 @@ public class UiTaskMan {
 	}
 
 	private void planTask() throws ExitUseCaseException {
-		Task task = reader.select(taskManController.getUnplannedTasks());
-		TimeSpan timeSpan = new TimeSpan(reader.selectDate(taskManController
-				.getPossibleStartTimes(task)), task.getDuration());
-		Planning.PlanningBuilder plan = Planning.builder(timeSpan.getBegin(),
-				task, reader.select(taskManController.getDeveloperExpert()
-						.getAllDevelopers()), taskManController.getPlanner());
-		while (reader.getBoolean("Do you want to assign an extra Developer?")) {
-			plan.addDeveloper(reader.select(taskManController
-					.getDeveloperExpert().getAllDevelopers()));
+		Task task = reader.select(tmc.getUnplannedTasks());
+		plan(task);
+	}
+
+	private void plan(Task task) throws ExitUseCaseException {
+		System.out.println("Planning task:"
+				+ new ToStringVisitor().create(task));
+		TimeSpan timeSpan = planSelectTimeSpan(task);
+		try {
+			Planning.PlanningBuilder plan = Planning.builder(
+					timeSpan.getBegin(), task,
+					reader.select(tmc.getDeveloperExpert().getAllDevelopers()),
+					tmc.getPlanner());
+			while (reader
+					.getBoolean("Do you want to assign an extra Developer?")) {
+				plan.addDeveloper(reader.select(tmc.getDeveloperExpert()
+						.getAllDevelopers()));
+			}
+			if (task.requiresRessources()) {
+				plan.addAllResources(planSelectResources(task, timeSpan));
+			}
+			plan.build();
+		} catch (ConlictingPlanningException conflict) {
+			resolveConflict(conflict, task);
 		}
-		if (task.requiresRessources()) {
-			Set<Resource> ressources = taskManController.selectResources(task,
-					timeSpan);
-			System.out.println("The system proposes the following ressources:");
-			Printer.list(ressources);
-			plan.addAllResources(ressources);
+	}
+
+	private Set<Resource> planSelectResources(Task task, TimeSpan timeSpan)
+			throws ExitUseCaseException {
+		System.out.println("The system proposes the following ressources:");
+		System.out.println(Printer.list(tmc.selectResources(task, timeSpan)));
+		if (reader.getBoolean("Do you accept the systems proposal?")) {
+			return tmc.selectResources(task, timeSpan);
+		} else {
+			Set<Resource> selected = new HashSet<Resource>();
+			Map<ResourceType, Integer> requirements = task
+					.getRequiredResourceTypes();
+			for (ResourceType type : requirements.keySet()) {
+				System.out.println("The task requires "
+						+ requirements.get(type) + " ressources of type "
+						+ type.getName());
+				for (int i = 0; i < requirements.get(type); i++) {
+					selected.add(reader.select(tmc.getPlanner()
+							.resourcesOfTypeAvailableFor(type, task, timeSpan)));
+				}
+			}
+			return selected;
 		}
-		plan.build();
+	}
+
+	private TimeSpan planSelectTimeSpan(Task task) throws ExitUseCaseException {
+		System.out.println("Possible starting times:");
+		System.out.println(Printer.listDates(new ArrayList<LocalDateTime>(tmc
+				.getPossibleStartTimes(task))));
+		if (reader
+				.getBoolean("Do you want to start the planning on one of those times?")) {
+			return new TimeSpan(reader.selectDate(tmc
+					.getPossibleStartTimes(task)), task.getDuration());
+		} else {
+			return new TimeSpan(
+					reader.getDate("When do you want to start the planning of this Task?"),
+					task.getDuration());
+		}
+	}
+
+	private void resolveConflict(ConlictingPlanningException conflict, Task task)
+			throws ExitUseCaseException {
+		System.out.println("A conflict occured with the following Tasks:");
+		for (Planning planning : conflict.getConflictingPlannings()) {
+			System.out.println(new ToStringVisitor().create(tmc
+					.getTask(planning)));
+		}
+		if (!reader
+				.getBoolean("y => re-start planning the new task / n => re-plan the conflicting task")) {
+			for (Planning planning : conflict.getConflictingPlannings()) {
+				plan(tmc.getTask(planning));
+			}
+		}
+		plan(task);
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
-		Task task = reader.select(taskManController.getProjectExpert()
-				.getAllTasks(activeDeveloper));
+		Task task = reader.select(tmc.getProjectExpert().getAllTasks(
+				activeDeveloper));
 
 		while (true) {
 			try {
 				if (task.getStatus() == TaskStatus.AVAILABLE) {
-					taskManController.setExecuting(task,
+					tmc.setExecuting(task,
 							reader.getDate("When did you start this task?"));
 				} else if (task.getStatus() == TaskStatus.EXECUTING) {
 					if (reader
 							.getBoolean("Was this task finished succesfully?")) {
-						taskManController.setFinished(task, reader
+						tmc.setFinished(task, reader
 								.getDate("When did you finish this task?"));
 					} else {
-						taskManController.setFailed(task,
+						tmc.setFailed(task,
 								reader.getDate("When did you fail this task?"));
 					}
 				}
@@ -158,8 +222,7 @@ public class UiTaskMan {
 	private void advanceTime() throws ExitUseCaseException {
 		while (true) {
 			try {
-				taskManController.advanceTime(reader
-						.getDate("Enter the new timestamp:"));
+				tmc.advanceTime(reader.getDate("Enter the new timestamp:"));
 				return;
 			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());
@@ -173,7 +236,7 @@ public class UiTaskMan {
 	}
 
 	private void runSimulation() {
-		taskManController.saveSystem();
+		tmc.saveSystem();
 		while (true) {
 			try {
 				printSimMenu();
@@ -191,7 +254,7 @@ public class UiTaskMan {
 				case "9":
 					if (!reader
 							.getBoolean("Do you want to keep the simulation results?")) {
-						taskManController.loadSystem();
+						tmc.loadSystem();
 					}
 					return;
 				default:
@@ -207,7 +270,7 @@ public class UiTaskMan {
 	}
 
 	private void selectDeveloper() throws ExitUseCaseException {
-		activeDeveloper = reader.select(taskManController.getDeveloperExpert()
+		activeDeveloper = reader.select(tmc.getDeveloperExpert()
 				.getAllDevelopers());
 	}
 

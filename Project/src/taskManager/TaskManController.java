@@ -212,6 +212,14 @@ public class TaskManController {
 				getDeveloperExpert().getAllDevelopers());
 	}
 
+	/**
+	 * Have the system select resources for the given task, during the given
+	 * timeSpan
+	 * 
+	 * @param task
+	 * @param timeSpan
+	 * @return The selected resources
+	 */
 	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
 		Map<ResourceType, Integer> requirements = task
 				.getRequiredResourceTypes();
@@ -223,9 +231,19 @@ public class TaskManController {
 				ArrayList<Resource> available = new ArrayList<Resource>(
 						getPlanner().resourcesOfTypeAvailableFor(type, task,
 								timeSpan));
-				selected.addAll(available.subList(0, requirements.get(type) - 1));
+				selected.addAll(available.subList(0, requirements.get(type)));
 			}
 		}
 		return selected;
+	}
+
+	public Task getTask(Planning planning) {
+		for (Task task : getProjectExpert().getAllTasks()) {
+			if (task.hasPlanning() && task.getPlanning() == planning) {
+				return task;
+			}
+		}
+		throw new IllegalArgumentException(
+				"This planning is not the planning of any Task!");
 	}
 }
