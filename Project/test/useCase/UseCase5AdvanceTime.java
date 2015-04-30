@@ -37,10 +37,10 @@ public class UseCase5AdvanceTime {
 
 		tmc = new TaskManController(now);
 
-		tmc.getProjectExpert().createProject("Project 1", "Description 1",
+		tmc.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 10, 17, 00));
 
-		tmc.getProjectExpert().createProject("Project 2", "Description 2",
+		tmc.createProject("Project 2", "Description 2",
 				LocalDateTime.of(2015, 03, 10, 13, 00));
 
 		project1 = tmc.getAllProjects().get(0);

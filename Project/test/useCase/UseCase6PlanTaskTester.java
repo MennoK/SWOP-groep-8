@@ -58,7 +58,7 @@ public class UseCase6PlanTaskTester {
 		resourceType.createResource("resource2");
 
 		// create a project with 2 tasks
-		tmc.getProjectExpert().createProject("name", "des", time2.plusDays(13));
+		tmc.createProject("name", "des", time2.plusDays(13));
 		project = tmc.getAllProjects().get(0);
 		Task.builder("a task", Duration.ofHours(1), 1).build(project);
 		Task.builder("a task", Duration.ofHours(2), 1)

@@ -55,22 +55,6 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
-	 * Creates a new project with the given arguments and adds the project to
-	 * the list of projects. The creationTime is set to the current time
-	 * 
-	 * @param name
-	 *            : name of the project
-	 * @param description
-	 *            : description of the project
-	 * @param dueTime
-	 *            : due time of the project
-	 */
-	public Project createProject(String name, String description,
-			LocalDateTime dueTime) {
-		return createProject(name, description, lastUpdateTime, dueTime);
-	}
-
-	/**
 	 * Adds a given project to the list of projects. An IllegalArgumentException
 	 * will be thrown when the given project is invalid
 	 * 
@@ -144,7 +128,7 @@ public class ProjectExpert implements TimeObserver {
 	 *            the active Developer
 	 * @return All the tasks to which this developer is assigned.
 	 */
-	public Set<Task> getAllTasks(Developer dev) {
+	Set<Task> getAllTasks(Developer dev) {
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			for (Task task : project.getAllTasks()) {
@@ -154,13 +138,13 @@ public class ProjectExpert implements TimeObserver {
 				}
 			}
 		}
-		return Collections.unmodifiableSet(tasks);
+		return tasks;
 	}
 
 	/**
 	 * Saves the current state of the project expert
 	 */
-	 void save() {
+	void save() {
 		this.memento = new Memento(this);
 		for (Project project : this.projects) {
 			project.save();
@@ -174,7 +158,8 @@ public class ProjectExpert implements TimeObserver {
 	 */
 	void load() {
 		if (this.memento == null) {
-			throw new IllegalStateException("You need to save before you can load");
+			throw new IllegalStateException(
+					"You need to save before you can load");
 		} else {
 			this.memento.load(this);
 			for (Project project : this.projects) {

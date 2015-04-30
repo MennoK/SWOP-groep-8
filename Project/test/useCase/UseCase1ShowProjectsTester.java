@@ -51,14 +51,10 @@ public class UseCase1ShowProjectsTester {
 		jef = tmc.getDeveloperExpert().createDeveloper("Jef");
 		jos = tmc.getDeveloperExpert().createDeveloper("Jos");
 
-		tmc.getProjectExpert().createProject("Project 1", "Desc 1",
-				now.plusDays(2));
-		tmc.getProjectExpert().createProject("Project 2", "Desc 2",
-				now.plusHours(3));
-		tmc.getProjectExpert().createProject("Project 0", "Desc 3",
-				now.plusDays(2));
-		tmc.getProjectExpert().createProject("Project 3", "Desc 3",
-				now.plusHours(5));
+		tmc.createProject("Project 1", "Desc 1", now.plusDays(2));
+		tmc.createProject("Project 2", "Desc 2", now.plusHours(3));
+		tmc.createProject("Project 0", "Desc 3", now.plusDays(2));
+		tmc.createProject("Project 3", "Desc 3", now.plusHours(5));
 
 		project0 = tmc.getAllProjects().get(2);
 		project1 = tmc.getAllProjects().get(0);

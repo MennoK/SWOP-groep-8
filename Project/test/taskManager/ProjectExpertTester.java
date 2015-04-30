@@ -16,8 +16,8 @@ public class ProjectExpertTester {
 
 	@Before
 	public void setUp() {
-		taskManController = new TaskManController(LocalDateTime.of(2000, 03, 05,
-				00, 00));
+		taskManController = new TaskManController(LocalDateTime.of(2000, 03,
+				05, 00, 00));
 
 		projectController = taskManController.getProjectExpert();
 	}
@@ -32,7 +32,7 @@ public class ProjectExpertTester {
 		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), projectController
 				.getAllProjects().get(0).getLastUpdateTime());
 
-		projectController.createProject("name2", "description",
+		taskManController.createProject("name2", "description",
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		assertEquals(2, projectController.getAllProjects().size());
@@ -79,5 +79,5 @@ public class ProjectExpertTester {
 		LocalDateTime newTime = LocalDateTime.of(1999, 03, 05, 00, 00);
 		taskManController.advanceTime(newTime);
 	}
-	
+
 }

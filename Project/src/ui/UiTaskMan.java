@@ -82,7 +82,7 @@ public class UiTaskMan {
 			System.out.println("Project creation aborted.");
 			return;
 		}
-		tmc.getProjectExpert().createProject(name, description, dueTime);
+		tmc.createProject(name, description, dueTime);
 	}
 
 	private void createTask() throws ExitUseCaseException {
@@ -190,8 +190,7 @@ public class UiTaskMan {
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
-		Task task = reader.select(tmc.getProjectExpert().getAllTasks(
-				activeDeveloper));
+		Task task = reader.select(tmc.getAllTasks(activeDeveloper));
 
 		while (true) {
 			try {

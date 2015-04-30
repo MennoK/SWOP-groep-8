@@ -32,8 +32,7 @@ public class UseCase8RunSimulation {
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
 		controller = new TaskManController(time);
-		project = controller.getProjectExpert().createProject("project",
-				"desc", time.plusDays(4));
+		project = controller.createProject("project", "desc", time.plusDays(4));
 
 		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
 
@@ -96,7 +95,7 @@ public class UseCase8RunSimulation {
 
 		tmc.saveSystem();
 
-		projectController.createProject("name2", "description",
+		tmc.createProject("name2", "description",
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		assertEquals(2, tmc.getAllProjects().size());

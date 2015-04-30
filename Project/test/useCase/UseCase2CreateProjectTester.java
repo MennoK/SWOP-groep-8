@@ -41,7 +41,7 @@ public class UseCase2CreateProjectTester {
 				.getDueTime());
 
 		// create second project
-		tmc.getProjectExpert().createProject("name2", "descr2",
+		tmc.createProject("name2", "descr2",
 				LocalDateTime.of(2015, 03, 07, 05, 00));
 
 		// check if both are projects are made

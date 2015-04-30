@@ -35,7 +35,6 @@ public class PlannerTester {
 	private ResourceExpert resourceExpert;
 	private ArrayList<ResourceType> resourceTypeList;
 	private ResourceType resourceType;
-	private ProjectExpert projectExpert;
 	private Developer developer1;
 	private Developer developer2;
 	private ArrayList<Resource> resources;
@@ -66,9 +65,8 @@ public class PlannerTester {
 		resource2.add(resources.get(1));
 		// create a project with a task
 
-		projectExpert = tmController.getProjectExpert();
-		projectExpert.createProject("name", "des", time2.plusDays(13));
-		project = projectExpert.getAllProjects().get(0);
+		tmController.createProject("name", "des", time2.plusDays(13));
+		project = tmController.getAllProjects().get(0);
 		Task.builder("task 1", Duration.ofHours(1), 1).build(project);
 		Task.builder("task 2", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
@@ -89,8 +87,8 @@ public class PlannerTester {
 	public void testGetUnplannedTasks() {
 
 		// create planning for task1
-		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
-				.build();
+		Planning.builder(time1, task1, developer1, planner)
+				.addDeveloper(developer2).build();
 
 		// check if the planning has been created
 		assertEquals(1, planner.getAllPlannings().size());
@@ -129,8 +127,8 @@ public class PlannerTester {
 		possibleStartTimes111213.add(time1.plusHours(2));
 		assertEquals(possibleStartTimes111213, planner.getPossibleStartTimes(
 				task1, time1, this.developerExpert.getAllDevelopers()));
-		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
-				.addAllResources(resource).build();
+		Planning.builder(time1, task1, developer1, planner)
+				.addDeveloper(developer2).addAllResources(resource).build();
 
 		// CASE2: task1 + allDevs are planned for time1 until time1+1
 		Set<LocalDateTime> possibleStartTimes121314 = new LinkedHashSet<>();
@@ -167,7 +165,8 @@ public class PlannerTester {
 
 		assertEquals(possibleStartTimes121316, planner.getPossibleStartTimes(
 				task4, time1, this.developerExpert.getAllDevelopers()));
-		Planning.builder(time1.plusHours(1), task4, developer1, planner).build();
+		Planning.builder(time1.plusHours(1), task4, developer1, planner)
+				.build();
 
 		// CASE4: some developpers planned, some available -> same test as
 		// before for task3, task4 is planned on time1+1 and has 1 developer
@@ -184,8 +183,7 @@ public class PlannerTester {
 		Task task6 = project.getAllTasks().get(5);
 
 		Planning.builder(time1.plusHours(2), task5, developer1, planner)
-				.addDeveloper(developer2).addAllResources(resource)
-				.build();
+				.addDeveloper(developer2).addAllResources(resource).build();
 
 		assertEquals(possibleStartTimes121617, planner.getPossibleStartTimes(
 				task6, time1, this.developerExpert.getAllDevelopers()));
@@ -196,8 +194,8 @@ public class PlannerTester {
 	public void testHasConflictWithPlannedTask() {
 		// create planning for task 1 so that it can conflict with task 2 at
 		// certain times
-		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
-				.build();
+		Planning.builder(time1, task1, developer1, planner)
+				.addDeveloper(developer2).build();
 
 		assertTrue(planner.hasConflictWithAPlannedTask(task2, time1));
 
@@ -232,8 +230,8 @@ public class PlannerTester {
 
 		// create a planning for task 1 and see if it will be returned when it
 		// would conflict with task 2
-		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
-				.build();
+		Planning.builder(time1, task1, developer1, planner)
+				.addDeveloper(developer2).build();
 
 		Set<Task> allTasks = new LinkedHashSet<>(project.getAllTasks());
 		Set<Task> conflictSet = new LinkedHashSet<>();
@@ -279,7 +277,8 @@ public class PlannerTester {
 
 	@Test
 	public void testDeveloperAvailableForPlannedTask() {
-		Planning.builder(time1.plusHours(1), task1, developer1, planner).build();
+		Planning.builder(time1.plusHours(1), task1, developer1, planner)
+				.build();
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				2,
@@ -301,8 +300,8 @@ public class PlannerTester {
 
 	@Test
 	public void testDeveloperBothUnavailable() {
-		Planning.builder(time1, task2, developer1, planner).addDeveloper(developer2)
-				.build();
+		Planning.builder(time1, task2, developer1, planner)
+				.addDeveloper(developer2).build();
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				0,
@@ -313,8 +312,8 @@ public class PlannerTester {
 
 	@Test
 	public void testDeveloperOneOutOfTwoUnavailable() {
-		Planning.builder(time1.plusMinutes(30), task2, developer1, planner).build(
-				);
+		Planning.builder(time1.plusMinutes(30), task2, developer1, planner)
+				.build();
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
 		assertEquals(
 				1,
@@ -359,8 +358,8 @@ public class PlannerTester {
 		Task.builder("task 3", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
 		Task task3 = project.getAllTasks().get(2);
-		Planning.builder(time1, task2, developer1, planner).addAllResources(resource)
-				.build();
+		Planning.builder(time1, task2, developer1, planner)
+				.addAllResources(resource).build();
 		TimeSpan timeSpan = new TimeSpan(time1, task3.getDuration());
 		Map.Entry<ResourceType, Set<Resource>> map = planner
 				.resourcesAvailableFor(task3, timeSpan).entrySet().iterator()
@@ -391,92 +390,123 @@ public class PlannerTester {
 		Task.builder("task 3", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
 		Task task3 = project.getAllTasks().get(2);
-		Planning.builder(time1, task2, developer1, planner).addAllResources(resource)
-				.build();
+		Planning.builder(time1, task2, developer1, planner)
+				.addAllResources(resource).build();
 		TimeSpan timeSpan = new TimeSpan(time1.plusHours(3),
 				task3.getDuration());
 		Map.Entry<ResourceType, Set<Resource>> map = planner
 				.resourcesAvailableFor(task3, timeSpan).entrySet().iterator()
 				.next();
 		assertEquals(2, map.getValue().size());
-	}	
-	
+	}
+
 	@Test
-	public void testGetConflictingPlanningsForBuilder(){
+	public void testGetConflictingPlanningsForBuilder() {
 
 		Planning.builder(time1, task1, developer1, planner).build();
 		Set<Planning> conflictingPlannings = new HashSet<>();
 		Set<Planning> conflictingPlanningsFromException = new HashSet<>();
 		conflictingPlannings.addAll(planner.getAllPlannings());
 		PlanningBuilder builder = null;
-		try{
-		builder = Planning.builder(time1, task2, developer1, planner).addResources(resources.get(0));
-		}
-		catch (ConlictingPlanningException e){
+		try {
+			builder = Planning.builder(time1, task2, developer1, planner)
+					.addResources(resources.get(0));
+		} catch (ConlictingPlanningException e) {
 			builder = e.getPlanningBuilder();
 			conflictingPlanningsFromException = e.getConflictingPlannings();
 		}
-		
-		assertEquals(conflictingPlannings, planner.getConflictingPlanningsForBuilder(builder));
+
+		assertEquals(conflictingPlannings,
+				planner.getConflictingPlanningsForBuilder(builder));
 		assertEquals(conflictingPlannings, conflictingPlanningsFromException);
 	}
 
 	@Test
-	public void testResourceDailyAvailableIsAvailable(){
-		TimeInterval available13to17 = new TimeInterval(LocalTime.of(13, 0), LocalTime.of(17, 0));
-		TimeInterval available8to12= new TimeInterval(LocalTime.of(8, 0), LocalTime.of(12, 0));
-		TimeInterval available9to12= new TimeInterval(LocalTime.of(9, 0), LocalTime.of(12, 0));
-		
-		ResourceType.builder("available13to17").addDailyAvailability(available13to17).build(resourceExpert);
-		ResourceType.builder("available8to12").addDailyAvailability(available8to12).build(resourceExpert);
-		ResourceType.builder("available9to12").addDailyAvailability(available9to12).build(resourceExpert);
+	public void testResourceDailyAvailableIsAvailable() {
+		TimeInterval available13to17 = new TimeInterval(LocalTime.of(13, 0),
+				LocalTime.of(17, 0));
+		TimeInterval available8to12 = new TimeInterval(LocalTime.of(8, 0),
+				LocalTime.of(12, 0));
+		TimeInterval available9to12 = new TimeInterval(LocalTime.of(9, 0),
+				LocalTime.of(12, 0));
+
+		ResourceType.builder("available13to17")
+				.addDailyAvailability(available13to17).build(resourceExpert);
+		ResourceType.builder("available8to12")
+				.addDailyAvailability(available8to12).build(resourceExpert);
+		ResourceType.builder("available9to12")
+				.addDailyAvailability(available9to12).build(resourceExpert);
 		resourceTypeList = new ArrayList<ResourceType>(
 				resourceExpert.getAllResourceTypes());
-		
+
 		resourceTypeList.get(1).createResource("a resource");
 		resourceTypeList.get(2).createResource("a resource");
 		resourceTypeList.get(3).createResource("a resource");
-		
-		
-		Task.builder("testTask for available13to17 ", Duration.ofHours(3), 1).addRequiredResourceType(resourceTypeList.get(1), 1).build(project);
-		Task.builder("testTask for available8to12 ", Duration.ofHours(3), 1).addRequiredResourceType(resourceTypeList.get(2), 1).build(project);
-		Task.builder("testTask for available9to12 ", Duration.ofHours(3), 1).addRequiredResourceType(resourceTypeList.get(3), 1).build(project);
-		
-		TimeSpan timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 10, 00), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 11, 00), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
 
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 13, 00), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 14, 00), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 8, 00), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(3), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 9, 00), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(3), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 12, 00), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(3), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 8, 00), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(4), timeSpan));
-		
-		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 10, 00), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(4), timeSpan));
+		Task.builder("testTask for available13to17 ", Duration.ofHours(3), 1)
+				.addRequiredResourceType(resourceTypeList.get(1), 1)
+				.build(project);
+		Task.builder("testTask for available8to12 ", Duration.ofHours(3), 1)
+				.addRequiredResourceType(resourceTypeList.get(2), 1)
+				.build(project);
+		Task.builder("testTask for available9to12 ", Duration.ofHours(3), 1)
+				.addRequiredResourceType(resourceTypeList.get(3), 1)
+				.build(project);
+
+		TimeSpan timeSpan = new TimeSpan(
+				LocalDateTime.of(2015, 03, 10, 10, 00), Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(2), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 11, 00),
+				Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(2), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 13, 00),
+				Duration.ofHours(3));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(2), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 14, 00),
+				Duration.ofHours(3));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(2), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 8, 00),
+				Duration.ofHours(3));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(3), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 9, 00),
+				Duration.ofHours(3));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(3), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 12, 00),
+				Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(3), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 8, 00),
+				Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(4), timeSpan));
+
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 10, 00),
+				Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project
+				.getAllTasks().get(4), timeSpan));
 	}
+
 	@Test
 	public void testMementoRollbackRemovesPlannings() {
 
 		planner.save();
 
 		// create planning for task1
-		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
-				.build();
+		Planning.builder(time1, task1, developer1, planner)
+				.addDeveloper(developer2).build();
 
 		// check if the planning has been created
 		assertEquals(1, planner.getAllPlannings().size());
@@ -487,22 +517,21 @@ public class PlannerTester {
 
 	}
 
-	
 	@Test
 	public void testMementoPlanningConflicts() {
 
-		Planning.builder(time1, task1, developer1, planner).addDeveloper(developer2)
-				.build();
+		Planning.builder(time1, task1, developer1, planner)
+				.addDeveloper(developer2).build();
 
 		Set<Task> allTasks = new LinkedHashSet<>(project.getAllTasks());
 		Set<Task> conflictSet = new LinkedHashSet<>();
 		conflictSet.add(task1);
 		assertEquals(conflictSet, planner.getConflictingTasks(task2,
 				time1.minusHours(1), allTasks));
-		
+
 		tmController.saveSystem();
 		Set<Task> conflictSetOriginal = new LinkedHashSet<>(conflictSet);
-		
+
 		Planning.builder(time1.plusHours(3), task2, developer1, planner)
 				.addDeveloper(developer2).build();
 		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
