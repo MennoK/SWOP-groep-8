@@ -174,7 +174,8 @@ public class Project implements Visitable {
 	}
 
 	/**
-	 * observer pattern
+	 * Saves the last update time and 
+	 * changes the time in all tasks of the project
 	 * 
 	 * @param time
 	 *            : the new time of the clock
@@ -328,10 +329,17 @@ public class Project implements Visitable {
 		return lastUpdateTime;
 	}
 
+	/**
+	 * accept visitor for visiting this
+	 */
+	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
 
+	/**
+	 * Saves the current state of the project
+	 */
 	public void save() {
 		this.memento = new Memento(this);
 		for(Task task: this.tasks) {
@@ -339,6 +347,10 @@ public class Project implements Visitable {
 		}
 	}
 
+	/**
+	 * loads the last saved state of the project
+	 * 
+	 */
 	public boolean load() {
 		if(this.memento == null) {
 			return false;
@@ -352,6 +364,12 @@ public class Project implements Visitable {
 		}
 	}
 
+	/**
+	 * 
+	 * Inner momento class of project
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 		private List<Task> tasks;
 		private String name;
@@ -360,6 +378,13 @@ public class Project implements Visitable {
 
 		private LocalDateTime lastUpdateTime;
 
+		/**
+		 * Constructor of the momento inner class of project.
+		 * Initialize all the parameters of the current state of 
+		 * the given project
+		 * 
+		 * @param project : project
+		 */
 		public Memento(Project project) {
 			this.tasks = new ArrayList<Task>(project.tasks);
 			this.name = new String(project.name);
@@ -369,6 +394,13 @@ public class Project implements Visitable {
 			this.lastUpdateTime = project.lastUpdateTime;
 		}
 
+		/**
+		 * 
+		 * Sets the parameters of the project
+		 * to the last saved state of the project
+		 * 
+		 * @param project
+		 */
 		public void load(Project project) {
 			project.tasks = this.tasks;
 			project.name = this.name;

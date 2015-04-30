@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
-import utility.TimeInterval;
 import utility.TimeSpan;
 import utility.WorkDay;
 
@@ -50,6 +49,11 @@ public class Planner {
 
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 
+		if (developers.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Requires at least one developer to find a start time");
+		}
+
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
@@ -65,31 +69,24 @@ public class Planner {
 		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
 				timeSpan))
 				&& enoughResourcesAvailable(
-						resourcesAvailableFor(task, timeSpan), task)
-						) {
+						resourcesAvailableFor(task, timeSpan), task)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	/*boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan){
-		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
-			if ((type.getDailyAvailability().getBegin()
-					.isAfter(WorkDay.getStartTime()) || type
-					.getDailyAvailability().getEnd()
-					.isBefore(WorkDay.getEndTime()))
-					&& timeSpan.getBegin().getHour() > type.getDailyAvailability().getEnd().getHour()
-					&& timeSpan.getEnd().getHour() > type.getDailyAvailability().getEnd().getHour())
-					{
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		return true;
-	}*/
+	/*
+	 * boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan){
+	 * for (ResourceType type : task.getRequiredResourceTypes().keySet()) { if
+	 * ((type.getDailyAvailability().getBegin() .isAfter(WorkDay.getStartTime())
+	 * || type .getDailyAvailability().getEnd() .isBefore(WorkDay.getEndTime()))
+	 * && timeSpan.getBegin().getHour() >
+	 * type.getDailyAvailability().getEnd().getHour() &&
+	 * timeSpan.getEnd().getHour() >
+	 * type.getDailyAvailability().getEnd().getHour()) { return true; } else{
+	 * return false; } } return true; }
+	 */
 
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {
