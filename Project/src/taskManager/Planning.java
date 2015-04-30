@@ -9,6 +9,16 @@ import java.util.Set;
 import taskManager.exception.*;
 import utility.TimeSpan;
 
+/**
+ * 
+ * Planning class implements the planning of a task
+ * Every planning has an time span (start + end time),
+ * a set of developers and optional a set of resources that
+ * are required by the tasks.
+ * 
+ * @author Groep 8 
+ *
+ */
 public class Planning {
 
 	private Memento memento;
@@ -42,7 +52,7 @@ public class Planning {
 		 *            : task that is being planned
 		 * @param developers
 		 *            : assigned developers
-		 * @throws ConlictingPlanningException 
+		 * @param planner: planner of the planning
 		 */
 		public PlanningBuilder(LocalDateTime startTime, Task task,
 				Developer developer, Planner planner) {
@@ -91,15 +101,34 @@ public class Planning {
 			}
 			return this;
 		}
+		
+		/**
+		 * Returns the resources that were added to the builder
+		 * 
+		 * @return
+		 */
 		Set<Resource> getResources() {
 			return this.resources;
 		}
+		
+		/**
+		 * Returns the time span that was added to the builder
+		 * 
+		 * @return
+		 */
 		TimeSpan getTimeSpan(){
 			return this.timeSpan;
 		}
+		
+		/**
+		 * Returns the developers that were added to the builder
+		 * 
+		 * @return developers
+		 */
 		Set<Developer> getDevelopers(){
 			return this.developers;
 		}
+		
 		/**
 		 * Build a Planning after all the optional values have been set.
 		 */
@@ -156,23 +185,48 @@ public class Planning {
 		setTimeSpan(planningBuilder.timeSpan);
 		setResources(planningBuilder.resources);
 	}
-
+	
+	/**
+	 * Returns a set of all the developers of the planning
+	 * 
+	 * @return developers : set of developers
+	 */
 	public Set<Developer> getDevelopers() {
 		return Collections.unmodifiableSet(developers);
 	}
 
-	void setDevelopers(Set<Developer> developers) {
+	/**
+	 * Sets the set of developers of the planning
+	 * 
+	 * @param developers : set of developers
+	 */
+	private void setDevelopers(Set<Developer> developers) {
 		this.developers = developers;
 	}
 
+	/**
+	 * Returns the set of resources of the planning
+	 * 
+	 * @return resources : set of resources
+	 */
 	public Set<Resource> getResources() {
 		return Collections.unmodifiableSet(resources);
 	}
 
-	void setResources(Set<Resource> resources) {
+	/**
+	 * sets the set of resources of the planning
+	 * 
+	 * @param resources : resources
+	 */
+	private void setResources(Set<Resource> resources) {
 		this.resources = resources;
 	}
 
+	/**
+	 * Returns the time span of the planning
+	 * 
+	 * @return timeSpan : time span of the planning
+	 */
 	public TimeSpan getTimeSpan() {
 		return timeSpan;
 	}
@@ -204,10 +258,17 @@ public class Planning {
 
 	}
 
+	/**
+	 * saves the current state of planning in the memento
+	 */
 	void save() {
 		this.memento = new Memento(this);
 	}
 
+	/**
+	 * loads the last saved state of the planning from the
+	 * memento
+	 */
 	boolean load() {
 		if (this.memento == null) {
 			return false;
@@ -217,26 +278,39 @@ public class Planning {
 		}
 	}
 
+	/**
+	 * Inner memento class of a planning
+	 * 
+	 * @author Groep 8
+	 *
+	 */
 	private class Memento {
 		private TimeSpan timeSpan;
 		private Set<Developer> developers;
 		private Set<Resource> resources;
 
+		/**
+		 * Constructor of the inner memento class. It initializes
+		 * all the parameter of the current state of the planning
+		 * 
+		 * @param planning
+		 */
 		public Memento(Planning planning) {
 			this.timeSpan = planning.timeSpan;
 			this.developers = new LinkedHashSet<Developer>(planning.developers);
 			this.resources = new LinkedHashSet<Resource>(planning.resources);
 		}
 
+		/**
+		 * Sets all parameters of the given planning to
+		 * the saved paramets in the memento
+		 * 
+		 * @param planning
+		 */
 		public void load(Planning planning) {
 			planning.timeSpan = this.timeSpan;
 			planning.developers = this.developers;
 			planning.resources = this.resources;
 		}
 	} 
-	
-	@Override
-	public String toString() {
-		return "Task plannet at " + this.timeSpan.toString();
-	}
 }
