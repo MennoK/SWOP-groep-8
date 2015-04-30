@@ -109,7 +109,7 @@ tasks:
     estimatedDuration  : 100
     acceptableDeviation: 10
     alternativeFor     :
-    requiredTypes      : []
+    requiredTypes      : [{type: 5,  quantity: 1}]
     prerequisiteTasks  :
     status             :
 
