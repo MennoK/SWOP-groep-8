@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
+ * Worktime is a static class that implements
+ * the total work time between two times.
  * 
  * @author Groep 8
  * 

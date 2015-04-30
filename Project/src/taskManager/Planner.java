@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class Planner {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task,
-			LocalDateTime time, Set<Developer> developers) {
+			LocalDateTime startTime, Set<Developer> developers) {
 
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 
@@ -53,8 +54,8 @@ public class Planner {
 			throw new IllegalArgumentException(
 					"Requires at least one developer to find a start time");
 		}
-
-		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES) {
+		LocalDateTime time = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute());
+		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES && time.isBefore(startTime.plusYears(1))) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
 				possibleStartTimes.add(timeSpan.getBegin());
@@ -76,17 +77,25 @@ public class Planner {
 		}
 	}
 
-	/*
-	 * boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan){
-	 * for (ResourceType type : task.getRequiredResourceTypes().keySet()) { if
-	 * ((type.getDailyAvailability().getBegin() .isAfter(WorkDay.getStartTime())
-	 * || type .getDailyAvailability().getEnd() .isBefore(WorkDay.getEndTime()))
-	 * && timeSpan.getBegin().getHour() >
-	 * type.getDailyAvailability().getEnd().getHour() &&
-	 * timeSpan.getEnd().getHour() >
-	 * type.getDailyAvailability().getEnd().getHour()) { return true; } else{
-	 * return false; } } return true; }
-	 */
+	boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan) {
+		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
+				if ((type.getDailyAvailability().getBegin()
+					.isAfter(WorkDay.getStartTime()) || type
+					.getDailyAvailability().getEnd()
+					.isBefore(WorkDay.getEndTime()))) {
+				if (timeSpan.getBegin().getHour() >= type.getDailyAvailability()
+						.getBegin().getHour()
+						&& timeSpan.getEnd().getHour() <= type
+								.getDailyAvailability().getEnd().getHour()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
 
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {

@@ -2,6 +2,12 @@ package utility;
 
 import java.time.LocalTime;
 
+/**
+ * WorkTimeInterval extends the timeInterval class
+ * 
+ * @author groep 8
+ *
+ */
 public class WorkTimeInterval extends TimeInterval {
 	
 	private WorkTimeIntervalType type;
@@ -18,6 +24,11 @@ public class WorkTimeInterval extends TimeInterval {
 		this.type = type;
 	}
 	
+	/**
+	 * Return the type of the worktime interval (free or work)
+	 * 
+	 * @return workTimeIntervalType : type of the work time interval
+	 */
 	public WorkTimeIntervalType getType() {
 		return this.type;
 	}

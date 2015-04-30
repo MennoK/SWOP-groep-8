@@ -421,7 +421,7 @@ public class PlannerTester {
 		assertEquals(conflictingPlannings, conflictingPlanningsFromException);
 	}
 
-	/*@Test
+	@Test
 	public void testResourceDailyAvailableIsAvailable(){
 		TimeInterval available13to17 = new TimeInterval(LocalTime.of(13, 0), LocalTime.of(17, 0));
 		TimeInterval available8to12= new TimeInterval(LocalTime.of(8, 0), LocalTime.of(12, 0));
@@ -449,12 +449,26 @@ public class PlannerTester {
 		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
 
 		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 13, 00), Duration.ofHours(3));
-	//	assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
 		
 		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 14, 00), Duration.ofHours(3));
-//		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
-			
-	}*/
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(2), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 8, 00), Duration.ofHours(3));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(3), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 9, 00), Duration.ofHours(3));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(3), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 12, 00), Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(3), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 8, 00), Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(4), timeSpan));
+		
+		timeSpan = new TimeSpan(LocalDateTime.of(2015, 03, 10, 10, 00), Duration.ofHours(3));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(project.getAllTasks().get(4), timeSpan));
+	}
 	@Test
 	public void testMementoRollbackRemovesPlannings() {
 
