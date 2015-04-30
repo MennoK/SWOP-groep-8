@@ -3,6 +3,8 @@ package ui;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import parser.Parser;
@@ -115,7 +117,7 @@ public class UiTaskMan {
 	private void plan(Task task) throws ExitUseCaseException {
 		System.out.println("Planning task:"
 				+ new ToStringVisitor().create(task));
-		TimeSpan timeSpan = planGetTimeSpan(task);
+		TimeSpan timeSpan = planSelectTimeSpan(task);
 		try {
 			Planning.PlanningBuilder plan = Planning.builder(
 					timeSpan.getBegin(), task,
@@ -127,10 +129,7 @@ public class UiTaskMan {
 						.getAllDevelopers()));
 			}
 			if (task.requiresRessources()) {
-				System.out
-						.println("The system proposes the following ressources:");
-				Printer.list(tmc.selectResources(task, timeSpan));
-				plan.addAllResources(tmc.selectResources(task, timeSpan));
+				plan.addAllResources(planSelectResources(task, timeSpan));
 			}
 			plan.build();
 		} catch (ConlictingPlanningException conflict) {
@@ -138,7 +137,30 @@ public class UiTaskMan {
 		}
 	}
 
-	private TimeSpan planGetTimeSpan(Task task) throws ExitUseCaseException {
+	private Set<Resource> planSelectResources(Task task, TimeSpan timeSpan)
+			throws ExitUseCaseException {
+		System.out.println("The system proposes the following ressources:");
+		System.out.println(Printer.list(tmc.selectResources(task, timeSpan)));
+		if (reader.getBoolean("Do you accept the systems proposal?")) {
+			return tmc.selectResources(task, timeSpan);
+		} else {
+			Set<Resource> selected = new HashSet<Resource>();
+			Map<ResourceType, Integer> requirements = task
+					.getRequiredResourceTypes();
+			for (ResourceType type : requirements.keySet()) {
+				System.out.println("The task requires "
+						+ requirements.get(type) + " ressources of type "
+						+ type.getName());
+				for (int i = 0; i < requirements.get(type); i++) {
+					selected.add(reader.select(tmc.getPlanner()
+							.resourcesOfTypeAvailableFor(type, task, timeSpan)));
+				}
+			}
+			return selected;
+		}
+	}
+
+	private TimeSpan planSelectTimeSpan(Task task) throws ExitUseCaseException {
 		System.out.println("Possible starting times:");
 		System.out.println(Printer.listDates(new ArrayList<LocalDateTime>(tmc
 				.getPossibleStartTimes(task))));
