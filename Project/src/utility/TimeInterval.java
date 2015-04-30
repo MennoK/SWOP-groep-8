@@ -6,7 +6,6 @@ import java.time.temporal.ChronoUnit;
 
 /**
  * Time Interval class implements a begin and end time
- * for a daily availability of an object
  * 
  * @author Groep8
  *
@@ -80,11 +79,16 @@ public class TimeInterval {
 		return endTime;
 	}
 	
+	/**
+	 * checks whether a time is in the time interval
+	 */
 	public boolean isTimeInInterval(LocalTime time) {
 		return time.equals(beginTime) || (time.isAfter(beginTime) && time.isBefore(endTime));
 	}
 	
-	
+	/**
+	 * Returns the duration of a time interval
+	 */
 	public Duration getDuration() {
 		return Duration.ofMinutes(ChronoUnit.MINUTES.between(this.getBegin(), this.getEnd()));
 	}
