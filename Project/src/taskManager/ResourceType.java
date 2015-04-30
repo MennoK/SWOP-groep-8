@@ -25,7 +25,7 @@ public class ResourceType {
 	private Set<ResourceType> conflictedResourceTypes = new LinkedHashSet<ResourceType>();;
 	private Set<Resource> resources = new LinkedHashSet<Resource>();
 	private TimeInterval dailyAvailability;
-	
+
 	private Memento memento;
 
 	/**
@@ -54,7 +54,8 @@ public class ResourceType {
 		 */
 		public ResourceTypeBuilder(String name) {
 			this.name = name;
-			dailyAvailability = new TimeInterval(WorkDay.getStartTime(), WorkDay.getEndTime());
+			dailyAvailability = new TimeInterval(WorkDay.getStartTime(),
+					WorkDay.getEndTime());
 		}
 
 		/**
@@ -95,16 +96,17 @@ public class ResourceType {
 	}
 
 	/**
-	 * Returns a new resource type builder to add extra parameters such as
-	 * other required resource types and other conflicted resource types
+	 * Returns a new resource type builder to add extra parameters such as other
+	 * required resource types and other conflicted resource types
 	 * 
-	 * @param name : required name of a resource type
+	 * @param name
+	 *            : required name of a resource type
 	 * @return resourceTypeBuilder : new builder for creating resource types
 	 */
-	public static ResourceTypeBuilder builder(String name){
+	public static ResourceTypeBuilder builder(String name) {
 		return new ResourceTypeBuilder(name);
 	}
-	
+
 	/**
 	 * 
 	 * @param builder
@@ -122,10 +124,12 @@ public class ResourceType {
 	 * 
 	 * @param name
 	 *            : name of resource
+	 * @return the newly created Resource
 	 */
-	public void createResource(String name) {
+	public Resource createResource(String name) {
 		Resource resource = new Resource(name);
 		this.addResource(resource);
+		return resource;
 	}
 
 	/**
@@ -353,7 +357,7 @@ public class ResourceType {
 	public Set<ResourceType> getConflictedResourceTypes() {
 		return Collections.unmodifiableSet(conflictedResourceTypes);
 	}
-	
+
 	/**
 	 * Saves the current state of the class
 	 */
@@ -389,25 +393,29 @@ public class ResourceType {
 		private TimeInterval dailyAvailability;
 
 		/**
-		 * Constructor of the momento inner class of a resource type.
-		 * Initialize all parameters of the current state
-		 * of the resource type
+		 * Constructor of the momento inner class of a resource type. Initialize
+		 * all parameters of the current state of the resource type
 		 * 
-		 * @param rt : resource type
+		 * @param rt
+		 *            : resource type
 		 */
 		public Memento(ResourceType rt) {
 			this.name = new String(rt.name);
-			this.requiredResourceTypes = new LinkedHashSet<ResourceType>(rt.requiredResourceTypes);
-			this.conflictedResourceTypes = new LinkedHashSet<ResourceType>(rt.conflictedResourceTypes);
-			this.resources = new LinkedHashSet<Resource>(rt.resources);;
+			this.requiredResourceTypes = new LinkedHashSet<ResourceType>(
+					rt.requiredResourceTypes);
+			this.conflictedResourceTypes = new LinkedHashSet<ResourceType>(
+					rt.conflictedResourceTypes);
+			this.resources = new LinkedHashSet<Resource>(rt.resources);
+			;
 			this.dailyAvailability = rt.dailyAvailability;
 		}
 
 		/**
-		 * Sets the parameters of the resource type
-		 * to the saved state of the momento
+		 * Sets the parameters of the resource type to the saved state of the
+		 * momento
 		 * 
-		 * @param rt : resource typ
+		 * @param rt
+		 *            : resource typ
 		 */
 		public void load(ResourceType rt) {
 			rt.name = this.name;
