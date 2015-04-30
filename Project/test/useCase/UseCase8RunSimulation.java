@@ -98,7 +98,7 @@ public class UseCase8RunSimulation {
 		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), tmc
 				.getAllProjects().get(0).getLastUpdateTime());
 
-		projectController.save();
+		taskManController.saveSystem();
 
 		projectController.createProject("name2", "description",
 				LocalDateTime.of(2015, 03, 06, 00, 00));
@@ -107,7 +107,7 @@ public class UseCase8RunSimulation {
 		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), tmc
 				.getAllProjects().get(1).getCreationTime());
 
-		projectController.load();
+		taskManController.loadSystem();
 
 		assertEquals(1, tmc.getAllProjects().size());
 		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), tmc

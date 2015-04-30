@@ -96,7 +96,7 @@ public class TaskManClock {
 	 * Saves the last state of the clock to
 	 * a new memento
 	 */
-	public void save() {
+	void save() {
 		this.memento = new Memento(this);
 	}
 
@@ -104,12 +104,11 @@ public class TaskManClock {
 	 * loads the last saved state of the clock
 	 * 
 	 */
-	public boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
-			return true;
 		}
 	}
 

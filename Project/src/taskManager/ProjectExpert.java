@@ -160,7 +160,7 @@ public class ProjectExpert implements TimeObserver {
 	/**
 	 * Saves the current state of the project expert
 	 */
-	public void save() {
+	 void save() {
 		this.memento = new Memento(this);
 		for (Project project : this.projects) {
 			project.save();
@@ -172,15 +172,14 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return last state of project expert
 	 */
-	public boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
 			for (Project project : this.projects) {
 				project.load();
 			}
-			return true;
 		}
 	}
 
