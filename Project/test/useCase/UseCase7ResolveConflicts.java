@@ -50,7 +50,7 @@ public class UseCase7ResolveConflicts {
 	@Test
 	public void testGetConflictingPlanningsForBuilder(){
 		
-
+		
 		try {
 			//Conflicts with PlannedConflictingTask
 			Planning.builder(
@@ -71,7 +71,7 @@ public class UseCase7ResolveConflicts {
 					developer,
 					tmc.getPlanner()).build();
 		} catch (ConlictingPlanningException conflict) {
-			fail("There should be no conflict anymore");
+			fail("There should be no conflict anymore\n" + conflict.getConflictingPlannings());
 		}
 		
 		assertEquals(2, tmc.getPlanner().getAllPlannings().size());

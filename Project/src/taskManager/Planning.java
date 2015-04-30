@@ -109,7 +109,7 @@ public class Planning {
 							timeSpan)) {
 				Planning planning = new Planning(this);
 				if(task.hasPlanning()) {
-					planner.removePlanning(planning);
+					planner.removePlanning(task.getPlanning());
 				}
 				planner.addPlanning(planning);
 				task.setPlanning(planning);
@@ -233,5 +233,10 @@ public class Planning {
 			planning.developers = this.developers;
 			planning.resources = this.resources;
 		}
+	} 
+	
+	@Override
+	public String toString() {
+		return "Task plannet at " + this.timeSpan.toString();
 	}
 }
