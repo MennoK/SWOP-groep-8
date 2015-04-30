@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
-import utility.TimeInterval;
 import utility.TimeSpan;
 import utility.WorkDay;
 

@@ -46,7 +46,6 @@ public class Task implements Visitable {
 	private List<Task> dependencies = new ArrayList<>();
 	private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 	private Task originalTask;
-	private boolean failed = false;
 
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
@@ -142,6 +141,7 @@ public class Task implements Visitable {
 
 		/**
 		 * Build a Task after all the optional values have been set.
+		 * An project is required to add the created task to.
 		 */
 		public Task build(Project project) {
 			this.now = project.getLastUpdateTime();
@@ -152,6 +152,16 @@ public class Task implements Visitable {
 		}
 	}
 
+	/**
+	 * Static method that creates a new taskbuilder.
+	 * This method returns the builder after all given required
+	 * parameters are set.
+	 * 
+	 * @param description : required description of a task
+	 * @param estimatedDuration : required duration
+	 * @param acceptableDeviation : required deviation
+	 * @return taskBuilder : new taskBuilder
+	 */
 	public static TaskBuilder builder(String description,
 			Duration estimatedDuration, double acceptableDeviation) {
 		return new TaskBuilder(description, estimatedDuration,
@@ -446,10 +456,20 @@ public class Task implements Visitable {
 		this.lastUpdateTime = time;
 	}
 
+	/**
+	 * Returns the current status of a task
+	 * 
+	 * @return status : current status
+	 */
 	public TaskStatus getStatus() {
 		return status;
 	}
 
+	/**
+	 * Sets a new task status to the task
+	 * 
+	 * @param status : given task status
+	 */
 	void setStatus(TaskStatus status) {
 		this.status = status;
 	}
@@ -538,16 +558,6 @@ public class Task implements Visitable {
 	 */
 	public TaskFinishedStatus getFinishStatus() {
 		return status.getFinishStatus(this);
-	}
-
-	/**
-	 * Returns a boolean true if the task is failed false if the task is not
-	 * failed
-	 * 
-	 * @return true if and only if the task is failed
-	 */
-	public boolean isFailed() {
-		return failed;
 	}
 
 	/**
@@ -679,24 +689,47 @@ public class Task implements Visitable {
 		this.planning = planning;
 	}
 
+	/**
+	 * Checks whether a task has a planning
+	 * 
+	 * @return true if the task has a planning
+	 */
 	public boolean hasPlanning() {
 		return (planning != null);
 	}
 
+	/**
+	 * Sets the endtime of a planning if the task
+	 * has a planning
+	 * 
+	 * @param endTime : endtime of a planning
+	 */
 	private void setEndTimePlanning(LocalDateTime endTime) {
 		if (this.hasPlanning()) {
 			getPlanning().setEndTime(endTime);
 		}
 	}
 
+	/**
+	 * accept visitor for visiting this
+	 */
+	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
 
+	/**
+	 * Saves the current state of the task
+	 * to a new memento
+	 */
 	void save() {
 		this.memento = new Memento(this);
 	}
 
+	/**
+	 * loads the last saved state of task from
+	 * the momento 
+	 */
 	boolean load() {
 		if(this.memento == null) {
 			return false;
@@ -708,6 +741,12 @@ public class Task implements Visitable {
 
 	}
 
+	/**
+	 * 
+	 * Inner momento class of task 
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 
 		private String description;
@@ -717,7 +756,6 @@ public class Task implements Visitable {
 		private List<Task> dependencies;
 		private Map<ResourceType, Integer> requiredResourceTypes;
 		private Task originalTask;
-		private boolean failed = false;
 
 		private LocalDateTime endTime;
 		private LocalDateTime startTime;
@@ -734,6 +772,10 @@ public class Task implements Visitable {
 		// Alles moet gekopieerd worden, behalve referenties naar objecten in
 		// ons domein
 		// bv. de dependencies worden shallow gekopieerd
+		/**
+		 * Constructor of the momento inner class. It ini
+		 * @param task
+		 */
 		public Memento(Task task) {
 			this.description = new String(task.description);
 			this.estimatedDuration = task.estimatedDuration.plusSeconds(0);
@@ -743,7 +785,6 @@ public class Task implements Visitable {
 			this.requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>(
 					task.requiredResourceTypes);
 			this.originalTask = task.originalTask;
-			this.failed = task.failed;
 
 			this.endTime = task.endTime;
 			this.startTime = task.startTime;
@@ -763,7 +804,6 @@ public class Task implements Visitable {
 			task.dependencies = this.dependencies;
 			task.requiredResourceTypes = this.requiredResourceTypes;
 			task.originalTask = this.originalTask;
-			task.failed = this.failed;
 
 			task.endTime = this.endTime;
 			task.startTime = this.startTime;
