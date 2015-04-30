@@ -33,17 +33,17 @@ public class WorkDay {
 	
 	private static List<WorkTimeInterval> getWorkDaySchedule() {
 		ArrayList<WorkTimeInterval> schedule = new ArrayList<>();
-		schedule.add(new WorkTimeInterval(LocalTime.of(0, 0), STARTTIME, IntervalType.FREE));
-		schedule.add(new WorkTimeInterval(STARTTIME, BREAKSTART, IntervalType.WORK));
-		schedule.add(new WorkTimeInterval(BREAKSTART, BREAKEND, IntervalType.FREE));
-		schedule.add(new WorkTimeInterval(BREAKEND, ENDTIME, IntervalType.WORK));
-		schedule.add(new WorkTimeInterval(ENDTIME, LocalTime.of(23, 59), IntervalType.FREE));
+		schedule.add(new WorkTimeInterval(LocalTime.of(0, 0), STARTTIME, WorkTimeIntervalType.FREE));
+		schedule.add(new WorkTimeInterval(STARTTIME, BREAKSTART, WorkTimeIntervalType.WORK));
+		schedule.add(new WorkTimeInterval(BREAKSTART, BREAKEND, WorkTimeIntervalType.FREE));
+		schedule.add(new WorkTimeInterval(BREAKEND, ENDTIME, WorkTimeIntervalType.WORK));
+		schedule.add(new WorkTimeInterval(ENDTIME, LocalTime.of(23, 59), WorkTimeIntervalType.FREE));
 		return schedule;
 	}
 	
 	private static List<WorkTimeInterval> getFreeDaySchedule() {
 		ArrayList<WorkTimeInterval> schedule = new ArrayList<>();
-		schedule.add(new WorkTimeInterval(LocalTime.of(0, 0), LocalTime.of(23, 59), IntervalType.FREE));
+		schedule.add(new WorkTimeInterval(LocalTime.of(0, 0), LocalTime.of(23, 59), WorkTimeIntervalType.FREE));
 		return schedule;
 	}
 
