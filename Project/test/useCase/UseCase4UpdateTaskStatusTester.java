@@ -34,7 +34,7 @@ public class UseCase4UpdateTaskStatusTester {
 		now = LocalDateTime.of(2015, 03, 02, 00, 00);
 
 		tmc = new TaskManController(now);
-		tmc.getProjectExpert().createProject("Project 1", "Description 1",
+		tmc.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));
 

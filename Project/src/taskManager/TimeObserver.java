@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * @author groep 8
  *
  */
-public interface TimeObserver {
+interface TimeObserver {
 
 	/**
 	 * handles time changes

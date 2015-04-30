@@ -288,6 +288,25 @@ public class TaskManController {
 
 	/**
 	 * Creates a new project with the given arguments and adds the project to
+	 * the list of projects
+	 * 
+	 * @param name
+	 *            : name of the project
+	 * @param description
+	 *            : description of the project
+	 * @param creationTime
+	 *            : creation time of the project
+	 * @param dueTime
+	 *            : due time of the project
+	 */
+	public Project createProject(String name, String description,
+			LocalDateTime creationTime, LocalDateTime dueTime) {
+		return getProjectExpert().createProject(name, description,
+				creationTime, dueTime);
+	}
+
+	/**
+	 * Creates a new project with the given arguments and adds the project to
 	 * the list of projects. The creationTime is set to the current time
 	 * 
 	 * @param name

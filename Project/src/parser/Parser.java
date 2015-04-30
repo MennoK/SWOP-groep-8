@@ -100,7 +100,7 @@ public class Parser {
 		// create all projects
 		constructProjects(
 				(List<LinkedHashMap<String, Object>>) objects.get("projects"),
-				controller.getProjectExpert());
+				controller);
 
 		// create all tasks
 		constructTasks(
@@ -223,8 +223,7 @@ public class Parser {
 	 * Construct the projects
 	 */
 	private void constructProjects(
-			List<LinkedHashMap<String, Object>> projects,
-			ProjectExpert controller) {
+			List<LinkedHashMap<String, Object>> projects, TaskManController tmc) {
 		for (LinkedHashMap<String, Object> project : projects) {
 			// get all arguments needed for a project: name, description,
 			// creation time and due time
@@ -237,7 +236,7 @@ public class Parser {
 					(CharSequence) project.get("dueTime"), dateTimeFormatter);
 
 			// create a new project object
-			controller.createProject(name, description, creationTime, dueTime);
+			tmc.createProject(name, description, creationTime, dueTime);
 		}
 	}
 

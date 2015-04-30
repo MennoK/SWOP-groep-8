@@ -12,7 +12,6 @@ import org.junit.Test;
 import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.ProjectStatus;
 import taskManager.Task;
 import taskManager.TaskManController;
@@ -25,7 +24,6 @@ public class UseCase8RunSimulation {
 	private Project project;
 	private Task baseTask;
 
-	private ProjectExpert projectController;
 	private TaskManController tmc;
 
 	@Before
@@ -35,8 +33,6 @@ public class UseCase8RunSimulation {
 		project = controller.createProject("project", "desc", time.plusDays(4));
 
 		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
-
-		projectController = tmc.getProjectExpert();
 
 		// new developerExpert and create a new developer
 		controller.createDeveloper("Bob");
@@ -85,7 +81,7 @@ public class UseCase8RunSimulation {
 
 	@Test
 	public void mementoCanRemoveProjects() {
-		projectController.createProject("name", "description",
+		tmc.createProject("name", "description",
 				LocalDateTime.of(2015, 03, 05, 00, 00),
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 

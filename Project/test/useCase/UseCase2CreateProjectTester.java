@@ -25,7 +25,7 @@ public class UseCase2CreateProjectTester {
 	@Test
 	public void createProject() {
 		// create first project
-		tmc.getProjectExpert().createProject("Project 1", "Description 1",
+		tmc.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));
 
