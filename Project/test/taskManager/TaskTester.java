@@ -324,5 +324,21 @@ public class TaskTester {
 		Task.builder("A task", Duration.ofHours(2), 1).addRequiredResourceType(listOfResourceTypes.get(0), 1).build(project);
 	}
 	
+	@Test(expected = IllegalStateException.class)
+	public void createTaskWithIncorrectRequiredResources(){
+		ResourceExpert resourceExpert = new ResourceExpert();
+		
+		ResourceType.builder("resourcetype").build(resourceExpert);
+		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
+		listOfResourceTypes.get(0).createResource("res1");
+		
+		ResourceType.builder("resourcetype").addRequiredResourceTypes(listOfResourceTypes.get(0)).build(resourceExpert);
+		listOfResourceTypes = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
+
+		Task.builder("A task", Duration.ofHours(2), 1).addRequiredResourceType(listOfResourceTypes.get(1), 1).build(project);
+	}
+		
 
 }
