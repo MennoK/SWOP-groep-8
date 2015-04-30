@@ -86,9 +86,9 @@ public class ResourceType {
 		}
 
 		/**
-		 * Builds a resource type after all the optional values have been set.
-		 * a resourceExpert is required to add the new type to the given
-		 * resource Expert
+		 * Builds a resource type after all the optional values have been set. a
+		 * resourceExpert is required to add the new type to the given resource
+		 * Expert
 		 */
 		public ResourceType build(ResourceExpert resourceExpert) {
 			ResourceType resourceType = new ResourceType(this);
@@ -358,6 +358,14 @@ public class ResourceType {
 	 */
 	public Set<ResourceType> getConflictedResourceTypes() {
 		return Collections.unmodifiableSet(conflictedResourceTypes);
+	}
+
+	/**
+	 * to string method for debuging
+	 */
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 	/**
