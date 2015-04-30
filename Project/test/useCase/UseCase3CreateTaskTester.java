@@ -13,7 +13,6 @@ import org.junit.Test;
 import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Project;
-import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
@@ -22,7 +21,6 @@ public class UseCase3CreateTaskTester {
 
 	private TaskManController tmc;
 	private LocalDateTime now;
-	private ResourceExpert resourceExpert;
 
 	@Before
 	public void setUp() {
@@ -30,11 +28,10 @@ public class UseCase3CreateTaskTester {
 		now = LocalDateTime.of(2015, 03, 07, 01, 00);
 
 		tmc = new TaskManController(now);
-		resourceExpert = tmc.getResourceExpert();
-		ResourceType.builder("resourcetype").build(resourceExpert);
+		ResourceType.builder("resourcetype").build(tmc);
 
 		List<ResourceType> list = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		list.get(0).createResource("res1");
 
 	}
@@ -89,9 +86,9 @@ public class UseCase3CreateTaskTester {
 		// task with required resourceType
 		Task.builder("desc", Duration.ofHours(2), 2)
 				.addRequiredResourceType(
-						new ArrayList<ResourceType>(
-								resourceExpert.getAllResourceTypes()).get(0), 1)
-				.build(project1);
+						new ArrayList<ResourceType>(tmc.getAllResourceTypes())
+								.get(0),
+						1).build(project1);
 		assertEquals(1, project1.getAllTasks().get(3)
 				.getRequiredResourceTypes().size());
 	}

@@ -90,9 +90,9 @@ public class ResourceType {
 		 * resourceExpert is required to add the new type to the given resource
 		 * Expert
 		 */
-		public ResourceType build(ResourceExpert resourceExpert) {
+		public ResourceType build(TaskManController tmc) {
 			ResourceType resourceType = new ResourceType(this);
-			resourceExpert.addResourceType(resourceType);
+			tmc.getResourceExpert().addResourceType(resourceType);
 			return resourceType;
 		}
 	}
@@ -382,7 +382,8 @@ public class ResourceType {
 	 */
 	void load() {
 		if (this.memento == null) {
-			throw new IllegalStateException("You need to save before you can load");
+			throw new IllegalStateException(
+					"You need to save before you can load");
 		} else {
 			this.memento.load(this);
 		}

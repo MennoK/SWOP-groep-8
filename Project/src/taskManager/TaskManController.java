@@ -81,7 +81,7 @@ public class TaskManController {
 	 * 
 	 * @return resourceExpert : resource expert
 	 */
-	public ResourceExpert getResourceExpert() {
+	ResourceExpert getResourceExpert() {
 		return resourceExpert;
 	}
 

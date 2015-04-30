@@ -32,8 +32,7 @@ public class TaskManControllerTester extends TaskManTester {
 	@Test
 	public void SelectedRessourceTest() {
 		// Add 2 cars to the system
-		ResourceType car = ResourceType.builder("car").build(
-				tmc.getResourceExpert());
+		ResourceType car = ResourceType.builder("car").build(tmc);
 		Resource redCar = car.createResource("red car");
 		Resource greenCar = car.createResource("green car");
 
@@ -63,8 +62,7 @@ public class TaskManControllerTester extends TaskManTester {
 
 	@Test
 	public void collateralSetStatus() {
-		ResourceType car = ResourceType.builder("car").build(
-				tmc.getResourceExpert());
+		ResourceType car = ResourceType.builder("car").build(tmc);
 		Resource redCar = car.createResource("red car");
 		Task task1 = createPlannedRessourceTask(project, Duration.ofHours(8),
 				car, redCar, time.plusDays(5));

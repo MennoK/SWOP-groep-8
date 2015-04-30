@@ -23,7 +23,6 @@ import taskManager.Planning;
 import taskManager.Planning.PlanningBuilder;
 import taskManager.Project;
 import taskManager.Resource;
-import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.ResourceType.ResourceTypeBuilder;
 import taskManager.Task;
@@ -105,7 +104,7 @@ public class Parser {
 		constructTasks(
 				(List<LinkedHashMap<String, Object>>) objects.get("tasks"),
 				(List<LinkedHashMap<String, Object>>) objects.get("plannings"),
-				controller.getResourceExpert(), controller);
+				controller);
 
 		return controller;
 	}
@@ -174,7 +173,7 @@ public class Parser {
 						.get(dailyAvailability));
 			}
 
-			builder.build(tmc.getResourceExpert());
+			builder.build(tmc);
 		}
 	}
 
@@ -243,7 +242,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
 			List<LinkedHashMap<String, Object>> plannings,
-			ResourceExpert resourceExpert, TaskManController controller) {
+			TaskManController controller) {
 
 		Set<Integer> taskNrSet = new HashSet<Integer>();
 		for (LinkedHashMap<String, Object> planning : plannings) {

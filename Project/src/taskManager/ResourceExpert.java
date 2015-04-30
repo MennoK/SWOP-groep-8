@@ -1,6 +1,5 @@
 package taskManager;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -20,7 +19,7 @@ public class ResourceExpert {
 	 * Default constructor of the resource expert. It initializes a new set of
 	 * resource types
 	 */
-	ResourceExpert(){
+	ResourceExpert() {
 		this.resourcetypes = new LinkedHashSet<ResourceType>();
 	}
 
@@ -57,17 +56,16 @@ public class ResourceExpert {
 	 * 
 	 * @return resourcetypes : set of all resource types
 	 */
-	public Set<ResourceType> getAllResourceTypes(){
-		return Collections.unmodifiableSet(resourcetypes);
+	Set<ResourceType> getAllResourceTypes() {
+		return resourcetypes;
 	}
-
 
 	/**
 	 * Saves the current state of the class
 	 */
 	void save() {
 		this.memento = new Memento(this);
-		for(ResourceType rt : this.resourcetypes) {
+		for (ResourceType rt : this.resourcetypes) {
 			rt.save();
 		}
 	}
@@ -77,10 +75,11 @@ public class ResourceExpert {
 	 */
 	void load() {
 		if (this.memento == null) {
-			throw new IllegalStateException("You need to save before you can load");
+			throw new IllegalStateException(
+					"You need to save before you can load");
 		} else {
 			this.memento.load(this);
-			for(ResourceType rt : this.resourcetypes) {
+			for (ResourceType rt : this.resourcetypes) {
 				rt.load();
 			}
 		}
@@ -96,21 +95,23 @@ public class ResourceExpert {
 		private Set<ResourceType> resourcetypes;
 
 		/**
-		 * Constructor of the momento inner class of resource expert.
-		 * Initialize a new set of resourcetype of the current state
+		 * Constructor of the momento inner class of resource expert. Initialize
+		 * a new set of resourcetype of the current state
 		 * 
-		 * @param re : resourcetype expert
+		 * @param re
+		 *            : resourcetype expert
 		 */
 		public Memento(ResourceExpert re) {
 			this.resourcetypes = new LinkedHashSet<ResourceType>(
 					re.resourcetypes);
 		}
-		
+
 		/**
-		 * Sets the resource type set of the resourceExpert class
-		 * to the saved set of the momento class
+		 * Sets the resource type set of the resourceExpert class to the saved
+		 * set of the momento class
 		 * 
-		 * @param re : resourcetype expert
+		 * @param re
+		 *            : resourcetype expert
 		 */
 		public void load(ResourceExpert re) {
 			re.resourcetypes = this.resourcetypes;

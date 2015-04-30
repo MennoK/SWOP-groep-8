@@ -31,7 +31,6 @@ public class PlannerTester {
 	public Project project;
 	public Task task1;
 	public Task task2;
-	private ResourceExpert resourceExpert;
 	private ArrayList<ResourceType> resourceTypeList;
 	private ResourceType resourceType;
 	private Developer developer1;
@@ -49,8 +48,7 @@ public class PlannerTester {
 		// create planning expert
 		this.planner = tmc.getPlanner();
 		// create some resources
-		resourceExpert = tmc.getResourceExpert();
-		ResourceType.builder("type").build(resourceExpert);
+		ResourceType.builder("type").build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
 				tmc.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);
@@ -435,11 +433,11 @@ public class PlannerTester {
 				LocalTime.of(12, 0));
 
 		ResourceType.builder("available13to17")
-				.addDailyAvailability(available13to17).build(resourceExpert);
+				.addDailyAvailability(available13to17).build(tmc);
 		ResourceType.builder("available8to12")
-				.addDailyAvailability(available8to12).build(resourceExpert);
+				.addDailyAvailability(available8to12).build(tmc);
 		ResourceType.builder("available9to12")
-				.addDailyAvailability(available9to12).build(resourceExpert);
+				.addDailyAvailability(available9to12).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
 				tmc.getAllResourceTypes());
 

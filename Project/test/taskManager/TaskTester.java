@@ -242,11 +242,12 @@ public class TaskTester {
 	public void addResourceType() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		ResourceExpert resourceExpert = new ResourceExpert();
-		ResourceType.builder("resourcetype").build(resourceExpert);
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
+		ResourceType.builder("resourcetype").build(tmc);
 
 		List<ResourceType> list = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		list.get(0).createResource("res1");
 
 		Task.builder("desc", Duration.ofHours(2), 2)
@@ -257,10 +258,11 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addAlreadyPresentResourceType() {
-		ResourceExpert resourceExpert = new ResourceExpert();
-		ResourceType.builder("resourcetype").build(resourceExpert);
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
+		ResourceType.builder("resourcetype").build(tmc);
 		List<ResourceType> list = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		list.get(0).createResource("res1");
 		baseTask.addResourceType(list.get(0), 1);
 		baseTask.addResourceType(list.get(0), 1);
@@ -270,11 +272,12 @@ public class TaskTester {
 	public void addResourceTypeWithInvalidQuantity() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		ResourceExpert resourceExpert = new ResourceExpert();
-		ResourceType.builder("resourcetype").build(resourceExpert);
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
+		ResourceType.builder("resourcetype").build(tmc);
 
 		List<ResourceType> list = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		list.get(0).createResource("res1");
 
 		Task.builder("desc", Duration.ofHours(2), 2)
@@ -287,58 +290,74 @@ public class TaskTester {
 	public void addResourceTypeWithNotEnoughResources() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		ResourceExpert resourceExpert = new ResourceExpert();
-		ResourceType.builder("resourcetype").build(resourceExpert);
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
+		ResourceType.builder("resourcetype").build(tmc);
 
 		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		listOfResourceTypes.get(0).createResource("res1");
 
 		Task.builder("desc", Duration.ofHours(2), 2)
-				.addRequiredResourceType(listOfResourceTypes.get(0), 2).build(project);
+				.addRequiredResourceType(listOfResourceTypes.get(0), 2)
+				.build(project);
 		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes()
 				.size());
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
-	public void createTaskLongerThanAvailabilityResource(){
-		ResourceExpert resourceExpert = new ResourceExpert();
-		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0), LocalTime.of(17, 0));
-		ResourceType.builder("resourcetype").addDailyAvailability(dailyAvailability).build(resourceExpert);
+	public void createTaskLongerThanAvailabilityResource() {
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
+		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
+				LocalTime.of(17, 0));
+		ResourceType.builder("resourcetype")
+				.addDailyAvailability(dailyAvailability).build(tmc);
 		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		listOfResourceTypes.get(0).createResource("res1");
 
-		Task.builder("A task", Duration.ofHours(6), 1).addRequiredResourceType(listOfResourceTypes.get(0), 1).build(project);
+		Task.builder("A task", Duration.ofHours(6), 1)
+				.addRequiredResourceType(listOfResourceTypes.get(0), 1)
+				.build(project);
 	}
-	
+
 	@Test
-	public void createTaskShorterThanAvailabilityResource(){
-		ResourceExpert resourceExpert = new ResourceExpert();
-		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0), LocalTime.of(17, 0));
-		ResourceType.builder("resourcetype").addDailyAvailability(dailyAvailability).build(resourceExpert);
+	public void createTaskShorterThanAvailabilityResource() {
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
+		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
+				LocalTime.of(17, 0));
+		ResourceType.builder("resourcetype")
+				.addDailyAvailability(dailyAvailability).build(tmc);
 		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		listOfResourceTypes.get(0).createResource("res1");
 
-		Task.builder("A task", Duration.ofHours(2), 1).addRequiredResourceType(listOfResourceTypes.get(0), 1).build(project);
+		Task.builder("A task", Duration.ofHours(2), 1)
+				.addRequiredResourceType(listOfResourceTypes.get(0), 1)
+				.build(project);
 	}
-	
+
 	@Test(expected = IllegalStateException.class)
-	public void createTaskWithIncorrectRequiredResources(){
-		ResourceExpert resourceExpert = new ResourceExpert();
-		
-		ResourceType.builder("resourcetype").build(resourceExpert);
-		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
-		listOfResourceTypes.get(0).createResource("res1");
-		
-		ResourceType.builder("resourcetype").addRequiredResourceTypes(listOfResourceTypes.get(0)).build(resourceExpert);
-		listOfResourceTypes = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+	public void createTaskWithIncorrectRequiredResources() {
+		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+				03, 05, 00, 00));
 
-		Task.builder("A task", Duration.ofHours(2), 1).addRequiredResourceType(listOfResourceTypes.get(1), 1).build(project);
+		ResourceType.builder("resourcetype").build(tmc);
+		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
+				tmc.getAllResourceTypes());
+		listOfResourceTypes.get(0).createResource("res1");
+
+		ResourceType.builder("resourcetype")
+				.addRequiredResourceTypes(listOfResourceTypes.get(0))
+				.build(tmc);
+		listOfResourceTypes = new ArrayList<ResourceType>(
+				tmc.getAllResourceTypes());
+
+		Task.builder("A task", Duration.ofHours(2), 1)
+				.addRequiredResourceType(listOfResourceTypes.get(1), 1)
+				.build(project);
 	}
-		
 
 }

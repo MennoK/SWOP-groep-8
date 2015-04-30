@@ -2,6 +2,7 @@ package taskManager;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -9,16 +10,17 @@ import org.junit.Test;
 
 public class ResourceTester {
 
+	private TaskManController tmc;
 	private ResourceType resourceType;
-	
+
 	@Before
 	public void setUp() {
-		ResourceExpert resourceExpert = new ResourceExpert();
-		resourceType = ResourceType.builder("name").build(resourceExpert);
+		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
+		resourceType = ResourceType.builder("name").build(tmc);
 	}
-	
+
 	@Test
-	public void testGetName(){
+	public void testGetName() {
 		resourceType.createResource("resource");
 		ArrayList<Resource> resourceList = new ArrayList<Resource>();
 		resourceList.addAll(resourceType.getAllResources());

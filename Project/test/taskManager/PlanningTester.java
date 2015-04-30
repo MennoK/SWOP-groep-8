@@ -18,7 +18,6 @@ import taskManager.Planner;
 import taskManager.Planning;
 import taskManager.Project;
 import taskManager.Resource;
-import taskManager.ResourceExpert;
 import taskManager.ResourceType;
 import taskManager.Task;
 import taskManager.TaskManController;
@@ -33,7 +32,6 @@ public class PlanningTester {
 	public Project project;
 	public Task task1;
 	public Task task2;
-	private ResourceExpert resourceExpert;
 	private ArrayList<ResourceType> resourceTypeList;
 	private ResourceType resourceType;
 	private Developer developer1;
@@ -51,8 +49,7 @@ public class PlanningTester {
 		// create planning expert
 		this.planner = tmc.getPlanner();
 		// create some resources
-		resourceExpert = tmc.getResourceExpert();
-		ResourceType.builder("type").build(resourceExpert);
+		ResourceType.builder("type").build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
 				tmc.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);

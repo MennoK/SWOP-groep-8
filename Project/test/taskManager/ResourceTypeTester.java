@@ -3,6 +3,7 @@ package taskManager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import org.junit.Test;
 
 public class ResourceTypeTester {
 
-	private ResourceExpert resourceExpert;
+	private TaskManController tmc;
 	private ResourceType resourceType;
 	private ResourceType requiredResourceType;
 	private ResourceType conflictedResourceType;
@@ -19,13 +20,13 @@ public class ResourceTypeTester {
 
 	@Before
 	public void setUp() {
-		resourceExpert = new ResourceExpert();
-		ResourceType.builder("type").build(resourceExpert);
-		ResourceType.builder("requiredResourceType").build(resourceExpert);
-		ResourceType.builder("conflictedResourceType").build(resourceExpert);
+		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
+		ResourceType.builder("type").build(tmc);
+		ResourceType.builder("requiredResourceType").build(tmc);
+		ResourceType.builder("conflictedResourceType").build(tmc);
 
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);
 		requiredResourceType = resourceTypeList.get(1);
 		conflictedResourceType = resourceTypeList.get(2);
@@ -63,10 +64,10 @@ public class ResourceTypeTester {
 	@Test
 	public void testAddRequiredResourceType() {
 		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(resourceExpert);
+				.addRequiredResourceTypes(requiredResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
-		assertEquals(4, resourceExpert.getAllResourceTypes().size());
+				tmc.getAllResourceTypes());
+		assertEquals(4, tmc.getAllResourceTypes().size());
 		assertEquals(1, resourceTypeList.get(3).getRequiredResourceTypes()
 				.size());
 	}
@@ -74,10 +75,10 @@ public class ResourceTypeTester {
 	@Test
 	public void testAddConflictedResourceType() {
 		ResourceType.builder("type")
-				.addConflictedResourceTypes(requiredResourceType).build(resourceExpert);
+				.addConflictedResourceTypes(requiredResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
-		assertEquals(4, resourceExpert.getAllResourceTypes().size());
+				tmc.getAllResourceTypes());
+		assertEquals(4, tmc.getAllResourceTypes().size());
 		assertEquals(1, resourceTypeList.get(3).getConflictedResourceTypes()
 				.size());
 	}
@@ -85,36 +86,36 @@ public class ResourceTypeTester {
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddRequiredResourceTypeIsAlreadyInRequiredList() {
 		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(resourceExpert);
+				.addRequiredResourceTypes(requiredResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		resourceTypeList.get(3).addRequiredResourceType(requiredResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddRequiredResourceTypeIsAlreadyInConflictedList() {
 		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(resourceExpert);
+				.addRequiredResourceTypes(requiredResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		resourceTypeList.get(3).addConflictedResourceType(requiredResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddConflictedResourceTypeIsAlreadyInRequiredList() {
 		ResourceType.builder("type")
-				.addConflictedResourceTypes(conflictedResourceType).build(resourceExpert);
+				.addConflictedResourceTypes(conflictedResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		resourceTypeList.get(3).addRequiredResourceType(conflictedResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddConflictedResourceTypeIsAlreadyInConflictedList() {
 		ResourceType.builder("type")
-				.addConflictedResourceTypes(conflictedResourceType).build(resourceExpert);
+				.addConflictedResourceTypes(conflictedResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		resourceTypeList.get(3).addConflictedResourceType(
 				conflictedResourceType);
 	}
@@ -122,18 +123,18 @@ public class ResourceTypeTester {
 	@Test(expected = IllegalArgumentException.class)
 	public void addLoopingRequiredTypes() {
 		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(resourceExpert);
+				.addRequiredResourceTypes(requiredResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		requiredResourceType.addRequiredResourceType(resourceTypeList.get(3));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addLoopingConflictedTypes() {
 		ResourceType.builder("type")
-				.addConflictedResourceTypes(conflictedResourceType).build(resourceExpert);
+				.addConflictedResourceTypes(conflictedResourceType).build(tmc);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		conflictedResourceType.addConflictedResourceType(resourceTypeList
 				.get(3));
 	}
