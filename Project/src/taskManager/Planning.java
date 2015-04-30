@@ -111,6 +111,9 @@ public class Planning {
 					&& planner.isAvailableForResources(resources, task,
 							timeSpan)) {
 				Planning planning = new Planning(this);
+				if(task.hasPlanning()) {
+					planner.removePlanning(planning);
+				}
 				planner.addPlanning(planning);
 				task.setPlanning(planning);
 				planner.updateStatus(task);
