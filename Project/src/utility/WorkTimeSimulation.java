@@ -9,6 +9,12 @@ public class WorkTimeSimulation {
 	private LocalDateTime currentTime;
 	private Duration timeLeft;
 
+	/**
+	 * Creates a new WorkTime Simulation
+	 * 
+	 * @param startTime
+	 * @param hoursToWork
+	 */
 	public WorkTimeSimulation(LocalDateTime startTime, Duration hoursToWork) {
 		this.currentTime = startTime;
 		this.timeLeft = hoursToWork;
@@ -49,14 +55,19 @@ public class WorkTimeSimulation {
 		}
 	}
 
+	/**
+	 * Calculates the the time you would be finished with the given parameters,
+	 * taking in account the working hours
+	 * 
+	 * @return the finishtime
+	 */
 	public LocalDateTime workUntilFinished() {
 		while (!this.timeLeft.isZero() && !this.timeLeft.isNegative()) {
 			List<WorkTimeInterval> intervals = WorkDay
 					.getScheduleOfDate(this.currentTime.toLocalDate());
 
 			if (!this.currentTime.equals(this.currentTime.withHour(0)
-					.withMinute(0)))
-			{
+					.withMinute(0))) {
 				intervals = trimDayToCurrentTime(intervals);
 			}
 
