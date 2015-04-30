@@ -74,18 +74,15 @@ public class ResourceExpert {
 
 	/**
 	 * Loads the last save state of the class
-	 * 
-	 * @return last state of the class
 	 */
-	boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
 			for(ResourceType rt : this.resourcetypes) {
 				rt.load();
 			}
-			return true;
 		}
 	}
 

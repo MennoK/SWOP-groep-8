@@ -468,15 +468,14 @@ public class Planner {
 	/**
 	 * Loads the set of plannings to last saved state
 	 */
-	boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
 			for (Planning planning : this.planningSet) {
 				planning.load();
 			}
-			return true;
 		}
 	}
 

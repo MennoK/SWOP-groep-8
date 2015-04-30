@@ -372,12 +372,11 @@ public class ResourceType {
 	 * 
 	 * @return last state of the class
 	 */
-	boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
-			return true;
 		}
 	}
 
