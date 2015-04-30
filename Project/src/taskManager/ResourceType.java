@@ -49,8 +49,6 @@ public class ResourceType {
 		 * 
 		 * @param name
 		 *            : required name of a resource type
-		 * @param resourceExpert
-		 *            : resource expert
 		 */
 		public ResourceTypeBuilder(String name) {
 			this.name = name;
@@ -185,7 +183,7 @@ public class ResourceType {
 	 * 
 	 * @param requiredResourceType
 	 *            : resource type
-	 * @throws IllegalArgumentExcption
+	 * @throws IllegalArgumentException
 	 *             : if the given resource type creates a loop
 	 * @throws IllegalArgumentException
 	 *             : if the given resource type is already in the list

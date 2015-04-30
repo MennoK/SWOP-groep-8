@@ -576,8 +576,6 @@ public class Task implements Visitable {
 	 * Returns the TaskFinishedStatus of a task
 	 * 
 	 * @return taskFinishStatus : status of a finished task
-	 * @throws InvalidActivityException
-	 *             : thrown when the task is not finished yet
 	 */
 	public TaskFinishedStatus getFinishStatus() {
 		return status.getFinishStatus(this);

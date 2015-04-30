@@ -50,7 +50,7 @@ public class Planning {
 		 *            : planned start time
 		 * @param task
 		 *            : task that is being planned
-		 * @param developers
+		 * @param developer
 		 *            : assigned developers
 		 * @param planner: planner of the planning
 		 */
@@ -157,12 +157,12 @@ public class Planning {
 	 * 
 	 * @param startTime
 	 *            : planned start time
-	 * @param endTime
-	 *            : planned end time
 	 * @param task
 	 *            : task that is being planned
-	 * @param developers
+	 * @param developer
 	 *            : assigned developers
+	 * @param planner
+	 * 			  : The projects planner
 	 * 
 	 * @return planningBuilder : new builder for creating planning
 	 * @throws ConlictingPlanningException 
