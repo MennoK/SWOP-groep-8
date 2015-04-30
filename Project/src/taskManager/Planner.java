@@ -12,6 +12,13 @@ import taskManager.Planning.PlanningBuilder;
 import utility.TimeSpan;
 import utility.WorkDay;
 
+/**
+ * 
+ * The planner class makes and plans all the plannings.
+ * 
+ * @author Groep 8
+ *
+ */
 public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
 
@@ -53,7 +60,9 @@ public class Planner {
 			throw new IllegalArgumentException(
 					"Requires at least one developer to find a start time");
 		}
+		
 		LocalDateTime time = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), startTime.getHour(), startTime.getMinute());
+		
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES && time.isBefore(startTime.plusYears(1))) {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
@@ -64,6 +73,16 @@ public class Planner {
 		return possibleStartTimes;
 	}
 
+	/**
+	 * Checks whether a task is plannable for given time span
+	 * 
+	 * @param task : given task to be planned
+	 * @param developers : all developers
+	 * @param timeSpan : given time span
+	 * 
+	 * @return true if all developers and required resources are available for the task in the given
+	 * 			time span
+	 */
 	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,
 			TimeSpan timeSpan) {
 		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
@@ -76,6 +95,15 @@ public class Planner {
 		}
 	}
 
+	/**
+	 * Checks whether the required resources of a task are available
+	 * during a given time span
+	 * 
+	 * @param task : given task
+	 * @param timeSpan : given time span
+	 * 
+	 * @return true if all resources are available
+	 */
 	boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan) {
 		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
 				if ((type.getDailyAvailability().getBegin()
@@ -96,6 +124,13 @@ public class Planner {
 
 	}
 
+	/**
+	 * checks whether there is at least 1 developer available
+	 * 
+	 * @param developersAvailableFor : set of available developers
+	 * 
+	 * @return true if the size of the available developers is greater or equal than one
+	 */
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor) {
 		if (developersAvailableFor.size() >= 1) {
@@ -105,6 +140,14 @@ public class Planner {
 		}
 	}
 
+	/**
+	 * Checks whether there are enough resources available
+	 * 
+	 * @param tempResourceMap : map of available resources for each resource type
+	 * @param task : given task
+	 * 
+	 * @return true if the size of the available resources is equal to the quantity of required resources of the task
+	 */
 	private boolean enoughResourcesAvailable(
 			Map<ResourceType, Set<Resource>> tempResourceMap, Task task) {
 		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
@@ -173,7 +216,6 @@ public class Planner {
 			}
 		}
 		return false;
-
 	}
 
 	/**
@@ -185,6 +227,16 @@ public class Planner {
 		return Collections.unmodifiableSet(this.planningSet);
 	}
 
+	/**
+	 * Returns a map with resource types and set of the available
+	 * resources of the type
+	 * 
+	 * @param task
+	 * @param timeSpan
+	 * 
+	 * @return avalaibleResourcesForEachResourceType : map with each resourcetype required by the task and a set with available resources
+	 * 
+	 */
 	Map<ResourceType, Set<Resource>> resourcesAvailableFor(Task task,
 			TimeSpan timeSpan) {
 		Map<ResourceType, Set<Resource>> availableResourcesForEachResourceType = new LinkedHashMap<ResourceType, Set<Resource>>();
@@ -196,6 +248,16 @@ public class Planner {
 		return availableResourcesForEachResourceType;
 	}
 
+	/**
+	 * Returns a set of available resource of a given resource type
+	 * during a time span
+	 * 
+	 * @param resourcetype : given resource type
+	 * @param task : given task
+	 * @param timeSpan : given time span
+	 * 
+	 * @return availableResources : set of available resources during a given time span
+	 */
 	public Set<Resource> resourcesOfTypeAvailableFor(ResourceType resourcetype,
 			Task task, TimeSpan timeSpan) {
 		Set<Resource> availableResources = new LinkedHashSet<Resource>();
@@ -207,6 +269,16 @@ public class Planner {
 		return availableResources;
 	}
 
+	/**
+	 * Checks whether a resource of task is available for 
+	 * a giving timespan
+	 *
+	 * @param resource	: given resource
+	 * @param task : given task
+	 * @param timeSpan : given time span
+	 * 
+	 * @return true if the given resource is not yet in another planning
+	 */
 	boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan) {
 		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
@@ -223,6 +295,15 @@ public class Planner {
 		return true;
 	}
 
+	/**
+	 * Returns all available developers for a task during a given time span
+	 * 
+	 * @param developers : set of resources
+	 * @param task : given task
+	 * @param timeSpan : given time span
+	 * 
+	 * @return a set of available developers during a given time span
+	 */
 	public Set<Developer> developersAvailableFor(Set<Developer> developers,
 			Task task, TimeSpan timeSpan) {
 		Set<Developer> availableDevelopers = new LinkedHashSet<Developer>();
@@ -234,6 +315,15 @@ public class Planner {
 		return availableDevelopers;
 	}
 
+	/**
+	 * Checks whether a given developer is available for a task
+	 * during a given time span
+	 * 
+	 * @param developer : given developer
+	 * @param task : given task
+	 * @param timeSpan: given time span
+	 * @return true if the given developer is not yet in an other planning during the given time span
+	 */
 	boolean isAvailableFor(Developer developer, Task task, TimeSpan timeSpan) {
 		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
@@ -250,6 +340,15 @@ public class Planner {
 		return true;
 	}
 
+	/**
+	 * Checks whether a set of developers are a available for a task
+	 * during a given time span
+	 * 
+	 * @param developers : given set of developers
+	 * @param task : given task
+	 * @param timeSpan : given time span
+	 * @return true if all developers in the set of developers are available
+	 */
 	boolean isAvailableForDevelopers(Set<Developer> developers, Task task,
 			TimeSpan timeSpan) {
 		for (Developer developer : developers) {
@@ -260,6 +359,15 @@ public class Planner {
 		return true;
 	}
 
+	/**
+	 * Checks whether a set of resources are a available for a task
+	 * during a given time span
+	 * 
+	 * @param resources : given set of resources
+	 * @param task : given task
+	 * @param timeSpan : given time span
+	 * @return true if all resources in the set of resources are available
+	 */
 	boolean isAvailableForResources(Set<Resource> resources, Task task,
 			TimeSpan timeSpan) {
 		for (Resource resource : resources) {
@@ -346,7 +454,10 @@ public class Planner {
 			task.setStatus(TaskStatus.UNAVAILABLE);
 		}
 	}
-
+	
+	/**
+	 * saves the current state of the memento
+	 */
 	void save() {
 		this.memento = new Memento(this);
 		for (Planning planning : this.planningSet) {
@@ -354,6 +465,9 @@ public class Planner {
 		}
 	}
 
+	/**
+	 * Loads the set of plannings to last saved state
+	 */
 	boolean load() {
 		if (this.memento == null) {
 			return false;
@@ -366,13 +480,32 @@ public class Planner {
 		}
 	}
 
+	/**
+	 * Memento inner class of the planner
+	 * 
+	 * @author groep 8
+	 *
+	 */
 	private class Memento {
 		Set<Planning> planningSet;
 
+		/**
+		 * Constructor of the memento. It initializes the set of plannings
+		 * in the memento to the current set of planning of the given planner
+		 * 
+		 * 
+		 * @param pe : planner
+		 */
 		public Memento(Planner pe) {
 			this.planningSet = new LinkedHashSet<Planning>(pe.planningSet);
 		}
 
+		/**
+		 * Sets all the set of plannings back to saved
+		 * state in the memento
+		 * 
+		 * @param pe : given planner
+		 */
 		public void load(Planner pe) {
 			pe.planningSet = this.planningSet;
 		}
