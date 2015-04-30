@@ -45,7 +45,7 @@ public class ResourceType {
 
 		/**
 		 * Constructor creates the resourceTypeBuilder with the required
-		 * parameters: name and resourceExpert.
+		 * parameters: name
 		 * 
 		 * @param name
 		 *            : required name of a resource type
@@ -86,6 +86,8 @@ public class ResourceType {
 
 		/**
 		 * Builds a resource type after all the optional values have been set.
+		 * a resourceExpert is required to add the new type to the given
+		 * resource Expert
 		 */
 		public ResourceType build(ResourceExpert resourceExpert) {
 			ResourceType resourceType = new ResourceType(this);

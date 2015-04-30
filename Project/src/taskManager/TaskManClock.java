@@ -74,18 +74,36 @@ public class TaskManClock {
 		return currentTime;
 	}
 
+	/**
+	 * Register with new time observer
+	 * 
+	 * @param observer: give time observer
+	 */
 	boolean register(TimeObserver observer) {
 		return this.observers.add(observer);
 	}
 
+	/**
+	 * Unregister with given time observer
+	 * 
+	 * @param observer
+	 */
 	boolean unregister(TimeObserver observer) {
 		return this.observers.remove(observer);
 	}
 
+	/**
+	 * Saves the last state of the clock to
+	 * a new memento
+	 */
 	public void save() {
 		this.memento = new Memento(this);
 	}
 
+	/**
+	 * loads the last saved state of the clock
+	 * 
+	 */
 	public boolean load() {
 		if (this.memento == null) {
 			return false;
@@ -95,20 +113,36 @@ public class TaskManClock {
 		}
 	}
 
+	/**
+	 * 
+	 * Inner momento class of taskmanclock
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 		private LocalDateTime currentTime;
 		private ArrayList<TimeObserver> observers;
 
+		/**
+		 * Constructor of the memento of taskManClock. Initialize
+		 * the current time of the clock and all the observers
+		 * of the current state
+		 * 
+		 * @param clock : given taskmanclock
+		 */
 		public Memento(TaskManClock clock) {
 			this.currentTime = clock.currentTime;
 			this.observers = new ArrayList<TimeObserver>(clock.observers);
 		}
 
+		/**
+		 * Sets the clock to the saved state
+		 * 
+		 * @param clock : taskManClock
+		 */
 		public void load(TaskManClock clock) {
 			clock.currentTime = this.currentTime;
 			clock.observers = this.observers;
 		}
-
 	}
-
 }
