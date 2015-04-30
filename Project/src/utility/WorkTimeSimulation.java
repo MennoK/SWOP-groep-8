@@ -4,6 +4,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * WorkTimeSimulations simulate every work day
+ * 
+ * @author groep 8
+ *
+ */
 public class WorkTimeSimulation {
 
 	private LocalDateTime currentTime;
