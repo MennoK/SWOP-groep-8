@@ -103,7 +103,7 @@ public class TimeSpan {
 	 * Sets the end time of the time span
 	 * @param end: end time of the time span
 	 */
-	private void setEnd(LocalDateTime end) {
+	public void setEnd(LocalDateTime end) {
 		this.end = end;
 	}
 
