@@ -137,6 +137,20 @@ public class Task implements Visitable {
 				this.requiredResourceTypes.put(requiredResourceType, quantity);
 			}
 			return this;
+		
+		}
+		
+		private boolean checkRequiredResources() {
+			for (ResourceType type : requiredResourceTypes.keySet()) {
+				if(!type.getRequiredResourceTypes().isEmpty()){
+					for (ResourceType requiredResourceType : type.getRequiredResourceTypes()) {
+						if(!requiredResourceTypes.keySet().contains(requiredResourceType)){
+							return false;
+						}
+					}
+				}
+			}
+			return true;
 		}
 
 		/**
@@ -144,12 +158,18 @@ public class Task implements Visitable {
 		 * is required to add the created task to.
 		 */
 		public Task build(Project project) {
-			this.now = project.getLastUpdateTime();
-			Task task = new Task(this);
-			project.updateDependencies(task, originalTask);
-			project.addTask(task);
-			return task;
+			if (checkRequiredResources()) {
+				this.now = project.getLastUpdateTime();
+				Task task = new Task(this);
+				project.updateDependencies(task, originalTask);
+				project.addTask(task);
+				return task;
+			} else {
+				throw new IllegalStateException("A resource is requiring an other resource.");
+			}
 		}
+
+		
 	}
 
 	/**
