@@ -61,6 +61,10 @@ public class ResourceExpert {
 		return Collections.unmodifiableSet(resourcetypes);
 	}
 
+
+	/**
+	 * Saves the current state of the class
+	 */
 	void save() {
 		this.memento = new Memento(this);
 		for(ResourceType rt : this.resourcetypes) {
@@ -68,6 +72,11 @@ public class ResourceExpert {
 		}
 	}
 
+	/**
+	 * Loads the last save state of the class
+	 * 
+	 * @return last state of the class
+	 */
 	boolean load() {
 		if (this.memento == null) {
 			return false;
@@ -80,14 +89,32 @@ public class ResourceExpert {
 		}
 	}
 
+	/**
+	 * 
+	 * Inner momento class of resource expert
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 		private Set<ResourceType> resourcetypes;
 
+		/**
+		 * Constructor of the momento inner class of resource expert.
+		 * Initialize a new set of resourcetype of the current state
+		 * 
+		 * @param re : resourcetype expert
+		 */
 		public Memento(ResourceExpert re) {
 			this.resourcetypes = new LinkedHashSet<ResourceType>(
 					re.resourcetypes);
 		}
-
+		
+		/**
+		 * Sets the resource type set of the resourceExpert class
+		 * to the saved set of the momento class
+		 * 
+		 * @param re : resourcetype expert
+		 */
 		public void load(ResourceExpert re) {
 			re.resourcetypes = this.resourcetypes;
 		}

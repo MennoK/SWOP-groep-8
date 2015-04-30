@@ -37,6 +37,9 @@ public class Resource implements Visitable {
 		return name;
 	}
 
+	/**
+	 * accept visitor for visiting this
+	 */
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
