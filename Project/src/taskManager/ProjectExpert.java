@@ -102,6 +102,10 @@ public class ProjectExpert implements TimeObserver {
 		return (!getAllProjects().contains(project) && project != null);
 	}
 
+	/**
+	 * Handles time changes with changing time in 
+	 * every project of the projectExpert
+	 */
 	@Override
 	public void handleTimeChange(LocalDateTime time) {
 		this.lastUpdateTime = time;
@@ -120,6 +124,7 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
+	 * Returns all tasks in all projects 
 	 * 
 	 * @return All the tasks in all projects
 	 */
@@ -132,6 +137,9 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
+	 * 
+	 * Returns a set with all tasks of a given
+	 * developer
 	 * 
 	 * @param dev
 	 *            the active Developer
@@ -150,6 +158,9 @@ public class ProjectExpert implements TimeObserver {
 		return Collections.unmodifiableSet(tasks);
 	}
 
+	/**
+	 * Saves the current state of the project expert
+	 */
 	public void save() {
 		this.memento = new Memento(this);
 		for (Project project : this.projects) {
@@ -157,6 +168,11 @@ public class ProjectExpert implements TimeObserver {
 		}
 	}
 
+	/**
+	 * Loads the last saved state 
+	 * 
+	 * @return last state of project expert
+	 */
 	public boolean load() {
 		if (this.memento == null) {
 			return false;
@@ -169,15 +185,34 @@ public class ProjectExpert implements TimeObserver {
 		}
 	}
 
+	/**
+	 * 
+	 * Inner momento class of project expert
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 		private ArrayList<Project> projects;
 		private LocalDateTime lastUpdateTime;
 
+		/**
+		 * Constructor of the momento inner class of project expert.
+		 * Initialize a new set of project of the current state and
+		 * saves the last update time
+		 * 
+		 * @param pe : projectExpert
+		 */
 		public Memento(ProjectExpert pe) {
 			this.projects = new ArrayList<Project>(pe.projects);
 			this.lastUpdateTime = pe.lastUpdateTime;
 		}
 
+		/**
+		 * Sets the project set of the project expert class
+		 * to the saved set of the momento class
+		 * 
+		 * @param pe : projectExpert
+		 */
 		public void load(ProjectExpert pe) {
 			pe.projects = this.projects;
 			pe.lastUpdateTime = this.lastUpdateTime;
