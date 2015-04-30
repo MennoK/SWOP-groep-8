@@ -11,8 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.activity.InvalidActivityException;
 
-import com.sun.org.apache.xerces.internal.util.Status;
-
+import utility.WorkDay;
 import utility.WorkTime;
 
 /**
@@ -43,7 +42,6 @@ public class Task implements Visitable {
 	private Duration estimatedDuration;
 	private double acceptableDeviation;
 	private TaskStatus status = TaskStatus.UNAVAILABLE;
-
 
 	private List<Task> dependencies = new ArrayList<>();
 	private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
@@ -124,7 +122,20 @@ public class Task implements Visitable {
 		 */
 		public TaskBuilder addRequiredResourceType(
 				ResourceType requiredResourceType, int quantity) {
-			this.requiredResourceTypes.put(requiredResourceType, quantity);
+			if ((requiredResourceType.getDailyAvailability().getBegin()
+					.isAfter(WorkDay.getStartTime()) || requiredResourceType
+					.getDailyAvailability().getEnd()
+					.isBefore(WorkDay.getEndTime()))
+					&& estimatedDuration.compareTo(Duration.between(
+							requiredResourceType.getDailyAvailability()
+									.getEnd(), requiredResourceType
+									.getDailyAvailability().getEnd())) > 0) {
+				throw new IllegalArgumentException(
+						"The estimated duration of the task is longer then the availablitiy of the resource");
+
+			} else {
+				this.requiredResourceTypes.put(requiredResourceType, quantity);
+			}
 			return this;
 		}
 
@@ -304,7 +315,7 @@ public class Task implements Visitable {
 	 * 
 	 * @return true if and only if the task was finished early
 	 */
-	 boolean wasFinishedEarly() {
+	boolean wasFinishedEarly() {
 		long hours = (long) ((int) getEstimatedDuration().toHours() - (int) getEstimatedDuration()
 				.toHours() * getAcceptableDeviation());
 		LocalDateTime earlyTime = getStartTime().plusHours(hours);
@@ -318,7 +329,7 @@ public class Task implements Visitable {
 	 * 
 	 * @return true if and only if the task was finished on a delay
 	 */
-	 boolean wasFinishedWithADelay() {
+	boolean wasFinishedWithADelay() {
 		long hours = (long) ((int) getEstimatedDuration().toHours() + (int) getEstimatedDuration()
 				.toHours() * getAcceptableDeviation());
 		LocalDateTime delayTime = getStartTime().plusHours(hours);
@@ -686,10 +697,9 @@ public class Task implements Visitable {
 	}
 
 	boolean load() {
-		if(this.memento == null) {
+		if (this.memento == null) {
 			return false;
-		}
-		else {
+		} else {
 			this.memento.load(this);
 			return true;
 		}
@@ -713,7 +723,7 @@ public class Task implements Visitable {
 		private Planning planning;
 
 		private int id;
-		
+
 		private TaskStatus status;
 
 		// Het aanmaken van het memento object
@@ -737,7 +747,7 @@ public class Task implements Visitable {
 
 			this.planning = task.planning;
 			this.id = task.id;
-			
+
 			this.status = task.status;
 		}
 
@@ -757,7 +767,7 @@ public class Task implements Visitable {
 
 			task.planning = this.planning;
 			task.id = this.id;
-			
+
 			task.status = this.status;
 		}
 	}

@@ -9,13 +9,15 @@ import java.util.Map;
 import java.util.Set;
 
 import taskManager.Planning.PlanningBuilder;
+import utility.TimeInterval;
 import utility.TimeSpan;
+import utility.WorkDay;
 
 public class Planner {
 	Set<Planning> planningSet = new LinkedHashSet<Planning>();
-	
+
 	private Memento memento;
-	
+
 	private static final int TOTAL_POSSIBLE_START_TIMES = 3;
 
 	/**
@@ -52,7 +54,7 @@ public class Planner {
 			TimeSpan timeSpan = new TimeSpan(time, task.getDuration());
 			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
 				possibleStartTimes.add(timeSpan.getBegin());
-			}			
+			}
 			time = time.plusHours(1);
 		}
 		return possibleStartTimes;
@@ -68,6 +70,19 @@ public class Planner {
 		} else {
 			return false;
 		}
+	}
+
+	private boolean resourceDailyAvailableIsAvailable(Task task, TimeSpan timeSpan){
+		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
+			if ((type.getDailyAvailability().getBegin()
+					.isAfter(WorkDay.getStartTime()) || type
+					.getDailyAvailability().getEnd()
+					.isBefore(WorkDay.getEndTime()))
+					){
+				
+			}
+		}
+		return true;
 	}
 
 	private boolean enoughDevelopersAvalaible(
@@ -88,37 +103,6 @@ public class Planner {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * This method adds a given planning to the planningExpert
-	 * 
-	 * @param planning
-	 *            : planning to add to project
-	 * @throws IllegalArgumentException
-	 *             : thrown when the given planning is not valid
-	 */
-	void addPlanning(Planning planning) {
-		if (!canHavePlanning(planning)) {
-			throw new IllegalArgumentException(
-					"The given planning is already in the planningExpert.");
-		} else {
-			planningSet.add(planning);
-		}
-	}
-
-	/**
-	 * This method checks if PlanningExpert can have a given planning. It
-	 * returns true if and only if the PlanningExpert does not contain the
-	 * planning yet and the planning is not null
-	 * 
-	 * @param planning
-	 *            : given planning to be added
-	 * @return true if and only if the given planning is not null and the task
-	 *         is not already in the PlanningExpert
-	 */
-	private boolean canHavePlanning(Planning planning) {
-		return (!getAllPlannings().contains(planning) && planning != null);
 	}
 
 	/**
@@ -203,8 +187,7 @@ public class Planner {
 		return availableResources;
 	}
 
-	boolean isAvailableFor(Resource resource, Task task,
-			TimeSpan timeSpan) {
+	boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan) {
 		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
 		if (task.hasPlanning()) {
@@ -231,8 +214,7 @@ public class Planner {
 		return availableDevelopers;
 	}
 
-	boolean isAvailableFor(Developer developer, Task task,
-			TimeSpan timeSpan) {
+	boolean isAvailableFor(Developer developer, Task task, TimeSpan timeSpan) {
 		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
 		if (task.hasPlanning()) {
@@ -248,41 +230,49 @@ public class Planner {
 		return true;
 	}
 
-	boolean isAvailableForDevelopers(Set<Developer> developers, Task task, TimeSpan timeSpan){
+	boolean isAvailableForDevelopers(Set<Developer> developers, Task task,
+			TimeSpan timeSpan) {
 		for (Developer developer : developers) {
-			if(!isAvailableFor(developer, task, timeSpan)){
+			if (!isAvailableFor(developer, task, timeSpan)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	boolean isAvailableForResources(Set<Resource> resources, Task task, TimeSpan timeSpan){
+
+	boolean isAvailableForResources(Set<Resource> resources, Task task,
+			TimeSpan timeSpan) {
 		for (Resource resource : resources) {
-			if(!isAvailableFor(resource, task, timeSpan)){
+			if (!isAvailableFor(resource, task, timeSpan)) {
 				return false;
 			}
 		}
 		return true;
 	}
+
 	/**
-	 * returns conlicting plannings based on the information of a planningbuilder 
+	 * returns conlicting plannings based on the information of a
+	 * planningbuilder
+	 * 
 	 * @param planningBuilder
-	 * 					: the planningbuilder that contains the information for a planning that would conflict
-	 * @return
-	 * 					: set of conflicting plannings
+	 *            : the planningbuilder that contains the information for a
+	 *            planning that would conflict
+	 * @return : set of conflicting plannings
 	 */
-	Set<Planning> getConflictingPlanningsForBuilder(PlanningBuilder planningBuilder){
+	Set<Planning> getConflictingPlanningsForBuilder(
+			PlanningBuilder planningBuilder) {
 		Set<Planning> conflictingPlannings = new HashSet<>();
-		
+
 		for (Planning planning : this.getAllPlannings()) {
-			if(planning.getTimeSpan().overlaps(planningBuilder.getTimeSpan())){
+			if (planning.getTimeSpan().overlaps(planningBuilder.getTimeSpan())) {
 				for (Developer developer : planningBuilder.getDevelopers()) {
-					if(planning.getDevelopers().contains(developer)){
+					if (planning.getDevelopers().contains(developer)) {
 						conflictingPlannings.add(planning);
 					}
 				}
 				for (Resource resource : planningBuilder.getResources()) {
-					if(planning.getResources().contains(resource) && !conflictingPlannings.contains(planning)){
+					if (planning.getResources().contains(resource)
+							&& !conflictingPlannings.contains(planning)) {
 						conflictingPlannings.add(planning);
 					}
 				}
@@ -290,6 +280,38 @@ public class Planner {
 		}
 		return conflictingPlannings;
 	}
+
+	/**
+	 * This method adds a given planning to the planningExpert
+	 * 
+	 * @param planning
+	 *            : planning to add to project
+	 * @throws IllegalArgumentException
+	 *             : thrown when the given planning is not valid
+	 */
+	void addPlanning(Planning planning) {
+		if (!canHavePlanning(planning)) {
+			throw new IllegalArgumentException(
+					"The given planning is already in the planningExpert.");
+		} else {
+			planningSet.add(planning);
+		}
+	}
+
+	/**
+	 * This method checks if PlanningExpert can have a given planning. It
+	 * returns true if and only if the PlanningExpert does not contain the
+	 * planning yet and the planning is not null
+	 * 
+	 * @param planning
+	 *            : given planning to be added
+	 * @return true if and only if the given planning is not null and the task
+	 *         is not already in the PlanningExpert
+	 */
+	private boolean canHavePlanning(Planning planning) {
+		return (!getAllPlannings().contains(planning) && planning != null);
+	}
+
 	void updateStatus(Task task) {
 		if (task.getStatus() == TaskStatus.EXECUTING
 				|| task.getStatus() == TaskStatus.FINISHED
@@ -304,35 +326,33 @@ public class Planner {
 			task.setStatus(TaskStatus.UNAVAILABLE);
 		}
 	}
-	
-	
+
 	void save() {
 		this.memento = new Memento(this);
-		for(Planning planning: this.planningSet) {
+		for (Planning planning : this.planningSet) {
 			planning.save();
 		}
 	}
-	
+
 	boolean load() {
-		if(this.memento == null) {
+		if (this.memento == null) {
 			return false;
-		}
-		else {
+		} else {
 			this.memento.load(this);
-			for(Planning planning: this.planningSet) {
+			for (Planning planning : this.planningSet) {
 				planning.load();
 			}
 			return true;
 		}
 	}
-	
+
 	private class Memento {
 		Set<Planning> planningSet;
-		
+
 		public Memento(Planner pe) {
 			this.planningSet = new LinkedHashSet<Planning>(pe.planningSet);
 		}
-		
+
 		public void load(Planner pe) {
 			pe.planningSet = this.planningSet;
 		}

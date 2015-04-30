@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import utility.TimeInterval;
+import utility.WorkDay;
 
 /**
  * Each resource has a specific type, and for each type of resource, numerous
@@ -53,6 +54,7 @@ public class ResourceType {
 		 */
 		public ResourceTypeBuilder(String name) {
 			this.name = name;
+			dailyAvailability = new TimeInterval(WorkDay.getStartTime(), WorkDay.getEndTime());
 		}
 
 		/**
