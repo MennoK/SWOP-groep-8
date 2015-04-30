@@ -32,7 +32,7 @@ public class ResourceExpert {
 	 * @param resource
 	 *            type : given resource type
 	 */
-	public void addResourceType(ResourceType resourcetype) {
+	void addResourceType(ResourceType resourcetype) {
 		if (!canHaveResource(resourcetype)) {
 			throw new IllegalArgumentException(
 					"The resource expert has already the given resource type.");
