@@ -122,14 +122,15 @@ public class Task implements Visitable {
 		 */
 		public TaskBuilder addRequiredResourceType(
 				ResourceType requiredResourceType, int quantity) {
-			if ((requiredResourceType.getDailyAvailability().getBegin()
+	
+			if (((requiredResourceType.getDailyAvailability().getBegin()
 					.isAfter(WorkDay.getStartTime()) || requiredResourceType
 					.getDailyAvailability().getEnd()
 					.isBefore(WorkDay.getEndTime()))
 					&& estimatedDuration.compareTo(Duration.between(
 							requiredResourceType.getDailyAvailability()
-									.getEnd(), requiredResourceType
-									.getDailyAvailability().getEnd())) > 0) {
+									.getBegin(), requiredResourceType
+									.getDailyAvailability().getEnd())) > 0)) {
 				throw new IllegalArgumentException(
 						"The estimated duration of the task is longer then the availablitiy of the resource");
 

@@ -5,11 +5,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import utility.TimeInterval;
 
 public class TaskTester {
 
@@ -287,14 +290,38 @@ public class TaskTester {
 		ResourceExpert resourceExpert = new ResourceExpert();
 		ResourceType.builder("resourcetype").build(resourceExpert);
 
-		List<ResourceType> list = new ArrayList<ResourceType>(
+		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
 				resourceExpert.getAllResourceTypes());
-		list.get(0).createResource("res1");
+		listOfResourceTypes.get(0).createResource("res1");
 
 		Task.builder("desc", Duration.ofHours(2), 2)
-				.addRequiredResourceType(list.get(0), 2).build(project);
+				.addRequiredResourceType(listOfResourceTypes.get(0), 2).build(project);
 		assertEquals(1, project.getAllTasks().get(0).getRequiredResourceTypes()
 				.size());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void createTaskLongerThanAvailabilityResource(){
+		ResourceExpert resourceExpert = new ResourceExpert();
+		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0), LocalTime.of(17, 0));
+		ResourceType.builder("resourcetype").addDailyAvailability(dailyAvailability).build(resourceExpert);
+		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
+		listOfResourceTypes.get(0).createResource("res1");
+
+		Task.builder("A task", Duration.ofHours(6), 1).addRequiredResourceType(listOfResourceTypes.get(0), 1).build(project);
+	}
+	
+	@Test
+	public void createTaskShorterThanAvailabilityResource(){
+		ResourceExpert resourceExpert = new ResourceExpert();
+		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0), LocalTime.of(17, 0));
+		ResourceType.builder("resourcetype").addDailyAvailability(dailyAvailability).build(resourceExpert);
+		List<ResourceType> listOfResourceTypes = new ArrayList<ResourceType>(
+				resourceExpert.getAllResourceTypes());
+		listOfResourceTypes.get(0).createResource("res1");
+
+		Task.builder("A task", Duration.ofHours(2), 1).addRequiredResourceType(listOfResourceTypes.get(0), 1).build(project);
 	}
 	
 

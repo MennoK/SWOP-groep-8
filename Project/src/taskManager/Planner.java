@@ -65,7 +65,8 @@ public class Planner {
 		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
 				timeSpan))
 				&& enoughResourcesAvailable(
-						resourcesAvailableFor(task, timeSpan), task)) {
+						resourcesAvailableFor(task, timeSpan), task)
+						&& resourceDailyAvailableIsAvailable(task, timeSpan)) {
 			return true;
 		} else {
 			return false;
@@ -78,8 +79,10 @@ public class Planner {
 					.isAfter(WorkDay.getStartTime()) || type
 					.getDailyAvailability().getEnd()
 					.isBefore(WorkDay.getEndTime()))
-					){
-				
+					&& type.getDailyAvailability().getBegin().getHour() > timeSpan.getBegin().getHour()
+					&& type.getDailyAvailability().getEnd().getHour() < timeSpan.getBegin().getHour())
+					{
+				return false;
 			}
 		}
 		return true;

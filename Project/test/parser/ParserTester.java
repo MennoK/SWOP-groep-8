@@ -67,7 +67,6 @@ public class ParserTester {
 				.size());
 		assertEquals(0, resourceTypeList.get(0).getRequiredResourceTypes()
 				.size());
-		assertEquals(null, resourceTypeList.get(0).getDailyAvailability());
 	}
 
 	@Test
@@ -77,7 +76,6 @@ public class ParserTester {
 				.size());
 		assertEquals(0, resourceTypeList.get(1).getRequiredResourceTypes()
 				.size());
-		assertEquals(null, resourceTypeList.get(1).getDailyAvailability());
 	}
 
 	@Test
@@ -90,7 +88,6 @@ public class ParserTester {
 		assertEquals("car", conflictedRTlist.get(0).getName());
 		assertEquals(0, resourceTypeList.get(2).getRequiredResourceTypes()
 				.size());
-		assertEquals(null, resourceTypeList.get(2).getDailyAvailability());
 	}
 
 	@Test
@@ -106,7 +103,6 @@ public class ParserTester {
 		List<ResourceType> requiredRTlist = new ArrayList<ResourceType>(
 				resourceTypeList.get(3).getRequiredResourceTypes());
 		assertEquals("white board", requiredRTlist.get(0).getName());
-		assertEquals(null, resourceTypeList.get(3).getDailyAvailability());
 	}
 
 	@Test
@@ -117,7 +113,6 @@ public class ParserTester {
 				.size());
 		assertEquals(0, resourceTypeList.get(4).getRequiredResourceTypes()
 				.size());
-		assertEquals(null, resourceTypeList.get(4).getDailyAvailability());
 	}
 
 	@Test
@@ -372,7 +367,7 @@ public class ParserTester {
 		Task task2 = projecty.getAllTasks().get(1);
 
 		assertEquals("yet another task description", task2.getDescription());
-		assertEquals(Duration.ofHours(100), task2.getEstimatedDuration());
+		assertEquals(Duration.ofHours(4), task2.getEstimatedDuration());
 		assertEquals(task2.getAcceptableDeviation(), 0.10, 0.001);
 		assertEquals(0, task2.getDependencies().size());
 
@@ -412,7 +407,7 @@ public class ParserTester {
 		Task task4 = projecty.getAllTasks().get(3);
 
 		assertEquals("description", task4.getDescription());
-		assertEquals(Duration.ofHours(50), task4.getEstimatedDuration());
+		assertEquals(Duration.ofHours(4), task4.getEstimatedDuration());
 		assertEquals(task4.getAcceptableDeviation(), 0, 0.001);
 		assertEquals(1, task4.getDependencies().size());
 		assertEquals(task4.getOriginal(), taskManController.getProjectExpert()

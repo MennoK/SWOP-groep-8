@@ -106,7 +106,7 @@ tasks:
 
   - project            : 1
     description        : "yet another task description"
-    estimatedDuration  : 100
+    estimatedDuration  : 4
     acceptableDeviation: 10
     alternativeFor     :
     requiredTypes      : [{type: 5,  quantity: 1}]
@@ -126,7 +126,7 @@ tasks:
 
   - project            : 1
     description        : "description"
-    estimatedDuration  : 50
+    estimatedDuration  : 4
     acceptableDeviation: 0
     alternativeFor     : 3
     requiredTypes      : [{type: 5,  quantity: 1}]
