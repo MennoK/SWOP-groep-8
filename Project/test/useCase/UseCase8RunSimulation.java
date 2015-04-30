@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskManager.Developer;
-import taskManager.DeveloperExpert;
 import taskManager.Planning;
 import taskManager.Project;
 import taskManager.ProjectExpert;
@@ -29,8 +28,6 @@ public class UseCase8RunSimulation {
 	private ProjectExpert projectController;
 	private TaskManController tmc;
 
-	private DeveloperExpert developerExpert;
-
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
@@ -43,10 +40,9 @@ public class UseCase8RunSimulation {
 		projectController = tmc.getProjectExpert();
 
 		// new developerExpert and create a new developer
-		developerExpert = controller.getDeveloperExpert();
-		developerExpert.createDeveloper("Bob");
+		controller.getDeveloperExpert().createDeveloper("Bob");
 		ArrayList<Developer> devList = new ArrayList<Developer>();
-		devList.addAll(developerExpert.getAllDevelopers());
+		devList.addAll(tmc.getAllDevelopers());
 	}
 
 	private Task createStandardTask(Duration taskDuration) {
@@ -130,13 +126,11 @@ public class UseCase8RunSimulation {
 
 	@Test
 	public void testMementoSavesDevelopers() {
-		controller.saveSystem();
-		controller.getDeveloperExpert().createDeveloper("Bob");
-		assertEquals(2, controller.getDeveloperExpert().getAllDevelopers()
-				.size());
-		controller.loadSystem();
-		assertEquals(1, controller.getDeveloperExpert().getAllDevelopers()
-				.size());
+		tmc.saveSystem();
+		tmc.getDeveloperExpert().createDeveloper("Bob");
+		assertEquals(1, tmc.getAllDevelopers().size());
+		tmc.loadSystem();
+		assertEquals(0, tmc.getAllDevelopers().size());
 	}
 
 }

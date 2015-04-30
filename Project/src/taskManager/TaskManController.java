@@ -263,4 +263,14 @@ public class TaskManController {
 		return Collections
 				.unmodifiableList(getProjectExpert().getAllProjects());
 	}
+
+	/**
+	 * Returns the unmodifiable set of all developers
+	 * 
+	 * @return developers : set of all developers
+	 */
+	public Set<Developer> getAllDevelopers() {
+		return Collections.unmodifiableSet(getDeveloperExpert()
+				.getAllDevelopers());
+	}
 }

@@ -119,12 +119,10 @@ public class UiTaskMan {
 		try {
 			Planning.PlanningBuilder plan = Planning.builder(
 					timeSpan.getBegin(), task,
-					reader.select(tmc.getDeveloperExpert().getAllDevelopers()),
-					tmc.getPlanner());
+					reader.select(tmc.getAllDevelopers()), tmc.getPlanner());
 			while (reader
 					.getBoolean("Do you want to assign an extra Developer?")) {
-				plan.addDeveloper(reader.select(tmc.getDeveloperExpert()
-						.getAllDevelopers()));
+				plan.addDeveloper(reader.select(tmc.getAllDevelopers()));
 			}
 			if (task.requiresRessources()) {
 				plan.addAllResources(planSelectResources(task, timeSpan));
@@ -268,8 +266,7 @@ public class UiTaskMan {
 	}
 
 	private void selectDeveloper() throws ExitUseCaseException {
-		activeDeveloper = reader.select(tmc.getDeveloperExpert()
-				.getAllDevelopers());
+		activeDeveloper = reader.select(tmc.getAllDevelopers());
 	}
 
 	private void printSwitchUserMenu() {

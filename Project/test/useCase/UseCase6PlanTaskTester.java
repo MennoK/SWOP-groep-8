@@ -68,11 +68,10 @@ public class UseCase6PlanTaskTester {
 
 		// create some developers
 		developerExpert = tmc.getDeveloperExpert();
-		developerExpert.createDeveloper("person1");
-		developerExpert.createDeveloper("person2");
-		developers = new LinkedHashSet<>(developerExpert.getAllDevelopers());
-		developerList = new ArrayList<Developer>(
-				developerExpert.getAllDevelopers());
+		tmc.getDeveloperExpert().createDeveloper("person1");
+		tmc.getDeveloperExpert().createDeveloper("person2");
+		developers = new LinkedHashSet<>(tmc.getAllDevelopers());
+		developerList = new ArrayList<Developer>(tmc.getAllDevelopers());
 	}
 
 	@Test

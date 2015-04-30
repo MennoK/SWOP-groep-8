@@ -17,7 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import taskManager.Developer;
-import taskManager.DeveloperExpert;
 import taskManager.Planning;
 import taskManager.Project;
 import taskManager.Resource;
@@ -250,11 +249,9 @@ public class ParserTester {
 
 	@Test
 	public void testDevelopersMade() {
-		DeveloperExpert developerExpert = taskManController
-				.getDeveloperExpert();
-		assertEquals(3, developerExpert.getAllDevelopers().size());
+		assertEquals(3, taskManController.getAllDevelopers().size());
 		List<Developer> developerList = new ArrayList<Developer>(
-				developerExpert.getAllDevelopers());
+				taskManController.getAllDevelopers());
 		assertEquals("John Deere", developerList.get(0).getName());
 		assertEquals("Tom Hawk", developerList.get(1).getName());
 		assertEquals("Bob Grylls", developerList.get(2).getName());
