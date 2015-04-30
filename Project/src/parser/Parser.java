@@ -50,7 +50,6 @@ public class Parser {
 	private List<TimeInterval> timeIntervals = new ArrayList<TimeInterval>();
 	private List<Task> alltasks = new ArrayList<Task>();
 	private List<Resource> allresources = new ArrayList<Resource>();
-	private List<Developer> alldevelopers = new ArrayList<Developer>();
 
 	/**
 	 * This method parses the input file (needs absolute path) after it has
@@ -219,8 +218,6 @@ public class Parser {
 			String name = (String) developer.get("name");
 			developerExpert.createDeveloper(name);
 		}
-		alldevelopers = new ArrayList<Developer>(
-				developerExpert.getAllDevelopers());
 	}
 
 	/**
@@ -367,7 +364,8 @@ public class Parser {
 		List<Developer> assignedDevs = new ArrayList<Developer>();
 
 		for (Integer devNr : developersNr) {
-			assignedDevs.add(alldevelopers.get(devNr));
+			assignedDevs.add(new ArrayList<Developer>(controller
+					.getAllDevelopers()).get(devNr));
 		}
 
 		int taskNr = (int) (planning.get("task"));

@@ -263,4 +263,43 @@ public class TaskManController {
 		return Collections
 				.unmodifiableList(getProjectExpert().getAllProjects());
 	}
+
+	/**
+	 * Returns the unmodifiable set of all developers
+	 * 
+	 * @return developers : set of all developers
+	 */
+	public Set<Developer> getAllDevelopers() {
+		return Collections.unmodifiableSet(getDeveloperExpert()
+				.getAllDevelopers());
+	}
+
+	/**
+	 * 
+	 * Returns a set with all tasks of a given developer
+	 * 
+	 * @param dev
+	 *            the active Developer
+	 * @return All the tasks to which this developer is assigned.
+	 */
+	public Set<Task> getAllTasks(Developer dev) {
+		return Collections.unmodifiableSet(getProjectExpert().getAllTasks(dev));
+	}
+
+	/**
+	 * Creates a new project with the given arguments and adds the project to
+	 * the list of projects. The creationTime is set to the current time
+	 * 
+	 * @param name
+	 *            : name of the project
+	 * @param description
+	 *            : description of the project
+	 * @param dueTime
+	 *            : due time of the project
+	 */
+	public Project createProject(String name, String description,
+			LocalDateTime dueTime) {
+		return getProjectExpert().createProject(name, description, getTime(),
+				dueTime);
+	}
 }

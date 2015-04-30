@@ -18,7 +18,6 @@ import taskManager.DeveloperExpert;
 import taskManager.Planner;
 import taskManager.Planning;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.Resource;
 import taskManager.ResourceExpert;
 import taskManager.ResourceType;
@@ -39,7 +38,6 @@ public class PlanningTester {
 	private ResourceExpert resourceExpert;
 	private ArrayList<ResourceType> resourceTypeList;
 	private ResourceType resourceType;
-	private ProjectExpert projectExpert;
 	private Developer developer1;
 	private Developer developer2;
 	private ArrayList<Resource> resources;
@@ -70,9 +68,8 @@ public class PlanningTester {
 		resource2.add(resources.get(1));
 		// create a project with a task
 
-		projectExpert = tmController.getProjectExpert();
-		projectExpert.createProject("name", "des", time2.plusDays(13));
-		project = projectExpert.getAllProjects().get(0);
+		tmController.createProject("name", "des", time2.plusDays(13));
+		project = tmController.getAllProjects().get(0);
 		Task.builder("task 1", Duration.ofHours(1), 1).build(project);
 		Task.builder("task 2", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
@@ -124,18 +121,23 @@ public class PlanningTester {
 		assertEquals((this.developerExpert.getAllDevelopers()), planningList
 				.get(1).getDevelopers());
 	}
-	
+
 	@Test(expected = ConlictingPlanningException.class)
-	public void createPlanningInvalidResources(){
-		Task.builder("task 3", Duration.ofHours(2), 1).addRequiredResourceType(resourceType, 1).build(project);
+	public void createPlanningInvalidResources() {
+		Task.builder("task 3", Duration.ofHours(2), 1)
+				.addRequiredResourceType(resourceType, 1).build(project);
 		Task task3 = project.getAllTasks().get(2);
-		Planning.builder(time1, task3, developer1, planner).addAllResources(resource).build();
-		Planning.builder(time1, task2, developer2, planner).addAllResources(resource).build();
+		Planning.builder(time1, task3, developer1, planner)
+				.addAllResources(resource).build();
+		Planning.builder(time1, task2, developer2, planner)
+				.addAllResources(resource).build();
 	}
+
 	@Test(expected = ConlictingPlanningException.class)
-	public void createPlanningInvalidDeveloper(){
+	public void createPlanningInvalidDeveloper() {
 		Planning.builder(time1, task1, developer1, planner).build();
-		Planning.builder(time1, task2, developer1, planner).addAllResources(resource).build();
+		Planning.builder(time1, task2, developer1, planner)
+				.addAllResources(resource).build();
 	}
 
 }

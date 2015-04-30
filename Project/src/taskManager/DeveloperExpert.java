@@ -1,6 +1,5 @@
 package taskManager;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,7 +14,7 @@ public class DeveloperExpert {
 
 	private Set<Developer> developers;
 	private Memento memento;
-	
+
 	/**
 	 * Default constructor of the developer expert. It initializes a new set of
 	 * developers.
@@ -74,31 +73,31 @@ public class DeveloperExpert {
 	 * 
 	 * @return developers : set of all developers
 	 */
-	public Set<Developer> getAllDevelopers() {
-		return Collections.unmodifiableSet(developers);
+	Set<Developer> getAllDevelopers() {
+		return developers;
 	}
-	
+
 	/**
 	 * Saves the current state of the class
 	 */
 	void save() {
 		this.memento = new Memento(this);
 	}
-	
+
 	/**
 	 * Loads the last save state of the class
 	 * 
 	 * @return last state of the class
 	 */
 	void load() {
-		if(this.memento == null) {
-			throw new IllegalStateException("You need to save before you can load");
-		}
-		else {
+		if (this.memento == null) {
+			throw new IllegalStateException(
+					"You need to save before you can load");
+		} else {
 			this.memento.load(this);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Inner momento class of developer expert
@@ -107,26 +106,28 @@ public class DeveloperExpert {
 	 */
 	private class Memento {
 		private Set<Developer> developers;
-		
+
 		/**
 		 * Constructor of the momento inner class of developer expert.
 		 * Initialize a new set of developers of the current state
 		 * 
-		 * @param de : developerExpert
+		 * @param de
+		 *            : developerExpert
 		 */
 		public Memento(DeveloperExpert de) {
 			this.developers = new LinkedHashSet<Developer>(de.developers);
 		}
-		
+
 		/**
-		 * Sets the developer set of the developer class
-		 * to the saved set of the momento class
+		 * Sets the developer set of the developer class to the saved set of the
+		 * momento class
 		 * 
-		 * @param de : developer expert
+		 * @param de
+		 *            : developer expert
 		 */
 		public void load(DeveloperExpert de) {
 			de.developers = this.developers;
 		}
 	}
-	
+
 }

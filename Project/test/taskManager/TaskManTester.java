@@ -24,7 +24,7 @@ public class TaskManTester {
 	}
 
 	protected Project createStandardProject(LocalDateTime dueDate) {
-		return tmc.getProjectExpert().createProject("project", "desc", dueDate);
+		return tmc.createProject("project", "desc", dueDate);
 	}
 
 	protected Task createTask(Project project, Duration taskDuration) {
