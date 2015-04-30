@@ -759,12 +759,11 @@ public class Task implements Visitable {
 	/**
 	 * loads the last saved state of task from the momento
 	 */
-	boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
-			return true;
 		}
 
 	}

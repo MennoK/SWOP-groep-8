@@ -116,12 +116,11 @@ public class TaskManController {
 	 * Loads the last saved state of the system
 	 */
 	public void loadSystem() {
-		if (!(this.getProjectExpert().load()
-				&& this.getDeveloperExpert().load() && this.getPlanner().load()
-				&& this.getResourceExpert().load() && this.taskManClock.load())) {
-			throw new IllegalStateException(
-					"You need to save the system before loading");
-		}
+		this.getProjectExpert().load();
+		this.getDeveloperExpert().load();
+		this.getPlanner().load();
+		this.getResourceExpert().load();
+		this.taskManClock.load();
 	}
 
 	/**

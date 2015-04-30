@@ -351,16 +351,15 @@ public class Project implements Visitable {
 	 * loads the last saved state of the project
 	 * 
 	 */
-	public boolean load() {
+	 void load() {
 		if(this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		}
 		else {
 			this.memento.load(this);
 			for(Task task: this.tasks) {
 				task.load();
 			}
-			return true;
 		}
 	}
 

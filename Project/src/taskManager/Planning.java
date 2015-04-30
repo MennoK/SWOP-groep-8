@@ -269,12 +269,11 @@ public class Planning {
 	 * loads the last saved state of the planning from the
 	 * memento
 	 */
-	boolean load() {
+	void load() {
 		if (this.memento == null) {
-			return false;
+			throw new IllegalStateException("You need to save before you can load");
 		} else {
 			this.memento.load(this);
-			return true;
 		}
 	}
 
