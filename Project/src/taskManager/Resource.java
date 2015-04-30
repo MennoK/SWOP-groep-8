@@ -8,26 +8,28 @@ package taskManager;
 public class Resource implements Visitable {
 
 	private String name;
-	
+
 	/**
-	 * This is the constructor of the resource class. Every
-	 * resource requires an given name.
+	 * This is the constructor of the resource class. Every resource requires an
+	 * given name.
 	 * 
-	 * @param name : given name of the resource
+	 * @param name
+	 *            : given name of the resource
 	 */
-	public Resource (String name){
+	public Resource(String name) {
 		setName(name);
 	}
-	
+
 	/**
 	 * Sets the name of the resource
 	 * 
-	 * @param name : given name of a resource
+	 * @param name
+	 *            : given name of a resource
 	 */
-	private void setName(String name){
+	private void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Returns the name of the resource
 	 * 
@@ -35,6 +37,14 @@ public class Resource implements Visitable {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * to string method for debuging
+	 */
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 	/**

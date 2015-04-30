@@ -69,4 +69,14 @@ public class TaskManTester {
 				.addRequiredResourceType(type, 1).build(project);
 		return task;
 	}
+
+	protected Task createPlannedRessourceTask(Project project,
+			Duration taskDuration, ResourceType type, Resource resource,
+			LocalDateTime startTime) {
+		Task task = createRessourceTask(project, taskDuration, type);
+		Developer dev = tmc.getDeveloperExpert().createDeveloper("dev");
+		Planning.builder(startTime, task, dev, tmc.getPlanner())
+				.addResources(resource).build();
+		return task;
+	}
 }

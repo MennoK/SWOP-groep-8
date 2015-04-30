@@ -734,6 +734,14 @@ public class Task implements Visitable {
 	}
 
 	/**
+	 * To string method for debuging
+	 */
+	@Override
+	public String toString() {
+		return "Task" + getId();
+	}
+
+	/**
 	 * accept visitor for visiting this
 	 */
 	@Override
