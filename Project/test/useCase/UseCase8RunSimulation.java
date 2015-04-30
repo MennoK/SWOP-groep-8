@@ -20,7 +20,6 @@ import taskManager.TaskStatus;
 public class UseCase8RunSimulation {
 
 	private LocalDateTime time;
-	private TaskManController controller;
 	private Project project;
 	private Task baseTask;
 
@@ -29,21 +28,19 @@ public class UseCase8RunSimulation {
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		controller = new TaskManController(time);
-		project = controller.createProject("project", "desc", time.plusDays(4));
-
-		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
+		tmc = new TaskManController(time);
+		project = tmc.createProject("project", "desc", time.plusDays(4));
 
 		// new developerExpert and create a new developer
-		controller.createDeveloper("Bob");
+		tmc.createDeveloper("Bob");
 		ArrayList<Developer> devList = new ArrayList<Developer>();
 		devList.addAll(tmc.getAllDevelopers());
 	}
 
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
-		Developer dev = controller.createDeveloper("dev");
-		Planning.builder(time, task, dev, controller.getPlanner()).build();
+		Developer dev = tmc.createDeveloper("dev");
+		Planning.builder(time, task, dev, tmc.getPlanner()).build();
 		return task;
 	}
 
@@ -55,14 +52,14 @@ public class UseCase8RunSimulation {
 		assertEquals(1, project.getAllTasks().size());
 
 		// save memento
-		controller.saveSystem();
+		tmc.saveSystem();
 
 		// finish Tasks
 		Task baseTaskTwo = createStandardTask(Duration.ofHours(8));
-		controller.setExecuting(baseTask, time);
-		controller.setFinished(baseTask, time.plusHours(8));
-		controller.setExecuting(baseTaskTwo, time);
-		controller.setFinished(baseTaskTwo, time.plusHours(8));
+		tmc.setExecuting(baseTask, time);
+		tmc.setFinished(baseTask, time.plusHours(8));
+		tmc.setExecuting(baseTaskTwo, time);
+		tmc.setFinished(baseTaskTwo, time.plusHours(8));
 
 		// sanity check
 		assertEquals(TaskStatus.FINISHED, baseTask.getStatus());
@@ -71,7 +68,7 @@ public class UseCase8RunSimulation {
 		assertEquals(2, project.getAllTasks().size());
 
 		// load memento
-		controller.loadSystem();
+		tmc.loadSystem();
 
 		// statuses are different
 		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
@@ -85,23 +82,23 @@ public class UseCase8RunSimulation {
 				LocalDateTime.of(2015, 03, 05, 00, 00),
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
-		assertEquals(1, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), tmc
+		assertEquals(2, tmc.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00), tmc
 				.getAllProjects().get(0).getLastUpdateTime());
 
 		tmc.saveSystem();
 
 		tmc.createProject("name2", "description",
-				LocalDateTime.of(2015, 03, 06, 00, 00));
+				LocalDateTime.of(2015, 05, 06, 00, 00));
 
-		assertEquals(2, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), tmc
+		assertEquals(3, tmc.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2015, 03, 05, 00, 00), tmc
 				.getAllProjects().get(1).getCreationTime());
 
 		tmc.loadSystem();
 
-		assertEquals(1, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), tmc
+		assertEquals(2, tmc.getAllProjects().size());
+		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00), tmc
 				.getAllProjects().get(0).getLastUpdateTime());
 
 	}
@@ -123,9 +120,9 @@ public class UseCase8RunSimulation {
 	public void testMementoSavesDevelopers() {
 		tmc.saveSystem();
 		tmc.createDeveloper("Bob");
-		assertEquals(1, tmc.getAllDevelopers().size());
+		assertEquals(2, tmc.getAllDevelopers().size());
 		tmc.loadSystem();
-		assertEquals(0, tmc.getAllDevelopers().size());
+		assertEquals(1, tmc.getAllDevelopers().size());
 	}
 
 }
