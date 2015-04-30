@@ -109,12 +109,43 @@ public class Planner {
 	}
 
 	/**
+	 * This method adds a given planning to the planningExpert
+	 * 
+	 * @param planning
+	 *            : planning to add to project
+	 * @throws IllegalArgumentException
+	 *             : thrown when the given planning is not valid
+	 */
+	void addPlanning(Planning planning) {
+		if (!canHavePlanning(planning)) {
+			throw new IllegalArgumentException(
+					"The given planning is already in the planningExpert.");
+		} else {
+			planningSet.add(planning);
+		}
+	}
+
+	/**
 	 * Removes a planning from the Planner
 	 * 
 	 * @param planning
 	 */
 	void removePlanning(Planning planning) {
 		planningSet.remove(planning);
+	}
+
+	/**
+	 * This method checks if PlanningExpert can have a given planning. It
+	 * returns true if and only if the PlanningExpert does not contain the
+	 * planning yet and the planning is not null
+	 * 
+	 * @param planning
+	 *            : given planning to be added
+	 * @return true if and only if the given planning is not null and the task
+	 *         is not already in the PlanningExpert
+	 */
+	private boolean canHavePlanning(Planning planning) {
+		return (!getAllPlannings().contains(planning) && planning != null);
 	}
 
 	/**
@@ -291,37 +322,6 @@ public class Planner {
 			}
 		}
 		return conflictingPlannings;
-	}
-
-	/**
-	 * This method adds a given planning to the planningExpert
-	 * 
-	 * @param planning
-	 *            : planning to add to project
-	 * @throws IllegalArgumentException
-	 *             : thrown when the given planning is not valid
-	 */
-	void addPlanning(Planning planning) {
-		if (!canHavePlanning(planning)) {
-			throw new IllegalArgumentException(
-					"The given planning is already in the planningExpert.");
-		} else {
-			planningSet.add(planning);
-		}
-	}
-
-	/**
-	 * This method checks if PlanningExpert can have a given planning. It
-	 * returns true if and only if the PlanningExpert does not contain the
-	 * planning yet and the planning is not null
-	 * 
-	 * @param planning
-	 *            : given planning to be added
-	 * @return true if and only if the given planning is not null and the task
-	 *         is not already in the PlanningExpert
-	 */
-	private boolean canHavePlanning(Planning planning) {
-		return (!getAllPlannings().contains(planning) && planning != null);
 	}
 
 	void updateStatus(Task task) {

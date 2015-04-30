@@ -699,11 +699,8 @@ public class Task implements Visitable {
 
 	boolean load() {
 		if (this.memento == null) {
-		if(this.memento == null) {
 			return false;
 		} else {
-		}
-		else {
 			this.memento.load(this);
 			return true;
 		}
@@ -728,7 +725,6 @@ public class Task implements Visitable {
 
 		private int id;
 
-		
 		private TaskStatus status;
 
 		// Het aanmaken van het memento object

@@ -1,12 +1,9 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import taskManager.exception.*;
@@ -111,6 +108,9 @@ public class Planning {
 					&& planner.isAvailableForResources(resources, task,
 							timeSpan)) {
 				Planning planning = new Planning(this);
+				if(task.hasPlanning()) {
+					planner.removePlanning(planning);
+				}
 				planner.addPlanning(planning);
 				task.setPlanning(planning);
 				planner.updateStatus(task);
