@@ -13,11 +13,13 @@ import utility.TimeSpan;
 public class TaskManControllerTester extends TaskManTester {
 
 	private Project project;
+	private Developer dev;
 
 	@Before
 	public void setUp() {
 		super.setUp();
 		project = createStandardProject(time.plusDays(5));
+		dev = tmc.getDeveloperExpert().createDeveloper("dev");
 	}
 
 	@Test
