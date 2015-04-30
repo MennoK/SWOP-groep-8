@@ -125,11 +125,11 @@ public class Task implements Visitable {
 			if (((requiredResourceType.getDailyAvailability().getBegin()
 					.isAfter(WorkDay.getStartTime()) || requiredResourceType
 					.getDailyAvailability().getEnd()
-					.isBefore(WorkDay.getEndTime()))
-					&& estimatedDuration.compareTo(Duration.between(
+					.isBefore(WorkDay.getEndTime())) && estimatedDuration
+					.compareTo(Duration.between(requiredResourceType
+							.getDailyAvailability().getBegin(),
 							requiredResourceType.getDailyAvailability()
-							.getBegin(), requiredResourceType
-							.getDailyAvailability().getEnd())) > 0)) {
+									.getEnd())) > 0)) {
 				throw new IllegalArgumentException(
 						"The estimated duration of the task is longer then the availablitiy of the resource");
 
@@ -137,29 +137,51 @@ public class Task implements Visitable {
 				this.requiredResourceTypes.put(requiredResourceType, quantity);
 			}
 			return this;
+		
+		}
+		
+		private boolean checkRequiredResources() {
+			for (ResourceType type : requiredResourceTypes.keySet()) {
+				if(!type.getRequiredResourceTypes().isEmpty()){
+					for (ResourceType requiredResourceType : type.getRequiredResourceTypes()) {
+						if(!requiredResourceTypes.keySet().contains(requiredResourceType)){
+							return false;
+						}
+					}
+				}
+			}
+			return true;
 		}
 
 		/**
-		 * Build a Task after all the optional values have been set.
-		 * An project is required to add the created task to.
+		 * Build a Task after all the optional values have been set. An project
+		 * is required to add the created task to.
 		 */
 		public Task build(Project project) {
-			this.now = project.getLastUpdateTime();
-			Task task = new Task(this);
-			project.updateDependencies(task, originalTask);
-			project.addTask(task);
-			return task;
+			if (checkRequiredResources()) {
+				this.now = project.getLastUpdateTime();
+				Task task = new Task(this);
+				project.updateDependencies(task, originalTask);
+				project.addTask(task);
+				return task;
+			} else {
+				throw new IllegalStateException("A resource is requiring an other resource.");
+			}
 		}
+
+		
 	}
 
 	/**
-	 * Static method that creates a new taskbuilder.
-	 * This method returns the builder after all given required
-	 * parameters are set.
+	 * Static method that creates a new taskbuilder. This method returns the
+	 * builder after all given required parameters are set.
 	 * 
-	 * @param description : required description of a task
-	 * @param estimatedDuration : required duration
-	 * @param acceptableDeviation : required deviation
+	 * @param description
+	 *            : required description of a task
+	 * @param estimatedDuration
+	 *            : required duration
+	 * @param acceptableDeviation
+	 *            : required deviation
 	 * @return taskBuilder : new taskBuilder
 	 */
 	public static TaskBuilder builder(String description,
@@ -468,7 +490,8 @@ public class Task implements Visitable {
 	/**
 	 * Sets a new task status to the task
 	 * 
-	 * @param status : given task status
+	 * @param status
+	 *            : given task status
 	 */
 	void setStatus(TaskStatus status) {
 		this.status = status;
@@ -699,10 +722,10 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Sets the endtime of a planning if the task
-	 * has a planning
+	 * Sets the endtime of a planning if the task has a planning
 	 * 
-	 * @param endTime : endtime of a planning
+	 * @param endTime
+	 *            : endtime of a planning
 	 */
 	private void setEndTimePlanning(LocalDateTime endTime) {
 		if (this.hasPlanning()) {
@@ -719,22 +742,19 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Saves the current state of the task
-	 * to a new memento
+	 * Saves the current state of the task to a new memento
 	 */
 	void save() {
 		this.memento = new Memento(this);
 	}
 
 	/**
-	 * loads the last saved state of task from
-	 * the momento 
+	 * loads the last saved state of task from the momento
 	 */
 	boolean load() {
-		if(this.memento == null) {
+		if (this.memento == null) {
 			return false;
-		} 
-		else {
+		} else {
 			this.memento.load(this);
 			return true;
 		}
@@ -743,7 +763,7 @@ public class Task implements Visitable {
 
 	/**
 	 * 
-	 * Inner momento class of task 
+	 * Inner momento class of task
 	 * 
 	 * @author groep 8
 	 */
@@ -764,7 +784,6 @@ public class Task implements Visitable {
 		private Planning planning;
 
 		private int id;
-
 
 		private TaskStatus status;
 
@@ -799,10 +818,10 @@ public class Task implements Visitable {
 		}
 
 		/**
-		 * Sets the parameters of the task to the saved
-		 * parameters
+		 * Sets the parameters of the task to the saved parameters
 		 * 
-		 * @param task : given task
+		 * @param task
+		 *            : given task
 		 */
 		public void load(Task task) {
 			task.description = this.description;
