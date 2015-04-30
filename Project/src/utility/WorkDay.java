@@ -47,4 +47,10 @@ public class WorkDay {
 		return schedule;
 	}
 
+	public static LocalTime getStartTime(){
+		return STARTTIME;
+	}
+	public static LocalTime getEndTime(){
+		return ENDTIME; 
+	}
 }

@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import utility.TimeInterval;
+import utility.WorkDay;
 
 /**
  * Each resource has a specific type, and for each type of resource, numerous
@@ -53,6 +54,7 @@ public class ResourceType {
 		 */
 		public ResourceTypeBuilder(String name) {
 			this.name = name;
+			dailyAvailability = new TimeInterval(WorkDay.getStartTime(), WorkDay.getEndTime());
 		}
 
 		/**
@@ -352,11 +354,18 @@ public class ResourceType {
 		return Collections.unmodifiableSet(conflictedResourceTypes);
 	}
 	
-	
+	/**
+	 * Saves the current state of the class
+	 */
 	void save() {
 		this.memento = new Memento(this);
 	}
 
+	/**
+	 * Loads the last save state of the class
+	 * 
+	 * @return last state of the class
+	 */
 	boolean load() {
 		if (this.memento == null) {
 			return false;
@@ -366,6 +375,12 @@ public class ResourceType {
 		}
 	}
 
+	/**
+	 * 
+	 * Inner momento class of resource type
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 		private String name;
 		private Set<ResourceType> requiredResourceTypes;
@@ -373,6 +388,13 @@ public class ResourceType {
 		private Set<Resource> resources;
 		private TimeInterval dailyAvailability;
 
+		/**
+		 * Constructor of the momento inner class of a resource type.
+		 * Initialize all parameters of the current state
+		 * of the resource type
+		 * 
+		 * @param rt : resource type
+		 */
 		public Memento(ResourceType rt) {
 			this.name = new String(rt.name);
 			this.requiredResourceTypes = new LinkedHashSet<ResourceType>(rt.requiredResourceTypes);
@@ -381,6 +403,12 @@ public class ResourceType {
 			this.dailyAvailability = rt.dailyAvailability;
 		}
 
+		/**
+		 * Sets the parameters of the resource type
+		 * to the saved state of the momento
+		 * 
+		 * @param rt : resource typ
+		 */
 		public void load(ResourceType rt) {
 			rt.name = this.name;
 			rt.conflictedResourceTypes = this.conflictedResourceTypes;

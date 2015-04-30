@@ -14,7 +14,6 @@ import java.util.Set;
 public class DeveloperExpert {
 
 	private Set<Developer> developers;
-
 	private Memento memento;
 	
 	/**
@@ -71,7 +70,7 @@ public class DeveloperExpert {
 	}
 
 	/**
-	 * Returns the set of all developers
+	 * Returns the unmodifiable set of all developers
 	 * 
 	 * @return developers : set of all developers
 	 */
@@ -79,10 +78,18 @@ public class DeveloperExpert {
 		return Collections.unmodifiableSet(developers);
 	}
 	
+	/**
+	 * Saves the current state of the class
+	 */
 	void save() {
 		this.memento = new Memento(this);
 	}
 	
+	/**
+	 * Loads the last save state of the class
+	 * 
+	 * @return last state of the class
+	 */
 	boolean load() {
 		if(this.memento == null) {
 			return false;
@@ -93,13 +100,31 @@ public class DeveloperExpert {
 		}
 	}
 	
+	/**
+	 * 
+	 * Inner momento class of developer expert
+	 * 
+	 * @author groep 8
+	 */
 	private class Memento {
 		private Set<Developer> developers;
 		
+		/**
+		 * Constructor of the momento inner class of developer expert.
+		 * Initialize a new set of developers of the current state
+		 * 
+		 * @param de : developerExpert
+		 */
 		public Memento(DeveloperExpert de) {
 			this.developers = new LinkedHashSet<Developer>(de.developers);
 		}
 		
+		/**
+		 * Sets the developer set of the developer class
+		 * to the saved set of the momento class
+		 * 
+		 * @param de : developer expert
+		 */
 		public void load(DeveloperExpert de) {
 			de.developers = this.developers;
 		}
