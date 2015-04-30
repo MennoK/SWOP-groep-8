@@ -1,12 +1,9 @@
 package taskManager;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import taskManager.exception.*;
