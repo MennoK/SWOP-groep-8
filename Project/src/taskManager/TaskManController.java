@@ -90,7 +90,7 @@ public class TaskManController {
 	 * 
 	 * @return projectExpert : project expert
 	 */
-	public ProjectExpert getProjectExpert() {
+	private ProjectExpert getProjectExpert() {
 		return projectExpert;
 	}
 
@@ -262,6 +262,16 @@ public class TaskManController {
 	public List<Project> getAllProjects() {
 		return Collections
 				.unmodifiableList(getProjectExpert().getAllProjects());
+	}
+
+	/**
+	 * Returns the set of all resource types
+	 * 
+	 * @return resourcetypes : set of all resource types
+	 */
+	public Set<ResourceType> getAllResourceTypes() {
+		return Collections.unmodifiableSet(getResourceExpert()
+				.getAllResourceTypes());
 	}
 
 	/**

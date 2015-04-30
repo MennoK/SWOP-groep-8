@@ -81,7 +81,7 @@ public class ProjectExpert implements TimeObserver {
 	 * @return true if and only if the project controller does not contain the
 	 *         project yet and the project is not null
 	 */
-	boolean canHaveProject(Project project) {
+	private boolean canHaveProject(Project project) {
 		return (!getAllProjects().contains(project) && project != null);
 	}
 

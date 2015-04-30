@@ -26,7 +26,7 @@ import taskManager.exception.ConlictingPlanningException;
 
 public class PlanningTester {
 
-	public TaskManController tmController;
+	public TaskManController tmc;
 	public Planner planner;
 	public LocalDateTime time1;
 	public LocalDateTime time2;
@@ -47,14 +47,14 @@ public class PlanningTester {
 		// 2 default times
 		this.time1 = LocalDateTime.of(2015, 03, 10, 11, 00);
 		this.time2 = LocalDateTime.of(2015, 03, 10, 15, 00);
-		tmController = new TaskManController(time1);
+		tmc = new TaskManController(time1);
 		// create planning expert
-		this.planner = tmController.getPlanner();
+		this.planner = tmc.getPlanner();
 		// create some resources
-		resourceExpert = tmController.getResourceExpert();
+		resourceExpert = tmc.getResourceExpert();
 		ResourceType.builder("type").build(resourceExpert);
 		resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 		resourceType = resourceTypeList.get(0);
 		resourceType.createResource("resource");
 		resourceType.createResource("resource2");
@@ -66,8 +66,8 @@ public class PlanningTester {
 		resource2.add(resources.get(1));
 		// create a project with a task
 
-		tmController.createProject("name", "des", time2.plusDays(13));
-		project = tmController.getAllProjects().get(0);
+		tmc.createProject("name", "des", time2.plusDays(13));
+		project = tmc.getAllProjects().get(0);
 		Task.builder("task 1", Duration.ofHours(1), 1).build(project);
 		Task.builder("task 2", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
@@ -75,11 +75,11 @@ public class PlanningTester {
 		task2 = project.getAllTasks().get(1);
 
 		// create some developers
-		tmController.createDeveloper("person1resource2 = resources.get(1);");
-		tmController.createDeveloper("person2");
+		tmc.createDeveloper("person1resource2 = resources.get(1);");
+		tmc.createDeveloper("person2");
 
-		developer1 = (Developer) tmController.getAllDevelopers().toArray()[0];
-		developer2 = (Developer) tmController.getAllDevelopers().toArray()[1];
+		developer1 = (Developer) tmc.getAllDevelopers().toArray()[0];
+		developer2 = (Developer) tmc.getAllDevelopers().toArray()[1];
 
 	}
 
@@ -108,14 +108,14 @@ public class PlanningTester {
 		assertEquals(this.time1, planningList.get(0).getTimeSpan().getBegin());
 		assertEquals(time1.plus(task1.getDuration()), planningList.get(0)
 				.getTimeSpan().getEnd());
-		assertEquals(tmController.getAllDevelopers(), planningList.get(0)
+		assertEquals(tmc.getAllDevelopers(), planningList.get(0)
 				.getDevelopers());
 		assertTrue(planningList.get(0).getResources().isEmpty());
 
 		assertEquals(this.time2, planningList.get(1).getTimeSpan().getBegin());
 		assertEquals(time2.plus(task2.getDuration()), planningList.get(1)
 				.getTimeSpan().getEnd());
-		assertEquals((tmController.getAllDevelopers()), planningList.get(1)
+		assertEquals((tmc.getAllDevelopers()), planningList.get(1)
 				.getDevelopers());
 	}
 

@@ -28,7 +28,7 @@ public class ParserTester {
 
 	DateTimeFormatter dateTimeFormatter = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd HH:mm");
-	static TaskManController taskManController;
+	static TaskManController tmc;
 	static List<ResourceType> resourceTypeList;
 	static List<Planning> planningsList;
 
@@ -36,11 +36,11 @@ public class ParserTester {
 	@BeforeClass
 	public static void setUp() {
 		try {
-			taskManController = new Parser().parse("./input2.tman");
-			resourceTypeList = new ArrayList<ResourceType>(taskManController
-					.getResourceExpert().getAllResourceTypes());
-			planningsList = new ArrayList<Planning>(taskManController
-					.getPlanner().getAllPlannings());
+			tmc = new Parser().parse("./input2.tman");
+			resourceTypeList = new ArrayList<ResourceType>(
+					tmc.getAllResourceTypes());
+			planningsList = new ArrayList<Planning>(tmc.getPlanner()
+					.getAllPlannings());
 		} catch (FileNotFoundException | RuntimeException e) {
 			e.printStackTrace();
 		}
@@ -50,13 +50,12 @@ public class ParserTester {
 	public void testSystemTime() {
 		assertEquals(
 				LocalDateTime.parse("2014-04-01 09:00", dateTimeFormatter),
-				taskManController.getTime());
+				tmc.getTime());
 	}
 
 	@Test
 	public void testSixResourceTypesMade() {
-		assertEquals(6, taskManController.getResourceExpert()
-				.getAllResourceTypes().size());
+		assertEquals(6, tmc.getAllResourceTypes().size());
 	}
 
 	@Test
@@ -244,14 +243,14 @@ public class ParserTester {
 
 	@Test
 	public void testThreeProjectsAreMade() {
-		assertEquals(3, taskManController.getAllProjects().size());
+		assertEquals(3, tmc.getAllProjects().size());
 	}
 
 	@Test
 	public void testDevelopersMade() {
-		assertEquals(3, taskManController.getAllDevelopers().size());
+		assertEquals(3, tmc.getAllDevelopers().size());
 		List<Developer> developerList = new ArrayList<Developer>(
-				taskManController.getAllDevelopers());
+				tmc.getAllDevelopers());
 		assertEquals("John Deere", developerList.get(0).getName());
 		assertEquals("Tom Hawk", developerList.get(1).getName());
 		assertEquals("Bob Grylls", developerList.get(2).getName());
@@ -259,7 +258,7 @@ public class ParserTester {
 
 	@Test
 	public void testProjectxIsMade() {
-		Project projectx = taskManController.getAllProjects().get(0);
+		Project projectx = tmc.getAllProjects().get(0);
 		assertEquals("project x", projectx.getName());
 		assertEquals("a project description", projectx.getDescription());
 		assertEquals(projectx.getCreationTime(),
@@ -270,7 +269,7 @@ public class ParserTester {
 
 	@Test
 	public void testProjectyIsMade() {
-		Project projecty = taskManController.getAllProjects().get(1);
+		Project projecty = tmc.getAllProjects().get(1);
 		assertEquals("project y", projecty.getName());
 		assertEquals("another project description", projecty.getDescription());
 		assertEquals(projecty.getCreationTime(),
@@ -281,7 +280,7 @@ public class ParserTester {
 
 	@Test
 	public void testProjectzIsMade() {
-		Project projectz = taskManController.getAllProjects().get(2);
+		Project projectz = tmc.getAllProjects().get(2);
 		assertEquals("project z", projectz.getName());
 		assertEquals(projectz.getDescription(),
 				"yet another project description");
@@ -293,13 +292,13 @@ public class ParserTester {
 
 	@Test
 	public void testOneTaskOfProjectxIsMade() {
-		Project projectx = taskManController.getAllProjects().get(0);
+		Project projectx = tmc.getAllProjects().get(0);
 		assertEquals(1, projectx.getAllTasks().size());
 	}
 
 	@Test
 	public void testTaskOneOfProjectxIsMade() {
-		Project projectx = taskManController.getAllProjects().get(0);
+		Project projectx = tmc.getAllProjects().get(0);
 		Task task1 = projectx.getAllTasks().get(0);
 
 		assertEquals("task description", task1.getDescription());
@@ -325,13 +324,13 @@ public class ParserTester {
 
 	@Test
 	public void testFourTasksOfProjectyAreMade() {
-		Project projecty = taskManController.getAllProjects().get(1);
+		Project projecty = tmc.getAllProjects().get(1);
 		assertEquals(4, projecty.getAllTasks().size());
 	}
 
 	@Test
 	public void testTaskOneOfProjectyIsMade() {
-		Project projecty = taskManController.getAllProjects().get(1);
+		Project projecty = tmc.getAllProjects().get(1);
 		Task task1 = projecty.getAllTasks().get(0);
 
 		assertEquals("another task description", task1.getDescription());
@@ -351,7 +350,7 @@ public class ParserTester {
 
 	@Test
 	public void testTaskTwoOfProjectyIsMade() {
-		Project projecty = taskManController.getAllProjects().get(1);
+		Project projecty = tmc.getAllProjects().get(1);
 		Task task2 = projecty.getAllTasks().get(1);
 
 		assertEquals("yet another task description", task2.getDescription());
@@ -368,7 +367,7 @@ public class ParserTester {
 
 	@Test
 	public void testTaskThreeOfProjectyIsMade() {
-		Project projecty = taskManController.getAllProjects().get(1);
+		Project projecty = tmc.getAllProjects().get(1);
 		Task task3 = projecty.getAllTasks().get(2);
 
 		assertEquals("description", task3.getDescription());
@@ -389,15 +388,15 @@ public class ParserTester {
 
 	@Test
 	public void testTaskFourOfProjectyIsMade() {
-		Project projecty = taskManController.getAllProjects().get(1);
+		Project projecty = tmc.getAllProjects().get(1);
 		Task task4 = projecty.getAllTasks().get(3);
 
 		assertEquals("description", task4.getDescription());
 		assertEquals(Duration.ofHours(4), task4.getEstimatedDuration());
 		assertEquals(task4.getAcceptableDeviation(), 0, 0.001);
 		assertEquals(1, task4.getDependencies().size());
-		assertEquals(task4.getOriginal(), taskManController.getAllProjects()
-				.get(1).getAllTasks().get(2));
+		assertEquals(task4.getOriginal(), tmc.getAllProjects().get(1)
+				.getAllTasks().get(2));
 
 		assertEquals(
 				LocalDateTime.parse("2014-03-26 09:00", dateTimeFormatter),
@@ -415,13 +414,13 @@ public class ParserTester {
 
 	@Test
 	public void testTwoTasksOfProjectzAreMade() {
-		Project projectz = taskManController.getAllProjects().get(2);
+		Project projectz = tmc.getAllProjects().get(2);
 		assertEquals(2, projectz.getAllTasks().size());
 	}
 
 	@Test
 	public void testTaskOneOfProjectzIsMade() {
-		Project projectz = taskManController.getAllProjects().get(2);
+		Project projectz = tmc.getAllProjects().get(2);
 		Task task1 = projectz.getAllTasks().get(0);
 
 		assertEquals("description", task1.getDescription());
@@ -438,7 +437,7 @@ public class ParserTester {
 
 	@Test
 	public void testTaskTwoOfProjectzIsMade() {
-		Project projectz = taskManController.getAllProjects().get(2);
+		Project projectz = tmc.getAllProjects().get(2);
 		Task task2 = projectz.getAllTasks().get(1);
 
 		assertEquals("description", task2.getDescription());
@@ -456,7 +455,7 @@ public class ParserTester {
 
 	@Test
 	public void testFourPlanningAreMade() {
-		assertEquals(4, taskManController.getPlanner().getAllPlannings().size());
+		assertEquals(4, tmc.getPlanner().getAllPlannings().size());
 	}
 
 	@Test
@@ -482,8 +481,8 @@ public class ParserTester {
 		assertTrue(ressourceNames.contains(resources.get(1).getName()));
 		assertTrue(ressourceNames.contains(resources.get(2).getName()));
 
-		assertTrue(taskManController.getAllProjects().get(1).getAllTasks()
-				.get(2).hasPlanning());
+		assertTrue(tmc.getAllProjects().get(1).getAllTasks().get(2)
+				.hasPlanning());
 
 	}
 
@@ -500,8 +499,8 @@ public class ParserTester {
 
 		assertEquals(0, planningsList.get(2).getResources().size());
 
-		assertTrue(taskManController.getAllProjects().get(1).getAllTasks()
-				.get(3).hasPlanning());
+		assertTrue(tmc.getAllProjects().get(1).getAllTasks().get(3)
+				.hasPlanning());
 
 	}
 
@@ -518,8 +517,8 @@ public class ParserTester {
 
 		assertEquals(0, planningsList.get(2).getResources().size());
 
-		assertTrue(taskManController.getAllProjects().get(1).getAllTasks()
-				.get(3).hasPlanning());
+		assertTrue(tmc.getAllProjects().get(1).getAllTasks().get(3)
+				.hasPlanning());
 
 	}
 
@@ -539,7 +538,7 @@ public class ParserTester {
 		assertEquals(1, resources.size());
 		assertEquals("Data Center Y", resources.get(0).getName());
 
-		assertTrue(taskManController.getAllProjects().get(0).getAllTasks()
-				.get(0).hasPlanning());
+		assertTrue(tmc.getAllProjects().get(0).getAllTasks().get(0)
+				.hasPlanning());
 	}
 }

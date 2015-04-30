@@ -22,7 +22,6 @@ import taskManager.Developer;
 import taskManager.Planning;
 import taskManager.Planning.PlanningBuilder;
 import taskManager.Project;
-import taskManager.ProjectExpert;
 import taskManager.Resource;
 import taskManager.ResourceExpert;
 import taskManager.ResourceType;
@@ -85,12 +84,12 @@ public class Parser {
 		constructResourceTypes(
 				(List<LinkedHashMap<String, Object>>) objects
 						.get("resourceTypes"),
-				controller.getResourceExpert());
+				controller);
 
 		// create all resources
 		constructResources(
 				(List<LinkedHashMap<String, Object>>) objects.get("resources"),
-				controller.getResourceExpert());
+				controller);
 
 		// create all developers
 		constructDevelopers(
@@ -106,8 +105,7 @@ public class Parser {
 		constructTasks(
 				(List<LinkedHashMap<String, Object>>) objects.get("tasks"),
 				(List<LinkedHashMap<String, Object>>) objects.get("plannings"),
-				controller.getProjectExpert(), controller.getResourceExpert(),
-				controller);
+				controller.getResourceExpert(), controller);
 
 		return controller;
 	}
@@ -141,7 +139,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructResourceTypes(
 			List<LinkedHashMap<String, Object>> resourceTypes,
-			ResourceExpert resourceExpert) {
+			TaskManController tmc) {
 
 		for (LinkedHashMap<String, Object> resourceType : resourceTypes) {
 
@@ -149,7 +147,7 @@ public class Parser {
 
 			ResourceTypeBuilder builder = ResourceType.builder(name);
 			List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
-					resourceExpert.getAllResourceTypes());
+					tmc.getAllResourceTypes());
 
 			if (resourceType.get("requires") != null) {
 				ArrayList<Integer> requiredResourceTypes = (ArrayList<Integer>) resourceType
@@ -176,7 +174,7 @@ public class Parser {
 						.get(dailyAvailability));
 			}
 
-			builder.build(resourceExpert);
+			builder.build(tmc.getResourceExpert());
 		}
 	}
 
@@ -184,11 +182,10 @@ public class Parser {
 	 * Construct the resources
 	 */
 	private void constructResources(
-			List<LinkedHashMap<String, Object>> resources,
-			ResourceExpert resourceExpert) {
+			List<LinkedHashMap<String, Object>> resources, TaskManController tmc) {
 
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
-				resourceExpert.getAllResourceTypes());
+				tmc.getAllResourceTypes());
 
 		for (LinkedHashMap<String, Object> resource : resources) {
 			String name = (String) resource.get("name");
@@ -199,7 +196,7 @@ public class Parser {
 			resourceTypeOfResource.createResource(name);
 		}
 
-		for (ResourceType type : resourceExpert.getAllResourceTypes()) {
+		for (ResourceType type : tmc.getAllResourceTypes()) {
 			for (Resource resource : type.getAllResources()) {
 				allresources.add(resource);
 			}
@@ -246,8 +243,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
 			List<LinkedHashMap<String, Object>> plannings,
-			ProjectExpert projectExpert, ResourceExpert resourceExpert,
-			TaskManController controller) {
+			ResourceExpert resourceExpert, TaskManController controller) {
 
 		Set<Integer> taskNrSet = new HashSet<Integer>();
 		for (LinkedHashMap<String, Object> planning : plannings) {
@@ -293,7 +289,7 @@ public class Parser {
 			// add required resource types
 			if (task.get("requiredTypes") != null) {
 				List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
-						resourceExpert.getAllResourceTypes());
+						controller.getAllResourceTypes());
 				for (LinkedHashMap<String, Object> pair : (List<LinkedHashMap<String, Object>>) task
 						.get("requiredTypes")) {
 					builder.addRequiredResourceType(
