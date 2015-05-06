@@ -635,7 +635,7 @@ public class Task implements Visitable {
 	 * Saves the current state of the task to a new memento
 	 */
 	void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 	}
 
 	/**
@@ -645,7 +645,7 @@ public class Task implements Visitable {
 		if (this.memento == null) {
 			throw new IllegalStateException("You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 		}
 
 	}
@@ -686,24 +686,24 @@ public class Task implements Visitable {
 		 * 
 		 * @param task
 		 */
-		public Memento(Task task) {
-			this.description = new String(task.description);
-			this.estimatedDuration = task.estimatedDuration.plusSeconds(0);
-			this.acceptableDeviation = new Double(task.acceptableDeviation);
+		public Memento() {
+			this.description = new String(Task.this.description);
+			this.estimatedDuration = Task.this.estimatedDuration.plusSeconds(0);
+			this.acceptableDeviation = new Double(Task.this.acceptableDeviation);
 
-			this.dependencies = new ArrayList<Task>(task.dependencies);
+			this.dependencies = new ArrayList<Task>(Task.this.dependencies);
 			this.requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>(
-					task.requiredResourceTypes);
-			this.originalTask = task.originalTask;
+					Task.this.requiredResourceTypes);
+			this.originalTask = Task.this.originalTask;
 
-			this.endTime = task.endTime;
-			this.startTime = task.startTime;
-			this.lastUpdateTime = task.lastUpdateTime;
+			this.endTime = Task.this.endTime;
+			this.startTime = Task.this.startTime;
+			this.lastUpdateTime = Task.this.lastUpdateTime;
 
-			this.planning = task.planning;
-			this.id = task.id;
+			this.planning = Task.this.planning;
+			this.id = Task.this.id;
 
-			this.status = task.status;
+			this.status = Task.this.status;
 		}
 
 		/**
@@ -712,23 +712,23 @@ public class Task implements Visitable {
 		 * @param task
 		 *            : given task
 		 */
-		public void load(Task task) {
-			task.description = this.description;
-			task.estimatedDuration = this.estimatedDuration;
-			task.acceptableDeviation = this.acceptableDeviation;
+		public void load() {
+			Task.this.description = this.description;
+			Task.this.estimatedDuration = this.estimatedDuration;
+			Task.this.acceptableDeviation = this.acceptableDeviation;
 
-			task.dependencies = this.dependencies;
-			task.requiredResourceTypes = this.requiredResourceTypes;
-			task.originalTask = this.originalTask;
+			Task.this.dependencies = this.dependencies;
+			Task.this.requiredResourceTypes = this.requiredResourceTypes;
+			Task.this.originalTask = this.originalTask;
 
-			task.endTime = this.endTime;
-			task.startTime = this.startTime;
-			task.lastUpdateTime = this.lastUpdateTime;
+			Task.this.endTime = this.endTime;
+			Task.this.startTime = this.startTime;
+			Task.this.lastUpdateTime = this.lastUpdateTime;
 
-			task.planning = this.planning;
-			task.id = this.id;
+			Task.this.planning = this.planning;
+			Task.this.id = this.id;
 
-			task.status = this.status;
+			Task.this.status = this.status;
 		}
 	}
 	

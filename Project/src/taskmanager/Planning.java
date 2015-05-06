@@ -138,7 +138,7 @@ public class Planning {
 	 * saves the current state of planning in the memento
 	 */
 	void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class Planning {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 		}
 	}
 
@@ -170,10 +170,10 @@ public class Planning {
 		 * 
 		 * @param planning
 		 */
-		public Memento(Planning planning) {
-			this.timeSpan = planning.timeSpan;
-			this.developers = new LinkedHashSet<Developer>(planning.developers);
-			this.resources = new LinkedHashSet<Resource>(planning.resources);
+		public Memento() {
+			this.timeSpan = Planning.this.timeSpan;
+			this.developers = new LinkedHashSet<Developer>(Planning.this.developers);
+			this.resources = new LinkedHashSet<Resource>(Planning.this.resources);
 		}
 
 		/**
@@ -182,10 +182,10 @@ public class Planning {
 		 * 
 		 * @param planning
 		 */
-		public void load(Planning planning) {
-			planning.timeSpan = this.timeSpan;
-			planning.developers = this.developers;
-			planning.resources = this.resources;
+		public void load() {
+			Planning.this.timeSpan = this.timeSpan;
+			Planning.this.developers = this.developers;
+			Planning.this.resources = this.resources;
 		}
 	}
 

@@ -81,7 +81,7 @@ public class DeveloperExpert {
 	 * Saves the current state of the class
 	 */
 	void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class DeveloperExpert {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 		}
 	}
 
@@ -114,8 +114,8 @@ public class DeveloperExpert {
 		 * @param de
 		 *            : developerExpert
 		 */
-		public Memento(DeveloperExpert de) {
-			this.developers = new LinkedHashSet<Developer>(de.developers);
+		public Memento() {
+			this.developers = new LinkedHashSet<Developer>(DeveloperExpert.this.developers);
 		}
 
 		/**
@@ -125,8 +125,8 @@ public class DeveloperExpert {
 		 * @param de
 		 *            : developer expert
 		 */
-		public void load(DeveloperExpert de) {
-			de.developers = this.developers;
+		public void load() {
+			DeveloperExpert.this.developers = this.developers;
 		}
 	}
 

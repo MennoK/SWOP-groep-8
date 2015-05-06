@@ -64,7 +64,7 @@ public class ResourceExpert {
 	 * Saves the current state of the class
 	 */
 	void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 		for (ResourceType rt : this.resourcetypes) {
 			rt.save();
 		}
@@ -78,7 +78,7 @@ public class ResourceExpert {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 			for (ResourceType rt : this.resourcetypes) {
 				rt.load();
 			}
@@ -101,9 +101,9 @@ public class ResourceExpert {
 		 * @param re
 		 *            : resourcetype expert
 		 */
-		public Memento(ResourceExpert re) {
+		public Memento() {
 			this.resourcetypes = new LinkedHashSet<ResourceType>(
-					re.resourcetypes);
+					ResourceExpert.this.resourcetypes);
 		}
 
 		/**
@@ -113,8 +113,8 @@ public class ResourceExpert {
 		 * @param re
 		 *            : resourcetype expert
 		 */
-		public void load(ResourceExpert re) {
-			re.resourcetypes = this.resourcetypes;
+		public void load() {
+			ResourceExpert.this.resourcetypes = this.resourcetypes;
 		}
 	}
 }

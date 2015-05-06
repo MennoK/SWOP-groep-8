@@ -144,7 +144,7 @@ public class ProjectExpert implements TimeObserver {
 	 * Saves the current state of the project expert
 	 */
 	void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 		for (Project project : this.projects) {
 			project.save();
 		}
@@ -160,7 +160,7 @@ public class ProjectExpert implements TimeObserver {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 			for (Project project : this.projects) {
 				project.load();
 			}
@@ -185,9 +185,9 @@ public class ProjectExpert implements TimeObserver {
 		 * @param pe
 		 *            : projectExpert
 		 */
-		public Memento(ProjectExpert pe) {
-			this.projects = new ArrayList<Project>(pe.projects);
-			this.lastUpdateTime = pe.lastUpdateTime;
+		public Memento() {
+			this.projects = new ArrayList<Project>(ProjectExpert.this.projects);
+			this.lastUpdateTime = ProjectExpert.this.lastUpdateTime;
 		}
 
 		/**
@@ -197,9 +197,9 @@ public class ProjectExpert implements TimeObserver {
 		 * @param pe
 		 *            : projectExpert
 		 */
-		public void load(ProjectExpert pe) {
-			pe.projects = this.projects;
-			pe.lastUpdateTime = this.lastUpdateTime;
+		public void load() {
+			ProjectExpert.this.projects = this.projects;
+			ProjectExpert.this.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
 

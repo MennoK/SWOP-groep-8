@@ -341,7 +341,7 @@ public class Project implements Visitable {
 	 * Saves the current state of the project
 	 */
 	public void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 		for (Task task : this.tasks) {
 			task.save();
 		}
@@ -356,7 +356,7 @@ public class Project implements Visitable {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 			for (Task task : this.tasks) {
 				task.load();
 			}
@@ -384,13 +384,13 @@ public class Project implements Visitable {
 		 * @param project
 		 *            : project
 		 */
-		public Memento(Project project) {
-			this.tasks = new ArrayList<Task>(project.tasks);
-			this.name = new String(project.name);
-			this.description = new String(project.description);
-			this.dueTime = project.dueTime;
+		public Memento() {
+			this.tasks = new ArrayList<Task>(Project.this.tasks);
+			this.name = new String(Project.this.name);
+			this.description = new String(Project.this.description);
+			this.dueTime = Project.this.dueTime;
 
-			this.lastUpdateTime = project.lastUpdateTime;
+			this.lastUpdateTime = Project.this.lastUpdateTime;
 		}
 
 		/**
@@ -400,13 +400,13 @@ public class Project implements Visitable {
 		 * 
 		 * @param project
 		 */
-		public void load(Project project) {
-			project.tasks = this.tasks;
-			project.name = this.name;
-			project.description = this.description;
-			project.dueTime = this.dueTime;
+		public void load() {
+			Project.this.tasks = this.tasks;
+			Project.this.name = this.name;
+			Project.this.description = this.description;
+			Project.this.dueTime = this.dueTime;
 
-			project.lastUpdateTime = this.lastUpdateTime;
+			Project.this.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
 }

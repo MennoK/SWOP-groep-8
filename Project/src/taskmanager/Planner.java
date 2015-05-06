@@ -493,7 +493,7 @@ public class Planner {
 	 * saves the current state of the memento
 	 */
 	void save() {
-		this.memento = new Memento(this);
+		this.memento = new Memento();
 		for (Planning planning : this.planningSet) {
 			planning.save();
 		}
@@ -507,7 +507,7 @@ public class Planner {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load(this);
+			this.memento.load();
 			for (Planning planning : this.planningSet) {
 				planning.load();
 			}
@@ -531,8 +531,8 @@ public class Planner {
 		 * @param pe
 		 *            : planner
 		 */
-		public Memento(Planner pe) {
-			this.planningSet = new LinkedHashSet<Planning>(pe.planningSet);
+		public Memento() {
+			this.planningSet = new LinkedHashSet<Planning>(Planner.this.planningSet);
 		}
 
 		/**
@@ -541,8 +541,8 @@ public class Planner {
 		 * @param pe
 		 *            : given planner
 		 */
-		public void load(Planner pe) {
-			pe.planningSet = this.planningSet;
+		public void load() {
+			Planner.this.planningSet = this.planningSet;
 		}
 	}
 }
