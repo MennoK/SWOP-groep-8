@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Developer;
-import taskManager.Planning;
-import taskManager.Project;
-import taskManager.ProjectFinishingStatus;
-import taskManager.ProjectStatus;
-import taskManager.Task;
-import taskManager.TaskManController;
+import taskmanager.Developer;
+import taskmanager.Planning;
+import taskmanager.Project;
+import taskmanager.ProjectFinishingStatus;
+import taskmanager.ProjectStatus;
+import taskmanager.Task;
+import taskmanager.TaskManController;
 
 public class UseCase5AdvanceTime {
 

@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import parser.Parser;
-import taskManager.*;
-import taskManager.Task.TaskBuilder;
-import taskManager.exception.ConlictingPlanningException;
+import taskmanager.*;
+import taskmanager.Task.TaskBuilder;
+import taskmanager.exception.ConlictingPlanningException;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 

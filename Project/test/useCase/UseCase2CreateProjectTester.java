@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Project;
-import taskManager.TaskManController;
+import taskmanager.Project;
+import taskmanager.TaskManController;
 
 public class UseCase2CreateProjectTester {
 

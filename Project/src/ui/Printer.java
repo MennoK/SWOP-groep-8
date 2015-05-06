@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import taskManager.Developer;
-import taskManager.Project;
-import taskManager.ProjectFinishingStatus;
-import taskManager.ResourceType;
-import taskManager.Task;
-import taskManager.TaskFinishedStatus;
-import taskManager.TaskStatus;
-import taskManager.Visitable;
+import taskmanager.Developer;
+import taskmanager.Project;
+import taskmanager.ProjectFinishingStatus;
+import taskmanager.ResourceType;
+import taskmanager.Task;
+import taskmanager.TaskFinishedStatus;
+import taskmanager.TaskStatus;
+import taskmanager.Visitable;
 
 public class Printer {
 

@@ -13,15 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import utility.TimeSpan;
-import taskManager.Developer;
-import taskManager.DeveloperExpert;
-import taskManager.Planner;
-import taskManager.Planning;
-import taskManager.Project;
-import taskManager.ResourceType;
-import taskManager.Task;
-import taskManager.TaskManController;
-import taskManager.exception.ConlictingPlanningException;
+import taskmanager.Developer;
+import taskmanager.DeveloperExpert;
+import taskmanager.Planner;
+import taskmanager.Planning;
+import taskmanager.Project;
+import taskmanager.ResourceType;
+import taskmanager.Task;
+import taskmanager.TaskManController;
+import taskmanager.exception.ConlictingPlanningException;
 
 public class UseCase6PlanTaskTester {
 

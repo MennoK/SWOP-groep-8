@@ -18,16 +18,16 @@ import java.util.Set;
 
 import org.yaml.snakeyaml.Yaml;
 
-import taskManager.Developer;
-import taskManager.Planning;
-import taskManager.Planning.PlanningBuilder;
-import taskManager.Project;
-import taskManager.Resource;
-import taskManager.ResourceType;
-import taskManager.ResourceType.ResourceTypeBuilder;
-import taskManager.Task;
-import taskManager.Task.TaskBuilder;
-import taskManager.TaskManController;
+import taskmanager.Developer;
+import taskmanager.Planning;
+import taskmanager.Project;
+import taskmanager.Resource;
+import taskmanager.ResourceType;
+import taskmanager.Task;
+import taskmanager.TaskManController;
+import taskmanager.Planning.PlanningBuilder;
+import taskmanager.ResourceType.ResourceTypeBuilder;
+import taskmanager.Task.TaskBuilder;
 import utility.TimeInterval;
 
 /**

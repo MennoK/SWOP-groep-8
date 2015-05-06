@@ -10,12 +10,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Developer;
-import taskManager.Planning;
-import taskManager.Project;
-import taskManager.ResourceType;
-import taskManager.Task;
-import taskManager.TaskManController;
+import taskmanager.Developer;
+import taskmanager.Planning;
+import taskmanager.Project;
+import taskmanager.ResourceType;
+import taskmanager.Task;
+import taskmanager.TaskManController;
 
 public class UseCase3CreateTaskTester {
 

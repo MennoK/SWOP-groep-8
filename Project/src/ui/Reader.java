@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
-import taskManager.Visitable;
+import taskmanager.Visitable;
 import ui.exception.ExitUseCaseException;
 
 public class Reader {

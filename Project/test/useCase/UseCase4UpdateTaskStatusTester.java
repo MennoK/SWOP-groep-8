@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskManager.Developer;
-import taskManager.Planning;
-import taskManager.Project;
-import taskManager.Task;
-import taskManager.TaskManController;
-import taskManager.TaskStatus;
+import taskmanager.Developer;
+import taskmanager.Planning;
+import taskmanager.Project;
+import taskmanager.Task;
+import taskmanager.TaskManController;
+import taskmanager.TaskStatus;
 
 public class UseCase4UpdateTaskStatusTester {
 

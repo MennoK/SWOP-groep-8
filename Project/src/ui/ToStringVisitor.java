@@ -1,14 +1,14 @@
 package ui;
 
-import taskManager.Developer;
-import taskManager.Project;
-import taskManager.ProjectFinishingStatus;
-import taskManager.Resource;
-import taskManager.Task;
-import taskManager.TaskFinishedStatus;
-import taskManager.TaskStatus;
-import taskManager.Visitable;
-import taskManager.Visitor;
+import taskmanager.Developer;
+import taskmanager.Project;
+import taskmanager.ProjectFinishingStatus;
+import taskmanager.Resource;
+import taskmanager.Task;
+import taskmanager.TaskFinishedStatus;
+import taskmanager.TaskStatus;
+import taskmanager.Visitable;
+import taskmanager.Visitor;
 
 public class ToStringVisitor implements Visitor {
 

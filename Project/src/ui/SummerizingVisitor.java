@@ -1,11 +1,11 @@
 package ui;
 
-import taskManager.Developer;
-import taskManager.Project;
-import taskManager.Resource;
-import taskManager.Task;
-import taskManager.Visitable;
-import taskManager.Visitor;
+import taskmanager.Developer;
+import taskmanager.Project;
+import taskmanager.Resource;
+import taskmanager.Task;
+import taskmanager.Visitable;
+import taskmanager.Visitor;
 
 public class SummerizingVisitor implements Visitor {
 
