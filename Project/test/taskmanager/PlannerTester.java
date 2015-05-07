@@ -565,5 +565,16 @@ public class PlannerTester {
 		
 		assertEquals(0, this.planner.getAllPlannings().size());
 	}
+	
+	@Test
+	public void testTaskHasPlanning() {
+		
+		assertFalse(this.planner.taskHasPlanning(task1));
+		
+		Planning.builder(time1, task1, developer1,
+				planner).addDeveloper(developer2).build();
+		
+		assertTrue(this.planner.taskHasPlanning(task1));
+	}
 
 }

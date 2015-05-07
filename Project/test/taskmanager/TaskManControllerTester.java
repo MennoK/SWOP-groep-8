@@ -62,7 +62,7 @@ public class TaskManControllerTester extends TaskManTester {
 	@Test
 	public void getTaskTest() {
 		Task task = createPlannedTask(project, Duration.ofHours(8));
-		assertEquals(task, tmc.getTask(task.getPlanning()));
+		assertEquals(task, tmc.getPlanner().getTask(task.getPlanning()));
 	}
 
 	@Test
