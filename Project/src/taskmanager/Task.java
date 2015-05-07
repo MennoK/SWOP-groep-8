@@ -35,7 +35,7 @@ import utility.WorkTime;
  * @author Groep 8
  */
 public class Task implements Visitable {
-	
+
 	private static AtomicInteger idCounter = new AtomicInteger(1);
 	private int id;
 
@@ -55,7 +55,7 @@ public class Task implements Visitable {
 	private Memento memento;
 
 	private Planning planning;
-	
+
 	/**
 	 * The constructor of task has a task builder as argument. The task builder
 	 * contains all the required parameters and possible optional parameters
@@ -64,8 +64,8 @@ public class Task implements Visitable {
 	 *            : task builder with parameters
 	 */
 	public Task(TaskBuilder taskBuilder) {
-		if ((taskBuilder.dependencies != null && !taskBuilder.dependencies
-				.isEmpty()) && taskBuilder.originalTask != null) {
+		if ((!taskBuilder.dependencies.isEmpty())
+				&& taskBuilder.originalTask != null) {
 			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
 				throw new IllegalArgumentException(
 						"Can not create an alternative task which is dependent"
@@ -643,7 +643,8 @@ public class Task implements Visitable {
 	 */
 	void load() {
 		if (this.memento == null) {
-			throw new IllegalStateException("You need to save before you can load");
+			throw new IllegalStateException(
+					"You need to save before you can load");
 		} else {
 			this.memento.load();
 		}
@@ -731,7 +732,7 @@ public class Task implements Visitable {
 			Task.this.status = this.status;
 		}
 	}
-	
+
 	/**
 	 * The TaskBuilder is an inner class builder for constructing new tasks. The
 	 * description, estimated duration and acceptable deviation of a task are
@@ -811,14 +812,16 @@ public class Task implements Visitable {
 				this.requiredResourceTypes.put(requiredResourceType, quantity);
 			}
 			return this;
-		
+
 		}
-		
+
 		private boolean checkRequiredResources() {
 			for (ResourceType type : requiredResourceTypes.keySet()) {
-				if(!type.getRequiredResourceTypes().isEmpty()){
-					for (ResourceType requiredResourceType : type.getRequiredResourceTypes()) {
-						if(!requiredResourceTypes.keySet().contains(requiredResourceType)){
+				if (!type.getRequiredResourceTypes().isEmpty()) {
+					for (ResourceType requiredResourceType : type
+							.getRequiredResourceTypes()) {
+						if (!requiredResourceTypes.keySet().contains(
+								requiredResourceType)) {
 							return false;
 						}
 					}
@@ -839,11 +842,11 @@ public class Task implements Visitable {
 				project.addTask(task);
 				return task;
 			} else {
-				throw new IllegalStateException("A resource is requiring an other resource.");
+				throw new IllegalStateException(
+						"A resource is requiring an other resource.");
 			}
 		}
 
-		
 	}
-	
+
 }
