@@ -554,4 +554,16 @@ public class PlannerTester {
 				time1.minusHours(1), allTasks));
 	}
 
+	@Test
+	public void testRemovePlanningWorks() {
+		Planning newPlanning = Planning.builder(time1, task1, developer1,
+				planner).addDeveloper(developer2).build();
+		
+		assertEquals(1, this.planner.getAllPlannings().size());
+		
+		planner.removePlanning(newPlanning);
+		
+		assertEquals(0, this.planner.getAllPlannings().size());
+	}
+
 }
