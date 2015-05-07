@@ -83,7 +83,8 @@ public class PlanningTester {
 	@Test
 	public void createSimplePlanning() {
 		// create planning for task1 (needs no resources)
-		Planning.builder(time1, task1, developer1, planner)
+		Planning planning1 = Planning
+				.builder(time1, task1, developer1, planner)
 				.addDeveloper(developer2).build();
 		// check if 1 planning exist
 		assertEquals(1, planner.getAllPlannings().size());
@@ -92,7 +93,8 @@ public class PlanningTester {
 
 		Map<ResourceType, Set<Resource>> resources = new LinkedHashMap<ResourceType, Set<Resource>>();
 		resources.put(resourceType, resourceType.getAllResources());
-		Planning.builder(time2, task2, developer1, planner)
+		Planning planning2 = Planning
+				.builder(time2, task2, developer1, planner)
 				.addDeveloper(developer2)
 				.addAllResources(resourceType.getAllResources()).build();
 
@@ -102,18 +104,16 @@ public class PlanningTester {
 		// check if the plannings are made correctly
 		ArrayList<Planning> planningList = new ArrayList<Planning>();
 		planningList.addAll(planner.getAllPlannings());
-		assertEquals(this.time1, planningList.get(0).getTimeSpan().getBegin());
-		assertEquals(time1.plus(task1.getDuration()), planningList.get(0)
-				.getTimeSpan().getEnd());
-		assertEquals(tmc.getAllDevelopers(), planningList.get(0)
-				.getDevelopers());
-		assertTrue(planningList.get(0).getResources().isEmpty());
+		assertEquals(this.time1, planning1.getTimeSpan().getBegin());
+		assertEquals(time1.plus(task1.getDuration()), planning1.getTimeSpan()
+				.getEnd());
+		assertEquals(tmc.getAllDevelopers(), planning1.getDevelopers());
+		assertTrue(planning1.getResources().isEmpty());
 
-		assertEquals(this.time2, planningList.get(1).getTimeSpan().getBegin());
-		assertEquals(time2.plus(task2.getDuration()), planningList.get(1)
-				.getTimeSpan().getEnd());
-		assertEquals((tmc.getAllDevelopers()), planningList.get(1)
-				.getDevelopers());
+		assertEquals(this.time2, planning2.getTimeSpan().getBegin());
+		assertEquals(time2.plus(task2.getDuration()), planning2.getTimeSpan()
+				.getEnd());
+		assertEquals((tmc.getAllDevelopers()), planning2.getDevelopers());
 	}
 
 	@Test(expected = ConlictingPlanningException.class)
