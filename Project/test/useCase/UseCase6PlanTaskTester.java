@@ -138,13 +138,13 @@ public class UseCase6PlanTaskTester {
 
 		// resolve conflict ends -> back to original planning of the task
 
-		Planning.builder(time1, task2, developerList.get(0), planner).build();
+		Planning newPlanning = Planning.builder(time1, task2, developerList.get(0), planner).build();
 
 		ArrayList<Planning> planningList = new ArrayList<Planning>();
 		planningList.addAll(planner.getAllPlannings());
-		assertEquals(this.time1.plusHours(2), planningList.get(0).getTimeSpan()
+		assertEquals(this.time1.plusHours(2), task1.getPlanning().getTimeSpan()
 				.getBegin());
-		assertEquals(this.time1, planningList.get(1).getTimeSpan().getBegin());
+		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());
 	}
 
 }
