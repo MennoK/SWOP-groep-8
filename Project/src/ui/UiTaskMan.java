@@ -176,12 +176,12 @@ public class UiTaskMan {
 		System.out.println("A conflict occured with the following Tasks:");
 		for (Planning planning : conflict.getConflictingPlannings()) {
 			System.out.println(new ToStringVisitor().create(tmc
-					.getTask(planning)));
+					.getPlanner().getTask(planning)));
 		}
 		if (!reader
 				.getBoolean("y => re-start planning the new task / n => re-plan the conflicting task")) {
 			for (Planning planning : conflict.getConflictingPlannings()) {
-				plan(tmc.getTask(planning));
+				plan(tmc.getPlanner().getTask(planning));
 			}
 		}
 		plan(task);

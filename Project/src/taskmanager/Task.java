@@ -54,8 +54,6 @@ public class Task implements Visitable {
 
 	private Memento memento;
 
-	private Planning planning;
-
 	/**
 	 * The constructor of task has a task builder as argument. The task builder
 	 * contains all the required parameters and possible optional parameters
@@ -402,7 +400,6 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setStatus(getStatus().goFinished());
 		setEndTime(endTime);
-		setEndTimePlanning(endTime);
 	}
 
 	/**
@@ -416,7 +413,6 @@ public class Task implements Visitable {
 					"End time can not be before start time");
 		setStatus(getStatus().goFailed());
 		setEndTime(endTime);
-		setEndTimePlanning(endTime);
 	}
 
 	/**
@@ -574,48 +570,6 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * returns the planning of the task, if it has one
-	 * 
-	 * @return
-	 */
-	public Planning getPlanning() {
-		if (this.hasPlanning()) {
-			return planning;
-		} else
-			throw new NullPointerException("the task has no planning");
-	}
-
-	/**
-	 * sets a planning for the task
-	 * 
-	 * @param planning
-	 */
-	public void setPlanning(Planning planning) {
-		this.planning = planning;
-	}
-
-	/**
-	 * Checks whether a task has a planning
-	 * 
-	 * @return true if the task has a planning
-	 */
-	public boolean hasPlanning() {
-		return (planning != null);
-	}
-
-	/**
-	 * Sets the endtime of a planning if the task has a planning
-	 * 
-	 * @param endTime
-	 *            : endtime of a planning
-	 */
-	private void setEndTimePlanning(LocalDateTime endTime) {
-		if (this.hasPlanning()) {
-			getPlanning().setEndTime(endTime);
-		}
-	}
-
-	/**
 	 * To string method for debuging
 	 */
 	@Override
@@ -671,8 +625,6 @@ public class Task implements Visitable {
 		private LocalDateTime startTime;
 		private LocalDateTime lastUpdateTime;
 
-		private Planning planning;
-
 		private int id;
 
 		private TaskStatus status;
@@ -701,7 +653,6 @@ public class Task implements Visitable {
 			this.startTime = Task.this.startTime;
 			this.lastUpdateTime = Task.this.lastUpdateTime;
 
-			this.planning = Task.this.planning;
 			this.id = Task.this.id;
 
 			this.status = Task.this.status;
@@ -726,7 +677,6 @@ public class Task implements Visitable {
 			Task.this.startTime = this.startTime;
 			Task.this.lastUpdateTime = this.lastUpdateTime;
 
-			Task.this.planning = this.planning;
 			Task.this.id = this.id;
 
 			Task.this.status = this.status;

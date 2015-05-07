@@ -120,27 +120,6 @@ public class ProjectExpert implements TimeObserver {
 	}
 
 	/**
-	 * 
-	 * Returns a set with all tasks of a given developer
-	 * 
-	 * @param dev
-	 *            the active Developer
-	 * @return All the tasks to which this developer is assigned.
-	 */
-	Set<Task> getAllTasks(Developer dev) {
-		Set<Task> tasks = new HashSet<Task>();
-		for (Project project : getAllProjects()) {
-			for (Task task : project.getAllTasks()) {
-				if (task.hasPlanning()
-						&& task.getPlanning().getDevelopers().contains(dev)) {
-					tasks.add(task);
-				}
-			}
-		}
-		return tasks;
-	}
-
-	/**
 	 * Saves the current state of the project expert
 	 */
 	void save() {

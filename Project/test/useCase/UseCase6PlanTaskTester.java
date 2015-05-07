@@ -132,7 +132,7 @@ public class UseCase6PlanTaskTester {
 				planner.getPossibleStartTimes(task1, time1, developers));
 
 		// user selects time1 +2
-		task1.getPlanning().setTimeSpan(
+		tmc.getPlanner().getPlanning(task1).setTimeSpan(
 				new TimeSpan(time1.plusHours(2), task1.getDuration()));
 
 		// resolve conflict ends -> back to original planning of the task
@@ -140,7 +140,7 @@ public class UseCase6PlanTaskTester {
 		Planning newPlanning = Planning.builder(time1, task2,
 				developerList.get(0), planner).build();
 
-		assertEquals(this.time1.plusHours(2), task1.getPlanning().getTimeSpan()
+		assertEquals(this.time1.plusHours(2), tmc.getPlanner().getPlanning(task1).getTimeSpan()
 				.getBegin());
 		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());
 	}

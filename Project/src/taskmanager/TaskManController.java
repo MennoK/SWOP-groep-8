@@ -156,7 +156,7 @@ public class TaskManController {
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		task.getPlanning().setTimeSpan(
+		this.getPlanner().getPlanning(task).setTimeSpan(
 				new TimeSpan(startTime, task.getDuration()));
 		updateStatusAll();
 	}
@@ -170,6 +170,9 @@ public class TaskManController {
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
+		if(this.getPlanner().taskHasPlanning(task)) {
+			this.getPlanner().getPlanning(task).setEndTime(endTime);
+		}
 		updateStatusAll();
 	}
 
@@ -182,6 +185,9 @@ public class TaskManController {
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
+		if(this.getPlanner().taskHasPlanning(task)) {
+			this.getPlanner().getPlanning(task).setEndTime(endTime);
+		}
 		updateStatusAll();
 	}
 
@@ -239,22 +245,6 @@ public class TaskManController {
 	}
 
 	/**
-	 * Get the task of this planning
-	 * 
-	 * @param planning
-	 * @return
-	 */
-	public Task getTask(Planning planning) {
-		for (Task task : getProjectExpert().getAllTasks()) {
-			if (task.hasPlanning() && task.getPlanning() == planning) {
-				return task;
-			}
-		}
-		throw new IllegalArgumentException(
-				"This planning is not the planning of any Task!");
-	}
-
-	/**
 	 * Returns a list of the projects
 	 * 
 	 * @return projects: list of projects
@@ -293,7 +283,16 @@ public class TaskManController {
 	 * @return All the tasks to which this developer is assigned.
 	 */
 	public Set<Task> getAllTasks(Developer dev) {
-		return Collections.unmodifiableSet(getProjectExpert().getAllTasks(dev));
+		Set<Task> tasks = new HashSet<Task>();
+		for (Project project : getAllProjects()) {
+			for (Task task : project.getAllTasks()) {
+				if (this.getPlanner().taskHasPlanning(task)
+						&& this.getPlanner().getPlanning(task).getDevelopers().contains(dev)) {
+					tasks.add(task);
+				}
+			}
+		}
+		return Collections.unmodifiableSet(tasks);
 	}
 
 	/**
