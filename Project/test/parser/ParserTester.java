@@ -487,8 +487,8 @@ public class ParserTester {
 		assertTrue(ressourceNames.contains(resources.get(1).getName()));
 		assertTrue(ressourceNames.contains(resources.get(2).getName()));
 
-		assertTrue(tmc.getAllProjects().get(1).getAllTasks().get(2)
-				.hasPlanning());
+		assertTrue(tmc.getPlanner().taskHasPlanning(
+				tmc.getAllProjects().get(1).getAllTasks().get(2)));
 
 	}
 
@@ -503,8 +503,8 @@ public class ParserTester {
 
 		assertEquals(0, plan.getResources().size());
 
-		assertTrue(tmc.getAllProjects().get(1).getAllTasks().get(3)
-				.hasPlanning());
+		assertTrue(tmc.getPlanner().taskHasPlanning(
+				tmc.getAllProjects().get(1).getAllTasks().get(3)));
 
 	}
 
@@ -519,8 +519,8 @@ public class ParserTester {
 
 		assertEquals(0, plan.getResources().size());
 
-		assertTrue(tmc.getAllProjects().get(1).getAllTasks().get(3)
-				.hasPlanning());
+		assertTrue(tmc.getPlanner().taskHasPlanning(
+				tmc.getAllProjects().get(1).getAllTasks().get(3)));
 
 	}
 
@@ -538,7 +538,7 @@ public class ParserTester {
 		assertEquals(1, resources.size());
 		assertEquals("Data Center Y", resources.get(0).getName());
 
-		assertTrue(tmc.getAllProjects().get(0).getAllTasks().get(0)
-				.hasPlanning());
+		assertTrue(tmc.getPlanner().taskHasPlanning(
+				tmc.getAllProjects().get(0).getAllTasks().get(0)));
 	}
 }

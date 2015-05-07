@@ -84,7 +84,6 @@ public class PlanningTester {
 	public void createSimplePlanning() {
 		// create planning for task1 (needs no resources)
 		Planning plan1 = Planning.builder(time1, task1, developer1, planner)
-				.builder(time1, task1, developer1, planner)
 				.addDeveloper(developer2).build();
 		// check if 1 planning exist
 		assertEquals(1, planner.getAllPlannings().size());
@@ -94,7 +93,6 @@ public class PlanningTester {
 		Map<ResourceType, Set<Resource>> resources = new LinkedHashMap<ResourceType, Set<Resource>>();
 		resources.put(resourceType, resourceType.getAllResources());
 		Planning plan2 = Planning.builder(time2, task2, developer1, planner)
-				.builder(time2, task2, developer1, planner)
 				.addDeveloper(developer2)
 				.addAllResources(resourceType.getAllResources()).build();
 
