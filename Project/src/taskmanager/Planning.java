@@ -310,7 +310,7 @@ public class Planning {
 				if (task.hasPlanning()) {
 					planner.removePlanning(task.getPlanning());
 				}
-				planner.addPlanning(planning);
+				planner.addPlanning(task, planning);
 				task.setPlanning(planning);
 				planner.updateStatus(task);
 				return planning;

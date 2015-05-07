@@ -8,6 +8,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.HashBiMap;
+
 import taskmanager.Planning.PlanningBuilder;
 import utility.TimeSpan;
 import utility.WorkDay;
@@ -22,7 +24,7 @@ import utility.WorkDay;
 public class Planner {
 	private static final int TOTAL_POSSIBLE_START_TIMES = 3;
 
-	private Set<Planning> planningSet = new LinkedHashSet<Planning>();
+	private HashBiMap<Task, Planning> plannings = HashBiMap.create();
 
 	private Memento memento;
 
@@ -178,7 +180,7 @@ public class Planner {
 	 * @param planning
 	 */
 	void removePlanning(Planning planning) {
-		planningSet.remove(planning);
+		plannings.inverse().remove(planning);
 	}
 
 	/**
@@ -223,7 +225,7 @@ public class Planner {
 	 */
 	public boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time) {
 		TimeSpan taskTimeSpan = new TimeSpan(time, task.getDuration());
-		for (Planning planning : planningSet) {
+		for (Planning planning : this.plannings.values()) {
 			if (taskTimeSpan.overlaps(planning.getTimeSpan())) {
 				return true;
 			}
@@ -237,7 +239,7 @@ public class Planner {
 	 * @return all the plannings in the system
 	 */
 	public Set<Planning> getAllPlannings() {
-		return Collections.unmodifiableSet(this.planningSet);
+		return Collections.unmodifiableSet(plannings.values());
 	}
 
 	/**
@@ -451,12 +453,12 @@ public class Planner {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given planning is not valid
 	 */
-	void addPlanning(Planning planning) {
+	void addPlanning(Task task, Planning planning) {
 		if (!canHavePlanning(planning)) {
 			throw new IllegalArgumentException(
 					"The given planning is already in the planningExpert.");
 		} else {
-			planningSet.add(planning);
+			this.plannings.put(task, planning);
 		}
 	}
 
@@ -494,7 +496,7 @@ public class Planner {
 	 */
 	void save() {
 		this.memento = new Memento();
-		for (Planning planning : this.planningSet) {
+		for (Planning planning : this.plannings.values()) {
 			planning.save();
 		}
 	}
@@ -508,7 +510,7 @@ public class Planner {
 					"You need to save before you can load");
 		} else {
 			this.memento.load();
-			for (Planning planning : this.planningSet) {
+			for (Planning planning : this.plannings.values()) {
 				planning.load();
 			}
 		}
@@ -522,6 +524,7 @@ public class Planner {
 	 */
 	private class Memento {
 		Set<Planning> planningSet;
+		HashBiMap<Task, Planning> plannings;
 
 		/**
 		 * Constructor of the memento. It initializes the set of plannings in
@@ -532,7 +535,7 @@ public class Planner {
 		 *            : planner
 		 */
 		public Memento() {
-			this.planningSet = new LinkedHashSet<Planning>(Planner.this.planningSet);
+			this.plannings = HashBiMap.create(Planner.this.plannings);
 		}
 
 		/**
@@ -542,7 +545,7 @@ public class Planner {
 		 *            : given planner
 		 */
 		public void load() {
-			Planner.this.planningSet = this.planningSet;
+			Planner.this.plannings = this.plannings;
 		}
 	}
 }
