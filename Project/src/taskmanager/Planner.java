@@ -527,6 +527,10 @@ public class Planner {
 	public boolean taskHasPlanning(Task task) {
 		return this.plannings.get(task) != null;
 	}
+	
+	public Planning getPlanning(Task task) {
+		return this.plannings.get(task);
+	}
 
 	/**
 	 * Memento inner class of the planner

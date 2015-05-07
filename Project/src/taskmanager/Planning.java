@@ -311,7 +311,6 @@ public class Planning {
 					planner.removePlanning(task);
 				}
 				planner.addPlanning(task, planning);
-				task.setPlanning(planning);
 				planner.updateStatus(task);
 				return planning;
 			} else {
