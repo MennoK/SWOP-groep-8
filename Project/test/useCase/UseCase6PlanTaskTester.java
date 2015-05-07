@@ -97,17 +97,16 @@ public class UseCase6PlanTaskTester {
 		// user selects a developer
 
 		// system makes reservation
-		Planning.builder(time1, task2, developerList.get(0), planner).build();
+		Planning newPlanning = Planning.builder(time1, task2,
+				developerList.get(0), planner).build();
 
-		ArrayList<Planning> planningList = new ArrayList<Planning>();
-		planningList.addAll(planner.getAllPlannings());
-		assertEquals(this.time1, planningList.get(0).getTimeSpan().getBegin());
-		assertEquals(time1.plus(task2.getDuration()), planningList.get(0)
+		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());
+		assertEquals(time1.plus(task2.getDuration()), newPlanning
 				.getTimeSpan().getEnd());
-		assertTrue(planningList.get(0).getDevelopers()
+		assertTrue(newPlanning.getDevelopers()
 				.contains(developerList.get(0)));
-		assertEquals(1, planningList.get(0).getDevelopers().size());
-		assertTrue(planningList.get(0).getResources().isEmpty());
+		assertEquals(1, newPlanning.getDevelopers().size());
+		assertTrue(newPlanning.getResources().isEmpty());
 
 	}
 
@@ -138,10 +137,9 @@ public class UseCase6PlanTaskTester {
 
 		// resolve conflict ends -> back to original planning of the task
 
-		Planning newPlanning = Planning.builder(time1, task2, developerList.get(0), planner).build();
+		Planning newPlanning = Planning.builder(time1, task2,
+				developerList.get(0), planner).build();
 
-		ArrayList<Planning> planningList = new ArrayList<Planning>();
-		planningList.addAll(planner.getAllPlannings());
 		assertEquals(this.time1.plusHours(2), task1.getPlanning().getTimeSpan()
 				.getBegin());
 		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());

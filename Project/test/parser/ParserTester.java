@@ -12,6 +12,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.TaskManController;
+import utility.TimeSpan;
 
 public class ParserTester {
 
@@ -508,7 +511,9 @@ public class ParserTester {
 	public void testPlanningThreeisMade() {
 		LocalDateTime time = LocalDateTime.parse(("2014-01-02 18:00"),
 				dateTimeFormatter);
-		assertEquals(time, planningsList.get(2).getTimeSpan().getBegin());
+		assertTrue(planningsList.stream().map(Planning::getTimeSpan)
+				.map(TimeSpan::getBegin).collect(Collectors.toSet())
+				.contains(time));
 		// endTime is finish time of task because task is failed
 
 		List<Developer> developers = new ArrayList<Developer>(planningsList
