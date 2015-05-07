@@ -239,22 +239,6 @@ public class TaskManController {
 	}
 
 	/**
-	 * Get the task of this planning
-	 * 
-	 * @param planning
-	 * @return
-	 */
-	public Task getTask(Planning planning) {
-		for (Task task : getProjectExpert().getAllTasks()) {
-			if (task.hasPlanning() && task.getPlanning() == planning) {
-				return task;
-			}
-		}
-		throw new IllegalArgumentException(
-				"This planning is not the planning of any Task!");
-	}
-
-	/**
 	 * Returns a list of the projects
 	 * 
 	 * @return projects: list of projects

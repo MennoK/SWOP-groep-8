@@ -39,7 +39,7 @@ public class Planner {
 		Set<Task> modifiableTaskSet = new LinkedHashSet<Task>(tasks);
 
 		for (Task task2 : tasks) {
-			if (task2.hasPlanning()) {
+			if (this.taskHasPlanning(task2)) {
 				modifiableTaskSet.remove(task2);
 			}
 
@@ -182,6 +182,10 @@ public class Planner {
 	void removePlanning(Planning planning) {
 		plannings.inverse().remove(planning);
 	}
+	
+	void removePlanning(Task task) {
+		plannings.remove(task);
+	}
 
 	/**
 	 * returns all tasks that would conflict if a task would be planned at a
@@ -200,8 +204,8 @@ public class Planner {
 		Set<Task> conflictingTasks = new LinkedHashSet<>();
 		for (Task conflictingTask : tasks) {
 
-			if (conflictingTask.hasPlanning()) {
-				TimeSpan planningTimeSpan = conflictingTask.getPlanning()
+			if (this.taskHasPlanning(conflictingTask)) {
+				TimeSpan planningTimeSpan = this.plannings.get(conflictingTask)
 						.getTimeSpan();
 
 				if (planningTimeSpan.overlaps(new TimeSpan(time, task
@@ -305,8 +309,8 @@ public class Planner {
 	boolean isAvailableFor(Resource resource, Task task, TimeSpan timeSpan) {
 		Set<Planning> otherPlannings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
-		if (task.hasPlanning()) {
-			otherPlannings.remove(task.getPlanning());
+		if (this.taskHasPlanning(task)) {
+			otherPlannings.remove(this.plannings.get(task));
 		}
 		for (Planning otherPlanning : otherPlannings) {
 			if (otherPlanning.getResources().contains(resource)) {
@@ -357,8 +361,8 @@ public class Planner {
 	boolean isAvailableFor(Developer developer, Task task, TimeSpan timeSpan) {
 		Set<Planning> otherPlanings = new LinkedHashSet<Planning>(
 				this.getAllPlannings());
-		if (task.hasPlanning()) {
-			otherPlanings.remove(task.getPlanning());
+		if (this.taskHasPlanning(task)) {
+			otherPlanings.remove(this.plannings.get(task));
 		}
 		for (Planning otherPlanning : otherPlanings) {
 			if (otherPlanning.getDevelopers().contains(developer)) {
@@ -462,6 +466,10 @@ public class Planner {
 		}
 	}
 
+	public Task getTask(Planning planning) {
+		return this.plannings.inverse().get(planning);
+	}
+
 	/**
 	 * This method checks if PlanningExpert can have a given planning. It
 	 * returns true if and only if the PlanningExpert does not contain the
@@ -479,11 +487,11 @@ public class Planner {
 	void updateStatus(Task task) {
 		if (task.getStatus() == TaskStatus.EXECUTING
 				|| task.getStatus() == TaskStatus.FINISHED
-				|| task.getStatus() == TaskStatus.FAILED || !task.hasPlanning()
+				|| task.getStatus() == TaskStatus.FAILED || !this.taskHasPlanning(task)
 				|| !task.checkDependenciesFinished())
 			// task status remains unchanged
 			return;
-		if (isPlannableForTimeSpan(task, task.getPlanning().getDevelopers(),
+		if (isPlannableForTimeSpan(task, this.plannings.get(task).getDevelopers(),
 				new TimeSpan(task.getLastUpdateTime(), task.getDuration()))) {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
@@ -515,6 +523,10 @@ public class Planner {
 			}
 		}
 	}
+	
+	public boolean taskHasPlanning(Task task) {
+		return this.plannings.get(task) != null;
+	}
 
 	/**
 	 * Memento inner class of the planner
@@ -523,7 +535,6 @@ public class Planner {
 	 *
 	 */
 	private class Memento {
-		Set<Planning> planningSet;
 		HashBiMap<Task, Planning> plannings;
 
 		/**

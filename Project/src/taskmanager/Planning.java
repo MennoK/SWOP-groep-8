@@ -307,8 +307,8 @@ public class Planning {
 					&& planner.isAvailableForResources(resources, task,
 							timeSpan)) {
 				Planning planning = new Planning(this);
-				if (task.hasPlanning()) {
-					planner.removePlanning(task.getPlanning());
+				if (planner.taskHasPlanning(task)) {
+					planner.removePlanning(task);
 				}
 				planner.addPlanning(task, planning);
 				task.setPlanning(planning);
