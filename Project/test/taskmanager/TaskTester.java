@@ -226,7 +226,14 @@ public class TaskTester {
 				.addDependencies(dependentTask).setOriginalTask(baseTask)
 				.build(project);
 	}
-
+	
+	@Test
+	public void createTaskWithCustomAmountOfDevelopers(){
+		Task.builder("desc", Duration.ofHours(1), 1).amountOfRequiredDevelopers(3).build(project);
+		Task task = project.getAllTasks().get(project.getAllTasks().size() - 1 );
+		assertEquals(task.getAmountOfRequiredDevelopers(), 3); 
+	}
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void setAlternativeTaskInvalidTaskNotFailed() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,

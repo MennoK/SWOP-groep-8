@@ -47,6 +47,7 @@ public class Task implements Visitable {
 	private List<Task> dependencies = new ArrayList<>();
 	private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 	private Task originalTask;
+	private int amountOfRequiredDevelopers;
 
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
@@ -86,6 +87,7 @@ public class Task implements Visitable {
 		setDescription(taskBuilder.description);
 		setEstimatedDuration(taskBuilder.estimatedDuration);
 		setAcceptableDeviation(taskBuilder.acceptableDeviation);
+		setAmountOfRequiredDevelopers(taskBuilder.amountOfRequiredDevelopers);
 		this.id = idCounter.getAndIncrement();
 
 		handleTimeChange(taskBuilder.now);
@@ -605,6 +607,19 @@ public class Task implements Visitable {
 
 	}
 
+	public int getAmountOfRequiredDevelopers() {
+		return amountOfRequiredDevelopers;
+	}
+
+	public void setAmountOfRequiredDevelopers(int amountOfRequiredDevelopers) {
+		if(amountOfRequiredDevelopers > 0){
+			this.amountOfRequiredDevelopers = amountOfRequiredDevelopers;
+		}
+		else{
+			throw new IllegalArgumentException("amount of developers must be greater then 0");
+		}
+	}
+
 	/**
 	 * 
 	 * Inner momento class of task
@@ -699,6 +714,7 @@ public class Task implements Visitable {
 
 		private List<Task> dependencies = new ArrayList<Task>();
 		private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
+		private int amountOfRequiredDevelopers;
 
 		/**
 		 * Creates a TaskBuilder with the required information for the creation
@@ -716,6 +732,7 @@ public class Task implements Visitable {
 			this.description = description;
 			this.estimatedDuration = estimatedDuration;
 			this.acceptableDeviation = acceptableDeviation;
+			this.amountOfRequiredDevelopers = 1;
 		}
 
 		/**
@@ -764,6 +781,11 @@ public class Task implements Visitable {
 			return this;
 
 		}
+		
+		public TaskBuilder amountOfRequiredDevelopers(int amountOfRequiredDevelopers){
+			this.amountOfRequiredDevelopers = amountOfRequiredDevelopers;
+			return this;
+		}
 
 		private boolean checkRequiredResources() {
 			for (ResourceType type : requiredResourceTypes.keySet()) {
@@ -779,6 +801,7 @@ public class Task implements Visitable {
 			}
 			return true;
 		}
+		
 
 		/**
 		 * Build a Task after all the optional values have been set. An project
