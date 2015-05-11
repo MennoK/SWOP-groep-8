@@ -16,20 +16,34 @@ public class TaskManController {
 	private Developer activeDeveloper;
 	private TaskManClock taskManClock;
 
+	@Deprecated
+	// To be removed when BranchOffice does not use TaskManClock directly
+	// anymore
+	TaskManClock getTaskManClock() {
+		return taskManClock;
+	}
+
 	public TaskManController(LocalDateTime now) {
 		company = new Company();
 		taskManClock = new TaskManClock(now);
 	}
 
 	/**
-	 * Log the user in and set his Branch office
+	 * Log into a Branch office
 	 * 
-	 * @param activeDeveloper
 	 * @param activeOffice
 	 */
-	public void logIn(Developer activeDeveloper, BranchOffice activeOffice) {
-		setActiveDeveloper(activeDeveloper);
+	public void logIn(BranchOffice activeOffice) {
 		setActiveOffice(activeOffice);
+	}
+
+	/**
+	 * Log the user in
+	 * 
+	 * @param activeDeveloper
+	 */
+	public void logIn(Developer activeDeveloper) {
+		setActiveDeveloper(activeDeveloper);
 	}
 
 	/**
@@ -187,6 +201,27 @@ public class TaskManController {
 	}
 
 	/**
+	 * Create a BranchOffice
+	 * 
+	 * @param location
+	 * @return the new BranchOffice
+	 */
+	public BranchOffice createBranchOffice(String location) {
+		return company.createBranchOffice(location);
+	}
+
+	/**
+	 * Create a BranchOffice
+	 * 
+	 * @param location
+	 * @return the new BranchOffice
+	 */
+	@Deprecated
+	public BranchOffice createBranchOffice(String location, TaskManClock clock) {
+		return company.createBranchOffice(location, clock);
+	}
+
+	/**
 	 * Creates a new project with the given arguments and adds the project to
 	 * the list of projects
 	 * 
@@ -234,6 +269,15 @@ public class TaskManController {
 	}
 
 	/**
+	 * Returns the planning expert
+	 * 
+	 * @return planningExpert : planning expert
+	 */
+	public Planner getPlanner() {
+		return activeOffice.getPlanner();
+	}
+
+	/**
 	 * @return The user currently logged in
 	 */
 	public Developer getActiveDeveloper() {
@@ -245,6 +289,13 @@ public class TaskManController {
 	 */
 	public BranchOffice getActiveOffice() {
 		return activeOffice;
+	}
+
+	/**
+	 * @return all the BranchOffice's of this company
+	 */
+	public Set<BranchOffice> getAllOffices() {
+		return company.getAllBranchOffices();
 	}
 
 	/**
@@ -260,8 +311,10 @@ public class TaskManController {
 	 * Update the status of all tasks
 	 */
 	private void updateStatusAll() {
-		for (Task task : activeOffice.getProjectExpert().getAllTasks())
-			activeOffice.getPlanner().updateStatus(task);
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			for (Task task : office.getProjectExpert().getAllTasks())
+				office.getPlanner().updateStatus(task);
+		}
 	}
 
 	private void setActiveDeveloper(Developer activeDeveloper) {
