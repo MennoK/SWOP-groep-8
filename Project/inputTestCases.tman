@@ -1,0 +1,26 @@
+systemTime = "2015-03-10 11:00"
+
+dailyAvailability :
+  - startTime : "12:00"
+    endTime   : "17:00"
+
+projects:
+  - name         : "project 0"
+    description  : "a project description"
+    creationTime : "2015-03-10 11:00" # YYYY-MM-DD HH:MM
+    dueTime      : "2015-03-12 11:00"
+
+  - name         : "project 1"
+    description  : "another project description"
+    creationTime : "2015-03-10 11:00"
+    dueTime      : "2015-03-12 11:00"
+
+  - name         : "project 2"
+    description  : "yet another project description"
+    creationTime : "2015-03-10 11:00"
+    dueTime      : "2015-03-10 14:00"
+
+  - name         : "project 3"
+    description  : "yet another project description"
+    creationTime : "2015-03-10 11:00"
+    dueTime      : "2015-03-10 15:00"

@@ -40,7 +40,7 @@ public class UseCase8RunSimulation {
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
 		Developer dev = tmc.createDeveloper("dev");
-		Planning.builder(time, task, dev, tmc.getPlanner()).build();
+		tmc.getPlanner().createPlanning(time, task, dev).build();
 		return task;
 	}
 

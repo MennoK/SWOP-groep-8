@@ -30,7 +30,7 @@ import taskmanager.exception.ConlictingPlanningException;
 import utility.TimeInterval;
 import utility.TimeSpan;
 
-public class PlannerTester {
+public class PlannerTester extends TaskManTester {
 
 	public BranchOffice tmc;
 	public Planner planner;

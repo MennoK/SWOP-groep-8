@@ -2,6 +2,7 @@ package useCase;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,14 +11,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskmanager.Developer;
-import taskmanager.Planning;
-import taskmanager.Project;
-import taskmanager.ProjectFinishingStatus;
-import taskmanager.ProjectStatus;
-import taskmanager.Task;
-import taskmanager.BranchOffice;
-import taskmanager.TaskStatus;
+import taskmanager.*;
+import parser.Parser;
 
 public class UseCase1ShowProjectsTester {
 
@@ -35,7 +30,6 @@ public class UseCase1ShowProjectsTester {
 	private Task task4;
 
 	private LocalDateTime now;
-
 	@Before
 	public void setUp() {
 
@@ -63,12 +57,12 @@ public class UseCase1ShowProjectsTester {
 
 		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
 				.build(project1);
-		Planning.builder(now, task1, jef, tmc.getPlanner()).build();
+		tmc.getPlanner().createPlanning(now, task1, jef).build();
 		tmc.setExecuting(task1, now);
 		tmc.setFinished(task1, now.plusDays(1));
 		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4)
 				.build(project2);
-		Planning.builder(now.plusHours(5), task2, jos, tmc.getPlanner())
+		tmc.getPlanner().createPlanning(now.plusHours(5), task2, jos)
 				.build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build(project2);
@@ -113,7 +107,7 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 
 		Task.builder("task5", Duration.ofHours(1), 0.4).addDependencies(task4)
-				.build(project3);
+		.build(project3);
 
 		// project 3 has 2 dependent tasks -> should still finish on time
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());

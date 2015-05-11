@@ -97,8 +97,8 @@ public class UseCase6PlanTaskTester {
 		// user selects a developer
 
 		// system makes reservation
-		Planning newPlanning = Planning.builder(time1, task2,
-				developerList.get(0), planner).build();
+		Planning newPlanning = tmc.getPlanner().createPlanning(time1, task2,
+				developerList.get(0)).build();
 
 		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());
 		assertEquals(time1.plus(task2.getDuration()), newPlanning
@@ -112,15 +112,15 @@ public class UseCase6PlanTaskTester {
 
 	@Test(expected = ConlictingPlanningException.class)
 	public void extensionUserSelectsTime() {
-		Planning.builder(time1, task1, developerList.get(0), planner).build();
+		tmc.getPlanner().createPlanning(time1, task1, developerList.get(0)).build();
 		// the user selects a time for task2 that will conflict with task1
-		Planning.builder(time1, task2, developerList.get(0), planner).build();
+		tmc.getPlanner().createPlanning(time1, task2, developerList.get(0)).build();
 		// use case resolve conflict starts
 	}
 
 	@Test
 	public void resolveConflict() {
-		Planning.builder(time1, task1, developerList.get(0), planner).build();
+		tmc.getPlanner().createPlanning(time1, task1, developerList.get(0)).build();
 		// use case resolveconflict starts
 		// user chooses to move conflicting task
 		// step 4 of use case plan task for the task that must be moved:
@@ -137,8 +137,8 @@ public class UseCase6PlanTaskTester {
 
 		// resolve conflict ends -> back to original planning of the task
 
-		Planning newPlanning = Planning.builder(time1, task2,
-				developerList.get(0), planner).build();
+		Planning newPlanning = tmc.getPlanner().createPlanning(time1, task2,
+				developerList.get(0)).build();
 
 		assertEquals(this.time1.plusHours(2), tmc.getPlanner().getPlanning(task1).getTimeSpan()
 				.getBegin());
