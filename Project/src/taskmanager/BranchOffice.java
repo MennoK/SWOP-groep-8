@@ -23,6 +23,7 @@ public class BranchOffice {
 	private DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
 	private ProjectExpert projectExpert;
+	private DelegatedTaskExpert delegatedTaskExpert;
 	private Planner planner;
 	private TaskManClock taskManClock;
 
@@ -37,8 +38,10 @@ public class BranchOffice {
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
+		createDelegatedTaskExpert();
 		createPlanner();
 	}
+
 
 	public BranchOffice(String location) {
 		//temporary time object
@@ -48,8 +51,17 @@ public class BranchOffice {
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
+		createDelegatedTaskExpert();
 		createPlanner();
 	}
+	
+	/**
+	 * Creates a new delegated task expert
+	 */
+	private void createDelegatedTaskExpert() {
+		this.delegatedTaskExpert = new DelegatedTaskExpert();
+	}
+
 	
 	/**
 	 * Sets the location of the branch office
@@ -133,6 +145,15 @@ public class BranchOffice {
 	 */
 	public Planner getPlanner() {
 		return this.planner;
+	}
+	
+	/**
+	 * Returns the delegated task expert
+	 * 
+	 * @return delegatedTaskExpert : delegated task expert
+	 */
+	public DelegatedTaskExpert getDelegatedTaskExpert(){
+		return this.delegatedTaskExpert;
 	}
 
 	/**
