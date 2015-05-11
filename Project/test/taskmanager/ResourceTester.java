@@ -10,16 +10,16 @@ import org.junit.Test;
 
 import taskmanager.Resource;
 import taskmanager.ResourceType;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class ResourceTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private ResourceType resourceType;
 
 	@Before
 	public void setUp() {
-		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
+		tmc = new BranchOffice(LocalDateTime.of(2000, 03, 05, 00, 00));
 		resourceType = ResourceType.builder("name").build(tmc);
 	}
 

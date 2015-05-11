@@ -16,7 +16,7 @@ import utility.TimeSpan;
 
 public class UiTaskMan {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private Reader reader;
 	private Developer activeDeveloper;
 
@@ -62,7 +62,7 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("The standard time will be used.");
 		}
-		tmc = new TaskManController(now);
+		tmc = new BranchOffice(now);
 	}
 
 	private void showProjects() throws ExitUseCaseException {

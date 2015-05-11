@@ -14,11 +14,11 @@ import taskmanager.Project;
 import taskmanager.ProjectFinishingStatus;
 import taskmanager.ProjectStatus;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class UseCase5AdvanceTime {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private Project project1;
 	private Project project2;
 
@@ -35,7 +35,7 @@ public class UseCase5AdvanceTime {
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
-		tmc = new TaskManController(now);
+		tmc = new BranchOffice(now);
 
 		tmc.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 10, 17, 00));

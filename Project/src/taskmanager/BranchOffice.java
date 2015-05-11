@@ -16,7 +16,7 @@ import utility.TimeSpan;
  * @author Groep 8
  *
  */
-public class TaskManController {
+public class BranchOffice {
 
 	private DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
@@ -28,7 +28,7 @@ public class TaskManController {
 	 * Constructor of TaskManController. When a new TaskManController has been
 	 * created new expert classes will be created.
 	 */
-	public TaskManController(LocalDateTime now) {
+	public BranchOffice(LocalDateTime now) {
 		this.taskManClock = new TaskManClock(now);
 
 		createDeveloperExpert();

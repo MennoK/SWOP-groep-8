@@ -12,12 +12,12 @@ import taskmanager.Developer;
 import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 
 public class UseCase4UpdateTaskStatusTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private Project project1;
 	private Task task1;
 	private Task task2;
@@ -33,7 +33,7 @@ public class UseCase4UpdateTaskStatusTester {
 
 		now = LocalDateTime.of(2015, 03, 02, 00, 00);
 
-		tmc = new TaskManController(now);
+		tmc = new BranchOffice(now);
 		tmc.createProject("Project 1", "Description 1",
 				LocalDateTime.of(2015, 03, 01, 00, 00),
 				LocalDateTime.of(2015, 03, 10, 00, 00));

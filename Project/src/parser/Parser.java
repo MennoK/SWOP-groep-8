@@ -24,7 +24,7 @@ import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.Planning.PlanningBuilder;
 import taskmanager.ResourceType.ResourceTypeBuilder;
 import taskmanager.Task.TaskBuilder;
@@ -58,7 +58,7 @@ public class Parser {
 	 * @throws RuntimeException
 	 */
 	@SuppressWarnings("unchecked")
-	public TaskManController parse(String pathToFile)
+	public BranchOffice parse(String pathToFile)
 			throws FileNotFoundException, RuntimeException {
 
 		// check if the given input file is valid for taskman
@@ -72,7 +72,7 @@ public class Parser {
 		Map<String, Object> objects = (Map<String, Object>) yaml.load(input);
 
 		// create system time
-		TaskManController controller = constructController((CharSequence) objects
+		BranchOffice controller = constructController((CharSequence) objects
 				.get("systemTime"));
 
 		// create daily availability
@@ -109,9 +109,9 @@ public class Parser {
 		return controller;
 	}
 
-	private TaskManController constructController(CharSequence time) {
+	private BranchOffice constructController(CharSequence time) {
 		LocalDateTime systemTime = LocalDateTime.parse(time, dateTimeFormatter);
-		return new TaskManController(systemTime);
+		return new BranchOffice(systemTime);
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructResourceTypes(
 			List<LinkedHashMap<String, Object>> resourceTypes,
-			TaskManController tmc) {
+			BranchOffice tmc) {
 
 		for (LinkedHashMap<String, Object> resourceType : resourceTypes) {
 
@@ -181,7 +181,7 @@ public class Parser {
 	 * Construct the resources
 	 */
 	private void constructResources(
-			List<LinkedHashMap<String, Object>> resources, TaskManController tmc) {
+			List<LinkedHashMap<String, Object>> resources, BranchOffice tmc) {
 
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
 				tmc.getAllResourceTypes());
@@ -207,7 +207,7 @@ public class Parser {
 	 */
 	private void constructDevelopers(
 			List<LinkedHashMap<String, Object>> developers,
-			TaskManController tmc) {
+			BranchOffice tmc) {
 		for (LinkedHashMap<String, Object> developer : developers) {
 			// get the developer name
 			String name = (String) developer.get("name");
@@ -219,7 +219,7 @@ public class Parser {
 	 * Construct the projects
 	 */
 	private void constructProjects(
-			List<LinkedHashMap<String, Object>> projects, TaskManController tmc) {
+			List<LinkedHashMap<String, Object>> projects, BranchOffice tmc) {
 		for (LinkedHashMap<String, Object> project : projects) {
 			// get all arguments needed for a project: name, description,
 			// creation time and due time
@@ -242,7 +242,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
 			List<LinkedHashMap<String, Object>> plannings,
-			TaskManController controller) {
+			BranchOffice controller) {
 
 		Set<Integer> taskNrSet = new HashSet<Integer>();
 		for (LinkedHashMap<String, Object> planning : plannings) {
@@ -346,7 +346,7 @@ public class Parser {
 	 */
 	@SuppressWarnings("unchecked")
 	private void constructPlannings(LinkedHashMap<String, Object> planning,
-			TaskManController controller) {
+			BranchOffice controller) {
 
 		LocalDateTime startTime = LocalDateTime.parse(
 				(CharSequence) planning.get("plannedStartTime"),

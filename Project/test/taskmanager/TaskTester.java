@@ -16,7 +16,7 @@ import taskmanager.Project;
 import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.TaskFinishedStatus;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 import utility.TimeInterval;
 
@@ -248,7 +248,7 @@ public class TaskTester {
 	public void addResourceType() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 		ResourceType.builder("resourcetype").build(tmc);
 
@@ -264,7 +264,7 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addAlreadyPresentResourceType() {
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 		ResourceType.builder("resourcetype").build(tmc);
 		List<ResourceType> list = new ArrayList<ResourceType>(
@@ -278,7 +278,7 @@ public class TaskTester {
 	public void addResourceTypeWithInvalidQuantity() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 		ResourceType.builder("resourcetype").build(tmc);
 
@@ -296,7 +296,7 @@ public class TaskTester {
 	public void addResourceTypeWithNotEnoughResources() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2014,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 		ResourceType.builder("resourcetype").build(tmc);
 
@@ -313,7 +313,7 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createTaskLongerThanAvailabilityResource() {
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
 				LocalTime.of(17, 0));
@@ -330,7 +330,7 @@ public class TaskTester {
 
 	@Test
 	public void createTaskShorterThanAvailabilityResource() {
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
 				LocalTime.of(17, 0));
@@ -347,7 +347,7 @@ public class TaskTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void createTaskWithIncorrectRequiredResources() {
-		TaskManController tmc = new TaskManController(LocalDateTime.of(2000,
+		BranchOffice tmc = new BranchOffice(LocalDateTime.of(2000,
 				03, 05, 00, 00));
 
 		ResourceType.builder("resourcetype").build(tmc);

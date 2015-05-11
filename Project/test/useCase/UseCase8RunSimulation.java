@@ -14,7 +14,7 @@ import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.ProjectStatus;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 
 public class UseCase8RunSimulation {
@@ -23,12 +23,12 @@ public class UseCase8RunSimulation {
 	private Project project;
 	private Task baseTask;
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		tmc = new TaskManController(time);
+		tmc = new BranchOffice(time);
 		project = tmc.createProject("project", "desc", time.plusDays(4));
 
 		// new developerExpert and create a new developer

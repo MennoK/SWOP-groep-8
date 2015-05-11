@@ -10,15 +10,15 @@ import org.junit.Test;
 
 import taskmanager.Project;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class ProjectExpertTester {
 
-	private TaskManController taskManController;
+	private BranchOffice taskManController;
 
 	@Before
 	public void setUp() {
-		taskManController = new TaskManController(LocalDateTime.of(2000, 03,
+		taskManController = new BranchOffice(LocalDateTime.of(2000, 03,
 				05, 00, 00));
 	}
 

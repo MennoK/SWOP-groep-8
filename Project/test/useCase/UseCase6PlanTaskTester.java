@@ -20,12 +20,12 @@ import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.exception.ConlictingPlanningException;
 
 public class UseCase6PlanTaskTester {
 
-	public TaskManController tmc;
+	public BranchOffice tmc;
 	public Planner planner;
 	public LocalDateTime time1;
 	public LocalDateTime time2;
@@ -43,7 +43,7 @@ public class UseCase6PlanTaskTester {
 		// 2 default times
 		this.time1 = LocalDateTime.of(2015, 03, 10, 11, 00);
 		this.time2 = LocalDateTime.of(2015, 03, 10, 15, 00);
-		tmc = new TaskManController(time1);
+		tmc = new BranchOffice(time1);
 		// create planning expert
 		this.planner = tmc.getPlanner();
 		// create some resources

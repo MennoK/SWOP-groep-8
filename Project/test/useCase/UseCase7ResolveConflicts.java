@@ -12,12 +12,12 @@ import taskmanager.Developer;
 import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.exception.ConlictingPlanningException;
 
 public class UseCase7ResolveConflicts {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private Project project;
 	private LocalDateTime now;
 
@@ -31,7 +31,7 @@ public class UseCase7ResolveConflicts {
 
 		now = LocalDateTime.of(2015, 04, 22, 9, 0);
 
-		tmc = new TaskManController(now);
+		tmc = new BranchOffice(now);
 		project = tmc.createProject("proj", "proj description",
 				now.plusYears(1));
 

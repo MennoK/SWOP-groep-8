@@ -23,13 +23,13 @@ import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class ParserTester {
 
 	DateTimeFormatter dateTimeFormatter = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd HH:mm");
-	static TaskManController tmc;
+	static BranchOffice tmc;
 	static List<ResourceType> resourceTypeList;
 	static List<Planning> planningsList;
 

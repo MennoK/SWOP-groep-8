@@ -9,16 +9,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Project;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class UseCase2CreateProjectTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 
 	@Before
 	public void setUp() {
 		// create a project controller
-		tmc = new TaskManController(LocalDateTime.of(2015, 03, 07, 01, 00));
+		tmc = new BranchOffice(LocalDateTime.of(2015, 03, 07, 01, 00));
 
 	}
 

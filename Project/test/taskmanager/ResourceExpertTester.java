@@ -12,16 +12,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.ResourceType;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import utility.TimeInterval;
 
 public class ResourceExpertTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 
 	@Before
 	public void setUp() {
-		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
+		tmc = new BranchOffice(LocalDateTime.of(2000, 03, 05, 00, 00));
 	}
 
 	@Test

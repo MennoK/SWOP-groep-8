@@ -427,7 +427,7 @@ public class ResourceType {
 		 * resourceExpert is required to add the new type to the given resource
 		 * Expert
 		 */
-		public ResourceType build(TaskManController tmc) {
+		public ResourceType build(BranchOffice tmc) {
 			ResourceType resourceType = new ResourceType(this);
 			tmc.getResourceExpert().addResourceType(resourceType);
 			return resourceType;

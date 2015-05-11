@@ -15,11 +15,11 @@ import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class UseCase3CreateTaskTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private LocalDateTime now;
 
 	@Before
@@ -27,7 +27,7 @@ public class UseCase3CreateTaskTester {
 		// create a controller
 		now = LocalDateTime.of(2015, 03, 07, 01, 00);
 
-		tmc = new TaskManController(now);
+		tmc = new BranchOffice(now);
 		ResourceType.builder("resourcetype").build(tmc);
 
 		List<ResourceType> list = new ArrayList<ResourceType>(

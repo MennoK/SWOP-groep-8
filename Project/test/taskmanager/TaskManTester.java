@@ -11,7 +11,7 @@ import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import utility.WorkTime;
 
 /**
@@ -22,12 +22,12 @@ import utility.WorkTime;
 public class TaskManTester {
 
 	LocalDateTime time;
-	TaskManController tmc;
+	BranchOffice tmc;
 
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		tmc = new TaskManController(time);
+		tmc = new BranchOffice(time);
 	}
 
 	protected Project createStandardProject(LocalDateTime dueDate) {

@@ -12,11 +12,11 @@ import org.junit.Test;
 
 import taskmanager.Resource;
 import taskmanager.ResourceType;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 
 public class ResourceTypeTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private ResourceType resourceType;
 	private ResourceType requiredResourceType;
 	private ResourceType conflictedResourceType;
@@ -24,7 +24,7 @@ public class ResourceTypeTester {
 
 	@Before
 	public void setUp() {
-		tmc = new TaskManController(LocalDateTime.of(2000, 03, 05, 00, 00));
+		tmc = new BranchOffice(LocalDateTime.of(2000, 03, 05, 00, 00));
 		ResourceType.builder("type").build(tmc);
 		ResourceType.builder("requiredResourceType").build(tmc);
 		ResourceType.builder("conflictedResourceType").build(tmc);

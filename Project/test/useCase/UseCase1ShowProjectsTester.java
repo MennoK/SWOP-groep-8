@@ -16,12 +16,12 @@ import taskmanager.Project;
 import taskmanager.ProjectFinishingStatus;
 import taskmanager.ProjectStatus;
 import taskmanager.Task;
-import taskmanager.TaskManController;
+import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 
 public class UseCase1ShowProjectsTester {
 
-	private TaskManController tmc;
+	private BranchOffice tmc;
 	private Developer jef;
 	private Developer jos;
 	private Project project1;
@@ -46,7 +46,7 @@ public class UseCase1ShowProjectsTester {
 
 		now = LocalDateTime.of(2015, 03, 10, 11, 00);
 
-		tmc = new TaskManController(now);
+		tmc = new BranchOffice(now);
 
 		jef = tmc.createDeveloper("Jef");
 		jos = tmc.createDeveloper("Jos");
