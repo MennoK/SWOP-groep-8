@@ -17,7 +17,7 @@ import utility.TimeSpan;
  *
  */
 public class BranchOffice {
-	
+
 	private String location;
 
 	private DeveloperExpert developerExpert;
@@ -44,17 +44,17 @@ public class BranchOffice {
 
 
 	public BranchOffice(String location) {
-		//temporary time object
+		// temporary time object
 		this.taskManClock = new TaskManClock(LocalDateTime.now());
 		setLocation(location);
-		
+
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
 		createDelegatedTaskExpert();
 		createPlanner();
 	}
-	
+
 	/**
 	 * Creates a new delegated task expert
 	 */
@@ -66,9 +66,10 @@ public class BranchOffice {
 	/**
 	 * Sets the location of the branch office
 	 * 
-	 * @param location : given location
+	 * @param location
+	 *            : given location
 	 */
-	private void setLocation(String location){
+	private void setLocation(String location) {
 		this.location = location;
 	}
 
@@ -107,7 +108,7 @@ public class BranchOffice {
 	 * 
 	 * @return developerExpert : developer expert
 	 */
-	private DeveloperExpert getDeveloperExpert() {
+	DeveloperExpert getDeveloperExpert() {
 		return developerExpert;
 	}
 
@@ -125,16 +126,16 @@ public class BranchOffice {
 	 * 
 	 * @return projectExpert : project expert
 	 */
-	private ProjectExpert getProjectExpert() {
+	ProjectExpert getProjectExpert() {
 		return projectExpert;
 	}
-	
+
 	/**
 	 * Returns the location of the branch office
 	 * 
 	 * @return location : location as a string
 	 */
-	public String getLocation(){
+	public String getLocation() {
 		return this.location;
 	}
 
@@ -186,6 +187,7 @@ public class BranchOffice {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given time is invalid
 	 */
+	@Deprecated
 	public void advanceTime(LocalDateTime time) {
 		this.taskManClock.setTime(time);
 		this.getProjectExpert().handleTimeChange(this.taskManClock.getTime());
@@ -196,6 +198,7 @@ public class BranchOffice {
 	 * 
 	 * @return LocalDateTime : time
 	 */
+	@Deprecated
 	public LocalDateTime getTime() {
 		return this.taskManClock.getTime();
 	}
@@ -207,10 +210,11 @@ public class BranchOffice {
 	 * @param task
 	 * @param startTime
 	 */
+	@Deprecated
 	public void setExecuting(Task task, LocalDateTime startTime) {
 		task.setExecuting(startTime);
-		this.getPlanner().getPlanning(task).setTimeSpan(
-				new TimeSpan(startTime, task.getDuration()));
+		this.getPlanner().getPlanning(task)
+				.setTimeSpan(new TimeSpan(startTime, task.getDuration()));
 		updateStatusAll();
 	}
 
@@ -221,9 +225,10 @@ public class BranchOffice {
 	 * @param task
 	 * @param endTime
 	 */
+	@Deprecated
 	public void setFinished(Task task, LocalDateTime endTime) {
 		task.setFinished(endTime);
-		if(this.getPlanner().taskHasPlanning(task)) {
+		if (this.getPlanner().taskHasPlanning(task)) {
 			this.getPlanner().getPlanning(task).setEndTime(endTime);
 		}
 		updateStatusAll();
@@ -236,9 +241,10 @@ public class BranchOffice {
 	 * @param task
 	 * @param endTime
 	 */
+	@Deprecated
 	public void setFailed(Task task, LocalDateTime endTime) {
 		task.setFailed(endTime);
-		if(this.getPlanner().taskHasPlanning(task)) {
+		if (this.getPlanner().taskHasPlanning(task)) {
 			this.getPlanner().getPlanning(task).setEndTime(endTime);
 		}
 		updateStatusAll();
@@ -247,7 +253,8 @@ public class BranchOffice {
 	/**
 	 * Update the status of all tasks
 	 */
-	private void updateStatusAll() {
+	@Deprecated
+	void updateStatusAll() {
 		for (Task task : getProjectExpert().getAllTasks())
 			getPlanner().updateStatus(task);
 	}
@@ -257,6 +264,7 @@ public class BranchOffice {
 	 * 
 	 * @return set of tasks without a planning
 	 */
+	@Deprecated
 	public Set<Task> getUnplannedTasks() {
 		return getPlanner().getUnplannedTasks(getProjectExpert().getAllTasks());
 	}
@@ -267,6 +275,7 @@ public class BranchOffice {
 	 * 
 	 * @return A set of localdateTimes
 	 */
+	@Deprecated
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
 		return getPlanner().getPossibleStartTimes(task, getTime(),
 				getDeveloperExpert().getAllDevelopers());
@@ -280,6 +289,7 @@ public class BranchOffice {
 	 * @param timeSpan
 	 * @return The selected resources
 	 */
+	@Deprecated
 	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
 		Map<ResourceType, Integer> requirements = task
 				.getRequiredResourceTypes();
@@ -302,6 +312,7 @@ public class BranchOffice {
 	 * 
 	 * @return projects: list of projects
 	 */
+	@Deprecated
 	public List<Project> getAllProjects() {
 		return Collections
 				.unmodifiableList(getProjectExpert().getAllProjects());
@@ -312,6 +323,7 @@ public class BranchOffice {
 	 * 
 	 * @return resourcetypes : set of all resource types
 	 */
+	@Deprecated
 	public Set<ResourceType> getAllResourceTypes() {
 		return Collections.unmodifiableSet(getResourceExpert()
 				.getAllResourceTypes());
@@ -322,6 +334,7 @@ public class BranchOffice {
 	 * 
 	 * @return developers : set of all developers
 	 */
+	@Deprecated
 	public Set<Developer> getAllDevelopers() {
 		return Collections.unmodifiableSet(getDeveloperExpert()
 				.getAllDevelopers());
@@ -335,12 +348,14 @@ public class BranchOffice {
 	 *            the active Developer
 	 * @return All the tasks to which this developer is assigned.
 	 */
+	@Deprecated
 	public Set<Task> getAllTasks(Developer dev) {
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			for (Task task : project.getAllTasks()) {
 				if (this.getPlanner().taskHasPlanning(task)
-						&& this.getPlanner().getPlanning(task).getDevelopers().contains(dev)) {
+						&& this.getPlanner().getPlanning(task).getDevelopers()
+								.contains(dev)) {
 					tasks.add(task);
 				}
 			}
@@ -361,6 +376,7 @@ public class BranchOffice {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
+	@Deprecated
 	public Project createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
 		return getProjectExpert().createProject(name, description,
@@ -378,6 +394,7 @@ public class BranchOffice {
 	 * @param dueTime
 	 *            : due time of the project
 	 */
+	@Deprecated
 	public Project createProject(String name, String description,
 			LocalDateTime dueTime) {
 		return getProjectExpert().createProject(name, description, getTime(),
@@ -391,9 +408,9 @@ public class BranchOffice {
 	 * @param name
 	 *            : given name
 	 */
+	@Deprecated
 	public Developer createDeveloper(String name) {
 		return getDeveloperExpert().createDeveloper(name);
 	}
-	
-	
+
 }
