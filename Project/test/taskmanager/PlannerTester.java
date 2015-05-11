@@ -29,6 +29,7 @@ import taskmanager.Planning.PlanningBuilder;
 import taskmanager.exception.ConlictingPlanningException;
 import utility.TimeInterval;
 import utility.TimeSpan;
+import utility.WorkTime;
 
 public class PlannerTester extends TaskManTester {
 
@@ -125,24 +126,24 @@ public class PlannerTester extends TaskManTester {
 	@Test
 	public void testGetPossibleStartTimes() {
 		// CASE1: everything is available
-		Set<LocalDateTime> possibleStartTimes111213 = new LinkedHashSet<>();
-		possibleStartTimes111213.add(time1);
-		possibleStartTimes111213.add(time1.plusHours(1));
-		possibleStartTimes111213.add(time1.plusHours(2));
+		Set<LocalDateTime> possibleStartTimes111214 = new LinkedHashSet<>();
+		possibleStartTimes111214.add(time1);
+		possibleStartTimes111214.add(time1.plusHours(1));
+		possibleStartTimes111214.add(time1.plusHours(3));
 		assertEquals(
-				possibleStartTimes111213,
+				possibleStartTimes111214,
 				planner.getPossibleStartTimes(task1, time1,
 						tmc.getAllDevelopers()));
 		Planning.builder(time1, task1, developer1, planner)
 				.addDeveloper(developer2).addAllResources(resource).build();
 
 		// CASE2: task1 + allDevs are planned for time1 until time1+1
-		Set<LocalDateTime> possibleStartTimes121314 = new LinkedHashSet<>();
-		possibleStartTimes121314.add(time1.plusHours(1));
-		possibleStartTimes121314.add(time1.plusHours(2));
-		possibleStartTimes121314.add(time1.plusHours(3));
+		Set<LocalDateTime> possibleStartTimes121415 = new LinkedHashSet<>();
+		possibleStartTimes121415.add(time1.plusHours(1));
+		possibleStartTimes121415.add(time1.plusHours(3));
+		possibleStartTimes121415.add(time1.plusHours(4));
 		assertEquals(
-				possibleStartTimes121314,
+				possibleStartTimes121415,
 				planner.getPossibleStartTimes(task2, time1,
 						tmc.getAllDevelopers()));
 		Planning.builder(time1.plusHours(3), task2, developer1, planner)
@@ -157,28 +158,14 @@ public class PlannerTester extends TaskManTester {
 		Set<LocalDateTime> possibleStartTimes121617 = new LinkedHashSet<>();
 		possibleStartTimes121617.add(time1.plusHours(5));
 		possibleStartTimes121617.add(time1.plusHours(6));
-		possibleStartTimes121617.add(time1.plusHours(7));
+		possibleStartTimes121617.add(WorkTime.getFinishTime(time1, Duration.ofHours(6)));
 
 		assertEquals(
 				possibleStartTimes121617,
 				planner.getPossibleStartTimes(task3, time1,
 						tmc.getAllDevelopers()));
 
-		// subcase: 2 timeslots are available between planning of task 1 and
-		// task 2
-		Task.builder("task4 ", Duration.ofHours(1), 2).build(project);
-		Task task4 = project.getAllTasks().get(3);
-		Set<LocalDateTime> possibleStartTimes121316 = new LinkedHashSet<>();
-		possibleStartTimes121316.add(time1.plusHours(1));
-		possibleStartTimes121316.add(time1.plusHours(2));
-		possibleStartTimes121316.add(time1.plusHours(5));
-
-		assertEquals(
-				possibleStartTimes121316,
-				planner.getPossibleStartTimes(task4, time1,
-						tmc.getAllDevelopers()));
-		Planning.builder(time1.plusHours(1), task4, developer1, planner)
-				.build();
+	
 
 		// CASE4: some developpers planned, some available -> same test as
 		// before for task3, task4 is planned on time1+1 and has 1 developer
@@ -193,8 +180,8 @@ public class PlannerTester extends TaskManTester {
 				.addRequiredResourceType(resourceType, 1).build(project);
 		Task.builder("task6 ", Duration.ofHours(1), 2)
 				.addRequiredResourceType(resourceType, 1).build(project);
-		Task task5 = project.getAllTasks().get(4);
-		Task task6 = project.getAllTasks().get(5);
+		Task task5 = project.getAllTasks().get(3);
+		Task task6 = project.getAllTasks().get(4);
 
 		Planning.builder(time1.plusHours(2), task5, developer1, planner)
 				.addDeveloper(developer2).addAllResources(resource).build();
@@ -204,6 +191,14 @@ public class PlannerTester extends TaskManTester {
 				planner.getPossibleStartTimes(task6, time1,
 						tmc.getAllDevelopers()));
 
+		// CASE6: task with more then  1 developer required
+		Task.builder("task6 ", Duration.ofHours(1), 2).amountOfRequiredDevelopers(2).build(project);
+		Task task7 = project.getAllTasks().get(5);
+		Set<LocalDateTime> possibleStartTimes161709 = new LinkedHashSet<>();
+		possibleStartTimes161709.add(time1.plusHours(5));
+		possibleStartTimes161709.add(time1.plusHours(6));
+		possibleStartTimes161709.add(WorkTime.getFinishTime(time1, Duration.ofHours(6)));
+		assertEquals(possibleStartTimes161709, planner.getPossibleStartTimes(task7, time1, tmc.getAllDevelopers()));
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package taskmanager;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import com.google.common.collect.HashBiMap;
 import taskmanager.Planning.PlanningBuilder;
 import utility.TimeSpan;
 import utility.WorkDay;
+import utility.WorkTime;
 
 /**
  * 
@@ -73,7 +75,7 @@ public class Planner {
 			if (isPlannableForTimeSpan(task, developers, timeSpan)) {
 				possibleStartTimes.add(timeSpan.getBegin());
 			}
-			time = time.plusHours(1);
+			time = WorkTime.getFinishTime(time, Duration.ofHours(1));
 		}
 		return possibleStartTimes;
 	}
@@ -94,7 +96,7 @@ public class Planner {
 	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,
 			TimeSpan timeSpan) {
 		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
-				timeSpan))
+				timeSpan), task)
 				&& enoughResourcesAvailable(
 						resourcesAvailableFor(task, timeSpan), task)) {
 			return true;
@@ -144,8 +146,8 @@ public class Planner {
 	 *         than one
 	 */
 	private boolean enoughDevelopersAvalaible(
-			Set<Developer> developersAvailableFor) {
-		if (developersAvailableFor.size() >= 1) {
+			Set<Developer> developersAvailableFor, Task task) {
+		if (developersAvailableFor.size() >= task.getAmountOfRequiredDevelopers()) {
 			return true;
 		} else {
 			return false;
