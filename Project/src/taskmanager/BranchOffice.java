@@ -17,10 +17,13 @@ import utility.TimeSpan;
  *
  */
 public class BranchOffice {
+	
+	private String location;
 
 	private DeveloperExpert developerExpert;
 	private ResourceExpert resourceExpert;
 	private ProjectExpert projectExpert;
+	private DelegatedTaskExpert delegatedTaskExpert;
 	private Planner planner;
 	private TaskManClock taskManClock;
 
@@ -28,13 +31,45 @@ public class BranchOffice {
 	 * Constructor of TaskManController. When a new TaskManController has been
 	 * created new expert classes will be created.
 	 */
+	@Deprecated
 	public BranchOffice(LocalDateTime now) {
 		this.taskManClock = new TaskManClock(now);
 
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
+		createDelegatedTaskExpert();
 		createPlanner();
+	}
+
+
+	public BranchOffice(String location) {
+		//temporary time object
+		this.taskManClock = new TaskManClock(LocalDateTime.now());
+		setLocation(location);
+		
+		createDeveloperExpert();
+		createResourceExpert();
+		createProjectExpert();
+		createDelegatedTaskExpert();
+		createPlanner();
+	}
+	
+	/**
+	 * Creates a new delegated task expert
+	 */
+	private void createDelegatedTaskExpert() {
+		this.delegatedTaskExpert = new DelegatedTaskExpert();
+	}
+
+	
+	/**
+	 * Sets the location of the branch office
+	 * 
+	 * @param location : given location
+	 */
+	private void setLocation(String location){
+		this.location = location;
 	}
 
 	/**
@@ -93,6 +128,15 @@ public class BranchOffice {
 	private ProjectExpert getProjectExpert() {
 		return projectExpert;
 	}
+	
+	/**
+	 * Returns the location of the branch office
+	 * 
+	 * @return location : location as a string
+	 */
+	public String getLocation(){
+		return this.location;
+	}
 
 	/**
 	 * Returns the planning expert
@@ -101,6 +145,15 @@ public class BranchOffice {
 	 */
 	public Planner getPlanner() {
 		return this.planner;
+	}
+	
+	/**
+	 * Returns the delegated task expert
+	 * 
+	 * @return delegatedTaskExpert : delegated task expert
+	 */
+	public DelegatedTaskExpert getDelegatedTaskExpert(){
+		return this.delegatedTaskExpert;
 	}
 
 	/**
@@ -341,4 +394,6 @@ public class BranchOffice {
 	public Developer createDeveloper(String name) {
 		return getDeveloperExpert().createDeveloper(name);
 	}
+	
+	
 }
