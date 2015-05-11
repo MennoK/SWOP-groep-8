@@ -55,7 +55,7 @@ public class Planning {
 	 * @return planningBuilder : new builder for creating planning
 	 * @throws ConlictingPlanningException
 	 */
-	public static PlanningBuilder builder(LocalDateTime startTime, Task task,
+	static PlanningBuilder builder(LocalDateTime startTime, Task task,
 			Developer developer, Planner planner) {
 		return new PlanningBuilder(startTime, task, developer, planner);
 	}

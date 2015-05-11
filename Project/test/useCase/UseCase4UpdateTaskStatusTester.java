@@ -43,22 +43,22 @@ public class UseCase4UpdateTaskStatusTester {
 		task1 = Task.builder("Task 1", Duration.ofHours(8), 0.4)
 				.build(project1);
 		Developer dev1 = tmc.createDeveloper("dev1");
-		Planning.builder(now, task1, dev1, tmc.getPlanner()).build();
+		tmc.getPlanner().createPlanning(now, task1, dev1).build();
 		task2 = Task.builder("Task 2", Duration.ofHours(8), 0.4)
 				.build(project1);
 		Developer dev2 = tmc.createDeveloper("dev2");
-		Planning.builder(now, task2, dev2, tmc.getPlanner()).build();
+		tmc.getPlanner().createPlanning(now, task2, dev2).build();
 
 		// task 3 has dependency on task2
 		task3 = Task.builder("Task 3", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build(project1);
 		Developer dev3 = tmc.createDeveloper("dev3");
-		Planning.builder(now, task3, dev3, tmc.getPlanner()).build();
+		tmc.getPlanner().createPlanning(now, task3, dev3).build();
 		// task 4 had dependency on task 2
 		task4 = Task.builder("Task 4", Duration.ofHours(8), 0.4)
 				.addDependencies(task2).build(project1);
 		Developer dev4 = tmc.createDeveloper("dev4");
-		Planning.builder(now, task4, dev4, tmc.getPlanner()).build();
+		tmc.getPlanner().createPlanning(now, task4, dev4).build();
 	}
 
 	@Test

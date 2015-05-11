@@ -117,9 +117,9 @@ public class UiTaskMan {
 				+ new ToStringVisitor().create(task));
 		TimeSpan timeSpan = planSelectTimeSpan(task);
 		try {
-			Planning.PlanningBuilder plan = Planning.builder(
+			Planning.PlanningBuilder plan = tmc.getPlanner().createPlanning(
 					timeSpan.getBegin(), task,
-					reader.select(tmc.getAllDevelopers()), tmc.getPlanner());
+					reader.select(tmc.getAllDevelopers()));
 			while (reader
 					.getBoolean("Do you want to assign an extra Developer?")) {
 				plan.addDeveloper(reader.select(tmc.getAllDevelopers()));
