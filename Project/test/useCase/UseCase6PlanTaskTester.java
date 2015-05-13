@@ -81,7 +81,7 @@ public class UseCase6PlanTaskTester {
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);
 		possibleStartTimes.add(time1.plusHours(1));
-		possibleStartTimes.add(time1.plusHours(2));
+		possibleStartTimes.add(time1.plusHours(3));
 		assertEquals(possibleStartTimes,
 				planner.getPossibleStartTimes(task2, time1, developers));
 		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
@@ -127,7 +127,7 @@ public class UseCase6PlanTaskTester {
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(time1);
 		possibleStartTimes.add(time1.plusHours(1));
-		possibleStartTimes.add(time1.plusHours(2));
+		possibleStartTimes.add(time1.plusHours(3));
 		assertEquals(possibleStartTimes,
 				planner.getPossibleStartTimes(task1, time1, developers));
 
