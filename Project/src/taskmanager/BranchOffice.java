@@ -1,16 +1,12 @@
-	package taskmanager;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import utility.TimeSpan;
+package taskmanager;
 
 /**
- * The taskManController class controls every expert
+ * A branch office is a part of some company with a specific geo-
+ * graphical location. Each branch office hosts its own projects, manages its
+ * own resources and employs its own employees. A task can be planned for
+ * execution at the branch office that hosts the corresponding project or a task
+ * can be delegated to another branch office, meaning that the delegated task
+ * should be planned for execution at another branch office.
  * 
  * @author Groep 8
  *
@@ -144,28 +140,28 @@ public class BranchOffice {
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
 	public void saveSystem(BranchOffice office) {
-        if(this.equals(office)) {
-            this.getProjectExpert().save();
-            this.getDeveloperExpert().save();
-            this.getPlanner().save();
-            this.getResourceExpert().save();
-        } else {
-            this.getDelegatedTaskExpert().save(office);
-        }
+		if(this.equals(office)) {
+			this.getProjectExpert().save();
+			this.getDeveloperExpert().save();
+			this.getPlanner().save();
+			this.getResourceExpert().save();
+		} else {
+			this.getDelegatedTaskExpert().save(office);
+		}
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
 	public void loadSystem(BranchOffice office) {
-        if(this.equals(office)) {
-            this.getProjectExpert().load();
-            this.getDeveloperExpert().load();
-            this.getPlanner().load();
-            this.getResourceExpert().load();
-        } else {
-            this.getDelegatedTaskExpert().load(office);
-        }
+		if(this.equals(office)) {
+			this.getProjectExpert().load();
+			this.getDeveloperExpert().load();
+			this.getPlanner().load();
+			this.getResourceExpert().load();
+		} else {
+			this.getDelegatedTaskExpert().load(office);
+		}
 	}
 
 }
