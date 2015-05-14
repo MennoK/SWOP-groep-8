@@ -40,7 +40,7 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 		assertEquals(1, project.getAllTasks().size());
 
 		// save memento
-		tmc.getActiveOffice().saveSystem();
+		tmc.saveSystem();
 
 		// finish Tasks
 		Task baseTaskTwo = createStandardTask(Duration.ofHours(8));
@@ -56,7 +56,7 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 		assertEquals(2, project.getAllTasks().size());
 
 		// load memento
-		tmc.getActiveOffice().loadSystem();
+		tmc.loadSystem();
 
 		// statuses are different
 		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
@@ -72,7 +72,7 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 
 		assertEquals(2, tmc.getAllProjects().size());
 
-		tmc.getActiveOffice().saveSystem();
+		tmc.saveSystem();
 
 		tmc.createProject("name2", "description",
 				LocalDateTime.of(2015, 05, 06, 00, 00));
@@ -81,7 +81,7 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 		assertEquals(LocalDateTime.of(2015, 03, 05, 00, 00), tmc
 				.getAllProjects().get(1).getCreationTime());
 
-		tmc.getActiveOffice().loadSystem();
+		tmc.loadSystem();
 
 		assertEquals(2, tmc.getAllProjects().size());
 
@@ -89,10 +89,10 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 
 	@Test
 	public void testMementoSavesDevelopers() {
-		tmc.getActiveOffice().saveSystem();
+		tmc.saveSystem();
 		tmc.createDeveloper("Bob");
 		assertEquals(2, tmc.getAllDevelopers().size());
-		tmc.getActiveOffice().loadSystem();
+		tmc.loadSystem();
 		assertEquals(1, tmc.getAllDevelopers().size());
 	}
 

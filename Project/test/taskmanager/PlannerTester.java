@@ -483,14 +483,14 @@ public class PlannerTester extends TaskManTester {
 		assertEquals(1, planner.getConflictingTasks(task2,
 				time1.minusHours(1), allTasks).size());
 
-		tmc.getActiveOffice().saveSystem();
+		tmc.saveSystem();
 
 		Planning.builder(time1.plusHours(3), task2, developer1, planner)
 				.addDeveloper(developer2).build();
 		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
 		Task.builder("task4", Duration.ofHours(4), 2).build(project);
 		
-		tmc.getActiveOffice().loadSystem();
+		tmc.loadSystem();
 
 		assertTrue(planner.getConflictingTasks(task2,
 				time1.minusHours(1), allTasks).contains(task1));

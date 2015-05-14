@@ -333,13 +333,17 @@ public class TaskManController {
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
 	public void saveSystem() {
-		this.activeOffice.saveSystem();
+        for(BranchOffice office : this.getCompany().getAllBranchOffices()) {
+            office.saveSystem(this.activeOffice);
+        }
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
 	public void loadSystem() {
-		this.activeOffice.loadSystem();
+        for(BranchOffice office : this.getCompany().getAllBranchOffices()) {
+            office.loadSystem(this.activeOffice);
+        }
 	}
 }
