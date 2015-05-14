@@ -9,7 +9,6 @@ import java.util.Set;
 
 import utility.TimeSpan;
 
-
 public class TaskManController {
 	private Company company;
 	private BranchOffice activeOffice;
@@ -27,7 +26,7 @@ public class TaskManController {
 		taskManClock = new TaskManClock(now);
 		company = new Company(taskManClock);
 	}
-	
+
 	public Company getCompany() {
 		return company;
 	}
@@ -51,11 +50,10 @@ public class TaskManController {
 	}
 
 	/**
-	}
-
-	/**
-	 * Tell the system execution of Task was started. And updates the status of
-	 * all Tasks.
+	 * }
+	 * 
+	 * /** Tell the system execution of Task was started. And updates the status
+	 * of all Tasks.
 	 * 
 	 * @param task
 	 * @param startTime
@@ -315,20 +313,6 @@ public class TaskManController {
 	}
 
 	/**
-	 * Saves the current state of the system. Only the last state is remembered
-	 */
-	public void saveSystem() {
-		getActiveOffice().saveSystem();
-	}
-
-	/**
-	 * Loads the last saved state of the system
-	 */
-	public void loadSystem() {
-		getActiveOffice().loadSystem();
-	}
-
-	/**
 	 * Update the status of all tasks
 	 */
 	private void updateStatusAll() {
@@ -345,6 +329,7 @@ public class TaskManController {
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
 	}
+
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
