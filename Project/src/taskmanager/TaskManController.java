@@ -68,6 +68,7 @@ public class TaskManController {
 	 * @param startTime
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
+		checkActiveOfficeForNull();
 		task.setExecuting(startTime);
 		activeOffice.getPlanner().getPlanning(task)
 				.setTimeSpan(new TimeSpan(startTime, task.getDuration()));
@@ -82,6 +83,7 @@ public class TaskManController {
 	 * @param endTime
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
+		checkActiveOfficeForNull();
 		task.setFinished(endTime);
 		if (activeOffice.getPlanner().taskHasPlanning(task)) {
 			activeOffice.getPlanner().getPlanning(task).setEndTime(endTime);
@@ -97,6 +99,7 @@ public class TaskManController {
 	 * @param endTime
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
+		checkActiveOfficeForNull();
 		task.setFailed(endTime);
 		if (activeOffice.getPlanner().taskHasPlanning(task)) {
 			activeOffice.getPlanner().getPlanning(task).setEndTime(endTime);
@@ -122,6 +125,7 @@ public class TaskManController {
 	 * @return set of tasks without a planning
 	 */
 	public Set<Task> getUnplannedTasks() {
+		checkActiveOfficeForNull();
 		return activeOffice.getPlanner().getUnplannedTasks(
 				activeOffice.getProjectExpert().getAllTasks());
 	}
@@ -150,6 +154,7 @@ public class TaskManController {
 	}
 
 	private boolean taskIsDelegatedToActiveOffice(Task unplannedTask) {
+		checkActiveOfficeForNull();
 		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(unplannedTask);
 	}
 
@@ -169,6 +174,7 @@ public class TaskManController {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
+		checkActiveOfficeForNull();
 		return activeOffice.getPlanner().getPossibleStartTimes(task, getTime(),
 				activeOffice.getDeveloperExpert().getAllDevelopers());
 	}
@@ -182,6 +188,7 @@ public class TaskManController {
 	 * @return The selected resources
 	 */
 	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
+		checkActiveOfficeForNull();
 		Map<ResourceType, Integer> requirements = task
 				.getRequiredResourceTypes();
 		Set<Resource> selected = new HashSet<Resource>();
@@ -237,6 +244,7 @@ public class TaskManController {
 	 * @return All the tasks to which this developer is assigned.
 	 */
 	public Set<Task> getAllTasks(Developer dev) {
+		checkActiveOfficeForNull();
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			for (Task task : project.getAllTasks()) {
@@ -362,6 +370,15 @@ public class TaskManController {
 
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
+	}
+	
+	private boolean checkActiveOfficeForNull(){
+		if(this.activeOffice == null){
+			throw new IllegalStateException("No active branch office");
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
