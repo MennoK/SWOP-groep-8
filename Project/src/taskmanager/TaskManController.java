@@ -329,4 +329,17 @@ public class TaskManController {
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
 	}
+	/**
+	 * Saves the current state of the system. Only the last state is remembered
+	 */
+	public void saveSystem() {
+		this.activeOffice.saveSystem();
+	}
+
+	/**
+	 * Loads the last saved state of the system
+	 */
+	public void loadSystem() {
+		this.activeOffice.loadSystem();
+	}
 }
