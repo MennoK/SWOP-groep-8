@@ -25,7 +25,6 @@ public class DelegatedTaskExpert {
 	public void addDelegatedTask(Task task){
 		this.addDelegatedTask(task);
 	}
-	
 	/**
 	 * Returns the delegated task set
 	 * 
