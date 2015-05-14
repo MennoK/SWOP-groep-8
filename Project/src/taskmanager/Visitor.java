@@ -29,4 +29,11 @@ public interface Visitor {
 	 * @param resource
 	 */
 	public void visit(Resource resource);
+
+	/**
+	 * Visit the office
+	 * 
+	 * @param office
+	 */
+	public void visit(BranchOffice office);
 }

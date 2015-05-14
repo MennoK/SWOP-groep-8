@@ -1,17 +1,17 @@
 package taskmanager;
 
 /**
- * A branch office is a part of some company with a specific geo-
- * graphical location. Each branch office hosts its own projects, manages its
- * own resources and employs its own employees. A task can be planned for
- * execution at the branch office that hosts the corresponding project or a task
- * can be delegated to another branch office, meaning that the delegated task
- * should be planned for execution at another branch office.
+ * A branch office is a part of some company with a specific geo- graphical
+ * location. Each branch office hosts its own projects, manages its own
+ * resources and employs its own employees. A task can be planned for execution
+ * at the branch office that hosts the corresponding project or a task can be
+ * delegated to another branch office, meaning that the delegated task should be
+ * planned for execution at another branch office.
  * 
  * @author Groep 8
  *
  */
-public class BranchOffice {
+public class BranchOffice implements Visitable {
 
 	private String location;
 
@@ -162,6 +162,14 @@ public class BranchOffice {
 		} else {
 			this.getDelegatedTaskExpert().load(office);
 		}
+	}
+
+	/**
+	 * accept visitor for visiting this
+	 */
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 
 }

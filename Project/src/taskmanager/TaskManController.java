@@ -48,6 +48,15 @@ public class TaskManController {
 	}
 
 	/**
+	 * Log out returning the active developer and branch office to their base
+	 * state.
+	 */
+	public void logOut() {
+		setActiveDeveloper(null);
+		setActiveOffice(null);
+	}
+
+	/**
 	 * delegates a task from one branch office to an other.
 	 * 
 	 * @param task

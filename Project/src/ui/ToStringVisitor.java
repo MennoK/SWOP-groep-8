@@ -1,5 +1,6 @@
 package ui;
 
+import taskmanager.BranchOffice;
 import taskmanager.Developer;
 import taskmanager.Project;
 import taskmanager.ProjectFinishingStatus;
@@ -62,6 +63,11 @@ public class ToStringVisitor implements Visitor {
 
 	@Override
 	public void visit(Resource resource) {
+		throw new UnsupportedOperationException("Not implemented!");
+	}
+
+	@Override
+	public void visit(BranchOffice office) {
 		throw new UnsupportedOperationException("Not implemented!");
 	}
 

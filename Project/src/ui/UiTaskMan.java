@@ -266,10 +266,6 @@ public class UiTaskMan {
 		}
 	}
 
-	private void selectDeveloper() throws ExitUseCaseException {
-		activeDeveloper = reader.select(tmc.getAllDevelopers());
-	}
-
 	private void printSwitchUserMenu() {
 		System.out.println("\nSwitch user menu:\n" + "1: Projectmanager\t"
 				+ "2: Developer\t" + "9: Exit");
@@ -298,7 +294,6 @@ public class UiTaskMan {
 					projectManagerMenu();
 					break;
 				case "2":
-					selectDeveloper();
 					developerMenu();
 					break;
 				case "9":
@@ -318,6 +313,7 @@ public class UiTaskMan {
 
 	private void projectManagerMenu() {
 		try {
+			tmc.logIn(reader.select(tmc.getAllOffices()));
 			printProjectManagerMenu();
 			String choice = reader.getString("Select an option");
 			switch (choice) {
@@ -348,10 +344,13 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("Use case exited, returning to the main menu.");
 		}
+		tmc.logOut();
 	}
 
 	private void developerMenu() {
 		try {
+			tmc.logIn(reader.select(tmc.getAllOffices()));
+			tmc.logIn(reader.select(tmc.getAllDevelopers()));
 			printDeveloperMenu();
 			String choice = reader.getString("Select an option");
 			switch (choice) {
@@ -373,6 +372,7 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("Use case exited, returning to the main menu.");
 		}
+		tmc.logOut();
 	}
 
 	public static void main(String[] args) {
