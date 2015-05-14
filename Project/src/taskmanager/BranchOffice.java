@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.istack.internal.NotNull;
-
 import utility.TimeSpan;
 
 /**
@@ -180,6 +178,7 @@ public class BranchOffice {
 		this.getPlanner().save();
 		this.getResourceExpert().save();
 		this.taskManClock.save();
+        this.getDelegatedTaskExpert().save();
 	}
 
 	/**

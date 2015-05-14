@@ -26,3 +26,5 @@ group08/
 *.synctex.gz
 
 .recommenders/
+*.class
+*.syntastic*
