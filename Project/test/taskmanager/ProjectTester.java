@@ -152,7 +152,7 @@ public class ProjectTester extends TaskManTester {
 		assertEquals(null, dependentTask.getOriginal());
 		assertEquals(0, baseTask.getDependencies().size());
 		assertEquals(1, dependentTask.getDependencies().size());
-		assertEquals(baseTask, dependentTask.getDependencies().get(0));
+		assertTrue(dependentTask.getDependencies().contains(baseTask));
 
 		// check status
 		assertEquals(TaskStatus.AVAILABLE, baseTask.getStatus());
@@ -201,7 +201,7 @@ public class ProjectTester extends TaskManTester {
 		assertEquals(baseTask, alternativeTask.getOriginal());
 		assertEquals(0, baseTask.getDependencies().size());
 		assertEquals(1, dependentTask.getDependencies().size());
-		assertEquals(alternativeTask, dependentTask.getDependencies().get(0));
+		assertTrue(dependentTask.getDependencies().contains(alternativeTask));
 		assertEquals(0, alternativeTask.getDependencies().size());
 
 		// double check

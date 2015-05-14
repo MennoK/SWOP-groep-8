@@ -158,9 +158,8 @@ public class PlannerTester extends TaskManTester {
 				(WorkTime.getFinishTime(time1, Duration.ofHours(6)))));
 
 		// CASE5: task with more then 1 developer required
-		Task.builder("task6 ", Duration.ofHours(1), 2)
+		Task task7 = Task.builder("task6 ", Duration.ofHours(1), 2)
 				.amountOfRequiredDevelopers(2).build(project);
-		Task task7 = project.getAllTasks().get(5);
 
 		assertTrue(planner.getPossibleStartTimes(task7, time1,
 				tmc.getAllDevelopers()).contains(time1.plusHours(5)));
@@ -411,49 +410,43 @@ public class PlannerTester extends TaskManTester {
 		type2.createResource("a resource");
 		type3.createResource("a resource");
 
-		Task.builder("testTask for available13to17 ", Duration.ofHours(3), 1)
-				.addRequiredResourceType(type1, 1).build(project);
-		Task.builder("testTask for available8to12 ", Duration.ofHours(3), 1)
+		Task task2 = Task
+				.builder("testTask for available13to17 ", Duration.ofHours(3),
+						1).addRequiredResourceType(type1, 1).build(project);
+		Task task3 = Task
+				.builder("testTask for available8to12 ", Duration.ofHours(3), 1)
 				.addRequiredResourceType(type2, 1).build(project);
-		Task.builder("testTask for available9to12 ", Duration.ofHours(3), 1)
+		Task task4 = Task
+				.builder("testTask for available9to12 ", Duration.ofHours(3), 1)
 				.addRequiredResourceType(type3, 1).build(project);
 
 		TimeSpan timeSpan = new TimeSpan(time1.minusHours(1),
 				Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(2), timeSpan));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(task2, timeSpan));
 
 		timeSpan = new TimeSpan(time1, Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(2), timeSpan));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(task2, timeSpan));
 
 		timeSpan = new TimeSpan(time1.plusHours(2), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(2), timeSpan));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(task2, timeSpan));
 
 		timeSpan = new TimeSpan(time1.plusHours(3), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(2), timeSpan));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(task2, timeSpan));
 
 		timeSpan = new TimeSpan(time1.minusHours(3), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(3), timeSpan));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(task3, timeSpan));
 
 		timeSpan = new TimeSpan(time1.minusHours(2), Duration.ofHours(3));
-		assertTrue(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(3), timeSpan));
+		assertTrue(planner.resourceDailyAvailableIsAvailable(task3, timeSpan));
 
 		timeSpan = new TimeSpan(time1.plusHours(1), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(3), timeSpan));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(task3, timeSpan));
 
 		timeSpan = new TimeSpan(time1.minusHours(3), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(4), timeSpan));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(task4, timeSpan));
 
 		timeSpan = new TimeSpan(time1.minusHours(1), Duration.ofHours(3));
-		assertFalse(planner.resourceDailyAvailableIsAvailable(project
-				.getAllTasks().get(4), timeSpan));
+		assertFalse(planner.resourceDailyAvailableIsAvailable(task4, timeSpan));
 	}
 
 	@Test
