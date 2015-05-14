@@ -167,6 +167,7 @@ public class BranchOffice {
 		this.getPlanner().save();
 		this.getResourceExpert().save();
 		this.taskManClock.save();
+        this.getDelegatedTaskExpert().save();
 	}
 
 	/**
