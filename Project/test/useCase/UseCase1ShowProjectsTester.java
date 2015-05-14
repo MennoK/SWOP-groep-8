@@ -2,7 +2,6 @@ package useCase;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileNotFoundException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,13 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.*;
-import parser.Parser;
 
-public class UseCase1ShowProjectsTester {
+public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 
-	private BranchOffice tmc;
-	private Developer jef;
 	private Developer jos;
+
 	private Project project1;
 	private Project project2;
 	private Project project0;
@@ -29,41 +26,30 @@ public class UseCase1ShowProjectsTester {
 	private Task task3;
 	private Task task4;
 
-	private LocalDateTime now;
 	@Before
 	public void setUp() {
+		setUpTMC(LocalDateTime.of(2015, 03, 10, 11, 00));
 
 		// create a controller, 3 projects and 3 tasks:
 		// project0 has 0 tasks
 		// project1 has 1 task (finished)
 		// project2 has 2 tasks (1 task is dependent on the other)
 
-		now = LocalDateTime.of(2015, 03, 10, 11, 00);
-
-		tmc = new BranchOffice(now);
-
-		jef = tmc.createDeveloper("Jef");
 		jos = tmc.createDeveloper("Jos");
 
-		tmc.createProject("Project 1", "Desc 1", now.plusDays(2));
-		tmc.createProject("Project 2", "Desc 2", now.plusHours(3));
-		tmc.createProject("Project 0", "Desc 3", now.plusDays(2));
-		tmc.createProject("Project 3", "Desc 3", now.plusHours(5));
-
-		project0 = tmc.getAllProjects().get(2);
-		project1 = tmc.getAllProjects().get(0);
-		project2 = tmc.getAllProjects().get(1);
-		project3 = tmc.getAllProjects().get(3);
+		project1 = tmc.createProject("Project 1", "Desc 1", now.plusDays(2));
+		project2 = tmc.createProject("Project 2", "Desc 2", now.plusHours(3));
+		project0 = tmc.createProject("Project 0", "Desc 3", now.plusDays(2));
+		project3 = tmc.createProject("Project 3", "Desc 3", now.plusHours(5));
 
 		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
 				.build(project1);
-		tmc.getPlanner().createPlanning(now, task1, jef).build();
+		tmc.getPlanner().createPlanning(now, task1, activeUser).build();
 		tmc.setExecuting(task1, now);
 		tmc.setFinished(task1, now.plusDays(1));
 		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4)
 				.build(project2);
-		tmc.getPlanner().createPlanning(now.plusHours(5), task2, jos)
-				.build();
+		tmc.getPlanner().createPlanning(now.plusHours(5), task2, jos).build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build(project2);
 		task4 = Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
@@ -107,7 +93,7 @@ public class UseCase1ShowProjectsTester {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 
 		Task.builder("task5", Duration.ofHours(1), 0.4).addDependencies(task4)
-		.build(project3);
+				.build(project3);
 
 		// project 3 has 2 dependent tasks -> should still finish on time
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());

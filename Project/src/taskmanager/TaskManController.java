@@ -19,7 +19,7 @@ public class TaskManController {
 	@Deprecated
 	// To be removed when BranchOffice does not use TaskManClock directly
 	// anymore
-	TaskManClock getTaskManClock() {
+	public TaskManClock getTaskManClock() {
 		return taskManClock;
 	}
 
