@@ -30,6 +30,7 @@ import utility.WorkTime;
 
 public class Project implements Visitable {
 
+	//TODO: Set<Task> tasks
 	private List<Task> tasks;
 	private String name;
 	private String description;
