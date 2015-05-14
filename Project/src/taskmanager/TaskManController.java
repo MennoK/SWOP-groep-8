@@ -50,7 +50,6 @@ public class TaskManController {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * delegates a task from one branch office to an other.
 	 * 
 	 * @param task 
@@ -67,12 +66,6 @@ public class TaskManController {
 	/**
 	 * Tell the system execution of Task was started. And updates the status of
 	 * all Tasks.
-=======
-	 * }
-	 * 
-	 * /** Tell the system execution of Task was started. And updates the status
-	 * of all Tasks.
->>>>>>> 549d638a3177816cbf5118347b88adaf74809f7b
 	 * 
 	 * @param task
 	 * @param startTime
