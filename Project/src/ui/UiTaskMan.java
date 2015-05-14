@@ -16,7 +16,7 @@ import utility.TimeSpan;
 
 public class UiTaskMan {
 
-	private BranchOffice tmc;
+	private TaskManController tmc;
 	private Reader reader;
 	private Developer activeDeveloper;
 
@@ -62,7 +62,7 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("The standard time will be used.");
 		}
-		tmc = new BranchOffice(now);
+		tmc = new TaskManController(now);
 	}
 
 	private void showProjects() throws ExitUseCaseException {
@@ -85,6 +85,7 @@ public class UiTaskMan {
 		tmc.createProject(name, description, dueTime);
 	}
 
+	// TODO ask if task requires Ressources
 	private void createTask() throws ExitUseCaseException {
 		while (true) {
 			System.out.println("Creating a task\n"
@@ -175,8 +176,8 @@ public class UiTaskMan {
 			throws ExitUseCaseException {
 		System.out.println("A conflict occured with the following Tasks:");
 		for (Planning planning : conflict.getConflictingPlannings()) {
-			System.out.println(new ToStringVisitor().create(tmc
-					.getPlanner().getTask(planning)));
+			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
+					.getTask(planning)));
 		}
 		if (!reader
 				.getBoolean("y => re-start planning the new task / n => re-plan the conflicting task")) {

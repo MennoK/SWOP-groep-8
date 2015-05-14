@@ -1,10 +1,9 @@
-package taskmanager;
+	package taskmanager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +39,6 @@ public class BranchOffice {
 		createPlanner();
 	}
 
-	
 	public BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object
 		this.clock = (TaskManClock)clock;
@@ -295,9 +293,8 @@ public class BranchOffice {
 	 * @return projects: list of projects
 	 */
 	@Deprecated
-	public List<Project> getAllProjects() {
-		return Collections
-				.unmodifiableList(getProjectExpert().getAllProjects());
+	public Set<Project> getAllProjects() {
+		return Collections.unmodifiableSet(getProjectExpert().getAllProjects());
 	}
 
 	/**
