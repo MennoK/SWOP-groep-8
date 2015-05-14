@@ -23,7 +23,7 @@ public class TaskManClock implements ImmutableClock {
 	 * @param startTime
 	 *            : the given time
 	 */
-	public TaskManClock(LocalDateTime startTime) {
+	TaskManClock(LocalDateTime startTime) {
 		this.currentTime = startTime;
 	}
 

@@ -1,13 +1,4 @@
-	package taskmanager;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import utility.TimeSpan;
+package taskmanager;
 
 /**
  * The taskManController class controls every expert
@@ -30,9 +21,9 @@ public class BranchOffice {
 	 * Constructor of TaskManController. When a new TaskManController has been
 	 * created new expert classes will be created.
 	 */
-	public BranchOffice(String location, ImmutableClock clock) {
+	BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object
-		this.clock = (TaskManClock)clock;
+		this.clock = (TaskManClock) clock;
 		setLocation(location);
 		createDeveloperExpert();
 		createResourceExpert();
@@ -127,7 +118,7 @@ public class BranchOffice {
 	 * 
 	 * @return planningExpert : planning expert
 	 */
-	public Planner getPlanner() {
+	Planner getPlanner() {
 		return this.planner;
 	}
 
@@ -136,36 +127,36 @@ public class BranchOffice {
 	 * 
 	 * @return delegatedTaskExpert : delegated task expert
 	 */
-	public DelegatedTaskExpert getDelegatedTaskExpert() {
+	DelegatedTaskExpert getDelegatedTaskExpert() {
 		return this.delegatedTaskExpert;
 	}
 
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
-	public void saveSystem(BranchOffice office) {
-        if(this.equals(office)) {
-            this.getProjectExpert().save();
-            this.getDeveloperExpert().save();
-            this.getPlanner().save();
-            this.getResourceExpert().save();
-        } else {
-            this.getDelegatedTaskExpert().save(office);
-        }
+	void saveSystem(BranchOffice office) {
+		if (this.equals(office)) {
+			this.getProjectExpert().save();
+			this.getDeveloperExpert().save();
+			this.getPlanner().save();
+			this.getResourceExpert().save();
+		} else {
+			this.getDelegatedTaskExpert().save(office);
+		}
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
-	public void loadSystem(BranchOffice office) {
-        if(this.equals(office)) {
-            this.getProjectExpert().load();
-            this.getDeveloperExpert().load();
-            this.getPlanner().load();
-            this.getResourceExpert().load();
-        } else {
-            this.getDelegatedTaskExpert().load(office);
-        }
+	void loadSystem(BranchOffice office) {
+		if (this.equals(office)) {
+			this.getProjectExpert().load();
+			this.getDeveloperExpert().load();
+			this.getPlanner().load();
+			this.getResourceExpert().load();
+		} else {
+			this.getDelegatedTaskExpert().load(office);
+		}
 	}
 
 }

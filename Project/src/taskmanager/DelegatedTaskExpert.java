@@ -11,32 +11,36 @@ import com.google.common.collect.ArrayListMultimap;
 public class DelegatedTaskExpert {
 
 	private ArrayListMultimap<BranchOffice, Task> delegatedTasks;
-    private HashMap<BranchOffice, Memento> mementos;
-	
+	private HashMap<BranchOffice, Memento> mementos;
+
 	/**
-	 * Default constructor of the delegatedTaskExpert. It initializes a 
-	 * new empty set for delegated tasks
+	 * Default constructor of the delegatedTaskExpert. It initializes a new
+	 * empty set for delegated tasks
 	 */
-	public DelegatedTaskExpert(){
+	DelegatedTaskExpert() {
 		this.delegatedTasks = ArrayListMultimap.create();
 	}
-	
+
 	/**
-	 * Adds the given task as a delegated task to the set 
+	 * Adds the given task as a delegated task to the set
 	 * 
-	 * @param task : given task
+	 * @param task
+	 *            : given task
 	 */
-	public void addDelegatedTask(Task task, BranchOffice office){
+	void addDelegatedTask(Task task, BranchOffice office) {
 		this.delegatedTasks.put(office, task);
 	}
+
 	/**
 	 * Returns the delegated task set
 	 * 
 	 * @return delegatedTasks : set with delegated Tasks
 	 */
-	public Set<Task> getAllDelegatedTasks(){
-		return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks.values()));
+	Set<Task> getAllDelegatedTasks() {
+		return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks
+				.values()));
 	}
+
 	/**
 	 * Saves the current state of the class
 	 */
@@ -75,8 +79,9 @@ public class DelegatedTaskExpert {
 		 */
 		public Memento(BranchOffice office) {
 			this.office = office;
-			
-			this.delegatedTasks = DelegatedTaskExpert.this.delegatedTasks.get(office);
+
+			this.delegatedTasks = DelegatedTaskExpert.this.delegatedTasks
+					.get(office);
 
 		}
 
@@ -87,8 +92,9 @@ public class DelegatedTaskExpert {
 		 */
 		public void load() {
 			DelegatedTaskExpert.this.delegatedTasks.removeAll(office);
-			DelegatedTaskExpert.this.delegatedTasks.putAll(office, delegatedTasks);
+			DelegatedTaskExpert.this.delegatedTasks.putAll(office,
+					delegatedTasks);
 		}
 	}
-	
+
 }

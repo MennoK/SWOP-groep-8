@@ -16,6 +16,8 @@ import utility.TimeSpan;
 
 public class UiTaskMan {
 
+	public static final String parserFileName = "input3.tman";
+
 	private TaskManController tmc;
 	private Reader reader;
 	private Developer activeDeveloper;
@@ -36,12 +38,12 @@ public class UiTaskMan {
 			try {
 				fileName = reader
 						.getString("Give a file for initialisation of the system:\n"
-								+ "(press 2 to use ./input2.tman)");
+								+ "(press 1 to use ./" + parserFileName + ")");
 			} catch (ExitUseCaseException e1) {
 				return;
 			}
-			if (fileName.equals("2"))
-				fileName = "./input2.tman";
+			if (fileName.equals("1"))
+				fileName = "./" + parserFileName;
 			try {
 				Parser parser = new Parser();
 				tmc = parser.parse(fileName);
@@ -175,14 +177,13 @@ public class UiTaskMan {
 	private void resolveConflict(ConlictingPlanningException conflict, Task task)
 			throws ExitUseCaseException {
 		System.out.println("A conflict occured with the following Tasks:");
-		for (Planning planning : conflict.getConflictingPlannings()) {
-			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
-					.getTask(planning)));
+		for (Task conflictingTask : conflict.getConflictingTasks()) {
+			System.out.println(new ToStringVisitor().create(conflictingTask));
 		}
 		if (!reader
 				.getBoolean("y => re-start planning the new task / n => re-plan the conflicting task")) {
-			for (Planning planning : conflict.getConflictingPlannings()) {
-				plan(tmc.getPlanner().getTask(planning));
+			for (Task conflictingTask : conflict.getConflictingTasks()) {
+				plan(conflictingTask);
 			}
 		}
 		plan(task);
