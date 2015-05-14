@@ -64,9 +64,9 @@ public class Parser {
 			throws FileNotFoundException, RuntimeException {
 
 		// check if the given input file is valid for taskman
-		//TaskManInitFileChecker checker = new TaskManInitFileChecker(
-		//		new FileReader(pathToFile));
-		//checker.checkFile();
+		TaskManInitFileChecker checker = new TaskManInitFileChecker(
+				new FileReader(pathToFile));
+		checker.checkFile();
 
 		// create new yaml
 		InputStream input = new FileInputStream(new File(pathToFile));
@@ -84,7 +84,7 @@ public class Parser {
 				.get("branch");
 
 		for(LinkedHashMap<String, Object> branch : branches){
-			BranchOffice activeOffice = tmc.createBranchOffice((String) branch.get("name"));
+			BranchOffice activeOffice = tmc.createBranchOffice((String) branch.get("location"));
 			
 			tmc.logIn(activeOffice);
 			

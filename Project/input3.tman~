@@ -4,7 +4,7 @@
 systemTime: "2014-04-01 09:00"
 
 branch:
-  - name : "Baarle-Hertog West Side"
+  - name : "Baarle-Hertog"
 
     dailyAvailability :
     - startTime : "12:00"
