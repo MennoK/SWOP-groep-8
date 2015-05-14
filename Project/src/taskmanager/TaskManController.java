@@ -15,13 +15,6 @@ public class TaskManController {
 	private Developer activeDeveloper;
 	private TaskManClock taskManClock;
 
-	@Deprecated
-	// To be removed when BranchOffice does not use TaskManClock directly
-	// anymore
-	public TaskManClock getTaskManClock() {
-		return taskManClock;
-	}
-
 	public TaskManController(LocalDateTime now) {
 		taskManClock = new TaskManClock(now);
 		company = new Company(taskManClock);
@@ -265,17 +258,6 @@ public class TaskManController {
 	 */
 	public BranchOffice createBranchOffice(String location) {
 		return company.createBranchOffice(location);
-	}
-
-	/**
-	 * Create a BranchOffice
-	 * 
-	 * @param location
-	 * @return the new BranchOffice
-	 */
-	@Deprecated
-	public BranchOffice createBranchOffice(String location, TaskManClock clock) {
-		return company.createBranchOffice(location, clock);
 	}
 
 	/**
