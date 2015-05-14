@@ -105,8 +105,7 @@ public class DelegatedTaskExpert {
 		 * loads the memento to restore the state		 * 
 		 */
 		public void load() {
-			DelegatedTaskExpert.this.delegatedTasks.removeAll(office);
-			DelegatedTaskExpert.this.delegatedTasks.putAll(office, delegatedTasks);
+			DelegatedTaskExpert.this.delegatedTasks.replaceValues(office, this.delegatedTasks);
 		}
 	}
 	
