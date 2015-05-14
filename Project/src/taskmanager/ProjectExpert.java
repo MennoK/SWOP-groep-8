@@ -1,9 +1,8 @@
 package taskmanager;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -19,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ProjectExpert implements TimeObserver {
 
-	private ArrayList<Project> projects;
+	private Set<Project> projects;
 
 	private Memento memento;
 	private LocalDateTime lastUpdateTime;
@@ -31,7 +30,7 @@ public class ProjectExpert implements TimeObserver {
 	 *            : the time at which the ProjectController is created
 	 */
 	ProjectExpert() {
-		projects = new ArrayList<>();
+		projects = new LinkedHashSet<>();
 	}
 
 	/**
@@ -91,7 +90,7 @@ public class ProjectExpert implements TimeObserver {
 	 * 
 	 * @return projects: list of projects
 	 */
-	List<Project> getAllProjects() {
+	Set<Project> getAllProjects() {
 		return projects;
 	}
 
@@ -142,7 +141,7 @@ public class ProjectExpert implements TimeObserver {
 	 * @author groep 8
 	 */
 	private class Memento {
-		private ArrayList<Project> projects;
+		private Set<Project> projects;
 		private LocalDateTime lastUpdateTime;
 
 		/**
@@ -154,7 +153,8 @@ public class ProjectExpert implements TimeObserver {
 		 *            : projectExpert
 		 */
 		public Memento() {
-			this.projects = new ArrayList<Project>(ProjectExpert.this.projects);
+			this.projects = new LinkedHashSet<Project>(
+					ProjectExpert.this.projects);
 			this.lastUpdateTime = ProjectExpert.this.lastUpdateTime;
 		}
 

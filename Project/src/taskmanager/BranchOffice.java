@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,7 +41,6 @@ public class BranchOffice {
 		createPlanner();
 	}
 
-	
 	public BranchOffice(String location) {
 		// temporary time object
 		this.taskManClock = new TaskManClock(LocalDateTime.now());
@@ -172,18 +170,20 @@ public class BranchOffice {
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
+	// TODO package private
 	public void saveSystem() {
 		this.getProjectExpert().save();
 		this.getDeveloperExpert().save();
 		this.getPlanner().save();
 		this.getResourceExpert().save();
 		this.taskManClock.save();
-        this.getDelegatedTaskExpert().save();
+		this.getDelegatedTaskExpert().save();
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
+	// TODO package private
 	public void loadSystem() {
 		this.getProjectExpert().load();
 		this.getDeveloperExpert().load();
@@ -326,9 +326,8 @@ public class BranchOffice {
 	 * @return projects: list of projects
 	 */
 	@Deprecated
-	public List<Project> getAllProjects() {
-		return Collections
-				.unmodifiableList(getProjectExpert().getAllProjects());
+	public Set<Project> getAllProjects() {
+		return Collections.unmodifiableSet(getProjectExpert().getAllProjects());
 	}
 
 	/**

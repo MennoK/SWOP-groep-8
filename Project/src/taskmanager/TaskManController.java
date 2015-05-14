@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -153,8 +152,8 @@ public class TaskManController {
 	 * 
 	 * @return projects: list of projects
 	 */
-	public List<Project> getAllProjects() {
-		return Collections.unmodifiableList(activeOffice.getProjectExpert()
+	public Set<Project> getAllProjects() {
+		return Collections.unmodifiableSet(activeOffice.getProjectExpert()
 				.getAllProjects());
 	}
 
@@ -305,6 +304,20 @@ public class TaskManController {
 	 */
 	public LocalDateTime getTime() {
 		return this.taskManClock.getTime();
+	}
+
+	/**
+	 * Saves the current state of the system. Only the last state is remembered
+	 */
+	public void saveSystem() {
+		getActiveOffice().saveSystem();
+	}
+
+	/**
+	 * Loads the last saved state of the system
+	 */
+	public void loadSystem() {
+		getActiveOffice().loadSystem();
 	}
 
 	/**
