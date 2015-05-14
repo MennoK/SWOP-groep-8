@@ -14,13 +14,10 @@ import taskmanager.Project;
 import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.TaskFinishedStatus;
-import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 import utility.TimeInterval;
 
-public class TaskTester {
-
-	private LocalDateTime time;
+public class TaskTester extends TaskManTester {
 
 	private Task baseTask;
 	private Task dependentTask;
@@ -31,35 +28,36 @@ public class TaskTester {
 
 	@Before
 	public void setUp() {
+		super.setUp();
 		time = LocalDateTime.of(2015, 03, 03, 8, 0);
 		project = new Project("proj", "descr", time, time.plusYears(1));
 
-		Task.builder("a task", Duration.ofHours(8), 0.2).build(project);
-		baseTask = project.getAllTasks().get(0);
+		baseTask = Task.builder("a task", Duration.ofHours(8), 0.2).build(
+				project);
 		baseTask.setStatus(TaskStatus.AVAILABLE);
 
-		Task.builder("a dependent task", Duration.ofHours(8), 0.2)
+		dependentTask = Task
+				.builder("a dependent task", Duration.ofHours(8), 0.2)
 				.addDependencies(baseTask).build(project);
-		dependentTask = project.getAllTasks().get(1);
 
-		Task.builder("a finished task", Duration.ofHours(8), 0.2)
-				.build(project);
-		finishedTask = project.getAllTasks().get(2);
+		finishedTask = Task
+				.builder("a finished task", Duration.ofHours(8), 0.2).build(
+						project);
 		finishedTask.setStatus(TaskStatus.AVAILABLE);
 		finishedTask.setExecuting(time);
 		finishedTask.setFinished(time.plusHours(2));
 
-		Task.builder("a failed task", Duration.ofHours(8), 0.2).build(project);
-		failedTask = project.getAllTasks().get(3);
+		failedTask = Task.builder("a failed task", Duration.ofHours(8), 0.2)
+				.build(project);
 		failedTask.setStatus(TaskStatus.AVAILABLE);
 		failedTask.setExecuting(time);
 		failedTask.setFailed(time.plusHours(2));
 
-		Task.builder("a task dependent on all kind of tasks",
-				Duration.ofHours(8), 0.2).addDependencies(finishedTask)
+		level2DependentTask = Task
+				.builder("a task dependent on all kind of tasks",
+						Duration.ofHours(8), 0.2).addDependencies(finishedTask)
 				.addDependencies(failedTask).addDependencies(dependentTask)
 				.build(project);
-		level2DependentTask = project.getAllTasks().get(4);
 	}
 
 	@Test
@@ -84,18 +82,20 @@ public class TaskTester {
 	public void testGetEstimatedFinishTime() {
 		Project project = new Project("proj", "descr", LocalDateTime.of(2015,
 				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
-		Task.builder("bla", Duration.ofHours(5 * 8), 0.5).build(project);
-		assertEquals(time.plusDays(6).plusHours(9), project.getAllTasks()
-				.get(0).getEstimatedFinishTime());
+		Task task = Task.builder("bla", Duration.ofHours(5 * 8), 0.5).build(
+				project);
+		assertEquals(time.plusDays(6).plusHours(9),
+				task.getEstimatedFinishTime());
 	}
 
 	@Test
 	public void getId() {
-		Task.builder("new task 1", Duration.ofHours(8), 0.2).build(project);
-		Task.builder("new task 2", Duration.ofHours(8), 0.2).build(project);
+		Task task1 = Task.builder("new task 1", Duration.ofHours(8), 0.2)
+				.build(project);
+		Task task2 = Task.builder("new task 2", Duration.ofHours(8), 0.2)
+				.build(project);
 
-		assertEquals(project.getAllTasks().get(0).getId() + 1, project
-				.getAllTasks().get(1).getId());
+		assertEquals(task1.getId() + 1, task2.getId());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -218,24 +218,24 @@ public class TaskTester {
 
 	@Test
 	public void createTaskWithCustomAmountOfDevelopers() {
-		Task.builder("desc", Duration.ofHours(1), 1)
+		Task task = Task.builder("desc", Duration.ofHours(1), 1)
 				.amountOfRequiredDevelopers(3).build(project);
-		Task task = project.getAllTasks().get(project.getAllTasks().size() - 1);
 		assertEquals(task.getAmountOfRequiredDevelopers(), 3);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void setAlternativeTaskInvalidTaskNotFailed() {
-		Task.builder("bla", Duration.ofHours(5 * 8), 3).build(project);
-		Task.builder("desc2", Duration.ofHours(3), 2)
-				.setOriginalTask(project.getAllTasks().get(0)).build(project);
+		Task task = Task.builder("bla", Duration.ofHours(5 * 8), 3).build(
+				project);
+		Task.builder("desc2", Duration.ofHours(3), 2).setOriginalTask(task)
+				.build(project);
 
 	}
 
 	@Test
 	public void addResourceType() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 
 		resType.createResource("res1");
 
@@ -246,8 +246,8 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addAlreadyPresentResourceType() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 		resType.createResource("res1");
 		// TODO discuss isn't the builder responsible for this?
 		baseTask.addResourceType(resType, 1);
@@ -256,8 +256,8 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addResourceTypeWithInvalidQuantity() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 
 		resType.createResource("res1");
 
@@ -268,8 +268,8 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addResourceTypeWithNotEnoughResources() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 
 		resType.createResource("res1");
 
@@ -280,11 +280,11 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createTaskLongerThanAvailabilityResource() {
-		BranchOffice tmc = new BranchOffice("here");
 		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
 				LocalTime.of(17, 0));
 		ResourceType resType = ResourceType.builder("resourcetype")
-				.addDailyAvailability(dailyAvailability).build(tmc);
+				.addDailyAvailability(dailyAvailability)
+				.build(tmc.getActiveOffice());
 		resType.createResource("res1");
 
 		Task.builder("A task", Duration.ofHours(6), 1)
@@ -293,11 +293,11 @@ public class TaskTester {
 
 	@Test
 	public void createTaskShorterThanAvailabilityResource() {
-		BranchOffice tmc = new BranchOffice("here");
 		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
 				LocalTime.of(17, 0));
 		ResourceType resType = ResourceType.builder("resourcetype")
-				.addDailyAvailability(dailyAvailability).build(tmc);
+				.addDailyAvailability(dailyAvailability)
+				.build(tmc.getActiveOffice());
 		resType.createResource("res1");
 
 		Task.builder("A task", Duration.ofHours(2), 1)
@@ -306,14 +306,14 @@ public class TaskTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void createTaskWithIncorrectRequiredResources() {
-		BranchOffice tmc = new BranchOffice("here");
 
 		ResourceType requirement = ResourceType.builder("resourcetype").build(
-				tmc);
+				tmc.getActiveOffice());
 		requirement.createResource("res1");
 
 		ResourceType resType = ResourceType.builder("resourcetype")
-				.addRequiredResourceTypes(requirement).build(tmc);
+				.addRequiredResourceTypes(requirement)
+				.build(tmc.getActiveOffice());
 
 		Task.builder("A task", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resType, 1).build(project);

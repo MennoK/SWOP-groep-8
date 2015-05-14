@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Project;
-import taskmanager.Task;
 
 public class ProjectExpertTester extends TaskManTester {
 
@@ -19,7 +18,7 @@ public class ProjectExpertTester extends TaskManTester {
 
 	@Test
 	public void testCreateProjects() {
-		Project project1 = createStandardProject(time.plusDays(1));
+		createStandardProject(time.plusDays(1));
 
 		assertEquals(1, tmc.getAllProjects().size());
 		assertEquals(time, tmc.getTime());
@@ -33,12 +32,11 @@ public class ProjectExpertTester extends TaskManTester {
 	@Test
 	public void testAdvanceTime() {
 		Project project = createStandardProject(time.plusDays(1));
-		Task task = createTask(project, Duration.ofHours(20));
+		createTask(project, Duration.ofHours(20));
 
 		tmc.advanceTime(time.plusDays(1));
 
 		assertEquals(time.plusDays(1), tmc.getTime());
-
 	}
 
 	@Test(expected = IllegalArgumentException.class)

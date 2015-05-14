@@ -293,16 +293,16 @@ public class Parser {
 				ArrayList<Integer> prerequisiteTasks = (ArrayList<Integer>) task
 						.get("prerequisiteTasks");
 				for (Integer taskNr : prerequisiteTasks) {
-					builder.addDependencies(projectOfTask.getAllTasks().get(
-							taskNr - 1));
+					builder.addDependencies(new ArrayList<>(projectOfTask
+							.getAllTasks()).get(taskNr - 1));
 				}
 			}
 
 			// add alternative task if there is any
 			if (task.get("alternativeFor") != null) {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
-				builder.setOriginalTask(projectOfTask.getAllTasks().get(
-						alternativeTaskNr - 1));
+				builder.setOriginalTask(new ArrayList<>(projectOfTask
+						.getAllTasks()).get(alternativeTaskNr - 1));
 			}
 
 			// add required resource types
@@ -319,8 +319,8 @@ public class Parser {
 
 			// build the new task
 			builder.build(projectOfTask);
-			Task newTask = projectOfTask.getAllTasks().get(
-					projectOfTask.getAllTasks().size() - 1);
+			Task newTask = new ArrayList<>(projectOfTask.getAllTasks())
+					.get(projectOfTask.getAllTasks().size() - 1);
 
 			alltasks.add(newTask);
 

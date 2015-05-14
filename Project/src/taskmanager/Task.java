@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import utility.WorkDay;
@@ -44,14 +46,14 @@ public class Task implements Visitable {
 	private double acceptableDeviation;
 	private TaskStatus status = TaskStatus.UNAVAILABLE;
 
-	private List<Task> dependencies = new ArrayList<>();
+	private Set<Task> dependencies = new LinkedHashSet<>();
 	private Map<ResourceType, Integer> requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>();
 	private Task originalTask;
 	private int amountOfRequiredDevelopers;
 
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
-	
+
 	private final ImmutableClock clock;
 
 	private Memento memento;
@@ -486,8 +488,8 @@ public class Task implements Visitable {
 	 * 
 	 * @return dependencies: list with dependencies
 	 */
-	public List<Task> getDependencies() {
-		return Collections.unmodifiableList(dependencies);
+	public Set<Task> getDependencies() {
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -593,11 +595,11 @@ public class Task implements Visitable {
 	}
 
 	public void setAmountOfRequiredDevelopers(int amountOfRequiredDevelopers) {
-		if(amountOfRequiredDevelopers > 0){
+		if (amountOfRequiredDevelopers > 0) {
 			this.amountOfRequiredDevelopers = amountOfRequiredDevelopers;
-		}
-		else{
-			throw new IllegalArgumentException("amount of developers must be greater then 0");
+		} else {
+			throw new IllegalArgumentException(
+					"amount of developers must be greater then 0");
 		}
 	}
 
@@ -613,7 +615,7 @@ public class Task implements Visitable {
 		private Duration estimatedDuration;
 		private double acceptableDeviation;
 
-		private List<Task> dependencies;
+		private Set<Task> dependencies;
 		private Map<ResourceType, Integer> requiredResourceTypes;
 		private Task originalTask;
 
@@ -639,7 +641,7 @@ public class Task implements Visitable {
 			this.estimatedDuration = Task.this.estimatedDuration.plusSeconds(0);
 			this.acceptableDeviation = new Double(Task.this.acceptableDeviation);
 
-			this.dependencies = new ArrayList<Task>(Task.this.dependencies);
+			this.dependencies = new LinkedHashSet<Task>(Task.this.dependencies);
 			this.requiredResourceTypes = new LinkedHashMap<ResourceType, Integer>(
 					Task.this.requiredResourceTypes);
 			this.originalTask = Task.this.originalTask;
@@ -758,8 +760,9 @@ public class Task implements Visitable {
 			return this;
 
 		}
-		
-		public TaskBuilder amountOfRequiredDevelopers(int amountOfRequiredDevelopers){
+
+		public TaskBuilder amountOfRequiredDevelopers(
+				int amountOfRequiredDevelopers) {
 			this.amountOfRequiredDevelopers = amountOfRequiredDevelopers;
 			return this;
 		}
@@ -778,7 +781,6 @@ public class Task implements Visitable {
 			}
 			return true;
 		}
-		
 
 		/**
 		 * Build a Task after all the optional values have been set. An project

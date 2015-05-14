@@ -141,7 +141,7 @@ public class Printer {
 			str += "(" + project.getCurrentDelay().toHours()
 					+ " working hours short)";
 		str += ")\n";
-		str += listTasks(project.getAllTasks());
+		str += listTasks(new ArrayList<Task>(project.getAllTasks()));
 		return str;
 	}
 }
