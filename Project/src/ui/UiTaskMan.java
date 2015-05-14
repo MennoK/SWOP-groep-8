@@ -85,6 +85,7 @@ public class UiTaskMan {
 		tmc.createProject(name, description, dueTime);
 	}
 
+	// TODO ask if task requires Ressources
 	private void createTask() throws ExitUseCaseException {
 		while (true) {
 			System.out.println("Creating a task\n"

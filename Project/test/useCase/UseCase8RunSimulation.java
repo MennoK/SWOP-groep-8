@@ -66,28 +66,28 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 
 	@Test
 	public void mementoCanRemoveProjects() {
-		tmc.createProject("name", "description",
+		Project project0 = tmc.createProject("name", "description",
 				LocalDateTime.of(2015, 03, 05, 00, 00),
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		assertEquals(2, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00), tmc
-				.getAllProjects().get(0).getLastUpdateTime());
+		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00),
+				project0.getLastUpdateTime());
 
 		tmc.getActiveOffice().saveSystem();
 
-		tmc.createProject("name2", "description",
+		Project project1 = tmc.createProject("name2", "description",
 				LocalDateTime.of(2015, 05, 06, 00, 00));
 
 		assertEquals(3, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2015, 03, 05, 00, 00), tmc
-				.getAllProjects().get(1).getCreationTime());
+		assertEquals(LocalDateTime.of(2015, 03, 05, 00, 00),
+				project1.getCreationTime());
 
 		tmc.getActiveOffice().loadSystem();
 
 		assertEquals(2, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00), tmc
-				.getAllProjects().get(0).getLastUpdateTime());
+		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00),
+				project0.getLastUpdateTime());
 
 	}
 

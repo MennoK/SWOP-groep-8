@@ -1,11 +1,10 @@
 package useCase;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +23,6 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 	private Task task1;
 	private Task task2;
 	private Task task3;
-	private Task task4;
 
 	@Before
 	public void setUp() {
@@ -37,9 +35,9 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 
 		jos = tmc.createDeveloper("Jos");
 
+		project0 = tmc.createProject("Project 0", "Desc 0", now.plusDays(2));
 		project1 = tmc.createProject("Project 1", "Desc 1", now.plusDays(2));
 		project2 = tmc.createProject("Project 2", "Desc 2", now.plusHours(3));
-		project0 = tmc.createProject("Project 0", "Desc 3", now.plusDays(2));
 		project3 = tmc.createProject("Project 3", "Desc 3", now.plusHours(5));
 
 		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
@@ -52,20 +50,25 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 		tmc.getPlanner().createPlanning(now.plusHours(5), task2, jos).build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(project2.getAllTasks().get(0)).build(project2);
-		task4 = Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
+		Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
 	}
 
 	@Test
 	public void showProjects() {
 
 		// List all projects
-		List<Project> allProjectsActuals = new ArrayList<Project>();
-		allProjectsActuals = tmc.getAllProjects();
-		assertEquals(project1, allProjectsActuals.get(0));
-		assertEquals(project2, allProjectsActuals.get(1));
-		assertEquals(project0, allProjectsActuals.get(2));
+		assertEquals(4, tmc.getAllProjects().size());
+		assertTrue(tmc.getAllProjects().contains(project0));
+		assertTrue(tmc.getAllProjects().contains(project1));
+		assertTrue(tmc.getAllProjects().contains(project2));
+		assertTrue(tmc.getAllProjects().contains(project3));
 
 		// show projects name description, creation time and due time
+		assertEquals("Project 0", project0.getName());
+		assertEquals("Desc 0", project0.getDescription());
+		assertEquals(now, project0.getCreationTime());
+		assertEquals(now.plusDays(2), project0.getDueTime());
+
 		assertEquals("Project 1", project1.getName());
 		assertEquals("Desc 1", project1.getDescription());
 		assertEquals(now, project1.getCreationTime());
@@ -76,10 +79,10 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 		assertEquals(now, project2.getCreationTime());
 		assertEquals(now.plusHours(3), project2.getDueTime());
 
-		assertEquals("Project 0", project0.getName());
-		assertEquals("Desc 3", project0.getDescription());
-		assertEquals(now, project0.getCreationTime());
-		assertEquals(now.plusDays(2), project0.getDueTime());
+		assertEquals("Project 3", project3.getName());
+		assertEquals("Desc 3", project3.getDescription());
+		assertEquals(now, project3.getCreationTime());
+		assertEquals(now.plusHours(5), project3.getDueTime());
 
 		// show details of the projects: over_time/on_time and hours short
 		// project 1 is finished -> ON_TIME
@@ -92,9 +95,6 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 
-		Task.builder("task5", Duration.ofHours(1), 0.4).addDependencies(task4)
-				.build(project3);
-
 		// project 3 has 2 dependent tasks -> should still finish on time
 		assertEquals(ProjectFinishingStatus.ON_TIME, project3.finishedOnTime());
 		// Show their status: project with zero tasks in ongoing
@@ -105,11 +105,10 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 		// show tasks of each project
 		assertEquals(0, project0.getAllTasks().size());
 		assertEquals(1, project1.getAllTasks().size());
-		assertEquals(task1, project1.getAllTasks().get(0));
+		assertTrue(project1.getAllTasks().contains(task1));
 		assertEquals(2, project2.getAllTasks().size());
-
-		assertEquals(task2, project2.getAllTasks().get(0));
-		assertEquals(task3, project2.getAllTasks().get(1));
+		assertTrue(project2.getAllTasks().contains(task2));
+		assertTrue(project2.getAllTasks().contains(task3));
 
 		// show tasks details: description, duration, deviation, alternativefor
 		// and dependency list

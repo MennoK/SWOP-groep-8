@@ -1,13 +1,10 @@
 package taskmanager;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.detect.PublicSemaphores;
 
 public class Company {
 
