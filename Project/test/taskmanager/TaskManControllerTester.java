@@ -102,6 +102,49 @@ public class TaskManControllerTester extends TaskManTester {
 	}
 	
 	@Test
+	public void getAllDelegatablePlannableTasksTest(){
+
+		BranchOffice activeOffice = tmc.getActiveOffice();
+		BranchOffice office2 = tmc.createBranchOffice("Wonderland");
+		Project project2 = office2.getProjectExpert().createProject("a project in wonderland", "capture the flag", time, time.plusDays(99));
+		
+		Task task1 = Task.builder("task1", Duration.ofHours(1), 1).build(project);
+		Task task2 = Task.builder("task1", Duration.ofHours(1), 1).build(project);
+		
+		Task task3 = Task.builder("task3", Duration.ofHours(1), 1).build(project2);
+				
+		activeOffice.getDelegatedTaskExpert().addDelegatedTask(task3, office2);
+		assertTrue(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(task3));
+		office2.getDelegatedTaskExpert().addDelegatedTask(task2, activeOffice);
+		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks().contains(task2));
+
+		assertEquals(2, tmc.getAllDelegatablePlannableTasks().size());
+		assertTrue(tmc.getAllDelegatablePlannableTasks().contains(task1));
+		assertTrue(tmc.getAllDelegatablePlannableTasks().contains(task3));
+	}
+	
+	@Test
 	public void delegateTaskTest(){
+		//delegate a simple task from activeOffice to office 2
+		BranchOffice activeOffice = tmc.getActiveOffice();
+		BranchOffice office2 = tmc.createBranchOffice("Wonderland");
+		BranchOffice office3 = tmc.createBranchOffice("Not Wonderland");
+		Task taskToDelegate = Task.builder("delegate", Duration.ofHours(1), 1).build(project);
+		tmc.delegate(taskToDelegate, office2);
+		
+		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate));
+		assertEquals(1, office2.getDelegatedTaskExpert().getAllDelegatedTasks().size());
+		
+		//delegate a task that has been delegated to active office to office 2
+		Task taskToDelegate2 = Task.builder("delegate2", Duration.ofHours(1), 1).build(project);;
+		activeOffice.getDelegatedTaskExpert().addDelegatedTask(taskToDelegate2, office3);
+		assertEquals(1, activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().size());
+		assertTrue(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate2));
+		tmc.delegate(taskToDelegate2, office2);
+		
+		assertFalse(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate2));
+		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate2));
+		assertEquals(2, office2.getDelegatedTaskExpert().getAllDelegatedTasks().size());
+		assertEquals(0, activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().size());
 	}
 }

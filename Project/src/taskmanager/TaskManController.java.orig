@@ -125,11 +125,14 @@ public class TaskManController {
 	 * 
 	 * @return set of tasks without a planning
 	 */
+<<<<<<< HEAD
 	private Set<Task> getUnplannedTasks() {
+=======
+	public Set<Task> getUnplannedTasks() {
 		checkActiveOfficeForNull();
-		Set<Task> allTasks = new HashSet<Task>( activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks());
-		allTasks.addAll(activeOffice.getProjectExpert().getAllTasks());
-		return activeOffice.getPlanner().getUnplannedTasks(allTasks);
+>>>>>>> f7bdd2b766d91e0c249d44bdd17c698e6981a945
+		return activeOffice.getPlanner().getUnplannedTasks(
+				activeOffice.getProjectExpert().getAllTasks());
 	}
 
 	/**
