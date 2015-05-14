@@ -417,9 +417,9 @@ public class ResourceType {
 		 * resourceExpert is required to add the new type to the given resource
 		 * Expert
 		 */
-		public ResourceType build(BranchOffice tmc) {
+		public ResourceType build(BranchOffice bo) {
 			ResourceType resourceType = new ResourceType(this);
-			tmc.getResourceExpert().addResourceType(resourceType);
+			bo.getResourceExpert().addResourceType(resourceType);
 			return resourceType;
 		}
 	}

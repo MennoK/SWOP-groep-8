@@ -1,0 +1,173 @@
+# The file format is a simple subset of YAML.
+# Everything after '#' is ignored (i.e. single line comment)
+
+systemTime: "2014-04-01 09:00"
+
+branch:
+  - name : "Baarle-Hertog West Side"
+
+    dailyAvailability :
+    - startTime : "12:00"
+      endTime   : "17:00"
+
+    resourceTypes:
+          - name              : "car"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "white board"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "demo kit"
+            requires          : []
+            conflictsWith     : [1]
+            dailyAvailability :
+          - name              : "conference room"
+            requires          : [2]
+            conflictsWith     : [3]
+            dailyAvailability :
+          - name              : "distributed testing setup"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "data center"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability : 0
+
+    resources:
+          - name: "Car 1"
+            type: 0
+          - name: "Car 2"
+            type: 0
+          - name: "Car 3"
+            type: 0
+          - name: "White Board 1"
+            type: 1
+          - name: "White Board 2"
+            type: 1
+          - name: "Demo Kit 1"
+            type: 2
+          - name: "Demo Kit 2"
+            type: 2
+          - name: "The Big Conference Room"
+            type: 3
+          - name: "The Small Conference Room"
+            type: 3
+          - name: "The Distributed Test Facility"
+            type: 4
+          - name: "Data Center X"
+            type: 5
+          - name: "Data Center Y"
+            type: 5
+
+    developers:
+          - name     : "John Deere"
+          - name     : "Tom Hawk"
+          - name     : "Bob Grylls"
+
+    projects:
+          - name         : "project x"
+            description  : "a project description"
+            creationTime : "2014-01-01 09:00" # YYYY-MM-DD HH:MM
+            dueTime      : "2014-02-01 18:00"
+
+          - name         : "project y"
+            description  : "another project description"
+            creationTime : "2014-01-01 09:00"
+            dueTime      : "2016-01-01 18:00"
+
+          - name         : "project z"
+            description  : "yet another project description"
+            creationTime : "2015-04-25 09:00"
+            dueTime      : "2015-04-30 18:00"
+
+    tasks:
+          - project            : 0
+            description        : "task description"
+            estimatedDuration  : 500 
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      : [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
+            prerequisiteTasks  :
+            status             : finished
+            startTime          : "2014-01-01 10:00"
+            endTime            : "2014-01-02 17:00"
+
+          - project            : 1
+            description        : "another task description"
+            estimatedDuration  : 500
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      : []
+            prerequisiteTasks  :
+            status             : finished
+            startTime          : "2014-01-02 17:10"
+            endTime            : "2014-01-02 17:20"
+
+          - project            : 1
+            description        : "yet another task description"
+            estimatedDuration  : 4
+            acceptableDeviation: 10
+            alternativeFor     :
+            requiredTypes      : [{type: 5,  quantity: 1}]
+            prerequisiteTasks  :
+            status             :
+
+          - project            : 1
+            description        : "description"
+            estimatedDuration  : 50
+            acceptableDeviation: 0
+            alternativeFor     :
+            requiredTypes      : []
+            prerequisiteTasks  : [1]
+            status             : failed
+            startTime          : "2014-01-02 18:00"
+            endTime            : "2014-03-25 18:00"
+
+          - project            : 1
+            description        : "description"
+            estimatedDuration  : 4
+            acceptableDeviation: 0
+            alternativeFor     : 3
+            requiredTypes      : [{type: 5,  quantity: 1}]
+            prerequisiteTasks  : [1]
+            status             : executing
+
+          - project            : 2
+            description        : "description"
+            estimatedDuration  : 500
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      : []
+            prerequisiteTasks  :
+            status             :
+
+          - project            : 2
+            description        : "description"
+            estimatedDuration  : 500
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      : []
+            prerequisiteTasks  :
+            status             :
+
+    plannings:
+          - plannedStartTime : "2014-01-01 09:00"
+            developers       : [0, 1]
+            task             : 0
+            resources        : [{type: 0,  resource: [0, 1]}, {type: 2,  resource: [6]}]
+          - plannedStartTime : "2014-01-02 17:10"
+            developers       : [1]
+            task             : 1
+            resources        : []
+          - plannedStartTime : "2014-01-02 18:00"
+            developers       : [1]
+            task             : 3
+            resources        : []
+          - plannedStartTime : "2014-03-26 09:00"
+            developers       : [2]
+            task             : 4
+            resources        : [{type: 5,  resource: [11]}]
