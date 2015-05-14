@@ -6,10 +6,13 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.detect.PublicSemaphores;
+
 public class Company {
 
 	private Set<BranchOffice> branchOffices;
-	
+
 	/**
 	 * Default constructor of Company class. Initializes a new 
 	 * set of branch offices 
@@ -17,7 +20,7 @@ public class Company {
 	public Company(){
 		this.branchOffices = new LinkedHashSet<BranchOffice>();
 	}
-	
+
 	/**
 	 * Creates a new branch office with the given name. and adds the new branch office
 	 * to the set of all branch offices
@@ -25,7 +28,7 @@ public class Company {
 	 * @param name
 	 *            : given name
 	 */
-	BranchOffice createBranchOffice(String location) {
+	BranchOffice createBranchOffice( String location) {
 		BranchOffice branchOffice = new BranchOffice(location);
 		this.addBranchOffice(branchOffice);
 		return branchOffice;
@@ -43,24 +46,13 @@ public class Company {
 	 *             : if the branch office is a null object or the branch office already
 	 *             exists
 	 */
+	
 	private void addBranchOffice(BranchOffice branchOffice) {
-		if (!canHaveBranchOffice(branchOffice)) {
+		if (getAllBranchOffices().contains(branchOffice)) {
 			throw new IllegalArgumentException(
 					"The given branch office already exists");
 		}
 		this.branchOffices.add(branchOffice);
-	}
-
-	/**
-	 * Checks whether the given branch office is valid
-	 * 
-	 * @param branchOffice
-	 *            : given branch office
-	 * @return true if and only if the branch office is not already in the set and
-	 *         not null
-	 */
-	boolean canHaveBranchOffice(BranchOffice branchOffice) {
-		return (!getAllBranchOffices().contains(branchOffice) && branchOffice != null);
 	}
 
 	/**
