@@ -9,36 +9,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Developer;
-import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Task;
-import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 
-public class UseCase4UpdateTaskStatusTester {
+public class UseCase4UpdateTaskStatusTester extends UseCaseTestBasis {
 
-	private BranchOffice tmc;
 	private Project project1;
 	private Task task1;
 	private Task task2;
 	private Task task3;
 	private Task task4;
 
-	private LocalDateTime now;
-
 	@Before
 	public void setUp() {
+		super.setUpTMC(LocalDateTime.of(2015, 03, 02, 00, 00));
 		// create a contoller and a project with 3 tasks
 		// task 3 is dependent on task 1
 
-		now = LocalDateTime.of(2015, 03, 02, 00, 00);
-
-		tmc = new BranchOffice(now);
-		tmc.createProject("Project 1", "Description 1",
-				LocalDateTime.of(2015, 03, 01, 00, 00),
-				LocalDateTime.of(2015, 03, 10, 00, 00));
-
-		project1 = tmc.getAllProjects().get(0);
+		project1 = tmc.createProject("Project 1", "Description 1",
+				now.minusDays(1), now.plusDays(8));
 
 		task1 = Task.builder("Task 1", Duration.ofHours(8), 0.4)
 				.build(project1);

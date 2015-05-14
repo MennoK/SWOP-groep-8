@@ -36,16 +36,11 @@ public class DeveloperExpertTester {
 		assertFalse(developerExpert.getAllDevelopers() == null);
 	}
 
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testCannotHaveTheSameDeveloper() {
 		developerExpert.createDeveloper("Bob");
 		ArrayList<Developer> devList = new ArrayList<Developer>();
 		devList.addAll(developerExpert.getAllDevelopers());
-		assertFalse(developerExpert.canHaveDeveloper(devList.get(0)));
-	}
-
-	@Test
-	public void testCannotHaveNullDeveloper() {
-		assertFalse(developerExpert.canHaveDeveloper(null));
+		developerExpert.addDeveloper((devList.get(0)));
 	}
 }

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,60 +13,43 @@ import org.junit.Test;
 
 import utility.TimeSpan;
 import taskmanager.Developer;
-import taskmanager.DeveloperExpert;
 import taskmanager.Planner;
 import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.BranchOffice;
 import taskmanager.exception.ConlictingPlanningException;
 
-public class UseCase6PlanTaskTester {
+public class UseCase6PlanTaskTester extends UseCaseTestBasis {
 
-	public BranchOffice tmc;
-	public Planner planner;
-	public LocalDateTime time1;
-	public LocalDateTime time2;
-	public Project project;
-	public Task task1;
-	public Task task2;
-	public DeveloperExpert developerExpert;
-	public Set<Developer> developers;
-	private ArrayList<ResourceType> resourceTypeList;
+	private Planner planner;
+	private Project project;
+	private Task task1;
+	private Task task2;
+	private Developer dev1;
 	private ResourceType resourceType;
-	private ArrayList<Developer> developerList;
 
 	@Before
 	public void setUp() {
-		// 2 default times
-		this.time1 = LocalDateTime.of(2015, 03, 10, 11, 00);
-		this.time2 = LocalDateTime.of(2015, 03, 10, 15, 00);
-		tmc = new BranchOffice(time1);
+		setUpTMC(LocalDateTime.of(2015, 03, 10, 11, 00));
 		// create planning expert
 		this.planner = tmc.getPlanner();
 		// create some resources
-		ResourceType.builder("type").build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		resourceType = resourceTypeList.get(0);
+		resourceType = ResourceType.builder("type")
+				.build(tmc.getActiveOffice());
 		resourceType.createResource("resource");
 		resourceType.createResource("resource2");
 
 		// create a project with 2 tasks
-		tmc.createProject("name", "des", time2.plusDays(13));
-		project = tmc.getAllProjects().get(0);
-		Task.builder("a task", Duration.ofHours(1), 1).build(project);
-		Task.builder("a task", Duration.ofHours(2), 1)
+		project = tmc.createProject("name", "des", now.plusHours(3)
+				.plusDays(13));
+		task1 = Task.builder("a task", Duration.ofHours(1), 1).build(project);
+		task2 = Task.builder("a task", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
-		task1 = project.getAllTasks().get(0);
-		task2 = project.getAllTasks().get(1);
 
-		// create some developers
-		tmc.createDeveloper("person1");
+		// create some tmc.getAllDevelopers()
+		dev1 = tmc.createDeveloper("person1");
 		tmc.createDeveloper("person2");
-		developers = new LinkedHashSet<>(tmc.getAllDevelopers());
-		developerList = new ArrayList<Developer>(tmc.getAllDevelopers());
 	}
 
 	@Test
@@ -79,32 +61,33 @@ public class UseCase6PlanTaskTester {
 		assertEquals(unplannedTasks, tmc.getUnplannedTasks());
 		// user selects task2 and receives 3 possible start times
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
-		possibleStartTimes.add(time1);
-		possibleStartTimes.add(time1.plusHours(1));
-		possibleStartTimes.add(time1.plusHours(3));
-		assertEquals(possibleStartTimes,
-				planner.getPossibleStartTimes(task2, time1, developers));
-		TimeSpan timeSpan = new TimeSpan(time1, task1.getDuration());
+		possibleStartTimes.add(now);
+		possibleStartTimes.add(now.plusHours(1));
+		possibleStartTimes.add(now.plusHours(3));
+		assertEquals(
+				possibleStartTimes,
+				planner.getPossibleStartTimes(task2, now,
+						tmc.getAllDevelopers()));
+		TimeSpan timeSpan = new TimeSpan(now, task1.getDuration());
 		// user selects time1
 		// the system shows possible available resources
 		assertEquals(resourceType.getAllResources(),
 				planner.resourcesOfTypeAvailableFor(resourceType, task2,
 						timeSpan));
 		// user selects a resource
-		// system shows developers
-		assertEquals(developers,
-				planner.developersAvailableFor(developers, task2, timeSpan));
+		// system shows tmc.getAllDevelopers()
+		assertEquals(tmc.getAllDevelopers(), planner.developersAvailableFor(
+				tmc.getAllDevelopers(), task2, timeSpan));
 		// user selects a developer
 
 		// system makes reservation
-		Planning newPlanning = tmc.getPlanner().createPlanning(time1, task2,
-				developerList.get(0)).build();
+		Planning newPlanning = tmc.getPlanner()
+				.createPlanning(now, task2, dev1).build();
 
-		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());
-		assertEquals(time1.plus(task2.getDuration()), newPlanning
-				.getTimeSpan().getEnd());
-		assertTrue(newPlanning.getDevelopers()
-				.contains(developerList.get(0)));
+		assertEquals(this.now, newPlanning.getTimeSpan().getBegin());
+		assertEquals(now.plus(task2.getDuration()), newPlanning.getTimeSpan()
+				.getEnd());
+		assertTrue(newPlanning.getDevelopers().contains(dev1));
 		assertEquals(1, newPlanning.getDevelopers().size());
 		assertTrue(newPlanning.getResources().isEmpty());
 
@@ -112,37 +95,41 @@ public class UseCase6PlanTaskTester {
 
 	@Test(expected = ConlictingPlanningException.class)
 	public void extensionUserSelectsTime() {
-		tmc.getPlanner().createPlanning(time1, task1, developerList.get(0)).build();
+		tmc.getPlanner().createPlanning(now, task1, dev1).build();
 		// the user selects a time for task2 that will conflict with task1
-		tmc.getPlanner().createPlanning(time1, task2, developerList.get(0)).build();
+		tmc.getPlanner().createPlanning(now, task2, dev1).build();
 		// use case resolve conflict starts
 	}
 
 	@Test
 	public void resolveConflict() {
-		tmc.getPlanner().createPlanning(time1, task1, developerList.get(0)).build();
+		tmc.getPlanner().createPlanning(now, task1, dev1).build();
 		// use case resolveconflict starts
 		// user chooses to move conflicting task
 		// step 4 of use case plan task for the task that must be moved:
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
-		possibleStartTimes.add(time1);
-		possibleStartTimes.add(time1.plusHours(1));
-		possibleStartTimes.add(time1.plusHours(3));
-		assertEquals(possibleStartTimes,
-				planner.getPossibleStartTimes(task1, time1, developers));
+		possibleStartTimes.add(now);
+		possibleStartTimes.add(now.plusHours(1));
+		possibleStartTimes.add(now.plusHours(3));
+		assertEquals(
+				possibleStartTimes,
+				planner.getPossibleStartTimes(task1, now,
+						tmc.getAllDevelopers()));
 
 		// user selects time1 +2
-		tmc.getPlanner().getPlanning(task1).setTimeSpan(
-				new TimeSpan(time1.plusHours(2), task1.getDuration()));
+		tmc.getPlanner()
+				.getPlanning(task1)
+				.setTimeSpan(
+						new TimeSpan(now.plusHours(2), task1.getDuration()));
 
 		// resolve conflict ends -> back to original planning of the task
 
-		Planning newPlanning = tmc.getPlanner().createPlanning(time1, task2,
-				developerList.get(0)).build();
+		Planning newPlanning = tmc.getPlanner()
+				.createPlanning(now, task2, dev1).build();
 
-		assertEquals(this.time1.plusHours(2), tmc.getPlanner().getPlanning(task1).getTimeSpan()
-				.getBegin());
-		assertEquals(this.time1, newPlanning.getTimeSpan().getBegin());
+		assertEquals(this.now.plusHours(2), tmc.getPlanner().getPlanning(task1)
+				.getTimeSpan().getBegin());
+		assertEquals(this.now, newPlanning.getTimeSpan().getBegin());
 	}
 
 }

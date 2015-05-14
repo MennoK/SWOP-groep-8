@@ -3,62 +3,47 @@ package useCase;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Project;
-import taskmanager.BranchOffice;
 
-public class UseCase2CreateProjectTester {
-
-	private BranchOffice tmc;
+public class UseCase2CreateProjectTester extends UseCaseTestBasis {
 
 	@Before
 	public void setUp() {
-		// create a project controller
-		tmc = new BranchOffice(LocalDateTime.of(2015, 03, 07, 01, 00));
-
+		setUpTMC(LocalDateTime.of(2015, 03, 07, 01, 00));
 	}
 
 	@Test
 	public void createProject() {
 		// create first project
-		tmc.createProject("Project 1", "Description 1",
-				LocalDateTime.of(2015, 03, 01, 00, 00),
-				LocalDateTime.of(2015, 03, 10, 00, 00));
+		Project project0 = tmc.createProject("Project 1", "Description 1", now
+				.minusDays(6).minusHours(1), now.plusDays(3).minusHours(1));
 
 		// check if the project is correctly made
 		assertEquals(1, tmc.getAllProjects().size());
 		assertEquals(tmc.getAllProjects().size(), 1);
-		List<Project> projects = tmc.getAllProjects();
-		assertEquals("Project 1", projects.get(0).getName());
-		assertEquals("Description 1", projects.get(0).getDescription());
-		assertEquals(LocalDateTime.of(2015, 03, 01, 00, 00), projects.get(0)
-				.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 00, 00), projects.get(0)
-				.getDueTime());
+		assertEquals("Project 1", project0.getName());
+		assertEquals("Description 1", project0.getDescription());
+		assertEquals(now.minusDays(6).minusHours(1), project0.getCreationTime());
+		assertEquals(now.plusDays(3).minusHours(1), project0.getDueTime());
 
 		// create second project
-		tmc.createProject("name2", "descr2",
-				LocalDateTime.of(2015, 03, 07, 05, 00));
+		Project project1 = tmc.createProject("name2", "descr2",
+				now.plusHours(4));
 
 		// check if both are projects are made
 		assertEquals(tmc.getAllProjects().size(), 2);
-		projects = tmc.getAllProjects();
-		assertEquals("Project 1", projects.get(0).getName());
-		assertEquals("Description 1", projects.get(0).getDescription());
-		assertEquals(LocalDateTime.of(2015, 03, 01, 00, 00), projects.get(0)
-				.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 10, 00, 00), projects.get(0)
-				.getDueTime());
+		assertEquals("Project 1", project0.getName());
+		assertEquals("Description 1", project0.getDescription());
+		assertEquals(now.minusDays(6).minusHours(1), project0.getCreationTime());
+		assertEquals(now.plusDays(3).minusHours(1), project0.getDueTime());
 
-		assertEquals("name2", projects.get(1).getName());
-		assertEquals("descr2", projects.get(1).getDescription());
-		assertEquals(LocalDateTime.of(2015, 03, 07, 01, 00), projects.get(1)
-				.getCreationTime());
-		assertEquals(LocalDateTime.of(2015, 03, 07, 05, 00), projects.get(1)
-				.getDueTime());
+		assertEquals("name2", project1.getName());
+		assertEquals("descr2", project1.getDescription());
+		assertEquals(now, project1.getCreationTime());
+		assertEquals(now.plusHours(4), project1.getDueTime());
 	}
 }

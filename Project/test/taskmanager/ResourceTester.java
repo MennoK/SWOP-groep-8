@@ -1,34 +1,28 @@
 package taskmanager;
 
-import static org.junit.Assert.assertEquals;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Resource;
 import taskmanager.ResourceType;
-import taskmanager.BranchOffice;
 
-public class ResourceTester {
+public class ResourceTester extends TaskManTester {
 
-	private BranchOffice tmc;
 	private ResourceType resourceType;
 
 	@Before
 	public void setUp() {
-		tmc = new BranchOffice(LocalDateTime.of(2000, 03, 05, 00, 00));
-		resourceType = ResourceType.builder("name").build(tmc);
+		super.setUp();
+		resourceType = ResourceType.builder("name")
+				.build(tmc.getActiveOffice());
 	}
 
 	@Test
 	public void testGetName() {
-		resourceType.createResource("resource");
-		ArrayList<Resource> resourceList = new ArrayList<Resource>();
-		resourceList.addAll(resourceType.getAllResources());
-		assertEquals("resource", resourceList.get(0).getName());
+		Resource res = resourceType.createResource("resource");
+		assertTrue(resourceType.getAllResources().contains(res));
 	}
 
 }

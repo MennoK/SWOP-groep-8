@@ -3,6 +3,8 @@ package taskmanager;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * The DeveloperExpert class is the information expert and creator of
  * developers. This means it can create new developer objects and it has a set
@@ -48,24 +50,13 @@ public class DeveloperExpert {
 	 *             : if the developer is a null object or the developer already
 	 *             exists
 	 */
-	private void addDeveloper(Developer developer) {
-		if (!canHaveDeveloper(developer)) {
+	@NonNull
+	void addDeveloper(Developer developer) {
+		if (getAllDevelopers().contains(developer)) {
 			throw new IllegalArgumentException(
 					"The developer expert has already the given developer.");
 		}
 		this.developers.add(developer);
-	}
-
-	/**
-	 * Checks whether the given developer is valid
-	 * 
-	 * @param developer
-	 *            : given developer
-	 * @return true if and only if the developer is not already in the set and
-	 *         not null
-	 */
-	boolean canHaveDeveloper(Developer developer) {
-		return (!getAllDevelopers().contains(developer) && developer != null);
 	}
 
 	/**

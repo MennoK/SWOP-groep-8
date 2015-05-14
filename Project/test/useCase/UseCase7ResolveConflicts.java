@@ -9,17 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Developer;
-import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Task;
-import taskmanager.BranchOffice;
 import taskmanager.exception.ConlictingPlanningException;
 
-public class UseCase7ResolveConflicts {
+public class UseCase7ResolveConflicts extends UseCaseTestBasis {
 
-	private BranchOffice tmc;
 	private Project project;
-	private LocalDateTime now;
 
 	private Developer developer;
 
@@ -28,10 +24,8 @@ public class UseCase7ResolveConflicts {
 
 	@Before
 	public void setUp() {
+		setUpTMC(LocalDateTime.of(2015, 04, 22, 9, 0));
 
-		now = LocalDateTime.of(2015, 04, 22, 9, 0);
-
-		tmc = new BranchOffice(now);
 		project = tmc.createProject("proj", "proj description",
 				now.plusYears(1));
 
@@ -43,7 +37,8 @@ public class UseCase7ResolveConflicts {
 		originalTask = Task.builder("a task", Duration.ofHours(8), 0.2).build(
 				project);
 
-		tmc.getPlanner().createPlanning(now, plannedConflictingTask, developer).build();
+		tmc.getPlanner().createPlanning(now, plannedConflictingTask, developer)
+				.build();
 
 	}
 
@@ -52,16 +47,20 @@ public class UseCase7ResolveConflicts {
 
 		try {
 			// Conflicts with PlannedConflictingTask
-			tmc.getPlanner().createPlanning(now.plusHours(1), originalTask, developer).build();
+			tmc.getPlanner()
+					.createPlanning(now.plusHours(1), originalTask, developer)
+					.build();
 		} catch (ConlictingPlanningException conflict) {
 			// Replan the conflicting task to solve the conflict
-			tmc.getPlanner().createPlanning(now.plusMonths(4), plannedConflictingTask,
-					developer).build();
+			tmc.getPlanner()
+					.createPlanning(now.plusMonths(4), plannedConflictingTask,
+							developer).build();
 		}
 		try {
 			// now planning works
-			tmc.getPlanner().createPlanning(now.plusHours(1), originalTask, developer
-					).build();
+			tmc.getPlanner()
+					.createPlanning(now.plusHours(1), originalTask, developer)
+					.build();
 		} catch (ConlictingPlanningException conflict) {
 			fail("There should be no conflict anymore\n"
 					+ conflict.getConflictingPlannings());

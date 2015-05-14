@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import utility.WorkTime;
 
 /**
@@ -30,6 +31,7 @@ import utility.WorkTime;
 
 public class Project implements Visitable {
 
+	//TODO: Set<Task> tasks
 	private List<Task> tasks;
 	private String name;
 	private String description;
@@ -69,27 +71,14 @@ public class Project implements Visitable {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given task is not valid
 	 */
+	@NonNull
 	void addTask(Task task) {
-		if (!canHaveTask(task)) {
+		if (getAllTasks().contains(task)) {
 			throw new IllegalArgumentException(
 					"The given task is already in this project.");
 		} else {
 			this.tasks.add(task);
 		}
-	}
-
-	/**
-	 * This method checks if a project can have a given task. It returns true if
-	 * and only if the project does not contain the task yet and the task is not
-	 * null
-	 * 
-	 * @param task
-	 *            : given task to be added
-	 * @return true if and only if the given task is not null and the task is
-	 *         not already in the project
-	 */
-	private boolean canHaveTask(Task task) {
-		return (!getAllTasks().contains(task) && task != null);
 	}
 
 	/**

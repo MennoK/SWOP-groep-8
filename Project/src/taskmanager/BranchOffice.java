@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.istack.internal.NotNull;
-
 import utility.TimeSpan;
 
 /**
@@ -44,11 +42,23 @@ public class BranchOffice {
 		createPlanner();
 	}
 
-
 	
 	public BranchOffice(String location) {
 		// temporary time object
 		this.taskManClock = new TaskManClock(LocalDateTime.now());
+		setLocation(location);
+
+		createDeveloperExpert();
+		createResourceExpert();
+		createProjectExpert();
+		createDelegatedTaskExpert();
+		createPlanner();
+	}
+
+	@Deprecated
+	public BranchOffice(String location, TaskManClock clock) {
+		// temporary time object
+		this.taskManClock = clock;
 		setLocation(location);
 
 		createDeveloperExpert();
@@ -65,7 +75,6 @@ public class BranchOffice {
 		this.delegatedTaskExpert = new DelegatedTaskExpert();
 	}
 
-	
 	/**
 	 * Sets the location of the branch office
 	 * 
@@ -150,13 +159,13 @@ public class BranchOffice {
 	public Planner getPlanner() {
 		return this.planner;
 	}
-	
+
 	/**
 	 * Returns the delegated task expert
 	 * 
 	 * @return delegatedTaskExpert : delegated task expert
 	 */
-	public DelegatedTaskExpert getDelegatedTaskExpert(){
+	public DelegatedTaskExpert getDelegatedTaskExpert() {
 		return this.delegatedTaskExpert;
 	}
 
@@ -169,6 +178,7 @@ public class BranchOffice {
 		this.getPlanner().save();
 		this.getResourceExpert().save();
 		this.taskManClock.save();
+        this.getDelegatedTaskExpert().save();
 	}
 
 	/**

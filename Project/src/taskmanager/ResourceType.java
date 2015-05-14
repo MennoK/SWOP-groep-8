@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import utility.TimeInterval;
 import utility.WorkDay;
 
@@ -76,24 +77,13 @@ public class ResourceType {
 	 *             : if the given resource is already in the resource set or
 	 *             null
 	 */
+	@NonNull
 	void addResource(Resource resource) {
-		if (!canHaveResource(resource)) {
+		if (getAllResources().contains(resource)) {
 			throw new IllegalArgumentException(
 					"The resource type has already the given resource.");
 		}
 		this.resources.add(resource);
-	}
-
-	/**
-	 * Checks whether the given resource is valid
-	 * 
-	 * @param resource
-	 *            : given resource
-	 * @return true if and only if the resource is not already in the set and
-	 *         not null
-	 */
-	boolean canHaveResource(Resource resource) {
-		return (!getAllResources().contains(resource) && resource != null);
 	}
 
 	/**
@@ -427,9 +417,9 @@ public class ResourceType {
 		 * resourceExpert is required to add the new type to the given resource
 		 * Expert
 		 */
-		public ResourceType build(BranchOffice tmc) {
+		public ResourceType build(BranchOffice bo) {
 			ResourceType resourceType = new ResourceType(this);
-			tmc.getResourceExpert().addResourceType(resourceType);
+			bo.getResourceExpert().addResourceType(resourceType);
 			return resourceType;
 		}
 	}
