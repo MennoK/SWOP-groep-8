@@ -63,39 +63,43 @@ public class Parser {
 	public TaskManController parse(String pathToFile)
 			throws FileNotFoundException, RuntimeException {
 
-		// check if the given input file is valid for taskman
+	/*	// check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(
 				new FileReader(pathToFile));
-		checker.checkFile();
+			checker.checkFile();*/
 
 		// create new yaml
 		InputStream input = new FileInputStream(new File(pathToFile));
 		Yaml yaml = new Yaml();
 		Map<String, Object> objects = (Map<String, Object>) yaml.load(input);
-		
+
 		// create system time
 		LocalDateTime systemTime = constructSystemTime((CharSequence) objects
 				.get("systemTime"));
-		
+
 		//create TaskManController
 		TaskManController tmc = new TaskManController(systemTime);
-		
+
 		List<LinkedHashMap<String, Object>> branches = (List<LinkedHashMap<String, Object>>) objects
 				.get("branch");
 
 		for(LinkedHashMap<String, Object> branch : branches){
+			timeIntervals = new ArrayList<TimeInterval>();
+			alltasks = new ArrayList<Task>();
+			allresources = new ArrayList<Resource>();
+
 			BranchOffice activeOffice = tmc.createBranchOffice((String) branch.get("location"));
-			
+
 			tmc.logIn(activeOffice);
-			
-			 // create daily availability
+
+			// create daily availability
 			constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) branch
 					.get("dailyAvailability"));
 
 			// create all resource types
 			constructResourceTypes(
 					(List<LinkedHashMap<String, Object>>) branch
-							.get("resourceTypes"),
+					.get("resourceTypes"),
 					tmc,activeOffice);
 
 			// create all resources
@@ -119,7 +123,7 @@ public class Parser {
 					(List<LinkedHashMap<String, Object>>) branch.get("plannings"),
 					tmc);
 		}
-	   
+
 		return tmc;
 	}
 
@@ -327,7 +331,7 @@ public class Parser {
 					if (status.equals("executing")) {
 						LocalDateTime startTime = LocalDateTime.parse(
 								(CharSequence) plannings.get(planningCounter)
-										.get("plannedStartTime"),
+								.get("plannedStartTime"),
 								dateTimeFormatter);
 						controller.setExecuting(newTask, startTime);
 					} else {
