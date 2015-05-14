@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.sun.istack.internal.NotNull;
+
 import utility.TimeSpan;
 
 /**
@@ -42,6 +44,7 @@ public class BranchOffice {
 		createPlanner();
 	}
 
+	
 	public BranchOffice(String location) {
 		// temporary time object
 		this.taskManClock = new TaskManClock(LocalDateTime.now());

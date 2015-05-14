@@ -36,12 +36,5 @@ public class CompanyTester {
 		company.createBranchOffice("Baarle-Hertog");
 		ArrayList<BranchOffice> boList = new ArrayList<BranchOffice>();
 		boList.addAll(company.getAllBranchOffices());
-		assertFalse(company.canHaveBranchOffice((boList.get(0))));
 	}
-
-	@Test
-	public void testCannotHaveNullDeveloper() {
-		assertFalse(company.canHaveBranchOffice(null));
-	}
-
 }
