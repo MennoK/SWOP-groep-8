@@ -6,6 +6,12 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A company consists of multiple branch offices.
+ * 
+ * @author menno
+ *
+ */
 public class Company {
 
 	private Set<BranchOffice> branchOffices;

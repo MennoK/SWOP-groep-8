@@ -626,10 +626,6 @@ public class Task implements Visitable {
 
 		private TaskStatus status;
 
-		// Het aanmaken van het memento object
-		// Alles moet gekopieerd worden, behalve referenties naar objecten in
-		// ons domein
-		// bv. de dependencies worden shallow gekopieerd
 		/**
 		 * Constructor of the momento inner class. It initialize all parameters
 		 * of the current state of the task.
@@ -697,14 +693,16 @@ public class Task implements Visitable {
 
 		/**
 		 * Creates a TaskBuilder with the required information for the creation
-		 * of a Task
+		 * of a Task. It sets the amount of required of developers to one.
 		 * 
 		 * @param description
 		 *            : description of a task
 		 * @param estimatedDuration
 		 *            : estimated duration of task
 		 * @param acceptableDeviation
-		 *            : acceptable deviation of a task
+		 *            : acceptable deviation of a task           
+		 *            
+		 * 
 		 */
 		public TaskBuilder(String description, Duration estimatedDuration,
 				double acceptableDeviation) {
@@ -761,6 +759,10 @@ public class Task implements Visitable {
 
 		}
 
+		/**
+		 * If the task requires more than 1 developer. It is possible to 
+		 * change the amount of required developers.
+		 */
 		public TaskBuilder amountOfRequiredDevelopers(
 				int amountOfRequiredDevelopers) {
 			this.amountOfRequiredDevelopers = amountOfRequiredDevelopers;

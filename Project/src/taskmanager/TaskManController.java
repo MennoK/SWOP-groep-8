@@ -20,6 +20,11 @@ public class TaskManController {
 		company = new Company(taskManClock);
 	}
 
+	/**
+	 * Returns the company of TaskMan
+	 * 
+	 * @return company : company
+	 */
 	public Company getCompany() {
 		return company;
 	}
@@ -364,14 +369,30 @@ public class TaskManController {
 		}
 	}
 
+	/**
+	 * Sets the active developer to the given developer
+	 * 
+	 * @param activeDeveloper : given developer
+	 */
 	private void setActiveDeveloper(Developer activeDeveloper) {
 		this.activeDeveloper = activeDeveloper;
 	}
 
+	/**
+	 * Sets the active office to the given branch office
+	 * 
+	 * @param activeOffice: given branch office
+	 */
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
 	}
 	
+	/**
+	 * Checks whether the active branch office is null or not. If its
+	 * null, it will throw an illegal state exception
+	 * 
+	 * @return true if the active office is not null
+	 */
 	private boolean checkActiveOfficeForNull(){
 		if(this.activeOffice == null){
 			throw new IllegalStateException("No active branch office");
