@@ -35,11 +35,11 @@ public class DelegatedTaskExpert {
 	 * @param task
 	 *            : given task
 	 */
-	void addDelegatedTask(Task task, BranchOffice office) {
+	void addDelegatedTask(Task task, BranchOffice office){
 		this.delegatedTasks.put(office, task);
 	}
 
-	public void removeDelegatedTask(Task task) {
+	void removeDelegatedTask(Task task){
 		delegatedTasks.remove(officeForDelegatedTask(task), task);
 	}
 
