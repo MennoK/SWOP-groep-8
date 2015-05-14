@@ -57,9 +57,10 @@ public class TaskManController {
 	 */
 	public void delegate(Task task, BranchOffice branchOffice){
 		if(taskIsDelegatedToActiveOffice(task)){
-			
+			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
+			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task, activeOffice.getDelegatedTaskExpert().officeForDelegatedTask(task));
 		}else{
-			
+			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task, activeOffice);
 		}
 	}
 	/**
@@ -129,7 +130,7 @@ public class TaskManController {
 	 * 
 	 * @return set of tasks without a planning
 	 */
-	public Set<Task> getUnplannedTasks() {
+	private Set<Task> getUnplannedTasks() {
 		checkActiveOfficeForNull();
 		return activeOffice.getPlanner().getUnplannedTasks(
 				activeOffice.getProjectExpert().getAllTasks());
@@ -140,7 +141,7 @@ public class TaskManController {
 	 * 
 	 * @return a set of tasks that can be delegated from the current active branch office
 	 */
-	public Set<Task> getTasksToDelegate(){
+	public Set<Task> getAllDelegatablePlannableTasks(){
 		Set<Task> unplannedTasks = new HashSet<Task>(getUnplannedTasks());
 		Set<Task> delegatableTasks = new HashSet<Task>(getUnplannedTasks());
 		for (Task unplannedTask : unplannedTasks) {

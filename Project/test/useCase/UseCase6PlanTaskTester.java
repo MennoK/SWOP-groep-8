@@ -58,7 +58,7 @@ public class UseCase6PlanTaskTester extends UseCaseTestBasis {
 
 		Set<Task> unplannedTasks = new LinkedHashSet<>(project.getAllTasks());
 		project.getAllTasks();
-		assertEquals(unplannedTasks, tmc.getUnplannedTasks());
+		assertEquals(unplannedTasks, tmc.getAllDelegatablePlannableTasks());
 		// user selects task2 and receives 3 possible start times
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<>();
 		possibleStartTimes.add(now);

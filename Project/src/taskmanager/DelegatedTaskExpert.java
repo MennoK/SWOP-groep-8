@@ -37,6 +37,19 @@ public class DelegatedTaskExpert {
 	public void addDelegatedTask(Task task, BranchOffice office){
 		this.delegatedTasks.put(office, task);
 	}
+	
+	public void removeDelegatedTask(Task task){
+			delegatedTasks.remove(officeForDelegatedTask(task), task);
+	}
+	
+	public BranchOffice officeForDelegatedTask(Task delegatedTask){
+		for (BranchOffice office : delegatedTasks.keySet()){
+			if(delegatedTasks.containsEntry(office, delegatedTask)){
+				return office;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Returns the delegated task set
 	 * 
