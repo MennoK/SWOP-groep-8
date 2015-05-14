@@ -53,8 +53,6 @@ public class UseCase5AdvanceTime extends UseCaseTestBasis {
 		// check if the last update time has changed in every project and every
 		// task
 		assertEquals(now.plusHours(5), tmc.getTime());
-		assertEquals(now.plusHours(5), project1.getLastUpdateTime());
-		assertEquals(now.plusHours(5), project2.getLastUpdateTime());
 
 		// check if the project finishing status is on time: current time:
 		// 2015-03-11 16:00
@@ -69,8 +67,6 @@ public class UseCase5AdvanceTime extends UseCaseTestBasis {
 		// advance time with 2 hours, the project is still on time
 		tmc.advanceTime(now.plusHours(7));
 		assertEquals(now.plusHours(7), tmc.getTime());
-		assertEquals(now.plusHours(7), project1.getLastUpdateTime());
-		assertEquals(now.plusHours(7), project2.getLastUpdateTime());
 
 		assertEquals(ProjectFinishingStatus.ON_TIME, project1.finishedOnTime());
 		assertEquals(ProjectStatus.FINISHED, project1.getStatus());
