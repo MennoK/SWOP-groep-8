@@ -24,12 +24,13 @@ import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.BranchOffice;
+import taskmanager.TaskManController;
 
 public class ParserTester {
 
 	DateTimeFormatter dateTimeFormatter = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd HH:mm");
-	static BranchOffice tmc;
+	static TaskManController tmc;
 	static List<ResourceType> resourceTypeList;
 	static List<Planning> planningsList;
 
@@ -45,7 +46,7 @@ public class ParserTester {
 	@BeforeClass
 	public static void setUp() {
 		try {
-			tmc = new Parser().parse("./input2.tman");
+			tmc = new Parser().parse("./input3.tman");
 			resourceTypeList = new ArrayList<ResourceType>(
 					tmc.getAllResourceTypes());
 			planningsList = new ArrayList<Planning>(tmc.getPlanner()

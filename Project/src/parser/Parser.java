@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.BranchOffice;
+import taskmanager.TaskManController;
 import taskmanager.Planning.PlanningBuilder;
 import taskmanager.ResourceType.ResourceTypeBuilder;
 import taskmanager.Task.TaskBuilder;
@@ -58,7 +60,7 @@ public class Parser {
 	 * @throws RuntimeException
 	 */
 	@SuppressWarnings("unchecked")
-	public BranchOffice parse(String pathToFile)
+	public TaskManController parse(String pathToFile)
 			throws FileNotFoundException, RuntimeException {
 
 		// check if the given input file is valid for taskman
@@ -70,48 +72,60 @@ public class Parser {
 		InputStream input = new FileInputStream(new File(pathToFile));
 		Yaml yaml = new Yaml();
 		Map<String, Object> objects = (Map<String, Object>) yaml.load(input);
-
+		
 		// create system time
-		BranchOffice controller = constructController((CharSequence) objects
+		LocalDateTime systemTime = constructSystemTime((CharSequence) objects
 				.get("systemTime"));
+		
+		//create TaskManController
+		TaskManController tmc = new TaskManController(systemTime);
+		
+		List<LinkedHashMap<String, Object>> branches = (List<LinkedHashMap<String, Object>>) objects
+				.get("branch");
 
-		// create daily availability
-		constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) objects
-				.get("dailyAvailability"));
+		for(LinkedHashMap<String, Object> branch : branches){
+			BranchOffice activeOffice = tmc.createBranchOffice((String) branch.get("location"));
+			
+			tmc.logIn(activeOffice);
+			
+			 // create daily availability
+			constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) branch
+					.get("dailyAvailability"));
 
-		// create all resource types
-		constructResourceTypes(
-				(List<LinkedHashMap<String, Object>>) objects
-						.get("resourceTypes"),
-				controller);
+			// create all resource types
+			constructResourceTypes(
+					(List<LinkedHashMap<String, Object>>) branch
+							.get("resourceTypes"),
+					tmc,activeOffice);
 
-		// create all resources
-		constructResources(
-				(List<LinkedHashMap<String, Object>>) objects.get("resources"),
-				controller);
+			// create all resources
+			constructResources(
+					(List<LinkedHashMap<String, Object>>) branch.get("resources"),
+					tmc);
 
-		// create all developers
-		constructDevelopers(
-				(List<LinkedHashMap<String, Object>>) objects.get("developers"),
-				controller);
+			// create all developers
+			constructDevelopers(
+					(List<LinkedHashMap<String, Object>>) branch.get("developers"),
+					tmc);
 
-		// create all projects
-		constructProjects(
-				(List<LinkedHashMap<String, Object>>) objects.get("projects"),
-				controller);
+			// create all projects
+			constructProjects(
+					(List<LinkedHashMap<String, Object>>) branch.get("projects"),
+					tmc);
 
-		// create all tasks
-		constructTasks(
-				(List<LinkedHashMap<String, Object>>) objects.get("tasks"),
-				(List<LinkedHashMap<String, Object>>) objects.get("plannings"),
-				controller);
-
-		return controller;
+			// create all tasks
+			constructTasks(
+					(List<LinkedHashMap<String, Object>>) branch.get("tasks"),
+					(List<LinkedHashMap<String, Object>>) branch.get("plannings"),
+					tmc);
+		}
+	   
+		return tmc;
 	}
 
-	private BranchOffice constructController(CharSequence time) {
+	private LocalDateTime constructSystemTime(CharSequence time) {
 		LocalDateTime systemTime = LocalDateTime.parse(time, dateTimeFormatter);
-		return new BranchOffice(systemTime);
+		return systemTime;
 	}
 
 	/**
@@ -138,7 +152,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructResourceTypes(
 			List<LinkedHashMap<String, Object>> resourceTypes,
-			BranchOffice tmc) {
+			TaskManController tmc, BranchOffice activeBranchOffice) {
 
 		for (LinkedHashMap<String, Object> resourceType : resourceTypes) {
 
@@ -173,7 +187,7 @@ public class Parser {
 						.get(dailyAvailability));
 			}
 
-			builder.build(tmc);
+			builder.build(activeBranchOffice);
 		}
 	}
 
@@ -181,7 +195,7 @@ public class Parser {
 	 * Construct the resources
 	 */
 	private void constructResources(
-			List<LinkedHashMap<String, Object>> resources, BranchOffice tmc) {
+			List<LinkedHashMap<String, Object>> resources, TaskManController tmc) {
 
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
 				tmc.getAllResourceTypes());
@@ -207,7 +221,7 @@ public class Parser {
 	 */
 	private void constructDevelopers(
 			List<LinkedHashMap<String, Object>> developers,
-			BranchOffice tmc) {
+			TaskManController tmc) {
 		for (LinkedHashMap<String, Object> developer : developers) {
 			// get the developer name
 			String name = (String) developer.get("name");
@@ -219,7 +233,7 @@ public class Parser {
 	 * Construct the projects
 	 */
 	private void constructProjects(
-			List<LinkedHashMap<String, Object>> projects, BranchOffice tmc) {
+			List<LinkedHashMap<String, Object>> projects, TaskManController tmc) {
 		for (LinkedHashMap<String, Object> project : projects) {
 			// get all arguments needed for a project: name, description,
 			// creation time and due time
@@ -242,7 +256,7 @@ public class Parser {
 	@SuppressWarnings("unchecked")
 	private void constructTasks(List<LinkedHashMap<String, Object>> tasks,
 			List<LinkedHashMap<String, Object>> plannings,
-			BranchOffice controller) {
+			TaskManController controller) {
 
 		Set<Integer> taskNrSet = new HashSet<Integer>();
 		for (LinkedHashMap<String, Object> planning : plannings) {
@@ -346,7 +360,7 @@ public class Parser {
 	 */
 	@SuppressWarnings("unchecked")
 	private void constructPlannings(LinkedHashMap<String, Object> planning,
-			BranchOffice controller) {
+			TaskManController controller) {
 
 		LocalDateTime startTime = LocalDateTime.parse(
 				(CharSequence) planning.get("plannedStartTime"),
