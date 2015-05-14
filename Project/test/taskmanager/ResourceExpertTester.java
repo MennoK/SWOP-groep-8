@@ -1,7 +1,6 @@
 package taskmanager;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalTime;
@@ -87,18 +86,10 @@ public class ResourceExpertTester extends TaskManTester {
 				.getEnd());
 	}
 
-	@Test
-	public void cannotHaveSameResourceType() {
+	@Test(expected = IllegalArgumentException.class)
+	public void cannNotHaveSameType() {
 		ResourceType resType = ResourceType.builder("simple").build(
 				tmc.getActiveOffice());
-
-		assertFalse(tmc.getActiveOffice().getResourceExpert()
-				.canHaveResource(resType));
-	}
-
-	@Test
-	public void cannotHaveNullResourceType() {
-		assertFalse(tmc.getActiveOffice().getResourceExpert()
-				.canHaveResource(null));
+		tmc.getActiveOffice().getResourceExpert().addResourceType(resType);
 	}
 }

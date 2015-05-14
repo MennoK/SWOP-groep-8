@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * 
  * The projectController class contains a list of all the projects and the
@@ -62,27 +64,14 @@ public class ProjectExpert implements TimeObserver {
 	 * @throws IllegalArgumentException
 	 *             : thrown when the given project is not valid
 	 */
+	@NonNull
 	private void addProject(Project project) throws IllegalArgumentException {
-		if (!canHaveProject(project)) {
+		if (getAllProjects().contains(project)) {
 			throw new IllegalArgumentException(
 					"The given project is already in this project.");
 		} else {
 			projects.add(project);
 		}
-	}
-
-	/**
-	 * Determines if the project controller can have the given project. This is
-	 * true if and only if the given project is not yet in the project
-	 * controller and the project is not null
-	 * 
-	 * @param project
-	 *            : given project to be added
-	 * @return true if and only if the project controller does not contain the
-	 *         project yet and the project is not null
-	 */
-	private boolean canHaveProject(Project project) {
-		return (!getAllProjects().contains(project) && project != null);
 	}
 
 	/**

@@ -59,7 +59,7 @@ public class Company {
 	 *             : if the branch office is a null object or the branch office
 	 *             already exists
 	 */
-	
+	@NonNull
 	private void addBranchOffice(BranchOffice branchOffice) {
 		if (getAllBranchOffices().contains(branchOffice)) {
 			throw new IllegalArgumentException(

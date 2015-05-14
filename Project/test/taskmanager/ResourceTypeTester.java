@@ -40,16 +40,10 @@ public class ResourceTypeTester extends TaskManTester {
 		assertTrue(resourceType.getAllResources().contains(res));
 	}
 
-	@Test
-	public void testCannotHaveNullResource() {
-		assertFalse(resourceType.canHaveResource(null));
-	}
-
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testCannotHaveSameResource() {
 		Resource res = resourceType.createResource("resource");
-
-		assertFalse(resourceType.canHaveResource(res));
+		resourceType.addResource(res);
 	}
 
 	@Test

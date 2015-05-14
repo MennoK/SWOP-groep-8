@@ -243,11 +243,6 @@ public class ProjectTester extends TaskManTester {
 		project.addTask(baseTask);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddTaskNullTask() {
-		project.addTask(null);
-	}
-
 	@Test
 	public void testUpdate() {
 		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
