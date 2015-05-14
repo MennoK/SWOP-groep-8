@@ -20,6 +20,11 @@ public class TaskManController {
 		company = new Company(taskManClock);
 	}
 
+	/**
+	 * Returns the company of TaskMan
+	 * 
+	 * @return company : company
+	 */
 	public Company getCompany() {
 		return company;
 	}
@@ -52,9 +57,10 @@ public class TaskManController {
 	 */
 	public void delegate(Task task, BranchOffice branchOffice){
 		if(taskIsDelegatedToActiveOffice(task)){
-			
+			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
+			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task, activeOffice.getDelegatedTaskExpert().officeForDelegatedTask(task));
 		}else{
-			
+			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task, activeOffice);
 		}
 	}
 	/**
@@ -68,6 +74,7 @@ public class TaskManController {
 	 * @param startTime
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
+		checkActiveOfficeForNull();
 		task.setExecuting(startTime);
 		activeOffice.getPlanner().getPlanning(task)
 				.setTimeSpan(new TimeSpan(startTime, task.getDuration()));
@@ -82,6 +89,7 @@ public class TaskManController {
 	 * @param endTime
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
+		checkActiveOfficeForNull();
 		task.setFinished(endTime);
 		if (activeOffice.getPlanner().taskHasPlanning(task)) {
 			activeOffice.getPlanner().getPlanning(task).setEndTime(endTime);
@@ -97,6 +105,7 @@ public class TaskManController {
 	 * @param endTime
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
+		checkActiveOfficeForNull();
 		task.setFailed(endTime);
 		if (activeOffice.getPlanner().taskHasPlanning(task)) {
 			activeOffice.getPlanner().getPlanning(task).setEndTime(endTime);
@@ -121,7 +130,8 @@ public class TaskManController {
 	 * 
 	 * @return set of tasks without a planning
 	 */
-	public Set<Task> getUnplannedTasks() {
+	private Set<Task> getUnplannedTasks() {
+		checkActiveOfficeForNull();
 		return activeOffice.getPlanner().getUnplannedTasks(
 				activeOffice.getProjectExpert().getAllTasks());
 	}
@@ -131,7 +141,7 @@ public class TaskManController {
 	 * 
 	 * @return a set of tasks that can be delegated from the current active branch office
 	 */
-	public Set<Task> getTasksToDelegate(){
+	public Set<Task> getAllDelegatablePlannableTasks(){
 		Set<Task> unplannedTasks = new HashSet<Task>(getUnplannedTasks());
 		Set<Task> delegatableTasks = new HashSet<Task>(getUnplannedTasks());
 		for (Task unplannedTask : unplannedTasks) {
@@ -150,6 +160,7 @@ public class TaskManController {
 	}
 
 	private boolean taskIsDelegatedToActiveOffice(Task unplannedTask) {
+		checkActiveOfficeForNull();
 		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(unplannedTask);
 	}
 
@@ -169,6 +180,7 @@ public class TaskManController {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
+		checkActiveOfficeForNull();
 		return activeOffice.getPlanner().getPossibleStartTimes(task, getTime(),
 				activeOffice.getDeveloperExpert().getAllDevelopers());
 	}
@@ -182,6 +194,7 @@ public class TaskManController {
 	 * @return The selected resources
 	 */
 	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
+		checkActiveOfficeForNull();
 		Map<ResourceType, Integer> requirements = task
 				.getRequiredResourceTypes();
 		Set<Resource> selected = new HashSet<Resource>();
@@ -237,6 +250,7 @@ public class TaskManController {
 	 * @return All the tasks to which this developer is assigned.
 	 */
 	public Set<Task> getAllTasks(Developer dev) {
+		checkActiveOfficeForNull();
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjects()) {
 			for (Task task : project.getAllTasks()) {
@@ -356,12 +370,37 @@ public class TaskManController {
 		}
 	}
 
+	/**
+	 * Sets the active developer to the given developer
+	 * 
+	 * @param activeDeveloper : given developer
+	 */
 	private void setActiveDeveloper(Developer activeDeveloper) {
 		this.activeDeveloper = activeDeveloper;
 	}
 
+	/**
+	 * Sets the active office to the given branch office
+	 * 
+	 * @param activeOffice: given branch office
+	 */
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
+	}
+	
+	/**
+	 * Checks whether the active branch office is null or not. If its
+	 * null, it will throw an illegal state exception
+	 * 
+	 * @return true if the active office is not null
+	 */
+	private boolean checkActiveOfficeForNull(){
+		if(this.activeOffice == null){
+			throw new IllegalStateException("No active branch office");
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**

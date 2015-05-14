@@ -1,7 +1,12 @@
 package taskmanager;
 
 /**
- * The taskManController class controls every expert
+ * A branch office is a part of some company with a specific geo-
+ * graphical location. Each branch office hosts its own projects, manages its
+ * own resources and employs its own employees. A task can be planned for
+ * execution at the branch office that hosts the corresponding project or a task
+ * can be delegated to another branch office, meaning that the delegated task
+ * should be planned for execution at another branch office.
  * 
  * @author Groep 8
  *

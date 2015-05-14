@@ -8,6 +8,14 @@ import java.util.HashMap;
 
 import com.google.common.collect.ArrayListMultimap;
 
+/**
+ * 
+ * The delegated task expert contains all the information of the task that 
+ * are delegated to the branch office
+ * 
+ * @author Group 8
+ *
+ */
 public class DelegatedTaskExpert {
 
 	private ArrayListMultimap<BranchOffice, Task> delegatedTasks;
@@ -31,6 +39,18 @@ public class DelegatedTaskExpert {
 		this.delegatedTasks.put(office, task);
 	}
 
+	public void removeDelegatedTask(Task task){
+			delegatedTasks.remove(officeForDelegatedTask(task), task);
+	}
+	
+	public BranchOffice officeForDelegatedTask(Task delegatedTask){
+		for (BranchOffice office : delegatedTasks.keySet()){
+			if(delegatedTasks.containsEntry(office, delegatedTask)){
+				return office;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Returns the delegated task set
 	 * 
@@ -64,7 +84,7 @@ public class DelegatedTaskExpert {
 
 	/**
 	 * 
-	 * Inner momento class of developer expert
+	 * Inner memento class of delegated task expert
 	 * 
 	 * @author groep 8
 	 */
@@ -73,8 +93,8 @@ public class DelegatedTaskExpert {
 		private List<Task> delegatedTasks;
 
 		/**
-		 * Constructor of the memento inner class of developer expert.
-		 * Initialize a new set of developers of the current state
+		 * Constructor of the memento inner class of delegated task expert.
+		 * Initialize a new list the delegated tasks in the current state
 		 * 
 		 */
 		public Memento(BranchOffice office) {
@@ -86,13 +106,10 @@ public class DelegatedTaskExpert {
 		}
 
 		/**
-		 * Sets the developer set of the developer class to the saved set of the
-		 * memento class
-		 * 
+		 * loads the memento to restore the state		 * 
 		 */
 		public void load() {
-			DelegatedTaskExpert.this.delegatedTasks.removeAll(office);
-			DelegatedTaskExpert.this.delegatedTasks.putAll(office,
+			DelegatedTaskExpert.this.delegatedTasks.replaceValues(office, this.delegatedTasks);
 					delegatedTasks);
 		}
 	}

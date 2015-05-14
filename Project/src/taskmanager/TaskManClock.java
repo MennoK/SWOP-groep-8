@@ -110,6 +110,9 @@ public class TaskManClock implements ImmutableClock {
 		}
 	}
 
+	/**
+	 * Overrides method from the immutableClock interface
+	 */
 	@Override
 	public LocalDateTime getCurrentTime() {
 		return this.currentTime;

@@ -93,4 +93,8 @@ public class TaskManControllerTester extends TaskManTester {
 		assertEquals(TaskStatus.FAILED, task2.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
 	}
+	
+	@Test
+	public void delegateTaskTest(){
+	}
 }
