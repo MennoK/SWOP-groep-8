@@ -58,7 +58,11 @@ public class TaskManController {
 	 * 			: the branch office to where the task must be delegated
 	 */
 	public void delegate(Task task, BranchOffice branchOffice){
-		company.delegate(task, branchOffice);
+		if(taskIsDelegatedToActiveOffice(task)){
+			
+		}else{
+			
+		}
 	}
 	/**
 	}
