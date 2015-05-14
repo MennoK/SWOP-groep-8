@@ -16,7 +16,7 @@ import utility.TimeSpan;
 
 public class UiTaskMan {
 
-	public static final String parserFileName = "input3.tman";
+	private static final String parserFileName = "input3.tman";
 
 	private TaskManController tmc;
 	private Reader reader;
@@ -111,7 +111,7 @@ public class UiTaskMan {
 	}
 
 	private void planTask() throws ExitUseCaseException {
-		Task task = reader.select(tmc.getUnplannedTasks());
+		Task task = reader.select(tmc.getAllDelegatablePlannableTasks());
 		plan(task);
 	}
 
