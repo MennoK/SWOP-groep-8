@@ -25,7 +25,7 @@ public class TaskManClockTester {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		assertEquals(taskManClock.getTime(),
+		assertEquals(taskManClock.getCurrentTime(),
 				LocalDateTime.of(2015, 03, 07, 02, 00));
 	}
 
@@ -36,7 +36,7 @@ public class TaskManClockTester {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		assertEquals(taskManClock.getTime(),
+		assertEquals(taskManClock.getCurrentTime(),
 				LocalDateTime.of(2015, 03, 07, 01, 00));
 	}
 

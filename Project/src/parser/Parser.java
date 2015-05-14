@@ -61,10 +61,10 @@ public class Parser {
 	public TaskManController parse(String pathToFile)
 			throws FileNotFoundException, RuntimeException {
 
-		// check if the given input file is valid for taskman
+	/*	// check if the given input file is valid for taskman
 		TaskManInitFileChecker checker = new TaskManInitFileChecker(
 				new FileReader(pathToFile));
-		checker.checkFile();
+			checker.checkFile();*/
 
 		// create new yaml
 		InputStream input = new FileInputStream(new File(pathToFile));
@@ -82,8 +82,10 @@ public class Parser {
 				.get("branch");
 
 		for (LinkedHashMap<String, Object> branch : branches) {
-			BranchOffice activeOffice = tmc.createBranchOffice((String) branch
-					.get("location"));
+			timeIntervals = new ArrayList<TimeInterval>();
+			alltasks = new ArrayList<Task>();
+			allresources = new ArrayList<Resource>();
+
 
 			tmc.logIn(activeOffice);
 
@@ -94,7 +96,7 @@ public class Parser {
 			// create all resource types
 			constructResourceTypes(
 					(List<LinkedHashMap<String, Object>>) branch
-							.get("resourceTypes"),
+					.get("resourceTypes"),
 					tmc, activeOffice);
 
 			// create all resources
@@ -329,7 +331,7 @@ public class Parser {
 					if (status.equals("executing")) {
 						LocalDateTime startTime = LocalDateTime.parse(
 								(CharSequence) plannings.get(planningCounter)
-										.get("plannedStartTime"),
+								.get("plannedStartTime"),
 								dateTimeFormatter);
 						controller.setExecuting(newTask, startTime);
 					} else {

@@ -9,12 +9,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class Company {
 
 	private Set<BranchOffice> branchOffices;
+	private ImmutableClock clock;
 
 	/**
 	 * Default constructor of Company class. Initializes a new set of branch
 	 * offices
 	 */
-	public Company() {
+	Company(ImmutableClock clock){
+		this.clock = clock;
 		this.branchOffices = new LinkedHashSet<BranchOffice>();
 	}
 
@@ -26,7 +28,7 @@ public class Company {
 	 *            : given name
 	 */
 	BranchOffice createBranchOffice( String location) {
-		BranchOffice branchOffice = new BranchOffice(location);
+		BranchOffice branchOffice = new BranchOffice(location, clock);
 		this.addBranchOffice(branchOffice);
 		return branchOffice;
 	}
@@ -72,5 +74,18 @@ public class Company {
 	 */
 	Set<BranchOffice> getAllBranchOffices() {
 		return Collections.unmodifiableSet(branchOffices);
+	}
+	
+	/**
+	 * delegates a task from one branch office to an other.
+	 * 
+	 * @param task 
+	 * 			: the task that must be delegated
+	 * @param branchOffice
+	 * 			: the branch office to where the task must be delegated
+	 */
+	public void delegate(Task task, BranchOffice branchOffice) {
+
+		branchOffice.getDelegatedTaskExpert().addDelegatedTask(task);
 	}
 }

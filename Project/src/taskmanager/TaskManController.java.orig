@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import utility.TimeSpan;
-
 
 public class TaskManController {
 	private Company company;
@@ -24,12 +24,8 @@ public class TaskManController {
 	}
 
 	public TaskManController(LocalDateTime now) {
+		company = new Company();
 		taskManClock = new TaskManClock(now);
-		company = new Company(taskManClock);
-	}
-	
-	public Company getCompany() {
-		return company;
 	}
 
 	/**
@@ -42,15 +38,24 @@ public class TaskManController {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * delegates a task from one branch office to an other.
+	 * 
+	 * @param task 
+	 * 			: the task that must be delegated
+	 * @param branchOffice
+	 * 			: the branch office to where the task must be delegated
+	 */
+	public void delegate(Task task, BranchOffice branchOffice){
+		company.delegate(task, branchOffice);
+=======
+	 * Log the user in
 	 * 
 	 * @param activeDeveloper
 	 */
 	public void logIn(Developer activeDeveloper) {
 		setActiveDeveloper(activeDeveloper);
-	}
-
-	/**
+>>>>>>> 496d97e35b5444040d183400b77e7d446a55b30e
 	}
 
 	/**
@@ -160,8 +165,8 @@ public class TaskManController {
 	 * 
 	 * @return projects: list of projects
 	 */
-	public Set<Project> getAllProjects() {
-		return Collections.unmodifiableSet(activeOffice.getProjectExpert()
+	public List<Project> getAllProjects() {
+		return Collections.unmodifiableList(activeOffice.getProjectExpert()
 				.getAllProjects());
 	}
 
@@ -311,21 +316,7 @@ public class TaskManController {
 	 * @return LocalDateTime : time
 	 */
 	public LocalDateTime getTime() {
-		return this.taskManClock.getCurrentTime();
-	}
-
-	/**
-	 * Saves the current state of the system. Only the last state is remembered
-	 */
-	public void saveSystem() {
-		getActiveOffice().saveSystem();
-	}
-
-	/**
-	 * Loads the last saved state of the system
-	 */
-	public void loadSystem() {
-		getActiveOffice().loadSystem();
+		return this.taskManClock.getTime();
 	}
 
 	/**
@@ -344,18 +335,5 @@ public class TaskManController {
 
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
-	}
-	/**
-	 * Saves the current state of the system. Only the last state is remembered
-	 */
-	public void saveSystem() {
-		this.activeOffice.saveSystem();
-	}
-
-	/**
-	 * Loads the last saved state of the system
-	 */
-	public void loadSystem() {
-		this.activeOffice.loadSystem();
 	}
 }
