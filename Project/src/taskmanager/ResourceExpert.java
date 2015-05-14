@@ -3,6 +3,8 @@ package taskmanager;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * The ResourceExpert class is the information expert and creator of resource
  * types. This means it can create a resource type builder to make new resource
@@ -31,24 +33,13 @@ public class ResourceExpert {
 	 * @param resource
 	 *            type : given resource type
 	 */
+	@NonNull
 	void addResourceType(ResourceType resourcetype) {
-		if (!canHaveResource(resourcetype)) {
+		if (getAllResourceTypes().contains(resourcetype)) {
 			throw new IllegalArgumentException(
 					"The resource expert has already the given resource type.");
 		}
 		this.resourcetypes.add(resourcetype);
-	}
-
-	/**
-	 * Checks whether the given resource type is valid
-	 * 
-	 * @param resource
-	 *            type : given resource type
-	 * @return true if and only if the resource type is not already in the set
-	 *         and not null
-	 */
-	boolean canHaveResource(ResourceType resourcetype) {
-		return (!getAllResourceTypes().contains(resourcetype) && resourcetype != null);
 	}
 
 	/**
