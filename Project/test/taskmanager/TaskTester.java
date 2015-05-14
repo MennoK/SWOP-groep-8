@@ -233,12 +233,6 @@ public class TaskTester {
 	}
 
 	@Test
-	public void update() {
-		baseTask.handleTimeChange(time.plusDays(5));
-		assertEquals(time.plusDays(5), baseTask.getLastUpdateTime());
-	}
-
-	@Test
 	public void addResourceType() {
 		BranchOffice tmc = new BranchOffice("here");
 		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);

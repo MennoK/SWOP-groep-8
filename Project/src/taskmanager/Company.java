@@ -1,23 +1,22 @@
 package taskmanager;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.detect.PublicSemaphores;
 
 public class Company {
 
 	private Set<BranchOffice> branchOffices;
+	private ImmutableClock clock;
 
 	/**
 	 * Default constructor of Company class. Initializes a new set of branch
 	 * offices
 	 */
-	public Company() {
+	Company(ImmutableClock clock){
+		this.clock = clock;
 		this.branchOffices = new LinkedHashSet<BranchOffice>();
 	}
 
@@ -29,7 +28,7 @@ public class Company {
 	 *            : given name
 	 */
 	BranchOffice createBranchOffice( String location) {
-		BranchOffice branchOffice = new BranchOffice(location);
+		BranchOffice branchOffice = new BranchOffice(location, clock);
 		this.addBranchOffice(branchOffice);
 		return branchOffice;
 	}

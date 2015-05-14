@@ -25,7 +25,7 @@ public class BranchOffice {
 	private ProjectExpert projectExpert;
 	private DelegatedTaskExpert delegatedTaskExpert;
 	private Planner planner;
-	private TaskManClock taskManClock;
+	private TaskManClock clock;
 
 	/**
 	 * Constructor of TaskManController. When a new TaskManController has been
@@ -33,8 +33,6 @@ public class BranchOffice {
 	 */
 	@Deprecated
 	public BranchOffice(LocalDateTime now) {
-		this.taskManClock = new TaskManClock(now);
-
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
@@ -43,11 +41,10 @@ public class BranchOffice {
 	}
 
 	
-	public BranchOffice(String location) {
+	public BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object
-		this.taskManClock = new TaskManClock(LocalDateTime.now());
+		this.clock = (TaskManClock)clock;
 		setLocation(location);
-
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
@@ -56,17 +53,10 @@ public class BranchOffice {
 	}
 
 	@Deprecated
-	public BranchOffice(String location, TaskManClock clock) {
-		// temporary time object
-		this.taskManClock = clock;
-		setLocation(location);
-
-		createDeveloperExpert();
-		createResourceExpert();
-		createProjectExpert();
-		createDelegatedTaskExpert();
-		createPlanner();
+	public BranchOffice(String string) {
+		this(string, new TaskManClock(LocalDateTime.of(1, 1, 1, 1, 1 )));
 	}
+
 
 	/**
 	 * Creates a new delegated task expert
@@ -89,9 +79,7 @@ public class BranchOffice {
 	 * Creates a new project expert
 	 */
 	private void createProjectExpert() {
-		this.projectExpert = new ProjectExpert();
-		this.taskManClock.register(projectExpert);
-		this.projectExpert.handleTimeChange(getTime());
+		this.projectExpert = new ProjectExpert(clock);
 	}
 
 	/**
@@ -112,7 +100,7 @@ public class BranchOffice {
 	 * creates a new planner
 	 */
 	void createPlanner() {
-		this.planner = new Planner();
+		this.planner = new Planner(clock);
 	}
 
 	/**
@@ -177,7 +165,6 @@ public class BranchOffice {
 		this.getDeveloperExpert().save();
 		this.getPlanner().save();
 		this.getResourceExpert().save();
-		this.taskManClock.save();
         this.getDelegatedTaskExpert().save();
 	}
 
@@ -189,31 +176,6 @@ public class BranchOffice {
 		this.getDeveloperExpert().load();
 		this.getPlanner().load();
 		this.getResourceExpert().load();
-		this.taskManClock.load();
-	}
-
-	/**
-	 * Advances the time of TaskMan.
-	 * 
-	 * @param time
-	 *            : new time
-	 * @throws IllegalArgumentException
-	 *             : thrown when the given time is invalid
-	 */
-	@Deprecated
-	public void advanceTime(LocalDateTime time) {
-		this.taskManClock.setTime(time);
-		this.getProjectExpert().handleTimeChange(this.taskManClock.getTime());
-	}
-
-	/**
-	 * Returns the time
-	 * 
-	 * @return LocalDateTime : time
-	 */
-	@Deprecated
-	public LocalDateTime getTime() {
-		return this.taskManClock.getTime();
 	}
 
 	/**
@@ -290,7 +252,7 @@ public class BranchOffice {
 	 */
 	@Deprecated
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
-		return getPlanner().getPossibleStartTimes(task, getTime(),
+		return getPlanner().getPossibleStartTimes(task, this.clock.getCurrentTime(),
 				getDeveloperExpert().getAllDevelopers());
 	}
 
@@ -410,7 +372,7 @@ public class BranchOffice {
 	@Deprecated
 	public Project createProject(String name, String description,
 			LocalDateTime dueTime) {
-		return getProjectExpert().createProject(name, description, getTime(),
+		return getProjectExpert().createProject(name, description, this.clock.getCurrentTime(),
 				dueTime);
 	}
 
@@ -424,6 +386,16 @@ public class BranchOffice {
 	@Deprecated
 	public Developer createDeveloper(String name) {
 		return getDeveloperExpert().createDeveloper(name);
+	}
+	
+	@Deprecated
+	public LocalDateTime getTime() {
+		return clock.getCurrentTime();
+	}
+
+	@Deprecated
+	public void advanceTime(LocalDateTime date) {
+		clock.setTime(date);
 	}
 
 }

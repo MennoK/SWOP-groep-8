@@ -277,6 +277,9 @@ public class TaskManInitFileChecker extends StreamTokenizer {
 				expectLabel("resources");
 				List<IntListPair> resources = expectLabeledIntListPairList("type", "resource");
 			}
+			
+			if (ttype != TT_EOF)
+				error("End of file or '-' expected");
 
 		}
 

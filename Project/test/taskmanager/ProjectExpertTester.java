@@ -22,7 +22,7 @@ public class ProjectExpertTester extends TaskManTester {
 		Project project1 = createStandardProject(time.plusDays(1));
 
 		assertEquals(1, tmc.getAllProjects().size());
-		assertEquals(time, project1.getLastUpdateTime());
+		assertEquals(time, tmc.getTime());
 
 		Project project2 = createStandardProject(time.plusDays(1));
 
@@ -38,8 +38,6 @@ public class ProjectExpertTester extends TaskManTester {
 		tmc.advanceTime(time.plusDays(1));
 
 		assertEquals(time.plusDays(1), tmc.getTime());
-		assertEquals(time.plusDays(1), project.getLastUpdateTime());
-		assertEquals(time.plusDays(1), task.getLastUpdateTime());
 
 	}
 

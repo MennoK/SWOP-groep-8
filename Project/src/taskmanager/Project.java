@@ -37,7 +37,7 @@ public class Project implements Visitable {
 	private String description;
 	private final LocalDateTime creationTime;
 	private LocalDateTime dueTime;
-	private LocalDateTime lastUpdateTime;
+	private final ImmutableClock clock;
 
 	private Memento memento;
 
@@ -54,13 +54,18 @@ public class Project implements Visitable {
 	 *            : due time of the project
 	 */
 	Project(String name, String description, LocalDateTime creationTime,
-			LocalDateTime dueTime) {
+			LocalDateTime dueTime, ImmutableClock clock) {
+		this.clock = clock;
 		setName(name);
 		setDescription(description);
 		this.creationTime = creationTime;
 		setDueTime(dueTime);
 		this.tasks = new ArrayList<Task>();
-		this.handleTimeChange(creationTime);
+	}
+
+	public Project(String string, String string2, LocalDateTime time,
+			LocalDateTime time2) {
+		this(string, string2, time,time2, new TaskManClock(time));
 	}
 
 	/**
@@ -163,20 +168,6 @@ public class Project implements Visitable {
 	}
 
 	/**
-	 * Saves the last update time and changes the time in all tasks of the
-	 * project
-	 * 
-	 * @param time
-	 *            : the new time of the clock
-	 */
-	public void handleTimeChange(LocalDateTime time) {
-		this.lastUpdateTime = time;
-		for (Task t : this.getAllTasks()) {
-			t.handleTimeChange(time);
-		}
-	}
-
-	/**
 	 * Estimates the finish time by calculating the estimated finished time of
 	 * each task
 	 * 
@@ -192,8 +183,8 @@ public class Project implements Visitable {
 			}
 		}
 		if (this.getStatus() != ProjectStatus.FINISHED
-				&& this.lastUpdateTime.isAfter(estimatedFinishTime)) {
-			estimatedFinishTime = this.lastUpdateTime;
+				&& this.clock.getCurrentTime().isAfter(estimatedFinishTime)) {
+			estimatedFinishTime = this.clock.getCurrentTime();
 		}
 		return estimatedFinishTime;
 	}
@@ -310,15 +301,6 @@ public class Project implements Visitable {
 	}
 
 	/**
-	 * Returns the latest update time
-	 * 
-	 * @return lastUpdateTime: latest update time
-	 */
-	public LocalDateTime getLastUpdateTime() {
-		return lastUpdateTime;
-	}
-
-	/**
 	 * accept visitor for visiting this
 	 */
 	@Override
@@ -364,8 +346,6 @@ public class Project implements Visitable {
 		private String description;
 		private LocalDateTime dueTime;
 
-		private LocalDateTime lastUpdateTime;
-
 		/**
 		 * Constructor of the momento inner class of project. Initialize all the
 		 * parameters of the current state of the given project
@@ -378,8 +358,6 @@ public class Project implements Visitable {
 			this.name = new String(Project.this.name);
 			this.description = new String(Project.this.description);
 			this.dueTime = Project.this.dueTime;
-
-			this.lastUpdateTime = Project.this.lastUpdateTime;
 		}
 
 		/**
@@ -394,8 +372,10 @@ public class Project implements Visitable {
 			Project.this.name = this.name;
 			Project.this.description = this.description;
 			Project.this.dueTime = this.dueTime;
-
-			Project.this.lastUpdateTime = this.lastUpdateTime;
 		}
+	}
+
+	ImmutableClock getClock() {
+		return this.clock;
 	}
 }

@@ -11,10 +11,9 @@ import java.util.ArrayList;
  * 
  */
 
-public class TaskManClock {
+public class TaskManClock implements ImmutableClock {
 
 	private LocalDateTime currentTime;
-	private ArrayList<TimeObserver> observers;
 
 	private Memento memento;
 
@@ -27,7 +26,6 @@ public class TaskManClock {
 	 */
 	public TaskManClock(LocalDateTime startTime) {
 		this.currentTime = startTime;
-		this.observers = new ArrayList<>();
 	}
 
 	/**
@@ -45,9 +43,6 @@ public class TaskManClock {
 					"The given time is before the current time");
 		} else {
 			this.currentTime = newTime;
-			for (TimeObserver obs : this.observers) {
-				obs.handleTimeChange(newTime);
-			}
 		}
 	}
 
@@ -62,35 +57,7 @@ public class TaskManClock {
 	 *         current time
 	 */
 	private boolean canHaveTime(LocalDateTime time) {
-		return time.isAfter(getTime()) || time.isEqual(getTime());
-	}
-
-	/**
-	 * Returns the current time of the system
-	 * 
-	 * @return currentTime : current time of the system
-	 */
-	public LocalDateTime getTime() {
-		return currentTime;
-	}
-
-	/**
-	 * Register with new time observer
-	 * 
-	 * @param observer
-	 *            : give time observer
-	 */
-	boolean register(TimeObserver observer) {
-		return this.observers.add(observer);
-	}
-
-	/**
-	 * Unregister with given time observer
-	 * 
-	 * @param observer
-	 */
-	boolean unregister(TimeObserver observer) {
-		return this.observers.remove(observer);
+		return time.isAfter(getCurrentTime()) || time.isEqual(getCurrentTime());
 	}
 
 	/**
@@ -121,7 +88,6 @@ public class TaskManClock {
 	 */
 	private class Memento {
 		private LocalDateTime currentTime;
-		private ArrayList<TimeObserver> observers;
 
 		/**
 		 * Constructor of the memento of taskManClock. Initialize the current
@@ -132,7 +98,6 @@ public class TaskManClock {
 		 */
 		public Memento(TaskManClock clock) {
 			this.currentTime = clock.currentTime;
-			this.observers = new ArrayList<TimeObserver>(clock.observers);
 		}
 
 		/**
@@ -143,7 +108,11 @@ public class TaskManClock {
 		 */
 		public void load(TaskManClock clock) {
 			clock.currentTime = this.currentTime;
-			clock.observers = this.observers;
 		}
+	}
+
+	@Override
+	public LocalDateTime getCurrentTime() {
+		return this.currentTime;
 	}
 }
