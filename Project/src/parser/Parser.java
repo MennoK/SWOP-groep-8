@@ -3,7 +3,6 @@ package parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,7 +10,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +18,6 @@ import java.util.Set;
 import org.yaml.snakeyaml.Yaml;
 
 import taskmanager.Developer;
-import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
@@ -63,10 +60,11 @@ public class Parser {
 	public TaskManController parse(String pathToFile)
 			throws FileNotFoundException, RuntimeException {
 
-	/*	// check if the given input file is valid for taskman
-		TaskManInitFileChecker checker = new TaskManInitFileChecker(
-				new FileReader(pathToFile));
-			checker.checkFile();*/
+		/*
+		 * // check if the given input file is valid for taskman
+		 * TaskManInitFileChecker checker = new TaskManInitFileChecker( new
+		 * FileReader(pathToFile)); checker.checkFile();
+		 */
 
 		// create new yaml
 		InputStream input = new FileInputStream(new File(pathToFile));
@@ -77,18 +75,19 @@ public class Parser {
 		LocalDateTime systemTime = constructSystemTime((CharSequence) objects
 				.get("systemTime"));
 
-		//create TaskManController
+		// create TaskManController
 		TaskManController tmc = new TaskManController(systemTime);
 
 		List<LinkedHashMap<String, Object>> branches = (List<LinkedHashMap<String, Object>>) objects
 				.get("branch");
 
-		for(LinkedHashMap<String, Object> branch : branches){
+		for (LinkedHashMap<String, Object> branch : branches) {
 			timeIntervals = new ArrayList<TimeInterval>();
 			alltasks = new ArrayList<Task>();
 			allresources = new ArrayList<Resource>();
 
-			BranchOffice activeOffice = tmc.createBranchOffice((String) branch.get("location"));
+			BranchOffice activeOffice = tmc.createBranchOffice((String) branch
+					.get("location"));
 
 			tmc.logIn(activeOffice);
 
@@ -99,29 +98,32 @@ public class Parser {
 			// create all resource types
 			constructResourceTypes(
 					(List<LinkedHashMap<String, Object>>) branch
-					.get("resourceTypes"),
-					tmc,activeOffice);
+							.get("resourceTypes"),
+					tmc, activeOffice);
 
 			// create all resources
 			constructResources(
-					(List<LinkedHashMap<String, Object>>) branch.get("resources"),
+					(List<LinkedHashMap<String, Object>>) branch
+							.get("resources"),
 					tmc);
 
 			// create all developers
 			constructDevelopers(
-					(List<LinkedHashMap<String, Object>>) branch.get("developers"),
+					(List<LinkedHashMap<String, Object>>) branch
+							.get("developers"),
 					tmc);
 
 			// create all projects
 			constructProjects(
-					(List<LinkedHashMap<String, Object>>) branch.get("projects"),
+					(List<LinkedHashMap<String, Object>>) branch
+							.get("projects"),
 					tmc);
 
 			// create all tasks
 			constructTasks(
 					(List<LinkedHashMap<String, Object>>) branch.get("tasks"),
-					(List<LinkedHashMap<String, Object>>) branch.get("plannings"),
-					tmc);
+					(List<LinkedHashMap<String, Object>>) branch
+							.get("plannings"), tmc);
 		}
 
 		return tmc;
@@ -280,8 +282,8 @@ public class Parser {
 					.get("acceptableDeviation")));
 			acceptableDeviation /= 100;
 
-			Project projectOfTask = controller.getAllProjects().get(
-					projectNumber);
+			Project projectOfTask = new ArrayList<>(controller.getAllProjects())
+					.get(projectNumber);
 
 			TaskBuilder builder = Task.builder(description, estimatedDuration,
 					acceptableDeviation);
@@ -331,7 +333,7 @@ public class Parser {
 					if (status.equals("executing")) {
 						LocalDateTime startTime = LocalDateTime.parse(
 								(CharSequence) plannings.get(planningCounter)
-								.get("plannedStartTime"),
+										.get("plannedStartTime"),
 								dateTimeFormatter);
 						controller.setExecuting(newTask, startTime);
 					} else {
@@ -380,8 +382,8 @@ public class Parser {
 		}
 
 		int taskNr = (int) (planning.get("task"));
-		PlanningBuilder pbuilder = controller.getPlanner().createPlanning(startTime,
-				alltasks.get(taskNr), assignedDevs.get(0));
+		PlanningBuilder pbuilder = controller.getPlanner().createPlanning(
+				startTime, alltasks.get(taskNr), assignedDevs.get(0));
 
 		for (int i = 1; i < assignedDevs.size(); i++) {
 			pbuilder.addDeveloper(assignedDevs.get(i));

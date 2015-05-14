@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import utility.TimeSpan;
+
 
 public class TaskManController {
 	private Company company;
@@ -26,7 +28,7 @@ public class TaskManController {
 		taskManClock = new TaskManClock(now);
 		company = new Company(taskManClock);
 	}
-
+	
 	public Company getCompany() {
 		return company;
 	}
@@ -50,7 +52,6 @@ public class TaskManController {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * delegates a task from one branch office to an other.
 	 * 
 	 * @param task 
@@ -67,12 +68,6 @@ public class TaskManController {
 	/**
 	 * Tell the system execution of Task was started. And updates the status of
 	 * all Tasks.
-=======
-	 * }
-	 * 
-	 * /** Tell the system execution of Task was started. And updates the status
-	 * of all Tasks.
->>>>>>> 549d638a3177816cbf5118347b88adaf74809f7b
 	 * 
 	 * @param task
 	 * @param startTime
@@ -213,8 +208,8 @@ public class TaskManController {
 	 * 
 	 * @return projects: list of projects
 	 */
-	public Set<Project> getAllProjects() {
-		return Collections.unmodifiableSet(activeOffice.getProjectExpert()
+	public List<Project> getAllProjects() {
+		return Collections.unmodifiableList(activeOffice.getProjectExpert()
 				.getAllProjects());
 	}
 
@@ -384,22 +379,17 @@ public class TaskManController {
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
 	}
-
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
 	public void saveSystem() {
-        for(BranchOffice office : this.getCompany().getAllBranchOffices()) {
-            office.saveSystem(this.activeOffice);
-        }
+		this.activeOffice.saveSystem();
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
 	public void loadSystem() {
-        for(BranchOffice office : this.getCompany().getAllBranchOffices()) {
-            office.loadSystem(this.activeOffice);
-        }
+		this.activeOffice.loadSystem();
 	}
 }

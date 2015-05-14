@@ -1,9 +1,8 @@
 package taskmanager;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -19,7 +18,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ProjectExpert {
 
-	private ArrayList<Project> projects;
+	private Set<Project> projects;
 
 	private Memento memento;
 	
@@ -33,7 +32,8 @@ public class ProjectExpert {
 	 */
 	ProjectExpert(ImmutableClock clock) {
 		this.clock = clock;
-		projects = new ArrayList<>();
+projects = new LinkedHashSet<>();
+
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class ProjectExpert {
 	 * 
 	 * @return projects: list of projects
 	 */
-	List<Project> getAllProjects() {
+	Set<Project> getAllProjects() {
 		return projects;
 	}
 
@@ -131,7 +131,7 @@ public class ProjectExpert {
 	 * @author groep 8
 	 */
 	private class Memento {
-		private ArrayList<Project> projects;
+		private Set<Project> projects;
 
 		/**
 		 * Constructor of the momento inner class of project expert. Initialize
@@ -142,7 +142,8 @@ public class ProjectExpert {
 		 *            : projectExpert
 		 */
 		public Memento() {
-			this.projects = new ArrayList<Project>(ProjectExpert.this.projects);
+			this.projects = new LinkedHashSet<Project>(
+					ProjectExpert.this.projects);
 		}
 
 		/**

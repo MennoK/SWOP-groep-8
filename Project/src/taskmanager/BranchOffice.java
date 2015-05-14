@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +39,6 @@ public class BranchOffice {
 		createPlanner();
 	}
 
-	
 	public BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object
 		this.clock = (TaskManClock)clock;
@@ -160,22 +158,29 @@ public class BranchOffice {
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
-	public void saveSystem() {
-		this.getProjectExpert().save();
-		this.getDeveloperExpert().save();
-		this.getPlanner().save();
-		this.getResourceExpert().save();
-        this.getDelegatedTaskExpert().save();
+	public void saveSystem(BranchOffice office) {
+        if(this.equals(office)) {
+            this.getProjectExpert().save();
+            this.getDeveloperExpert().save();
+            this.getPlanner().save();
+            this.getResourceExpert().save();
+        } else {
+            this.getDelegatedTaskExpert().save(office);
+        }
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
-	public void loadSystem() {
-		this.getProjectExpert().load();
-		this.getDeveloperExpert().load();
-		this.getPlanner().load();
-		this.getResourceExpert().load();
+	public void loadSystem(BranchOffice office) {
+        if(this.equals(office)) {
+            this.getProjectExpert().load();
+            this.getDeveloperExpert().load();
+            this.getPlanner().load();
+            this.getResourceExpert().load();
+        } else {
+            this.getDelegatedTaskExpert().load(office);
+        }
 	}
 
 	/**
@@ -288,9 +293,8 @@ public class BranchOffice {
 	 * @return projects: list of projects
 	 */
 	@Deprecated
-	public List<Project> getAllProjects() {
-		return Collections
-				.unmodifiableList(getProjectExpert().getAllProjects());
+	public Set<Project> getAllProjects() {
+		return Collections.unmodifiableSet(getProjectExpert().getAllProjects());
 	}
 
 	/**

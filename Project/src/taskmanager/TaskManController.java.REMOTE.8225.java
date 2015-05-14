@@ -50,29 +50,10 @@ public class TaskManController {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * delegates a task from one branch office to an other.
-	 * 
-	 * @param task 
-	 * 			: the task that must be delegated
-	 * @param branchOffice
-	 * 			: the branch office to where the task must be delegated
-	 */
-	public void delegate(Task task, BranchOffice branchOffice){
-		company.delegate(task, branchOffice);
-	}
-	/**
-	}
-
-	/**
-	 * Tell the system execution of Task was started. And updates the status of
-	 * all Tasks.
-=======
 	 * }
 	 * 
 	 * /** Tell the system execution of Task was started. And updates the status
 	 * of all Tasks.
->>>>>>> 549d638a3177816cbf5118347b88adaf74809f7b
 	 * 
 	 * @param task
 	 * @param startTime
@@ -134,42 +115,6 @@ public class TaskManController {
 	public Set<Task> getUnplannedTasks() {
 		return activeOffice.getPlanner().getUnplannedTasks(
 				activeOffice.getProjectExpert().getAllTasks());
-	}
-
-	/**
-	 * Returns all the tasks that can be delegated from the current active branch office
-	 * 
-	 * @return a set of tasks that can be delegated from the current active branch office
-	 */
-	public Set<Task> getTasksToDelegate(){
-		Set<Task> unplannedTasks = new HashSet<Task>(getUnplannedTasks());
-		Set<Task> delegatableTasks = new HashSet<Task>(getUnplannedTasks());
-		for (Task unplannedTask : unplannedTasks) {
-			if(!taskIsDelegatable(unplannedTask)){
-				delegatableTasks.remove(unplannedTask);
-			}
-		}
-		
-		return delegatableTasks;
-	}
-	private boolean taskIsDelegatable(Task unplannedTask) {
-		if(!taskHasBeenDelegated(unplannedTask) || taskIsDelegatedToActiveOffice(unplannedTask)){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean taskIsDelegatedToActiveOffice(Task unplannedTask) {
-		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(unplannedTask);
-	}
-
-	private boolean taskHasBeenDelegated(Task unplannedTask) {
-		for (BranchOffice office : company.getAllBranchOffices()) {
-			if(office.getDelegatedTaskExpert().getAllDelegatedTasks().contains(unplannedTask)){
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
