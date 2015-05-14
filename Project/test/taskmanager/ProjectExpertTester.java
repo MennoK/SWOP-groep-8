@@ -3,66 +3,49 @@ package taskmanager;
 import static org.junit.Assert.assertEquals;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Project;
 import taskmanager.Task;
-import taskmanager.BranchOffice;
 
-public class ProjectExpertTester {
-
-	private BranchOffice taskManController;
+public class ProjectExpertTester extends TaskManTester {
 
 	@Before
 	public void setUp() {
-		taskManController = new BranchOffice(LocalDateTime.of(2000, 03,
-				05, 00, 00));
+		super.setUp();
 	}
 
 	@Test
 	public void testCreateProjects() {
-		taskManController.createProject("name", "description",
-				LocalDateTime.of(2015, 03, 05, 00, 00),
-				LocalDateTime.of(2015, 03, 06, 00, 00));
+		Project project1 = createStandardProject(time.plusDays(1));
 
-		assertEquals(1, taskManController.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), taskManController
-				.getAllProjects().get(0).getLastUpdateTime());
+		assertEquals(1, tmc.getAllProjects().size());
+		assertEquals(time, project1.getLastUpdateTime());
 
-		taskManController.createProject("name2", "description",
-				LocalDateTime.of(2015, 03, 06, 00, 00));
+		Project project2 = createStandardProject(time.plusDays(1));
 
-		assertEquals(2, taskManController.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2000, 03, 05, 00, 00), taskManController
-				.getAllProjects().get(1).getCreationTime());
+		assertEquals(2, tmc.getAllProjects().size());
+		assertEquals(time, project2.getCreationTime());
 	}
 
 	@Test
 	public void testAdvanceTime() {
-		Project project1 = taskManController.createProject("name",
-				"description", LocalDateTime.of(2015, 03, 05, 00, 00),
-				LocalDateTime.of(2015, 03, 06, 00, 00));
+		Project project = createStandardProject(time.plusDays(1));
+		Task task = createTask(project, Duration.ofHours(20));
 
-		Task.builder("descr", Duration.ofHours(20), 20).build(project1);
+		tmc.advanceTime(time.plusDays(1));
 
-		taskManController.advanceTime(LocalDateTime.of(2001, 03, 06, 00, 00));
-
-		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00),
-				taskManController.getTime());
-		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00),
-				project1.getLastUpdateTime());
-		assertEquals(LocalDateTime.of(2001, 03, 06, 00, 00), project1
-				.getAllTasks().get(0).getLastUpdateTime());
+		assertEquals(time.plusDays(1), tmc.getTime());
+		assertEquals(time.plusDays(1), project.getLastUpdateTime());
+		assertEquals(time.plusDays(1), task.getLastUpdateTime());
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAdvanceTimeWithInvalidTime() {
-		LocalDateTime newTime = LocalDateTime.of(1999, 03, 05, 00, 00);
-		taskManController.advanceTime(newTime);
+		tmc.advanceTime(time.minusMinutes(1));
 	}
 
 }

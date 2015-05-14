@@ -9,46 +9,35 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Developer;
-import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.ProjectFinishingStatus;
 import taskmanager.ProjectStatus;
 import taskmanager.Task;
-import taskmanager.BranchOffice;
 
-public class UseCase5AdvanceTime {
+public class UseCase5AdvanceTime extends UseCaseTestBasis {
 
-	private BranchOffice tmc;
 	private Project project1;
 	private Project project2;
 
 	private Task task1;
 
-	private LocalDateTime now;
-
 	@Before
 	public void setUp() {
+		setUpTMC(LocalDateTime.of(2015, 03, 10, 11, 00));
 		// create a controller, 3 projects and 3 tasks:
 		// project0 has 0 tasks
 		// project1 has 1 task (finished)
 		// project2 has 2 tasks (1 task is dependent on the other)
 
-		now = LocalDateTime.of(2015, 03, 10, 11, 00);
+		project1 = tmc.createProject("Project 1", "Description 1",
+				now.plusHours(6));
 
-		tmc = new BranchOffice(now);
+		project2 = tmc.createProject("Project 2", "Description 2",
+				now.plusHours(2));
 
-		tmc.createProject("Project 1", "Description 1",
-				LocalDateTime.of(2015, 03, 10, 17, 00));
+		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
+				.build(project1);
 
-		tmc.createProject("Project 2", "Description 2",
-				LocalDateTime.of(2015, 03, 10, 13, 00));
-
-		project1 = tmc.getAllProjects().get(0);
-		project2 = tmc.getAllProjects().get(1);
-
-		Task.builder("Task 1", Duration.ofHours(5), 0.4).build(project1);
-
-		task1 = project1.getAllTasks().get(0);
 		Developer dev1 = tmc.createDeveloper("dev1");
 		tmc.getPlanner().createPlanning(now, task1, dev1).build();
 		tmc.setExecuting(task1, now.minusDays(6));

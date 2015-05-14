@@ -1,39 +1,29 @@
 package taskmanager;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.Resource;
 import taskmanager.ResourceType;
-import taskmanager.BranchOffice;
 
-public class ResourceTypeTester {
+public class ResourceTypeTester extends TaskManTester {
 
-	private BranchOffice tmc;
 	private ResourceType resourceType;
 	private ResourceType requiredResourceType;
 	private ResourceType conflictedResourceType;
-	private List<ResourceType> resourceTypeList;
 
 	@Before
 	public void setUp() {
-		tmc = new BranchOffice(LocalDateTime.of(2000, 03, 05, 00, 00));
-		ResourceType.builder("type").build(tmc);
-		ResourceType.builder("requiredResourceType").build(tmc);
-		ResourceType.builder("conflictedResourceType").build(tmc);
-
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		resourceType = resourceTypeList.get(0);
-		requiredResourceType = resourceTypeList.get(1);
-		conflictedResourceType = resourceTypeList.get(2);
+		super.setUp();
+		resourceType = ResourceType.builder("type")
+				.build(tmc.getActiveOffice());
+		requiredResourceType = ResourceType.builder("requiredResourceType")
+				.build(tmc.getActiveOffice());
+		conflictedResourceType = ResourceType.builder("conflictedResourceType")
+				.build(tmc.getActiveOffice());
 	}
 
 	@Test
@@ -43,104 +33,87 @@ public class ResourceTypeTester {
 
 	@Test
 	public void testCreateResource() {
-		resourceType.createResource("resource");
-		List<Resource> resourceList = new ArrayList<Resource>(
-				resourceType.getAllResources());
+		Resource res = resourceType.createResource("resource");
 
 		assertEquals(1, resourceType.getAllResources().size());
-		assertEquals("resource", resourceList.get(0).getName());
+		assertTrue(resourceType.getAllResources().contains(res));
 	}
 
-	@Test
-	public void testCannotHaveNullResource() {
-		assertFalse(resourceType.canHaveResource(null));
-	}
-
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void testCannotHaveSameResource() {
-		resourceType.createResource("resource");
-		List<Resource> resourceList = new ArrayList<Resource>(
-				resourceType.getAllResources());
-
-		assertFalse(resourceType.canHaveResource(resourceList.get(0)));
+		Resource res = resourceType.createResource("resource");
+		resourceType.addResource(res);
 	}
 
 	@Test
 	public void testAddRequiredResourceType() {
-		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
+		ResourceType requiringResType = ResourceType.builder("type")
+				.addRequiredResourceTypes(requiredResourceType)
+				.build(tmc.getActiveOffice());
 		assertEquals(4, tmc.getAllResourceTypes().size());
-		assertEquals(1, resourceTypeList.get(3).getRequiredResourceTypes()
-				.size());
+		assertTrue(requiringResType.getRequiredResourceTypes().contains(
+				requiredResourceType));
 	}
 
 	@Test
 	public void testAddConflictedResourceType() {
-		ResourceType.builder("type")
-				.addConflictedResourceTypes(requiredResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
+		ResourceType conflictingResType = ResourceType.builder("type")
+				.addConflictedResourceTypes(conflictedResourceType)
+				.build(tmc.getActiveOffice());
 		assertEquals(4, tmc.getAllResourceTypes().size());
-		assertEquals(1, resourceTypeList.get(3).getConflictedResourceTypes()
-				.size());
+		assertTrue(conflictingResType.getConflictedResourceTypes().contains(
+				conflictedResourceType));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddRequiredResourceTypeIsAlreadyInRequiredList() {
-		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		resourceTypeList.get(3).addRequiredResourceType(requiredResourceType);
+		ResourceType resType = ResourceType.builder("type")
+				.addRequiredResourceTypes(requiredResourceType)
+				.build(tmc.getActiveOffice());
+		// TODO discuss do we need this function, doesn't the builder do this?
+		resType.addRequiredResourceType(requiredResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddRequiredResourceTypeIsAlreadyInConflictedList() {
-		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		resourceTypeList.get(3).addConflictedResourceType(requiredResourceType);
+		ResourceType resType = ResourceType.builder("type")
+				.addRequiredResourceTypes(requiredResourceType)
+				.build(tmc.getActiveOffice());
+		// TODO discuss do we need this function, doesn't the builder do this?
+		resType.addConflictedResourceType(requiredResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddConflictedResourceTypeIsAlreadyInRequiredList() {
-		ResourceType.builder("type")
-				.addConflictedResourceTypes(conflictedResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		resourceTypeList.get(3).addRequiredResourceType(conflictedResourceType);
+		ResourceType resType = ResourceType.builder("type")
+				.addConflictedResourceTypes(conflictedResourceType)
+				.build(tmc.getActiveOffice());
+		// TODO discuss do we need this function, doesn't the builder do this?
+		resType.addRequiredResourceType(conflictedResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddConflictedResourceTypeIsAlreadyInConflictedList() {
-		ResourceType.builder("type")
-				.addConflictedResourceTypes(conflictedResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		resourceTypeList.get(3).addConflictedResourceType(
-				conflictedResourceType);
+		ResourceType resType = ResourceType.builder("type")
+				.addConflictedResourceTypes(conflictedResourceType)
+				.build(tmc.getActiveOffice());
+		resType.addConflictedResourceType(conflictedResourceType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addLoopingRequiredTypes() {
-		ResourceType.builder("type")
-				.addRequiredResourceTypes(requiredResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		requiredResourceType.addRequiredResourceType(resourceTypeList.get(3));
+		ResourceType resType = ResourceType.builder("type")
+				.addRequiredResourceTypes(requiredResourceType)
+				.build(tmc.getActiveOffice());
+		requiredResourceType.addRequiredResourceType(resType);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addLoopingConflictedTypes() {
-		ResourceType.builder("type")
-				.addConflictedResourceTypes(conflictedResourceType).build(tmc);
-		resourceTypeList = new ArrayList<ResourceType>(
-				tmc.getAllResourceTypes());
-		conflictedResourceType.addConflictedResourceType(resourceTypeList
-				.get(3));
+		ResourceType resType = ResourceType.builder("type")
+				.addConflictedResourceTypes(conflictedResourceType)
+				.build(tmc.getActiveOffice());
+		conflictedResourceType.addConflictedResourceType(resType);
 	}
 
 }

@@ -22,12 +22,17 @@ import utility.WorkTime;
 public class TaskManTester {
 
 	LocalDateTime time;
-	BranchOffice tmc;
+	TaskManController tmc;
 
 	@Before
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
-		tmc = new BranchOffice(time);
+		tmc = new TaskManController(time);
+		BranchOffice here = tmc.createBranchOffice("here",
+				tmc.getTaskManClock());
+		tmc.logIn(here);
+		Developer dev = tmc.createDeveloper("Jos");
+		tmc.logIn(dev);
 	}
 
 	protected Project createStandardProject(LocalDateTime dueDate) {
