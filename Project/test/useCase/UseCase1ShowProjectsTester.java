@@ -49,7 +49,7 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 				.build(project2);
 		tmc.getPlanner().createPlanning(now.plusHours(5), task2, jos).build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
-				.addDependencies(project2.getAllTasks().get(0)).build(project2);
+				.addDependencies(task2).build(project2);
 		Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
 	}
 

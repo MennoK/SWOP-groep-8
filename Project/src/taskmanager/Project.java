@@ -4,7 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import utility.WorkTime;
@@ -31,8 +32,7 @@ import utility.WorkTime;
 
 public class Project implements Visitable {
 
-	//TODO: Set<Task> tasks
-	private List<Task> tasks;
+	private Set<Task> tasks;
 	private String name;
 	private String description;
 	private final LocalDateTime creationTime;
@@ -60,12 +60,12 @@ public class Project implements Visitable {
 		setDescription(description);
 		this.creationTime = creationTime;
 		setDueTime(dueTime);
-		this.tasks = new ArrayList<Task>();
+		this.tasks = new LinkedHashSet<Task>();
 	}
 
 	public Project(String string, String string2, LocalDateTime time,
 			LocalDateTime time2) {
-		this(string, string2, time,time2, new TaskManClock(time));
+		this(string, string2, time, time2, new TaskManClock(time));
 	}
 
 	/**
@@ -94,8 +94,7 @@ public class Project implements Visitable {
 	 * @param originalTask
 	 */
 	void updateDependencies(Task alternativeTask, Task originalTask) {
-		List<Task> taskList = this.getAllTasks();
-		for (Task task : taskList) {
+		for (Task task : getAllTasks()) {
 			if (task.getDependencies().contains(originalTask)) {
 				task.addDependency(alternativeTask);
 				task.removeDependency(originalTask);
@@ -206,7 +205,8 @@ public class Project implements Visitable {
 			throw new IllegalStateException(
 					"Can not ask the current delay of a task which is expected to finish on time");
 
-		Task latestFinishingTask = this.getAllTasks().get(0);
+		// Get any Task
+		Task latestFinishingTask = new ArrayList<Task>(getAllTasks()).get(0);
 
 		for (Task task : getAllTasks()) {
 			if (task.getEstimatedFinishTime().isAfter(
@@ -260,8 +260,8 @@ public class Project implements Visitable {
 	 * 
 	 * @return list of tasks
 	 */
-	public List<Task> getAllTasks() {
-		return Collections.unmodifiableList(tasks);
+	public Set<Task> getAllTasks() {
+		return Collections.unmodifiableSet(tasks);
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class Project implements Visitable {
 	 * @author groep 8
 	 */
 	private class Memento {
-		private List<Task> tasks;
+		private Set<Task> tasks;
 		private String name;
 		private String description;
 		private LocalDateTime dueTime;
@@ -354,7 +354,7 @@ public class Project implements Visitable {
 		 *            : project
 		 */
 		public Memento() {
-			this.tasks = new ArrayList<Task>(Project.this.tasks);
+			this.tasks = new LinkedHashSet<Task>(Project.this.tasks);
 			this.name = new String(Project.this.name);
 			this.description = new String(Project.this.description);
 			this.dueTime = Project.this.dueTime;

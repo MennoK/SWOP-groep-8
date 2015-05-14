@@ -84,9 +84,8 @@ public class PlanningTester extends TaskManTester {
 
 	@Test(expected = ConlictingPlanningException.class)
 	public void createPlanningInvalidResources() {
-		Task.builder("task 3", Duration.ofHours(2), 1)
+		Task task3 = Task.builder("task 3", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resourceType, 1).build(project);
-		Task task3 = project.getAllTasks().get(2);
 		Planning.builder(time, task3, developer1, tmc.getPlanner())
 				.addResources(resource1).build();
 		Planning.builder(time, task2, developer2, tmc.getPlanner())
