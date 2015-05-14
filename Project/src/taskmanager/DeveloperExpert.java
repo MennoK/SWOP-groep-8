@@ -51,7 +51,7 @@ public class DeveloperExpert {
 	 *             exists
 	 */
 	@NonNull
-	private void addDeveloper(Developer developer) {
+	void addDeveloper(Developer developer) {
 		if (getAllDevelopers().contains(developer)) {
 			throw new IllegalArgumentException(
 					"The developer expert has already the given developer.");

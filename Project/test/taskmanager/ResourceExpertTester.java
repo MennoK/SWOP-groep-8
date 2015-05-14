@@ -119,19 +119,12 @@ public class ResourceExpertTester {
 				.getDailyAvailability().getEnd());
 	}
 
-	@Test
-	public void cannotHaveNullResourceType() {
+	@Test(expected=IllegalArgumentException.class)
+	public void cannNotHaveSameType() {
 		ResourceType.builder("simple").build(tmc);
 		List<ResourceType> resourceTypeList = new ArrayList<ResourceType>(
 				tmc.getAllResourceTypes());
-
-		assertFalse(tmc.getResourceExpert().canHaveResource(
-				resourceTypeList.get(0)));
-	}
-
-	@Test
-	public void cannotHaveSameResourceType() {
-		assertFalse(tmc.getResourceExpert().canHaveResource(null));
-
+		tmc.getResourceExpert().addResourceType(
+				resourceTypeList.get(0));
 	}
 }

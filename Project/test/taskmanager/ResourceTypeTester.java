@@ -51,18 +51,12 @@ public class ResourceTypeTester {
 		assertEquals("resource", resourceList.get(0).getName());
 	}
 
-	@Test
-	public void testCannotHaveNullResource() {
-		assertFalse(resourceType.canHaveResource(null));
-	}
-
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testCannotHaveSameResource() {
 		resourceType.createResource("resource");
 		List<Resource> resourceList = new ArrayList<Resource>(
 				resourceType.getAllResources());
-
-		assertFalse(resourceType.canHaveResource(resourceList.get(0)));
+		resourceType.addResource(resourceList.get(0));
 	}
 
 	@Test
