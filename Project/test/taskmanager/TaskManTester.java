@@ -28,8 +28,7 @@ public class TaskManTester {
 	public void setUp() {
 		time = LocalDateTime.of(2015, 03, 06, 8, 00);
 		tmc = new TaskManController(time);
-		BranchOffice here = tmc.createBranchOffice("here",
-				tmc.getTaskManClock());
+		BranchOffice here = tmc.createBranchOffice("here");
 		tmc.logIn(here);
 		Developer dev = tmc.createDeveloper("Jos");
 		tmc.logIn(dev);

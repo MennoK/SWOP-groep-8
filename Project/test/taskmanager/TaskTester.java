@@ -14,13 +14,10 @@ import taskmanager.Project;
 import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.TaskFinishedStatus;
-import taskmanager.BranchOffice;
 import taskmanager.TaskStatus;
 import utility.TimeInterval;
 
-public class TaskTester {
-
-	private LocalDateTime time;
+public class TaskTester extends TaskManTester {
 
 	private Task baseTask;
 	private Task dependentTask;
@@ -31,6 +28,7 @@ public class TaskTester {
 
 	@Before
 	public void setUp() {
+		super.setUp();
 		time = LocalDateTime.of(2015, 03, 03, 8, 0);
 		project = new Project("proj", "descr", time, time.plusYears(1));
 
@@ -236,8 +234,8 @@ public class TaskTester {
 
 	@Test
 	public void addResourceType() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 
 		resType.createResource("res1");
 
@@ -248,8 +246,8 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addAlreadyPresentResourceType() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 		resType.createResource("res1");
 		// TODO discuss isn't the builder responsible for this?
 		baseTask.addResourceType(resType, 1);
@@ -258,8 +256,8 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addResourceTypeWithInvalidQuantity() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 
 		resType.createResource("res1");
 
@@ -270,8 +268,8 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void addResourceTypeWithNotEnoughResources() {
-		BranchOffice tmc = new BranchOffice("here");
-		ResourceType resType = ResourceType.builder("resourcetype").build(tmc);
+		ResourceType resType = ResourceType.builder("resourcetype").build(
+				tmc.getActiveOffice());
 
 		resType.createResource("res1");
 
@@ -282,11 +280,11 @@ public class TaskTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createTaskLongerThanAvailabilityResource() {
-		BranchOffice tmc = new BranchOffice("here");
 		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
 				LocalTime.of(17, 0));
 		ResourceType resType = ResourceType.builder("resourcetype")
-				.addDailyAvailability(dailyAvailability).build(tmc);
+				.addDailyAvailability(dailyAvailability)
+				.build(tmc.getActiveOffice());
 		resType.createResource("res1");
 
 		Task.builder("A task", Duration.ofHours(6), 1)
@@ -295,11 +293,11 @@ public class TaskTester {
 
 	@Test
 	public void createTaskShorterThanAvailabilityResource() {
-		BranchOffice tmc = new BranchOffice("here");
 		TimeInterval dailyAvailability = new TimeInterval(LocalTime.of(12, 0),
 				LocalTime.of(17, 0));
 		ResourceType resType = ResourceType.builder("resourcetype")
-				.addDailyAvailability(dailyAvailability).build(tmc);
+				.addDailyAvailability(dailyAvailability)
+				.build(tmc.getActiveOffice());
 		resType.createResource("res1");
 
 		Task.builder("A task", Duration.ofHours(2), 1)
@@ -308,14 +306,14 @@ public class TaskTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void createTaskWithIncorrectRequiredResources() {
-		BranchOffice tmc = new BranchOffice("here");
 
 		ResourceType requirement = ResourceType.builder("resourcetype").build(
-				tmc);
+				tmc.getActiveOffice());
 		requirement.createResource("res1");
 
 		ResourceType resType = ResourceType.builder("resourcetype")
-				.addRequiredResourceTypes(requirement).build(tmc);
+				.addRequiredResourceTypes(requirement)
+				.build(tmc.getActiveOffice());
 
 		Task.builder("A task", Duration.ofHours(2), 1)
 				.addRequiredResourceType(resType, 1).build(project);

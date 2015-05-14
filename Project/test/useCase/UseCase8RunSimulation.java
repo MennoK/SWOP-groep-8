@@ -66,8 +66,8 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 
 	@Test
 	public void mementoCanRemoveProjects() {
-		Project project0 = tmc.createProject("name", "description", now
-				.minusDays(1).minusHours(8), now.minusHours(8));
+		tmc.createProject("name", "description",
+				now.minusDays(1).minusHours(8), now.minusHours(8));
 
 		assertEquals(2, tmc.getAllProjects().size());
 

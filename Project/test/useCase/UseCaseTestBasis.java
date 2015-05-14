@@ -15,8 +15,7 @@ public class UseCaseTestBasis {
 	public void setUpTMC(LocalDateTime now) {
 		this.now = now;
 		tmc = new TaskManController(now);// BranchOffice(now);
-		BranchOffice here = tmc.createBranchOffice("here",
-				tmc.getTaskManClock());
+		BranchOffice here = tmc.createBranchOffice("here");
 		tmc.logIn(here);
 		activeUser = tmc.createDeveloper("Jef");
 		tmc.logIn(activeUser);
