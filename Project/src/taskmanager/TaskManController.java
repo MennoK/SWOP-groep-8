@@ -50,25 +50,29 @@ public class TaskManController {
 	/**
 	 * delegates a task from one branch office to an other.
 	 * 
-	 * @param task 
-	 * 			: the task that must be delegated
+	 * @param task
+	 *            : the task that must be delegated
 	 * @param branchOffice
-	 * 			: the branch office to where the task must be delegated
+	 *            : the branch office to where the task must be delegated
 	 */
-	public void delegate(Task task, BranchOffice branchOffice){
-		if(taskIsDelegatedToActiveOffice(task)){
+	public void delegate(Task task, BranchOffice branchOffice) {
+		if (taskIsDelegatedToActiveOffice(task)) {
 			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
-			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task, activeOffice.getDelegatedTaskExpert().officeForDelegatedTask(task));
-		}else{
-			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task, activeOffice);
+			branchOffice.getDelegatedTaskExpert().addDelegatedTask(
+					task,
+					activeOffice.getDelegatedTaskExpert()
+							.officeForDelegatedTask(task));
+		} else {
+			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task,
+					activeOffice);
 		}
-	}
-	/**
 	}
 
 	/**
-	 * Tell the system execution of Task was started. And updates the status of
-	 * all Tasks.
+	 * }
+	 * 
+	 * /** Tell the system execution of Task was started. And updates the status
+	 * of all Tasks.
 	 * 
 	 * @param task
 	 * @param startTime
@@ -130,30 +134,34 @@ public class TaskManController {
 	 * 
 	 * @return set of tasks without a planning
 	 */
-	private Set<Task> getUnplannedTasks() {
+	public Set<Task> getUnplannedTasks() {
 		checkActiveOfficeForNull();
 		return activeOffice.getPlanner().getUnplannedTasks(
 				activeOffice.getProjectExpert().getAllTasks());
 	}
 
 	/**
-	 * Returns all the tasks that can be delegated from the current active branch office
+	 * Returns all the tasks that can be delegated from the current active
+	 * branch office
 	 * 
-	 * @return a set of tasks that can be delegated from the current active branch office
+	 * @return a set of tasks that can be delegated from the current active
+	 *         branch office
 	 */
-	public Set<Task> getAllDelegatablePlannableTasks(){
+	public Set<Task> getAllDelegatablePlannableTasks() {
 		Set<Task> unplannedTasks = new HashSet<Task>(getUnplannedTasks());
 		Set<Task> delegatableTasks = new HashSet<Task>(getUnplannedTasks());
 		for (Task unplannedTask : unplannedTasks) {
-			if(!taskIsDelegatable(unplannedTask)){
+			if (!taskIsDelegatable(unplannedTask)) {
 				delegatableTasks.remove(unplannedTask);
 			}
 		}
-		
+
 		return delegatableTasks;
 	}
+
 	private boolean taskIsDelegatable(Task unplannedTask) {
-		if(!taskHasBeenDelegated(unplannedTask) || taskIsDelegatedToActiveOffice(unplannedTask)){
+		if (!taskHasBeenDelegated(unplannedTask)
+				|| taskIsDelegatedToActiveOffice(unplannedTask)) {
 			return true;
 		}
 		return false;
@@ -161,12 +169,14 @@ public class TaskManController {
 
 	private boolean taskIsDelegatedToActiveOffice(Task unplannedTask) {
 		checkActiveOfficeForNull();
-		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(unplannedTask);
+		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.contains(unplannedTask);
 	}
 
 	private boolean taskHasBeenDelegated(Task unplannedTask) {
 		for (BranchOffice office : company.getAllBranchOffices()) {
-			if(office.getDelegatedTaskExpert().getAllDelegatedTasks().contains(unplannedTask)){
+			if (office.getDelegatedTaskExpert().getAllDelegatedTasks()
+					.contains(unplannedTask)) {
 				return true;
 			}
 		}
@@ -373,7 +383,8 @@ public class TaskManController {
 	/**
 	 * Sets the active developer to the given developer
 	 * 
-	 * @param activeDeveloper : given developer
+	 * @param activeDeveloper
+	 *            : given developer
 	 */
 	private void setActiveDeveloper(Developer activeDeveloper) {
 		this.activeDeveloper = activeDeveloper;
@@ -382,23 +393,23 @@ public class TaskManController {
 	/**
 	 * Sets the active office to the given branch office
 	 * 
-	 * @param activeOffice: given branch office
+	 * @param activeOffice
+	 *            : given branch office
 	 */
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
 	}
-	
+
 	/**
-	 * Checks whether the active branch office is null or not. If its
-	 * null, it will throw an illegal state exception
+	 * Checks whether the active branch office is null or not. If its null, it
+	 * will throw an illegal state exception
 	 * 
 	 * @return true if the active office is not null
 	 */
-	private boolean checkActiveOfficeForNull(){
-		if(this.activeOffice == null){
+	private boolean checkActiveOfficeForNull() {
+		if (this.activeOffice == null) {
 			throw new IllegalStateException("No active branch office");
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -407,17 +418,17 @@ public class TaskManController {
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
 	public void saveSystem() {
-        for(BranchOffice office : this.getCompany().getAllBranchOffices()) {
-            office.saveSystem(this.activeOffice);
-        }
+		for (BranchOffice office : this.getCompany().getAllBranchOffices()) {
+			office.saveSystem(this.activeOffice);
+		}
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
 	public void loadSystem() {
-        for(BranchOffice office : this.getCompany().getAllBranchOffices()) {
-            office.loadSystem(this.activeOffice);
-        }
+		for (BranchOffice office : this.getCompany().getAllBranchOffices()) {
+			office.loadSystem(this.activeOffice);
+		}
 	}
 }

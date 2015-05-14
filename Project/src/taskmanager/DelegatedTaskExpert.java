@@ -10,8 +10,8 @@ import com.google.common.collect.ArrayListMultimap;
 
 /**
  * 
- * The delegated task expert contains all the information of the task that 
- * are delegated to the branch office
+ * The delegated task expert contains all the information of the task that are
+ * delegated to the branch office
  * 
  * @author Group 8
  *
@@ -39,18 +39,19 @@ public class DelegatedTaskExpert {
 		this.delegatedTasks.put(office, task);
 	}
 
-	public void removeDelegatedTask(Task task){
-			delegatedTasks.remove(officeForDelegatedTask(task), task);
+	public void removeDelegatedTask(Task task) {
+		delegatedTasks.remove(officeForDelegatedTask(task), task);
 	}
-	
-	public BranchOffice officeForDelegatedTask(Task delegatedTask){
-		for (BranchOffice office : delegatedTasks.keySet()){
-			if(delegatedTasks.containsEntry(office, delegatedTask)){
+
+	public BranchOffice officeForDelegatedTask(Task delegatedTask) {
+		for (BranchOffice office : delegatedTasks.keySet()) {
+			if (delegatedTasks.containsEntry(office, delegatedTask)) {
 				return office;
 			}
 		}
 		return null;
 	}
+
 	/**
 	 * Returns the delegated task set
 	 * 
@@ -106,11 +107,11 @@ public class DelegatedTaskExpert {
 		}
 
 		/**
-		 * loads the memento to restore the state		 * 
+		 * loads the memento to restore the state *
 		 */
 		public void load() {
-			DelegatedTaskExpert.this.delegatedTasks.replaceValues(office, this.delegatedTasks);
-					delegatedTasks);
+			DelegatedTaskExpert.this.delegatedTasks.replaceValues(office,
+					this.delegatedTasks);
 		}
 	}
 
