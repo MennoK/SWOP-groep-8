@@ -1,20 +1,24 @@
 package taskmanager;
 
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.HashMap;
+
+import com.google.common.collect.ArrayListMultimap;
 
 public class DelegatedTaskExpert {
 
-	private Set<Task> delegatedTasks;
-    private Memento memento;
+	private ArrayListMultimap<BranchOffice, Task> delegatedTasks;
+    private HashMap<BranchOffice, Memento> mementos;
 	
 	/**
 	 * Default constructor of the delegatedTaskExpert. It initializes a 
 	 * new empty set for delegated tasks
 	 */
 	public DelegatedTaskExpert(){
-		this.delegatedTasks = new LinkedHashSet<Task>();
+		this.delegatedTasks = ArrayListMultimap.create();
 	}
 	
 	/**
@@ -22,23 +26,22 @@ public class DelegatedTaskExpert {
 	 * 
 	 * @param task : given task
 	 */
-	public void addDelegatedTask(Task task){
-		this.addDelegatedTask(task);
+	public void addDelegatedTask(Task task, BranchOffice office){
+		this.delegatedTasks.put(office, task);
 	}
-	
 	/**
 	 * Returns the delegated task set
 	 * 
 	 * @return delegatedTasks : set with delegated Tasks
 	 */
 	public Set<Task> getAllDelegatedTasks(){
-		return Collections.unmodifiableSet(delegatedTasks);
+		return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks.values()));
 	}
 	/**
 	 * Saves the current state of the class
 	 */
-	void save() {
-		this.memento = new Memento();
+	void save(BranchOffice office) {
+		this.mementos.put(office, new Memento(office));
 	}
 
 	/**
@@ -46,12 +49,12 @@ public class DelegatedTaskExpert {
 	 * 
 	 * @return last state of the class
 	 */
-	void load() {
-		if (this.memento == null) {
+	void load(BranchOffice office) {
+		if (this.mementos.get(office) == null) {
 			throw new IllegalStateException(
 					"You need to save before you can load");
 		} else {
-			this.memento.load();
+			this.mementos.get(office).load();
 		}
 	}
 
@@ -62,28 +65,29 @@ public class DelegatedTaskExpert {
 	 * @author groep 8
 	 */
 	private class Memento {
-		private Set<Task> delegatedTasks;
+		BranchOffice office;
+		private List<Task> delegatedTasks;
 
 		/**
-		 * Constructor of the momento inner class of developer expert.
+		 * Constructor of the memento inner class of developer expert.
 		 * Initialize a new set of developers of the current state
 		 * 
-		 * @param de
-		 *            : developerExpert
 		 */
-		public Memento() {
-            this.delegatedTasks = new LinkedHashSet<Task>(DelegatedTaskExpert.this.delegatedTasks);
+		public Memento(BranchOffice office) {
+			this.office = office;
+			
+			this.delegatedTasks = DelegatedTaskExpert.this.delegatedTasks.get(office);
+
 		}
 
 		/**
 		 * Sets the developer set of the developer class to the saved set of the
-		 * momento class
+		 * memento class
 		 * 
-		 * @param de
-		 *            : developer expert
 		 */
 		public void load() {
-			DelegatedTaskExpert.this.delegatedTasks = this.delegatedTasks;
+			DelegatedTaskExpert.this.delegatedTasks.removeAll(office);
+			DelegatedTaskExpert.this.delegatedTasks.putAll(office, delegatedTasks);
 		}
 	}
 	

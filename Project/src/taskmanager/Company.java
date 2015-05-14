@@ -75,17 +75,5 @@ public class Company {
 	Set<BranchOffice> getAllBranchOffices() {
 		return Collections.unmodifiableSet(branchOffices);
 	}
-	
-	/**
-	 * delegates a task from one branch office to an other.
-	 * 
-	 * @param task 
-	 * 			: the task that must be delegated
-	 * @param branchOffice
-	 * 			: the branch office to where the task must be delegated
-	 */
-	public void delegate(Task task, BranchOffice branchOffice) {
 
-		branchOffice.getDelegatedTaskExpert().addDelegatedTask(task);
-	}
 }

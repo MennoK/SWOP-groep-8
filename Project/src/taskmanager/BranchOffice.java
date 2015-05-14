@@ -158,24 +158,29 @@ public class BranchOffice {
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
-	// TODO package private
-	public void saveSystem() {
-		this.getProjectExpert().save();
-		this.getDeveloperExpert().save();
-		this.getPlanner().save();
-		this.getResourceExpert().save();
-		this.getDelegatedTaskExpert().save();
+	public void saveSystem(BranchOffice office) {
+        if(this.equals(office)) {
+            this.getProjectExpert().save();
+            this.getDeveloperExpert().save();
+            this.getPlanner().save();
+            this.getResourceExpert().save();
+        } else {
+            this.getDelegatedTaskExpert().save(office);
+        }
 	}
 
 	/**
 	 * Loads the last saved state of the system
 	 */
-	// TODO package private
-	public void loadSystem() {
-		this.getProjectExpert().load();
-		this.getDeveloperExpert().load();
-		this.getPlanner().load();
-		this.getResourceExpert().load();
+	public void loadSystem(BranchOffice office) {
+        if(this.equals(office)) {
+            this.getProjectExpert().load();
+            this.getDeveloperExpert().load();
+            this.getPlanner().load();
+            this.getResourceExpert().load();
+        } else {
+            this.getDelegatedTaskExpert().load(office);
+        }
 	}
 
 	/**

@@ -5,11 +5,9 @@ systemTime: "2014-04-01 09:00"
 
 branch:
   - location : "Baarle-Hertog"
-
     dailyAvailability :
           - startTime : "12:00"
             endTime   : "17:00"
-
     resourceTypes:
           - name              : "car"
             # Inner lists are between "[" and "]". Their items are seperated by ",".
@@ -36,7 +34,6 @@ branch:
             requires          : []
             conflictsWith     : []
             dailyAvailability : 0
-
     resources:
           - name: "Car 1"
             type: 0
@@ -62,12 +59,10 @@ branch:
             type: 5
           - name: "Data Center Y"
             type: 5
-
     developers:
           - name     : "John Deere"
           - name     : "Tom Hawk"
           - name     : "Bob Grylls"
-
     projects:
           - name         : "project x"
             description  : "a project description"
@@ -83,7 +78,6 @@ branch:
             description  : "yet another project description"
             creationTime : "2015-04-25 09:00"
             dueTime      : "2015-04-30 18:00"
-
     tasks:
           - project            : 0
             description        : "task description"
@@ -153,7 +147,6 @@ branch:
             requiredTypes      : []
             prerequisiteTasks  :
             status             :
-
     plannings:
           - plannedStartTime : "2014-01-01 09:00"
             developers       : [0, 1]
@@ -173,11 +166,9 @@ branch:
             resources        : [{type: 5,  resource: [11]}]
 
   - location : "Baarle-Nassau"
-
     dailyAvailability :
     - startTime : "12:00"
       endTime   : "17:00"
-
     resourceTypes:
           - name              : "car"
             # Inner lists are between "[" and "]". Their items are seperated by ",".
@@ -204,7 +195,6 @@ branch:
             requires          : []
             conflictsWith     : []
             dailyAvailability : 0
-
     resources:
           - name: "Car 1"
             type: 0
@@ -230,12 +220,10 @@ branch:
             type: 5
           - name: "Data Center Y"
             type: 5
-
     developers:
           - name     : "John Deere"
           - name     : "Tom Hawk"
           - name     : "Bob Grylls"
-
     projects:
           - name         : "project x"
             description  : "a project description"
@@ -251,7 +239,6 @@ branch:
             description  : "yet another project description"
             creationTime : "2015-04-25 09:00"
             dueTime      : "2015-04-30 18:00"
-
     tasks:
           - project            : 0
             description        : "task description"
@@ -321,7 +308,6 @@ branch:
             requiredTypes      : []
             prerequisiteTasks  :
             status             :
-
     plannings:
           - plannedStartTime : "2014-01-01 09:00"
             developers       : [0, 1]
