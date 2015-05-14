@@ -23,7 +23,6 @@ import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
 import taskmanager.Task;
-import taskmanager.BranchOffice;
 import taskmanager.TaskManController;
 
 public class ParserTester {
@@ -268,7 +267,7 @@ public class ParserTester {
 
 	@Test
 	public void testProjectxIsMade() {
-		Project projectx = tmc.getAllProjects().get(0);
+		Project projectx = new ArrayList<>(tmc.getAllProjects()).get(0);
 		assertEquals("project x", projectx.getName());
 		assertEquals("a project description", projectx.getDescription());
 		assertEquals(projectx.getCreationTime(),
@@ -279,7 +278,7 @@ public class ParserTester {
 
 	@Test
 	public void testProjectyIsMade() {
-		Project projecty = tmc.getAllProjects().get(1);
+		Project projecty = new ArrayList<>(tmc.getAllProjects()).get(1);
 		assertEquals("project y", projecty.getName());
 		assertEquals("another project description", projecty.getDescription());
 		assertEquals(projecty.getCreationTime(),
@@ -290,7 +289,7 @@ public class ParserTester {
 
 	@Test
 	public void testProjectzIsMade() {
-		Project projectz = tmc.getAllProjects().get(2);
+		Project projectz = new ArrayList<>(tmc.getAllProjects()).get(2);
 		assertEquals("project z", projectz.getName());
 		assertEquals(projectz.getDescription(),
 				"yet another project description");
@@ -302,13 +301,13 @@ public class ParserTester {
 
 	@Test
 	public void testOneTaskOfProjectxIsMade() {
-		Project projectx = tmc.getAllProjects().get(0);
+		Project projectx = new ArrayList<>(tmc.getAllProjects()).get(0);
 		assertEquals(1, projectx.getAllTasks().size());
 	}
 
 	@Test
 	public void testTaskOneOfProjectxIsMade() {
-		Project projectx = tmc.getAllProjects().get(0);
+		Project projectx = new ArrayList<>(tmc.getAllProjects()).get(0);
 		Task task1 = projectx.getAllTasks().get(0);
 
 		assertEquals("task description", task1.getDescription());
@@ -334,13 +333,13 @@ public class ParserTester {
 
 	@Test
 	public void testFourTasksOfProjectyAreMade() {
-		Project projecty = tmc.getAllProjects().get(1);
+		Project projecty = new ArrayList<>(tmc.getAllProjects()).get(1);
 		assertEquals(4, projecty.getAllTasks().size());
 	}
 
 	@Test
 	public void testTaskOneOfProjectyIsMade() {
-		Project projecty = tmc.getAllProjects().get(1);
+		Project projecty = new ArrayList<>(tmc.getAllProjects()).get(1);
 		Task task1 = projecty.getAllTasks().get(0);
 
 		assertEquals("another task description", task1.getDescription());
@@ -360,7 +359,7 @@ public class ParserTester {
 
 	@Test
 	public void testTaskTwoOfProjectyIsMade() {
-		Project projecty = tmc.getAllProjects().get(1);
+		Project projecty = new ArrayList<>(tmc.getAllProjects()).get(1);
 		Task task2 = projecty.getAllTasks().get(1);
 
 		assertEquals("yet another task description", task2.getDescription());
@@ -377,7 +376,7 @@ public class ParserTester {
 
 	@Test
 	public void testTaskThreeOfProjectyIsMade() {
-		Project projecty = tmc.getAllProjects().get(1);
+		Project projecty = new ArrayList<>(tmc.getAllProjects()).get(1);
 		Task task3 = projecty.getAllTasks().get(2);
 
 		assertEquals("description", task3.getDescription());
@@ -398,15 +397,15 @@ public class ParserTester {
 
 	@Test
 	public void testTaskFourOfProjectyIsMade() {
-		Project projecty = tmc.getAllProjects().get(1);
+		Project projecty = new ArrayList<>(tmc.getAllProjects()).get(1);
 		Task task4 = projecty.getAllTasks().get(3);
 
 		assertEquals("description", task4.getDescription());
 		assertEquals(Duration.ofHours(4), task4.getEstimatedDuration());
 		assertEquals(task4.getAcceptableDeviation(), 0, 0.001);
 		assertEquals(1, task4.getDependencies().size());
-		assertEquals(task4.getOriginal(), tmc.getAllProjects().get(1)
-				.getAllTasks().get(2));
+		assertEquals(task4.getOriginal(), new ArrayList<>(tmc.getAllProjects())
+				.get(1).getAllTasks().get(2));
 
 		assertEquals(
 				LocalDateTime.parse("2014-03-26 09:00", dateTimeFormatter),
@@ -424,13 +423,13 @@ public class ParserTester {
 
 	@Test
 	public void testTwoTasksOfProjectzAreMade() {
-		Project projectz = tmc.getAllProjects().get(2);
+		Project projectz = new ArrayList<>(tmc.getAllProjects()).get(2);
 		assertEquals(2, projectz.getAllTasks().size());
 	}
 
 	@Test
 	public void testTaskOneOfProjectzIsMade() {
-		Project projectz = tmc.getAllProjects().get(2);
+		Project projectz = new ArrayList<>(tmc.getAllProjects()).get(2);
 		Task task1 = projectz.getAllTasks().get(0);
 
 		assertEquals("description", task1.getDescription());
@@ -447,7 +446,7 @@ public class ParserTester {
 
 	@Test
 	public void testTaskTwoOfProjectzIsMade() {
-		Project projectz = tmc.getAllProjects().get(2);
+		Project projectz = new ArrayList<>(tmc.getAllProjects()).get(2);
 		Task task2 = projectz.getAllTasks().get(1);
 
 		assertEquals("description", task2.getDescription());
@@ -489,7 +488,8 @@ public class ParserTester {
 		assertTrue(ressourceNames.contains(resources.get(2).getName()));
 
 		assertTrue(tmc.getPlanner().taskHasPlanning(
-				tmc.getAllProjects().get(1).getAllTasks().get(2)));
+				new ArrayList<>(tmc.getAllProjects()).get(1).getAllTasks()
+						.get(2)));
 
 	}
 
@@ -505,7 +505,8 @@ public class ParserTester {
 		assertEquals(0, plan.getResources().size());
 
 		assertTrue(tmc.getPlanner().taskHasPlanning(
-				tmc.getAllProjects().get(1).getAllTasks().get(3)));
+				new ArrayList<>(tmc.getAllProjects()).get(1).getAllTasks()
+						.get(3)));
 
 	}
 
@@ -521,7 +522,8 @@ public class ParserTester {
 		assertEquals(0, plan.getResources().size());
 
 		assertTrue(tmc.getPlanner().taskHasPlanning(
-				tmc.getAllProjects().get(1).getAllTasks().get(3)));
+				new ArrayList<>(tmc.getAllProjects()).get(1).getAllTasks()
+						.get(3)));
 
 	}
 
@@ -540,6 +542,7 @@ public class ParserTester {
 		assertEquals("Data Center Y", resources.get(0).getName());
 
 		assertTrue(tmc.getPlanner().taskHasPlanning(
-				tmc.getAllProjects().get(0).getAllTasks().get(0)));
+				new ArrayList<>(tmc.getAllProjects()).get(0).getAllTasks()
+						.get(0)));
 	}
 }
