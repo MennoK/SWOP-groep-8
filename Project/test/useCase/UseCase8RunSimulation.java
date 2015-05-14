@@ -71,8 +71,6 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 				LocalDateTime.of(2015, 03, 06, 00, 00));
 
 		assertEquals(2, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00), tmc
-				.getAllProjects().get(0).getLastUpdateTime());
 
 		tmc.getActiveOffice().saveSystem();
 
@@ -86,22 +84,7 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 		tmc.getActiveOffice().loadSystem();
 
 		assertEquals(2, tmc.getAllProjects().size());
-		assertEquals(LocalDateTime.of(2015, 03, 06, 8, 00), tmc
-				.getAllProjects().get(0).getLastUpdateTime());
 
-	}
-
-	@Test
-	public void mementoRollsBackTime() {
-		LocalDateTime time = tmc.getTime();
-
-		tmc.getActiveOffice().saveSystem();
-
-		tmc.advanceTime(LocalDateTime.of(2020, 03, 06, 00, 00));
-
-		tmc.getActiveOffice().loadSystem();
-
-		assertEquals(time, tmc.getTime());
 	}
 
 	@Test

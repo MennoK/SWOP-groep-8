@@ -51,7 +51,8 @@ public class Task implements Visitable {
 
 	private LocalDateTime endTime;
 	private LocalDateTime startTime;
-	private LocalDateTime lastUpdateTime;
+	
+	private final ImmutableClock clock;
 
 	private Memento memento;
 
@@ -62,7 +63,7 @@ public class Task implements Visitable {
 	 * @param taskBuilder
 	 *            : task builder with parameters
 	 */
-	public Task(TaskBuilder taskBuilder) {
+	public Task(TaskBuilder taskBuilder, ImmutableClock clock) {
 		if ((!taskBuilder.dependencies.isEmpty())
 				&& taskBuilder.originalTask != null) {
 			if (taskBuilder.dependencies.contains(taskBuilder.originalTask))
@@ -84,13 +85,12 @@ public class Task implements Visitable {
 			setAlternativeTask(taskBuilder.originalTask);
 		}
 
+		this.clock = clock;
 		setDescription(taskBuilder.description);
 		setEstimatedDuration(taskBuilder.estimatedDuration);
 		setAcceptableDeviation(taskBuilder.acceptableDeviation);
 		setAmountOfRequiredDevelopers(taskBuilder.amountOfRequiredDevelopers);
 		this.id = idCounter.getAndIncrement();
-
-		handleTimeChange(taskBuilder.now);
 	}
 
 	/**
@@ -344,25 +344,6 @@ public class Task implements Visitable {
 	}
 
 	/**
-	 * Returns the last update time
-	 * 
-	 * @return lastupdatetime
-	 */
-	LocalDateTime getLastUpdateTime() {
-		return lastUpdateTime;
-	}
-
-	/**
-	 * observer pattern
-	 * 
-	 * @param time
-	 *            : the new time of the clock
-	 */
-	public void handleTimeChange(LocalDateTime time) {
-		this.lastUpdateTime = time;
-	}
-
-	/**
 	 * Returns the current status of a task
 	 * 
 	 * @return status : current status
@@ -429,10 +410,10 @@ public class Task implements Visitable {
 		} else {
 
 			if (this.getDependencies().isEmpty()) {
-				return add(this.lastUpdateTime, this.estimatedDuration);
+				return add(this.clock.getCurrentTime(), this.estimatedDuration);
 			} else {
 				// Find last estimated time of the dependencies
-				LocalDateTime estimatedTime = this.lastUpdateTime;
+				LocalDateTime estimatedTime = this.clock.getCurrentTime();
 				for (Task t : this.getDependencies()) {
 					if (t.getEstimatedFinishTime().isAfter(estimatedTime)) {
 						estimatedTime = t.getEstimatedFinishTime();
@@ -638,7 +619,6 @@ public class Task implements Visitable {
 
 		private LocalDateTime endTime;
 		private LocalDateTime startTime;
-		private LocalDateTime lastUpdateTime;
 
 		private int id;
 
@@ -666,7 +646,6 @@ public class Task implements Visitable {
 
 			this.endTime = Task.this.endTime;
 			this.startTime = Task.this.startTime;
-			this.lastUpdateTime = Task.this.lastUpdateTime;
 
 			this.id = Task.this.id;
 
@@ -690,7 +669,6 @@ public class Task implements Visitable {
 
 			Task.this.endTime = this.endTime;
 			Task.this.startTime = this.startTime;
-			Task.this.lastUpdateTime = this.lastUpdateTime;
 
 			Task.this.id = this.id;
 
@@ -709,7 +687,6 @@ public class Task implements Visitable {
 		private String description;
 		private Duration estimatedDuration;
 		private double acceptableDeviation;
-		private LocalDateTime now;
 		private Task originalTask = null;
 
 		private List<Task> dependencies = new ArrayList<Task>();
@@ -809,8 +786,7 @@ public class Task implements Visitable {
 		 */
 		public Task build(Project project) {
 			if (checkRequiredResources()) {
-				this.now = project.getLastUpdateTime();
-				Task task = new Task(this);
+				Task task = new Task(this, project.getClock());
 				project.updateDependencies(task, originalTask);
 				project.addTask(task);
 				return task;

@@ -29,6 +29,12 @@ public class Planner {
 	private HashBiMap<Task, Planning> plannings = HashBiMap.create();
 
 	private Memento memento;
+	
+	private final ImmutableClock clock;
+	
+	Planner(ImmutableClock clock) {
+		this.clock = clock;
+	}
 
 	/**
 	 * Return all the tasks that do not have a planning yet
@@ -494,7 +500,7 @@ public class Planner {
 			// task status remains unchanged
 			return;
 		if (isPlannableForTimeSpan(task, this.plannings.get(task).getDevelopers(),
-				new TimeSpan(task.getLastUpdateTime(), task.getDuration()))) {
+				new TimeSpan(this.clock.getCurrentTime(), task.getDuration()))) {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
 			task.setStatus(TaskStatus.UNAVAILABLE);

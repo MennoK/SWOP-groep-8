@@ -17,12 +17,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  * @author Groep 8
  */
 
-public class ProjectExpert implements TimeObserver {
+public class ProjectExpert {
 
 	private ArrayList<Project> projects;
 
 	private Memento memento;
-	private LocalDateTime lastUpdateTime;
+	
+	private final ImmutableClock clock;
 
 	/**
 	 * The constructor of the projectController needs a date time.
@@ -30,7 +31,8 @@ public class ProjectExpert implements TimeObserver {
 	 * @param now
 	 *            : the time at which the ProjectController is created
 	 */
-	ProjectExpert() {
+	ProjectExpert(ImmutableClock clock) {
+		this.clock = clock;
 		projects = new ArrayList<>();
 	}
 
@@ -49,8 +51,7 @@ public class ProjectExpert implements TimeObserver {
 	 */
 	Project createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
-		Project project = new Project(name, description, creationTime, dueTime);
-		project.handleTimeChange(lastUpdateTime);
+		Project project = new Project(name, description, creationTime, dueTime, clock);
 		addProject(project);
 		return project;
 	}
@@ -71,18 +72,6 @@ public class ProjectExpert implements TimeObserver {
 					"The given project is already in this project.");
 		} else {
 			projects.add(project);
-		}
-	}
-
-	/**
-	 * Handles time changes with changing time in every project of the
-	 * projectExpert
-	 */
-	@Override
-	public void handleTimeChange(LocalDateTime time) {
-		this.lastUpdateTime = time;
-		for (Project project : this.getAllProjects()) {
-			project.handleTimeChange(time);
 		}
 	}
 
@@ -143,7 +132,6 @@ public class ProjectExpert implements TimeObserver {
 	 */
 	private class Memento {
 		private ArrayList<Project> projects;
-		private LocalDateTime lastUpdateTime;
 
 		/**
 		 * Constructor of the momento inner class of project expert. Initialize
@@ -155,7 +143,6 @@ public class ProjectExpert implements TimeObserver {
 		 */
 		public Memento() {
 			this.projects = new ArrayList<Project>(ProjectExpert.this.projects);
-			this.lastUpdateTime = ProjectExpert.this.lastUpdateTime;
 		}
 
 		/**
@@ -167,7 +154,6 @@ public class ProjectExpert implements TimeObserver {
 		 */
 		public void load() {
 			ProjectExpert.this.projects = this.projects;
-			ProjectExpert.this.lastUpdateTime = this.lastUpdateTime;
 		}
 	}
 

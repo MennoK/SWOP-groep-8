@@ -244,15 +244,6 @@ public class ProjectTester extends TaskManTester {
 	}
 
 	@Test
-	public void testUpdate() {
-		Task baseTask = createPlannedTask(project, Duration.ofHours(8));
-
-		project.handleTimeChange(time.plusHours(5));
-		assertEquals(time.plusHours(5), project.getLastUpdateTime());
-		assertEquals(time.plusHours(5), baseTask.getLastUpdateTime());
-	}
-
-	@Test
 	public void testOverTime() {
 		// Add a task that will take to long
 		Task task = createPlannedTask(project, Duration.ofHours(3 * 8));

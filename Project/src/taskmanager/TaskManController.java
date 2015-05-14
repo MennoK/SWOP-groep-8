@@ -10,6 +10,7 @@ import java.util.Set;
 
 import utility.TimeSpan;
 
+
 public class TaskManController {
 	private Company company;
 	private BranchOffice activeOffice;
@@ -24,8 +25,12 @@ public class TaskManController {
 	}
 
 	public TaskManController(LocalDateTime now) {
-		company = new Company();
 		taskManClock = new TaskManClock(now);
+		company = new Company(taskManClock);
+	}
+	
+	public Company getCompany() {
+		return company;
 	}
 
 	/**
@@ -304,7 +309,7 @@ public class TaskManController {
 	 * @return LocalDateTime : time
 	 */
 	public LocalDateTime getTime() {
-		return this.taskManClock.getTime();
+		return this.taskManClock.getCurrentTime();
 	}
 
 	/**
@@ -323,5 +328,18 @@ public class TaskManController {
 
 	private void setActiveOffice(BranchOffice activeOffice) {
 		this.activeOffice = activeOffice;
+	}
+	/**
+	 * Saves the current state of the system. Only the last state is remembered
+	 */
+	public void saveSystem() {
+		this.activeOffice.saveSystem();
+	}
+
+	/**
+	 * Loads the last saved state of the system
+	 */
+	public void loadSystem() {
+		this.activeOffice.loadSystem();
 	}
 }

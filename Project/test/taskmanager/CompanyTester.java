@@ -2,6 +2,7 @@ package taskmanager;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -9,11 +10,15 @@ import org.junit.Test;
 
 public class CompanyTester {
 
-	private Company company;
+	TaskManController tmc;
+	Company company;
 
 	@Before
 	public void SetUp() {
-		company = new Company();
+		
+		this.tmc = new TaskManController(LocalDateTime.of(2015, 10, 10, 10, 10));
+		this.company = tmc.getCompany();
+
 	}
 
 	@Test
