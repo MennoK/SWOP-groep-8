@@ -201,7 +201,9 @@ public class UiTaskMan {
 	}
 
 	private void delegateTask() throws ExitUseCaseException {
-		System.out.println("TODO implement delegateTask()");
+		Task task = reader.select(tmc.getAllDelegatablePlannableTasks());
+		BranchOffice office = reader.select(tmc.getAllOffices());
+		tmc.delegate(task, office);
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
