@@ -19,7 +19,7 @@ import utility.WorkDay;
  * @author Groep 8
  * 
  */
-public class ResourceType {
+public class ResourceType implements Visitable {
 
 	private String name;
 	private Set<ResourceType> requiredResourceTypes = new LinkedHashSet<ResourceType>();
@@ -28,7 +28,7 @@ public class ResourceType {
 	private TimeInterval dailyAvailability;
 
 	private Memento memento;
-	
+
 	/**
 	 * 
 	 * @param builder
@@ -422,5 +422,13 @@ public class ResourceType {
 			bo.getResourceExpert().addResourceType(resourceType);
 			return resourceType;
 		}
+	}
+
+	/**
+	 * accept visitor for visiting this
+	 */
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }

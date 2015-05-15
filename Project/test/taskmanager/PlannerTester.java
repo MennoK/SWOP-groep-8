@@ -369,7 +369,7 @@ public class PlannerTester extends TaskManTester {
 
 		Planning.builder(time1, task1, developer1, planner).build();
 		Set<Planning> conflictingPlannings = new HashSet<>();
-		Set<Planning> conflictingPlanningsFromException = new HashSet<>();
+		Set<Task> conflictingPlanningsFromException = new HashSet<>();
 		conflictingPlannings.addAll(planner.getAllPlannings());
 		PlanningBuilder builder = null;
 		try {
@@ -377,15 +377,14 @@ public class PlannerTester extends TaskManTester {
 					.addResources(resource1);
 		} catch (ConlictingPlanningException e) {
 			builder = e.getPlanningBuilder();
-			conflictingPlanningsFromException = e.getConflictingPlannings();
+			conflictingPlanningsFromException = e.getConflictingTasks();
 		}
 
-		assertTrue(planner.getConflictingPlanningsForBuilder(builder)
-				.containsAll(planner.getAllPlannings()));
+		assertTrue(planner.getConflictingTasksForBuilder(builder).contains(
+				task1));
 		assertEquals(planner.getAllPlannings().size(), planner
-				.getConflictingPlanningsForBuilder(builder).size());
-		assertEquals(planner.getAllPlannings(),
-				conflictingPlanningsFromException);
+				.getConflictingTasksForBuilder(builder).size());
+		assertTrue(conflictingPlanningsFromException.contains(task1));
 	}
 
 	@Test
@@ -487,7 +486,7 @@ public class PlannerTester extends TaskManTester {
 				.addDeveloper(developer2).build();
 		Task.builder("task3 ", Duration.ofHours(2), 2).build(project);
 		Task.builder("task4", Duration.ofHours(4), 2).build(project);
-		
+
 		tmc.loadSystem();
 
 		assertTrue(planner.getConflictingTasks(task2, time1.minusHours(1),

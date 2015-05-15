@@ -104,6 +104,17 @@ public class Reader {
 		}
 	}
 
+	int getInt(String querry) throws ExitUseCaseException {
+		while (true) {
+			System.out.println(querry + " (int)");
+			try {
+				return Integer.parseInt(getData());
+			} catch (java.lang.NumberFormatException e) {
+				System.out.println("Give an int");
+			}
+		}
+	}
+
 	double getDouble(String querry) throws ExitUseCaseException {
 		while (true) {
 			System.out.println(querry + " (double)");

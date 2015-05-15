@@ -64,10 +64,7 @@ public class UseCase6PlanTaskTester extends UseCaseTestBasis {
 		possibleStartTimes.add(now);
 		possibleStartTimes.add(now.plusHours(1));
 		possibleStartTimes.add(now.plusHours(3));
-		assertEquals(
-				possibleStartTimes,
-				planner.getPossibleStartTimes(task2, now,
-						tmc.getAllDevelopers()));
+		assertEquals(possibleStartTimes, tmc.getPossibleStartTimes(task2));
 		TimeSpan timeSpan = new TimeSpan(now, task1.getDuration());
 		// user selects time1
 		// the system shows possible available resources
@@ -103,7 +100,8 @@ public class UseCase6PlanTaskTester extends UseCaseTestBasis {
 
 	@Test
 	public void resolveConflict() {
-		tmc.getPlanner().createPlanning(now, task1, dev1).build();
+		Planning plan1 = tmc.getPlanner().createPlanning(now, task1, dev1)
+				.build();
 		// use case resolveconflict starts
 		// user chooses to move conflicting task
 		// step 4 of use case plan task for the task that must be moved:
@@ -111,24 +109,17 @@ public class UseCase6PlanTaskTester extends UseCaseTestBasis {
 		possibleStartTimes.add(now);
 		possibleStartTimes.add(now.plusHours(1));
 		possibleStartTimes.add(now.plusHours(3));
-		assertEquals(
-				possibleStartTimes,
-				planner.getPossibleStartTimes(task1, now,
-						tmc.getAllDevelopers()));
+		assertEquals(possibleStartTimes, tmc.getPossibleStartTimes(task1));
 
 		// user selects time1 +2
-		tmc.getPlanner()
-				.getPlanning(task1)
-				.setTimeSpan(
-						new TimeSpan(now.plusHours(2), task1.getDuration()));
+		plan1.setTimeSpan(new TimeSpan(now.plusHours(2), task1.getDuration()));
 
 		// resolve conflict ends -> back to original planning of the task
 
 		Planning newPlanning = tmc.getPlanner()
 				.createPlanning(now, task2, dev1).build();
 
-		assertEquals(this.now.plusHours(2), tmc.getPlanner().getPlanning(task1)
-				.getTimeSpan().getBegin());
+		assertEquals(this.now.plusHours(2), plan1.getTimeSpan().getBegin());
 		assertEquals(this.now, newPlanning.getTimeSpan().getBegin());
 	}
 

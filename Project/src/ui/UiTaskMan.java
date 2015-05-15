@@ -16,6 +16,8 @@ import utility.TimeSpan;
 
 public class UiTaskMan {
 
+	private static final String parserFileName = "input3.tman";
+
 	private TaskManController tmc;
 	private Reader reader;
 	private Developer activeDeveloper;
@@ -36,12 +38,12 @@ public class UiTaskMan {
 			try {
 				fileName = reader
 						.getString("Give a file for initialisation of the system:\n"
-								+ "(press 2 to use ./input2.tman)");
+								+ "(press 1 to use ./" + parserFileName + ")");
 			} catch (ExitUseCaseException e1) {
 				return;
 			}
-			if (fileName.equals("2"))
-				fileName = "./input2.tman";
+			if (fileName.equals("1"))
+				fileName = "./" + parserFileName;
 			try {
 				Parser parser = new Parser();
 				tmc = parser.parse(fileName);
@@ -78,38 +80,43 @@ public class UiTaskMan {
 		String name = reader.getString("name");
 		String description = reader.getString("description");
 		LocalDateTime dueTime = reader.getDate("due time");
-		if (dueTime == null) {
-			System.out.println("Project creation aborted.");
-			return;
-		}
 		tmc.createProject(name, description, dueTime);
 	}
 
 	// TODO ask if task requires Ressources
 	private void createTask() throws ExitUseCaseException {
-		while (true) {
-			System.out.println("Creating a task\n"
-					+ "Please fill in the following form:\n"
-					+ "Adding task to which project?");
-			Project project = reader.select(tmc.getAllProjects());
-			TaskBuilder builder = Task.builder(reader
-					.getString("Give a description:"), reader
-					.getDuration("Give an estimate for the task duration:"),
-					reader.getDouble("Give an acceptable deviation:"));
-			while (reader
-					.getBoolean("Is this task dependent on an other task?")) {
-				builder.addDependencies(reader.select(project.getAllTasks()));
-			}
-			if (reader.getBoolean("Is this an alternative to a failled task?")) {
-				builder.setOriginalTask(reader.select(project.getAllTasks()));
-			}
+		System.out.println("Creating a task\n"
+				+ "Please fill in the following form:\n"
+				+ "Adding task to which project?");
+		Project project = reader.select(tmc.getAllProjects());
+		TaskBuilder builder = Task.builder(
+				reader.getString("Give a description:"),
+				reader.getDuration("Give an estimate for the task duration:"),
+				reader.getDouble("Give an acceptable deviation:"));
+		while (reader.getBoolean("Does this task require more ressources?")) {
+			builder.addRequiredResourceType(
+					reader.select(tmc.getAllResourceTypes()),
+					reader.getInt("How many of those do you need?"));
+		}
+		while (reader.getBoolean("Is this task dependent on an other task?")) {
+			builder.addDependencies(reader.select(project.getAllTasks()));
+		}
+		if (reader.getBoolean("Is this an alternative to a failled task?")) {
+			builder.setOriginalTask(reader.select(project.getAllTasks()));
+		}
+		builder.amountOfRequiredDevelopers(reader
+				.getInt("How many developers are required to work on this task?"));
+		try {
 			builder.build(project);
-			return;
+		} catch (IllegalStateException e) {
+			System.out
+					.println("This task was Illegal. Did you check the ressource requirements?");
+			createTask();
 		}
 	}
 
 	private void planTask() throws ExitUseCaseException {
-		Task task = reader.select(tmc.getUnplannedTasks());
+		Task task = reader.select(tmc.getAllDelegatablePlannableTasks());
 		plan(task);
 	}
 
@@ -175,14 +182,13 @@ public class UiTaskMan {
 	private void resolveConflict(ConlictingPlanningException conflict, Task task)
 			throws ExitUseCaseException {
 		System.out.println("A conflict occured with the following Tasks:");
-		for (Planning planning : conflict.getConflictingPlannings()) {
-			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
-					.getTask(planning)));
+		for (Task conflictingTask : conflict.getConflictingTasks()) {
+			System.out.println(new ToStringVisitor().create(conflictingTask));
 		}
 		if (!reader
 				.getBoolean("y => re-start planning the new task / n => re-plan the conflicting task")) {
-			for (Planning planning : conflict.getConflictingPlannings()) {
-				plan(tmc.getPlanner().getTask(planning));
+			for (Task conflictingTask : conflict.getConflictingTasks()) {
+				plan(conflictingTask);
 			}
 		}
 		plan(task);
@@ -265,10 +271,6 @@ public class UiTaskMan {
 		}
 	}
 
-	private void selectDeveloper() throws ExitUseCaseException {
-		activeDeveloper = reader.select(tmc.getAllDevelopers());
-	}
-
 	private void printSwitchUserMenu() {
 		System.out.println("\nSwitch user menu:\n" + "1: Projectmanager\t"
 				+ "2: Developer\t" + "9: Exit");
@@ -297,7 +299,6 @@ public class UiTaskMan {
 					projectManagerMenu();
 					break;
 				case "2":
-					selectDeveloper();
 					developerMenu();
 					break;
 				case "9":
@@ -317,6 +318,7 @@ public class UiTaskMan {
 
 	private void projectManagerMenu() {
 		try {
+			tmc.logIn(reader.select(tmc.getAllOffices()));
 			printProjectManagerMenu();
 			String choice = reader.getString("Select an option");
 			switch (choice) {
@@ -347,10 +349,13 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("Use case exited, returning to the main menu.");
 		}
+		tmc.logOut();
 	}
 
 	private void developerMenu() {
 		try {
+			tmc.logIn(reader.select(tmc.getAllOffices()));
+			tmc.logIn(reader.select(tmc.getAllDevelopers()));
 			printDeveloperMenu();
 			String choice = reader.getString("Select an option");
 			switch (choice) {
@@ -372,6 +377,7 @@ public class UiTaskMan {
 		} catch (ExitUseCaseException e) {
 			System.out.println("Use case exited, returning to the main menu.");
 		}
+		tmc.logOut();
 	}
 
 	public static void main(String[] args) {

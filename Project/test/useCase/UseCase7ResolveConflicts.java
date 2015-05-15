@@ -63,7 +63,7 @@ public class UseCase7ResolveConflicts extends UseCaseTestBasis {
 					.build();
 		} catch (ConlictingPlanningException conflict) {
 			fail("There should be no conflict anymore\n"
-					+ conflict.getConflictingPlannings());
+					+ conflict.getConflictingTasks());
 		}
 
 		assertEquals(2, tmc.getPlanner().getAllPlannings().size());

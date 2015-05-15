@@ -1,17 +1,17 @@
 package taskmanager;
 
 /**
- * A branch office is a part of some company with a specific geo-
- * graphical location. Each branch office hosts its own projects, manages its
- * own resources and employs its own employees. A task can be planned for
- * execution at the branch office that hosts the corresponding project or a task
- * can be delegated to another branch office, meaning that the delegated task
- * should be planned for execution at another branch office.
+ * A branch office is a part of some company with a specific geo- graphical
+ * location. Each branch office hosts its own projects, manages its own
+ * resources and employs its own employees. A task can be planned for execution
+ * at the branch office that hosts the corresponding project or a task can be
+ * delegated to another branch office, meaning that the delegated task should be
+ * planned for execution at another branch office.
  * 
  * @author Groep 8
  *
  */
-public class BranchOffice {
+public class BranchOffice implements Visitable {
 
 	private String location;
 
@@ -26,9 +26,9 @@ public class BranchOffice {
 	 * Constructor of TaskManController. When a new TaskManController has been
 	 * created new expert classes will be created.
 	 */
-	public BranchOffice(String location, ImmutableClock clock) {
+	BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object
-		this.clock = (TaskManClock)clock;
+		this.clock = (TaskManClock) clock;
 		setLocation(location);
 		createDeveloperExpert();
 		createResourceExpert();
@@ -123,7 +123,7 @@ public class BranchOffice {
 	 * 
 	 * @return planningExpert : planning expert
 	 */
-	public Planner getPlanner() {
+	Planner getPlanner() {
 		return this.planner;
 	}
 
@@ -132,15 +132,15 @@ public class BranchOffice {
 	 * 
 	 * @return delegatedTaskExpert : delegated task expert
 	 */
-	public DelegatedTaskExpert getDelegatedTaskExpert() {
+	DelegatedTaskExpert getDelegatedTaskExpert() {
 		return this.delegatedTaskExpert;
 	}
 
 	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
-	public void saveSystem(BranchOffice office) {
-		if(this.equals(office)) {
+	void saveSystem(BranchOffice office) {
+		if (this.equals(office)) {
 			this.getProjectExpert().save();
 			this.getDeveloperExpert().save();
 			this.getPlanner().save();
@@ -153,8 +153,8 @@ public class BranchOffice {
 	/**
 	 * Loads the last saved state of the system
 	 */
-	public void loadSystem(BranchOffice office) {
-		if(this.equals(office)) {
+	void loadSystem(BranchOffice office) {
+		if (this.equals(office)) {
 			this.getProjectExpert().load();
 			this.getDeveloperExpert().load();
 			this.getPlanner().load();
@@ -162,6 +162,14 @@ public class BranchOffice {
 		} else {
 			this.getDelegatedTaskExpert().load(office);
 		}
+	}
+
+	/**
+	 * accept visitor for visiting this
+	 */
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 
 }

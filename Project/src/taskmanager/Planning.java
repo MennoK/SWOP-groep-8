@@ -33,7 +33,7 @@ public class Planning {
 	 * @param planningBuilder
 	 *            : planning builder with parameters
 	 */
-	public Planning(PlanningBuilder planningBuilder) {
+	Planning(PlanningBuilder planningBuilder) {
 		setDevelopers(planningBuilder.developers);
 		setTimeSpan(planningBuilder.timeSpan);
 		setResources(planningBuilder.resources);
@@ -123,7 +123,7 @@ public class Planning {
 	 * @param endTime
 	 *            the new end time of the planning
 	 */
-	public void setEndTime(LocalDateTime endTime) {
+	void setEndTime(LocalDateTime endTime) {
 		if (!endTime.isAfter(getTimeSpan().getBegin())) {
 			throw new IllegalStateException(
 					"given end time is before the start time");
@@ -172,8 +172,10 @@ public class Planning {
 		 */
 		public Memento() {
 			this.timeSpan = Planning.this.timeSpan;
-			this.developers = new LinkedHashSet<Developer>(Planning.this.developers);
-			this.resources = new LinkedHashSet<Resource>(Planning.this.resources);
+			this.developers = new LinkedHashSet<Developer>(
+					Planning.this.developers);
+			this.resources = new LinkedHashSet<Resource>(
+					Planning.this.resources);
 		}
 
 		/**
@@ -236,8 +238,8 @@ public class Planning {
 		public PlanningBuilder addResources(Resource resource) {
 			this.resources.add(resource);
 			if (!planner.isAvailableFor(resource, task, timeSpan)) {
-				Set<Planning> conflictingPlannings = planner
-						.getConflictingPlanningsForBuilder(this);
+				Set<Task> conflictingPlannings = planner
+						.getConflictingTasksForBuilder(this);
 				throw new ConlictingPlanningException(conflictingPlannings,
 						this);
 			}
@@ -264,8 +266,8 @@ public class Planning {
 		public PlanningBuilder addDeveloper(Developer developer) {
 			this.developers.add(developer);
 			if (!planner.isAvailableFor(developer, task, timeSpan)) {
-				Set<Planning> conflictingPlannings = planner
-						.getConflictingPlanningsForBuilder(this);
+				Set<Task> conflictingPlannings = planner
+						.getConflictingTasksForBuilder(this);
 				throw new ConlictingPlanningException(conflictingPlannings,
 						this);
 			}

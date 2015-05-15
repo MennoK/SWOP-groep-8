@@ -10,8 +10,8 @@ import com.google.common.collect.ArrayListMultimap;
 
 /**
  * 
- * The delegated task expert contains all the information of the task that 
- * are delegated to the branch office
+ * The delegated task expert contains all the information of the task that are
+ * delegated to the branch office
  * 
  * @author Group 8
  *
@@ -19,38 +19,40 @@ import com.google.common.collect.ArrayListMultimap;
 public class DelegatedTaskExpert {
 
 	private ArrayListMultimap<BranchOffice, Task> delegatedTasks;
-    private HashMap<BranchOffice, Memento> mementos;
-	
+	private HashMap<BranchOffice, Memento> mementos;
+
 	/**
-	 * Default constructor of the delegatedTaskExpert. It initializes a 
-	 * new empty set for delegated tasks
+	 * Default constructor of the delegatedTaskExpert. It initializes a new
+	 * empty set for delegated tasks
 	 */
-	public DelegatedTaskExpert(){
+	DelegatedTaskExpert() {
 		this.delegatedTasks = ArrayListMultimap.create();
 		this.mementos = new HashMap<BranchOffice, Memento>();
 	}
-	
+
 	/**
-	 * Adds the given task as a delegated task to the set 
+	 * Adds the given task as a delegated task to the set
 	 * 
-	 * @param task : given task
+	 * @param task
+	 *            : given task
 	 */
 	void addDelegatedTask(Task task, BranchOffice office){
 		this.delegatedTasks.put(office, task);
 	}
-	
+
 	void removeDelegatedTask(Task task){
-			delegatedTasks.remove(officeForDelegatedTask(task), task);
+		delegatedTasks.remove(officeForDelegatedTask(task), task);
 	}
-	
-	public BranchOffice officeForDelegatedTask(Task delegatedTask){
-		for (BranchOffice office : delegatedTasks.keySet()){
-			if(delegatedTasks.containsEntry(office, delegatedTask)){
+
+	public BranchOffice officeForDelegatedTask(Task delegatedTask) {
+		for (BranchOffice office : delegatedTasks.keySet()) {
+			if (delegatedTasks.containsEntry(office, delegatedTask)) {
 				return office;
 			}
 		}
 		return null;
 	}
+
 	/**
 	 * Returns the delegated task set
 	 * 
@@ -63,6 +65,7 @@ public class DelegatedTaskExpert {
 			return new HashSet<Task>();
 		}
 	}
+
 	/**
 	 * Saves the current state of the class
 	 */
@@ -101,17 +104,19 @@ public class DelegatedTaskExpert {
 		 */
 		public Memento(BranchOffice office) {
 			this.office = office;
-			
-			this.delegatedTasks = DelegatedTaskExpert.this.delegatedTasks.get(office);
+
+			this.delegatedTasks = DelegatedTaskExpert.this.delegatedTasks
+					.get(office);
 
 		}
 
 		/**
-		 * loads the memento to restore the state		 * 
+		 * loads the memento to restore the state *
 		 */
 		public void load() {
-			DelegatedTaskExpert.this.delegatedTasks.replaceValues(office, this.delegatedTasks);
+			DelegatedTaskExpert.this.delegatedTasks.replaceValues(office,
+					this.delegatedTasks);
 		}
 	}
-	
+
 }
