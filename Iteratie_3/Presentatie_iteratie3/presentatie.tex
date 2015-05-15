@@ -1,0 +1,250 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%   PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+\usetheme{Madrid}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+\usecolortheme{seagull}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+
+\usepackage[ final ]{pdfpages}
+%----------------------------------------------------------------------------------------
+%   TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Software ontwerp: iteratie 2]{Software ontwerp: iteratie 2 (groep 8)} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author[Groep 8]{\\
+        Andr\'e Jacobs \\
+        Menno Keustermans\\
+        Bruno Lannoo \\
+        Thomas Marcelis} % Your name
+\institute[KULeuven] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{\\ % Your institution for the title page
+\medskip
+\textit{} % Your email address
+}
+\date{} % Date, can be changed to a custom date
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+%   PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%   Packages overzicht:
+%       In src zijn er 4 packages:
+%       
+%       Front-end : user interface
+%                   -> gebruikt exception, parser en taskmanager
+%       Back-end : taskManager
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle {Packages: overzicht}
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.8]{figures/Package_Diagram1}
+\end{center}
+\end{figure}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%   Class diagram overzicht: (back-end)
+%       Project-controller heeft overzicht over alle projecten en bevat
+%       de interne klok van het systeem
+%
+%       Project heeft overzicht van alle taken
+%
+%       Taken
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle {Class diagram: overzicht}
+
+\begin{figure}
+\centering
+\begin{center}
+\includegraphics[width=0.95\textwidth]{figures/Class_diagram_iteratie2}
+\end{center}
+\vspace{1cm}
+
+\end{figure}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%   ProjectController (discussion GRASP)
+%       Information expert
+%           Verantwoordelijkheden:
+%               - houdt lijst van projecten bij
+%               - houdt ook de klok bij
+%
+%           Creator:
+%               Verantwoordelijkheden: 
+%               - Maakt elk project aan.
+%   
+%           Controller:
+%               Aanspreekpunt voor alle informatie
+%
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle {Refactoring: veel constructoren}
+\textbf{Builders}
+\begin{figure}
+\includegraphics[scale=0.5]{figures/builder}
+\caption{Voorbeeld van builder in Task}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle {Refactoring: status opslaan}
+\begin{columns}
+	\begin{column}{0.3\textwidth}
+		\includegraphics[scale=0.7]{figures/statediagram}
+	\end{column}
+	\begin{column}{0.69\textwidth}
+		\begin{itemize}
+		\item \textbf{State pattern}
+		\item overgangen worden afgehandeld in enum klasse
+		
+		\end{itemize}
+	\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle {Probleem: simulatie}
+\includegraphics[scale=0.4]{figures/mementomori}
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%   Extensions
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Extensions}
+\begin{itemize}
+\item Utility package\newline
+\newline
+\item Developers\newline
+\newline
+\item Toepassing van GRASP-patterns
+\end{itemize}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%   Testing
+%       Unit testing: om corner cases te testen
+%       Use Case testing: succes scenarios getest
+%
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle {Testing}
+\begin{itemize}
+    \item Unit testing: om corner cases te testen
+    \item Use Case testing: succes scenarios getest
+    \item Gestandariseerde set-up
+    \item Mutator testen
+\end{itemize}
+\begin{columns}
+    \begin{column}{.4\paperwidth}
+        \includegraphics[width=0.25\paperwidth]{figures/test.png}
+    \end{column}
+    \begin{column}{.5\paperwidth}
+   		\includegraphics[scale=0.35]{figures/PITcoverage}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview Projectmanagement}
+
+
+\begin{itemize}
+    \item Design co\"ordinator: Bruno
+    \item Domain co\"ordinator: Menno
+    \item Test co\"ordinator: Thomas
+\end{itemize}
+
+volgende iteratie:
+
+\begin{itemize}
+    \item Design co\"ordinator: Thomas
+    \item Domain co\"ordinator: Andr\'{e}
+    \item Test co\"ordinator: Menno
+\end{itemize}
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|}
+\hline
+       & Individueel werk & Study & Groepswerk \\ \hline
+Andre  &     15             &    5   &   56         \\ \hline
+Bruno  &      17            &   13    &   56         \\ \hline
+Menno  &          20        &     6  &       56     \\ \hline
+Thomas &            13      &     5  &        56    \\ \hline
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\end{document} 
+

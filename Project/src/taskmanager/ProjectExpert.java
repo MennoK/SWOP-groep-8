@@ -32,7 +32,7 @@ public class ProjectExpert {
 	 */
 	ProjectExpert(ImmutableClock clock) {
 		this.clock = clock;
-projects = new LinkedHashSet<>();
+		projects = new LinkedHashSet<>();
 
 	}
 
