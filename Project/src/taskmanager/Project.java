@@ -63,6 +63,13 @@ public class Project implements Visitable {
 		this.tasks = new LinkedHashSet<Task>();
 	}
 
+	/**
+	 * 
+	 * @param string
+	 * @param string2
+	 * @param time
+	 * @param time2
+	 */
 	public Project(String string, String string2, LocalDateTime time,
 			LocalDateTime time2) {
 		this(string, string2, time, time2, new TaskManClock(time));
