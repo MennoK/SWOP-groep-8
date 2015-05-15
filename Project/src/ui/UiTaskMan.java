@@ -80,33 +80,38 @@ public class UiTaskMan {
 		String name = reader.getString("name");
 		String description = reader.getString("description");
 		LocalDateTime dueTime = reader.getDate("due time");
-		if (dueTime == null) {
-			System.out.println("Project creation aborted.");
-			return;
-		}
 		tmc.createProject(name, description, dueTime);
 	}
 
 	// TODO ask if task requires Ressources
 	private void createTask() throws ExitUseCaseException {
-		while (true) {
-			System.out.println("Creating a task\n"
-					+ "Please fill in the following form:\n"
-					+ "Adding task to which project?");
-			Project project = reader.select(tmc.getAllProjects());
-			TaskBuilder builder = Task.builder(reader
-					.getString("Give a description:"), reader
-					.getDuration("Give an estimate for the task duration:"),
-					reader.getDouble("Give an acceptable deviation:"));
-			while (reader
-					.getBoolean("Is this task dependent on an other task?")) {
-				builder.addDependencies(reader.select(project.getAllTasks()));
-			}
-			if (reader.getBoolean("Is this an alternative to a failled task?")) {
-				builder.setOriginalTask(reader.select(project.getAllTasks()));
-			}
+		System.out.println("Creating a task\n"
+				+ "Please fill in the following form:\n"
+				+ "Adding task to which project?");
+		Project project = reader.select(tmc.getAllProjects());
+		TaskBuilder builder = Task.builder(
+				reader.getString("Give a description:"),
+				reader.getDuration("Give an estimate for the task duration:"),
+				reader.getDouble("Give an acceptable deviation:"));
+		while (reader.getBoolean("Does this task require more ressources?")) {
+			builder.addRequiredResourceType(
+					reader.select(tmc.getAllResourceTypes()),
+					reader.getInt("How many of those do you need?"));
+		}
+		while (reader.getBoolean("Is this task dependent on an other task?")) {
+			builder.addDependencies(reader.select(project.getAllTasks()));
+		}
+		if (reader.getBoolean("Is this an alternative to a failled task?")) {
+			builder.setOriginalTask(reader.select(project.getAllTasks()));
+		}
+		builder.amountOfRequiredDevelopers(reader
+				.getInt("How many developers are required to work on this task?"));
+		try {
 			builder.build(project);
-			return;
+		} catch (IllegalStateException e) {
+			System.out
+					.println("This task was Illegal. Did you check the ressource requirements?");
+			createTask();
 		}
 	}
 

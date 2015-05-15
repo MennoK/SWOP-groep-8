@@ -24,6 +24,13 @@ public interface Visitor {
 	public void visit(Developer developer);
 
 	/**
+	 * Visit the resourceType
+	 * 
+	 * @param resourceType
+	 */
+	public void visit(ResourceType resourceType);
+
+	/**
 	 * Visit the resource
 	 * 
 	 * @param resource

@@ -5,6 +5,7 @@ import taskmanager.Developer;
 import taskmanager.Project;
 import taskmanager.ProjectFinishingStatus;
 import taskmanager.Resource;
+import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.TaskFinishedStatus;
 import taskmanager.TaskStatus;
@@ -58,6 +59,11 @@ public class ToStringVisitor implements Visitor {
 
 	@Override
 	public void visit(Developer developer) {
+		throw new UnsupportedOperationException("Not implemented!");
+	}
+
+	@Override
+	public void visit(ResourceType resourceType) {
 		throw new UnsupportedOperationException("Not implemented!");
 	}
 
