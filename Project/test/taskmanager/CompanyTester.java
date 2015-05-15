@@ -25,6 +25,8 @@ public class CompanyTester {
 	public void testCreateBranchOffice() {
 		company.createBranchOffice("Baarle-Hertog");
 		assertEquals(1, company.getAllBranchOffices().size());
+		company.createBranchOffice("Brugge");
+		assertEquals(2, company.getAllBranchOffices().size());
 		ArrayList<BranchOffice> boList = new ArrayList<BranchOffice>();
 		boList.addAll(company.getAllBranchOffices());
 		assertEquals("Baarle-Hertog", boList.get(0).getLocation());

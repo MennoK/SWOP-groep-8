@@ -770,7 +770,7 @@ public class Task implements Visitable {
 			return this;
 		}
 
-		private boolean checkRequiredResources() {
+		private void checkRequiredResources() {
 			for (ResourceType type : requiredResourceTypes.keySet()) {
 				if (!type.getRequiredResourceTypes().isEmpty()) {
 					for (ResourceType requiredResourceType : type
@@ -783,24 +783,37 @@ public class Task implements Visitable {
 					}
 				}
 			}
-			return true;
 		}
 
+		private void checkConflictingResources() {
+			for (ResourceType type : requiredResourceTypes.keySet()) {
+				if (!type.getConflictedResourceTypes().isEmpty()) {
+					for (ResourceType conflictingType : type
+							.getConflictedResourceTypes()) {
+						if (requiredResourceTypes.keySet().contains(
+								conflictingType)) {
+							throw new IllegalResourceException(type, type
+									.getRequiredResourceTypes() , this);
+						}
+					}
+				}
+			}
+			
+		}
 		/**
 		 * Build a Task after all the optional values have been set. An project
 		 * is required to add the created task to.
 		 */
 		public Task build(Project project) {
-			if (checkRequiredResources()) {
+				checkRequiredResources();
+				checkConflictingResources();
 				Task task = new Task(this, project.getClock());
 				project.updateDependencies(task, originalTask);
 				project.addTask(task);
 				return task;
-			} else {
-				throw new IllegalStateException(
-						"A resource is requiring an other resource.");
-			}
 		}
+
+		
 
 	}
 
