@@ -472,7 +472,7 @@ public class Planner {
 		}
 	}
 
-	private Task getTask(Planning planning) {
+	public Task getTask(Planning planning) {
 		return this.plannings.inverse().get(planning);
 	}
 
@@ -536,7 +536,7 @@ public class Planner {
 		return this.plannings.get(task) != null;
 	}
 
-	Planning getPlanning(Task task) {
+	public Planning getPlanning(Task task) {
 		return this.plannings.get(task);
 	}
 

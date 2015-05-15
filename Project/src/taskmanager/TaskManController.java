@@ -300,6 +300,19 @@ public class TaskManController {
 	}
 
 	/**
+	 * @param project
+	 * @return The BranchOffice responsible for this project
+	 */
+	public BranchOffice getResponsibleBranch(Project project) {
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			if (office.getProjectExpert().getAllProjects().contains(project)) {
+				return office;
+			}
+		}
+		throw new IllegalArgumentException("Project is not in the system");
+	}
+
+	/**
 	 * Create a BranchOffice
 	 * 
 	 * @param location

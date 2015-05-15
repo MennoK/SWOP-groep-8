@@ -2,6 +2,7 @@ package ui;
 
 import taskmanager.BranchOffice;
 import taskmanager.Developer;
+import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.ProjectFinishingStatus;
 import taskmanager.Resource;
@@ -44,6 +45,18 @@ public class ToStringVisitor implements Visitor {
 	}
 
 	@Override
+	public void visit(Planning plan) {
+		str = "Is planned from " + plan.getTimeSpan().getBegin() + " to "
+				+ plan.getTimeSpan().getEnd() + ".";
+		for (Resource resource : plan.getResources()) {
+			str += " Using " + resource.getName() + ".";
+		}
+		for (Developer developer : plan.getDevelopers()) {
+			str += " Asigned to " + developer.getName() + ".";
+		}
+	}
+
+	@Override
 	public void visit(Project project) {
 		str = new SummerizingVisitor().createSummary(project);
 		str += ", " + project.getDescription();
@@ -76,5 +89,4 @@ public class ToStringVisitor implements Visitor {
 	public void visit(BranchOffice office) {
 		throw new UnsupportedOperationException("Not implemented!");
 	}
-
 }
