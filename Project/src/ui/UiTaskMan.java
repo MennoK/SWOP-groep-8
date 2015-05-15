@@ -74,7 +74,9 @@ public class UiTaskMan {
 				+ " "
 				+ new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks(), false);
-		System.out.println(new ToStringVisitor().create(task));
+		System.out.println(new SummerizingVisitor().createSummary(tmc
+				.getResponsibleBranch(task))
+				+ " " + new ToStringVisitor().create(task));
 		if (tmc.getPlanner().taskHasPlanning(task)) {
 			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
 					.getPlanning(task)));
@@ -118,7 +120,9 @@ public class UiTaskMan {
 			System.out
 					.println("The required resource type where not consistent.");
 			if (e.isConflicting()) {
-				System.out.println("There was a conflict between: "
+				System.out.println("There was a conflict between '"
+						+ new SummerizingVisitor().createSummary(e
+								.getErrorType()) + "' and \n"
 						+ Printer.list(e.getproblematicResourceTypes()));
 			} else {
 				System.out.println(new SummerizingVisitor().createSummary(e
@@ -126,6 +130,7 @@ public class UiTaskMan {
 						+ " requires "
 						+ Printer.list(e.getproblematicResourceTypes()));
 			}
+			System.out.println("Try again:");
 			createTask();
 		}
 	}

@@ -313,6 +313,30 @@ public class TaskManController {
 	}
 
 	/**
+	 * If task is delegated return the branch to which it was delegated else
+	 * return the owner of the project
+	 * 
+	 * @param task
+	 * @return The BranchOffice responsible for this task
+	 */
+	public BranchOffice getResponsibleBranch(Task task) {
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			if (office.getDelegatedTaskExpert().getAllDelegatedTasks()
+					.contains(task)) {
+				return office;
+			}
+		}
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			for (Project project : office.getProjectExpert().getAllProjects()) {
+				if (project.getAllTasks().contains(task)) {
+					return office;
+				}
+			}
+		}
+		throw new IllegalArgumentException("Project is not in the system");
+	}
+
+	/**
 	 * Create a BranchOffice
 	 * 
 	 * @param location

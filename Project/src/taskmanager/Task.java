@@ -794,7 +794,8 @@ public class Task implements Visitable {
 						if (requiredResourceTypes.keySet().contains(
 								conflictingType)) {
 							throw new IllegalResourceException(type,
-									type.getRequiredResourceTypes(), this, true);
+									type.getConflictedResourceTypes(), this,
+									true);
 						}
 					}
 				}
