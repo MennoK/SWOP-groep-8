@@ -451,7 +451,7 @@ public class Planner {
 				}
 				for (Resource resource : planningBuilder.getResources()) {
 					if (planning.getResources().contains(resource)
-							&& !conflictingPlannings.contains(planning)) {
+							&& !conflictingPlannings.contains(getTask(planning))) {
 						conflictingPlannings.add(getTask(planning));
 					}
 				}
