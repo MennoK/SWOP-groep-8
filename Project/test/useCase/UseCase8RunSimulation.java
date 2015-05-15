@@ -69,19 +69,19 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 		tmc.createProject("name", "description",
 				now.minusDays(1).minusHours(8), now.minusHours(8));
 
-		assertEquals(2, tmc.getAllProjects().size());
+		assertEquals(2, tmc.getAllProjectsActiveOffice().size());
 
 		tmc.saveSystem();
 
 		Project project1 = tmc.createProject("name2", "description", now
 				.plusMonths(2).minusHours(8));
 
-		assertEquals(3, tmc.getAllProjects().size());
+		assertEquals(3, tmc.getAllProjectsActiveOffice().size());
 		assertEquals(now, project1.getCreationTime());
 
 		tmc.loadSystem();
 
-		assertEquals(2, tmc.getAllProjects().size());
+		assertEquals(2, tmc.getAllProjectsActiveOffice().size());
 
 	}
 
