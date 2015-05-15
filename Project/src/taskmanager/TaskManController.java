@@ -284,14 +284,14 @@ public class TaskManController {
 	 *            the active Developer
 	 * @return All the tasks to which this developer is assigned.
 	 */
-	public Set<Task> getAllTasks(Developer dev) {
+	public Set<Task> getAllTasks() {
 		checkActiveOfficeForNull();
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjectsActiveOffice()) {
 			for (Task task : project.getAllTasks()) {
 				if (activeOffice.getPlanner().taskHasPlanning(task)
 						&& activeOffice.getPlanner().getPlanning(task)
-								.getDevelopers().contains(dev)) {
+								.getDevelopers().contains(activeDeveloper)) {
 					tasks.add(task);
 				}
 			}
@@ -307,6 +307,30 @@ public class TaskManController {
 		for (BranchOffice office : company.getAllBranchOffices()) {
 			if (office.getProjectExpert().getAllProjects().contains(project)) {
 				return office;
+			}
+		}
+		throw new IllegalArgumentException("Project is not in the system");
+	}
+
+	/**
+	 * If task is delegated return the branch to which it was delegated else
+	 * return the owner of the project
+	 * 
+	 * @param task
+	 * @return The BranchOffice responsible for this task
+	 */
+	public BranchOffice getResponsibleBranch(Task task) {
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			if (office.getDelegatedTaskExpert().getAllDelegatedTasks()
+					.contains(task)) {
+				return office;
+			}
+		}
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			for (Project project : office.getProjectExpert().getAllProjects()) {
+				if (project.getAllTasks().contains(task)) {
+					return office;
+				}
 			}
 		}
 		throw new IllegalArgumentException("Project is not in the system");
@@ -403,20 +427,22 @@ public class TaskManController {
 	 * 
 	 * @return all the tasks that are delegated to the active office
 	 */
-	public Set<Task> getAllDelegatedTasks(){
+	public Set<Task> getAllDelegatedTasks() {
 		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks();
 	}
 
 	/**
 	 * 
-	 * @param office 
-	 * 			: the office from which you want to receive the tasks that are delegated to that office
+	 * @param office
+	 *            : the office from which you want to receive the tasks that are
+	 *            delegated to that office
 	 * 
 	 * @return all the tasks that are delegated to the office
 	 */
-	public Set<Task> getAllDelegatedTasksTo(BranchOffice office){
+	public Set<Task> getAllDelegatedTasksTo(BranchOffice office) {
 		return office.getDelegatedTaskExpert().getAllDelegatedTasks();
 	}
+
 	/**
 	 * Returns the time
 	 * 

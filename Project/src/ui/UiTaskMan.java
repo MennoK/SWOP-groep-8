@@ -11,6 +11,7 @@ import parser.Parser;
 import taskmanager.*;
 import taskmanager.Task.TaskBuilder;
 import taskmanager.exception.ConlictingPlanningException;
+import taskmanager.exception.IllegalResourceException;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
@@ -20,7 +21,6 @@ public class UiTaskMan {
 
 	private TaskManController tmc;
 	private Reader reader;
-	private Developer activeDeveloper;
 
 	private UiTaskMan() {
 		reader = new Reader();
@@ -74,7 +74,9 @@ public class UiTaskMan {
 				+ " "
 				+ new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks(), false);
-		System.out.println(new ToStringVisitor().create(task));
+		System.out.println(new SummerizingVisitor().createSummary(tmc
+				.getResponsibleBranch(task))
+				+ " " + new ToStringVisitor().create(task));
 		if (tmc.getPlanner().taskHasPlanning(task)) {
 			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
 					.getPlanning(task)));
@@ -114,9 +116,21 @@ public class UiTaskMan {
 				.getInt("How many developers are required to work on this task?"));
 		try {
 			builder.build(project);
-		} catch (IllegalStateException e) {
+		} catch (IllegalResourceException e) {
 			System.out
-					.println("This task was Illegal. Did you check the ressource requirements?");
+					.println("The required resource type where not consistent.");
+			if (e.isConflicting()) {
+				System.out.println("There was a conflict between '"
+						+ new SummerizingVisitor().createSummary(e
+								.getErrorType()) + "' and \n"
+						+ Printer.list(e.getproblematicResourceTypes()));
+			} else {
+				System.out.println(new SummerizingVisitor().createSummary(e
+						.getErrorType())
+						+ " requires "
+						+ Printer.list(e.getproblematicResourceTypes()));
+			}
+			System.out.println("Try again:");
 			createTask();
 		}
 	}
@@ -201,13 +215,15 @@ public class UiTaskMan {
 	}
 
 	private void delegateTask() throws ExitUseCaseException {
-		System.out.println("TODO implement delegateTask()");
+		Task task = reader.select(tmc.getAllDelegatablePlannableTasks());
+		BranchOffice office = reader.select(tmc.getAllOffices());
+		tmc.delegate(task, office);
 	}
 
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
-		Task task = reader.select(tmc.getAllTasks(activeDeveloper));
+		Task task = reader.select(tmc.getAllTasks());
 
 		while (true) {
 			try {

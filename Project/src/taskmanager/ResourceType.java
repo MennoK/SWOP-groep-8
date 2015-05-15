@@ -180,7 +180,7 @@ public class ResourceType implements Visitable {
 					"Tried to create a required resource type loop.");
 		if (!isValidConflictedResourceType(conflictedResourceType)) {
 			throw new IllegalArgumentException(
-					"The given resource type is already requires on this resource type");
+					"The given resource type is already required on this resource type");
 		} else {
 			conflictedResourceTypes.add(conflictedResourceType);
 		}
