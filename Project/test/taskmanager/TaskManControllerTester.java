@@ -207,4 +207,26 @@ public class TaskManControllerTester extends TaskManTester {
 		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
 		assertEquals(2, tmc.getAllProjectsAllOffices().size());
 	}
+	
+	@Test
+	public void testGetAllTasks() {
+		assertEquals(0, tmc.getAllTasks().size());
+		this.createStandardProject(time.plusHours(24));
+		this.createPlannedTask(project, Duration.ofHours(5), dev);
+		assertEquals(1, tmc.getAllTasks().size());
+	}
+	
+	@Test
+	public void getResponsibleBranch() {
+		assertEquals(this.here, tmc.getResponsibleBranch(project));
+	}
+
+	@Test
+	public void getResponsibleBranchForTask() {
+		Task task = this.createTask(project, Duration.ofHours(5));
+		assertEquals(this.here, tmc.getResponsibleBranch(task));
+		BranchOffice there = tmc.createBranchOffice("Celestijnenlaan 200a");
+		tmc.delegate(task, there);
+		assertEquals(there, tmc.getResponsibleBranch(task));
+	}
 }

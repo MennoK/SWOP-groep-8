@@ -51,6 +51,12 @@ public class TaskManTester {
 		return task;
 	}
 
+	protected Task createPlannedTask(Project project, Duration taskDuration, Developer developer) {
+		Task task = createTask(project, taskDuration);
+		Planning.builder(time, task, developer, tmc.getPlanner()).build();
+		return task;
+	}
+
 	protected Task createTask(Project project, Duration taskDuration,
 			Task dependency) {
 		return Task.builder("desc", taskDuration, 0.5)
