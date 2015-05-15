@@ -300,7 +300,7 @@ public class Parser {
 					.get("acceptableDeviation")));
 			acceptableDeviation /= 100;
 
-			Project projectOfTask = new ArrayList<>(controller.getAllProjects())
+			Project projectOfTask = new ArrayList<>(controller.getAllProjectsActiveOffice())
 					.get(projectNumber);
 
 			TaskBuilder builder = Task.builder(description, estimatedDuration,
@@ -435,7 +435,7 @@ public class Parser {
 
 			BranchOffice branchFrom = new ArrayList<>(controller.getAllOffices()).get(branchFromNr);
 			controller.logIn(branchFrom);
-			Project project = new ArrayList<>(controller.getAllProjects()).get(projectNr);
+			Project project = new ArrayList<>(controller.getAllProjectsActiveOffice()).get(projectNr);
 			System.out.println(project.getAllTasks());
 			System.out.println(new ArrayList<>(project.getAllTasks()));
 			Task task = new ArrayList<>(project.getAllTasks()).get(taskNr);

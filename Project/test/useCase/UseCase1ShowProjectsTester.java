@@ -57,11 +57,11 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 	public void showProjects() {
 
 		// List all projects
-		assertEquals(4, tmc.getAllProjects().size());
-		assertTrue(tmc.getAllProjects().contains(project0));
-		assertTrue(tmc.getAllProjects().contains(project1));
-		assertTrue(tmc.getAllProjects().contains(project2));
-		assertTrue(tmc.getAllProjects().contains(project3));
+		assertEquals(4, tmc.getAllProjectsActiveOffice().size());
+		assertTrue(tmc.getAllProjectsActiveOffice().contains(project0));
+		assertTrue(tmc.getAllProjectsActiveOffice().contains(project1));
+		assertTrue(tmc.getAllProjectsActiveOffice().contains(project2));
+		assertTrue(tmc.getAllProjectsActiveOffice().contains(project3));
 
 		// show projects name description, creation time and due time
 		assertEquals("Project 0", project0.getName());
