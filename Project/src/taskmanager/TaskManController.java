@@ -16,6 +16,10 @@ public class TaskManController {
 	private Developer activeDeveloper;
 	private TaskManClock taskManClock;
 
+	/**
+	 * Constructor of TaskManController
+	 * @param now
+	 */
 	public TaskManController(LocalDateTime now) {
 		taskManClock = new TaskManClock(now);
 		company = new Company(taskManClock);

@@ -30,8 +30,9 @@ public class ResourceType implements Visitable {
 	private Memento memento;
 
 	/**
+	 * Constructor of resourceType that uses a builder to make a new resourceType 
 	 * 
-	 * @param builder
+	 * @param builder : the builder that is used
 	 */
 	public ResourceType(ResourceTypeBuilder builder) {
 		setName(builder.name);
