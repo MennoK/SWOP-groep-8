@@ -21,10 +21,12 @@ public class UseCase4UpdateTaskStatusTester extends UseCaseTestBasis {
 	private Task task3;
 	private Task task4;
 
+	// TODO log in a user, select task available to that user, check assignment
+
 	@Before
 	public void setUp() {
 		super.setUpTMC(LocalDateTime.of(2015, 03, 02, 00, 00));
-		// create a contoller and a project with 3 tasks
+		// create a controller and a project with 3 tasks
 		// task 3 is dependent on task 1
 
 		project1 = tmc.createProject("Project 1", "Description 1",

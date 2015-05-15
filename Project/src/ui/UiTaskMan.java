@@ -20,7 +20,6 @@ public class UiTaskMan {
 
 	private TaskManController tmc;
 	private Reader reader;
-	private Developer activeDeveloper;
 
 	private UiTaskMan() {
 		reader = new Reader();
@@ -209,7 +208,7 @@ public class UiTaskMan {
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
-		Task task = reader.select(tmc.getAllTasks(activeDeveloper));
+		Task task = reader.select(tmc.getAllTasks());
 
 		while (true) {
 			try {
