@@ -198,6 +198,10 @@ public class UiTaskMan {
 		plan(task);
 	}
 
+	private void delegateTask() throws ExitUseCaseException {
+		System.out.println("TODO implement delegateTask()");
+	}
+
 	private void updateTaskStatus() throws ExitUseCaseException {
 		System.out.println("Updating the status of a task\n"
 				+ "Please select a task:");
@@ -238,7 +242,8 @@ public class UiTaskMan {
 
 	private void printSimMenu() {
 		System.out.println("\nSimulation menu:\n" + "1: Show projects\t"
-				+ "2: Create task\t" + "3: Plan task\n" + "9: Stop simulation");
+				+ "2: Create task\t" + "3: Plan task\n" + "4: Delegate task\t"
+				+ "9: Stop simulation");
 	}
 
 	private void runSimulation() {
@@ -246,18 +251,21 @@ public class UiTaskMan {
 		while (true) {
 			try {
 				printSimMenu();
-				String choice = reader.getString("select option:");
+				int choice = reader.getInt("select option:");
 				switch (choice) {
-				case "1":
+				case 1:
 					showProjects();
 					break;
-				case "2":
+				case 2:
 					createTask();
 					break;
-				case "3":
+				case 3:
 					planTask();
 					break;
-				case "9":
+				case 4:
+					delegateTask();
+					break;
+				case 9:
 					if (!reader
 							.getBoolean("Do you want to keep the simulation results?")) {
 						tmc.loadSystem();
@@ -283,8 +291,9 @@ public class UiTaskMan {
 	private void printProjectManagerMenu() {
 		System.out.println("\nProject Manager Main menu:\n"
 				+ "1: Show projects\t" + "2: Create project\t"
-				+ "3: Create task\n" + "4: Plan task\t\t" + "5: Advance time\n"
-				+ "6: Run simulation\t" + "9: Return to user menu");
+				+ "3: Create task\n" + "4: Plan task\t\t"
+				+ "5: Advance time\t\t" + "6: Run simulation\n"
+				+ "7: Delegate Task\t" + "9: Return to user menu");
 	}
 
 	private void printDeveloperMenu() {
@@ -297,15 +306,15 @@ public class UiTaskMan {
 		while (true) {
 			try {
 				printSwitchUserMenu();
-				String choice = reader.getString("select user");
+				int choice = reader.getInt("select user");
 				switch (choice) {
-				case "1":
+				case 1:
 					projectManagerMenu();
 					break;
-				case "2":
+				case 2:
 					developerMenu();
 					break;
-				case "9":
+				case 9:
 					reader.close();
 					return;
 				default:
@@ -324,27 +333,30 @@ public class UiTaskMan {
 		try {
 			tmc.logIn(reader.select(tmc.getAllOffices()));
 			printProjectManagerMenu();
-			String choice = reader.getString("Select an option");
+			int choice = reader.getInt("Select an option");
 			switch (choice) {
-			case "9":
+			case 9:
 				return;
-			case "1":
+			case 1:
 				showProjects();
 				break;
-			case "2":
+			case 2:
 				createProject();
 				break;
-			case "3":
+			case 3:
 				createTask();
 				break;
-			case "4":
+			case 4:
 				planTask();
 				break;
-			case "5":
+			case 5:
 				advanceTime();
 				break;
-			case "6":
+			case 6:
 				runSimulation();
+				break;
+			case 7:
+				delegateTask();
 				break;
 			default:
 				System.out.println("Invalid choice, try again.");
@@ -361,17 +373,17 @@ public class UiTaskMan {
 			tmc.logIn(reader.select(tmc.getAllOffices()));
 			tmc.logIn(reader.select(tmc.getAllDevelopers()));
 			printDeveloperMenu();
-			String choice = reader.getString("Select an option");
+			int choice = reader.getInt("Select an option");
 			switch (choice) {
-			case "9":
+			case 9:
 				return;
-			case "1":
+			case 1:
 				showProjects();
 				break;
-			case "2":
+			case 2:
 				updateTaskStatus();
 				break;
-			case "3":
+			case 3:
 				advanceTime();
 				break;
 			default:
