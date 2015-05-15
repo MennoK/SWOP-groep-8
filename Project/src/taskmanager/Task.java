@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import taskmanager.exception.IllegalResourceException;
 import utility.WorkDay;
 import utility.WorkTime;
 
@@ -776,7 +777,8 @@ public class Task implements Visitable {
 							.getRequiredResourceTypes()) {
 						if (!requiredResourceTypes.keySet().contains(
 								requiredResourceType)) {
-							return false;
+							throw new IllegalResourceException(type, type
+									.getRequiredResourceTypes() , this);
 						}
 					}
 				}
