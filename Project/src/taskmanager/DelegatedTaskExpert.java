@@ -27,6 +27,7 @@ public class DelegatedTaskExpert {
 	 */
 	public DelegatedTaskExpert(){
 		this.delegatedTasks = ArrayListMultimap.create();
+		this.mementos = new HashMap<BranchOffice, Memento>();
 	}
 	
 	/**
@@ -56,7 +57,11 @@ public class DelegatedTaskExpert {
 	 * @return delegatedTasks : set with delegated Tasks
 	 */
 	public Set<Task> getAllDelegatedTasks(){
-		return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks.values()));
+		if(!delegatedTasks.isEmpty()) {
+			return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks.values()));
+		} else {
+			return new HashSet<Task>();
+		}
 	}
 	/**
 	 * Saves the current state of the class
