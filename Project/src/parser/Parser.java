@@ -18,6 +18,7 @@ import java.util.Set;
 import org.yaml.snakeyaml.Yaml;
 
 import taskmanager.Developer;
+import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
@@ -92,38 +93,53 @@ public class Parser {
 			tmc.logIn(activeOffice);
 
 			// create daily availability
-			constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) branch
-					.get("dailyAvailability"));
-
+			if(branch.get("dailyAvailability") != null){
+				constructDailyAvailabilities((List<LinkedHashMap<String, Object>>) branch
+						.get("dailyAvailability"));
+			}
 			// create all resource types
-			constructResourceTypes(
-					(List<LinkedHashMap<String, Object>>) branch
-							.get("resourceTypes"),
-					tmc, activeOffice);
-
+			if(branch.get("resourceTypes") != null){
+				constructResourceTypes(
+						(List<LinkedHashMap<String, Object>>) branch
+						.get("resourceTypes"),
+						tmc, activeOffice);
+			}
 			// create all resources
-			constructResources(
-					(List<LinkedHashMap<String, Object>>) branch
-							.get("resources"),
-					tmc);
-
+			if(branch.get("resources") != null){
+				constructResources(
+						(List<LinkedHashMap<String, Object>>) branch
+						.get("resources"),
+						tmc);
+			}
 			// create all developers
-			constructDevelopers(
-					(List<LinkedHashMap<String, Object>>) branch
-							.get("developers"),
-					tmc);
+			if(branch.get("developers") != null){
+				constructDevelopers(
+						(List<LinkedHashMap<String, Object>>) branch
+						.get("developers"),
+						tmc);
+			}
 
 			// create all projects
-			constructProjects(
-					(List<LinkedHashMap<String, Object>>) branch
-							.get("projects"),
-					tmc);
-
+			if(branch.get("projects") != null){
+				constructProjects(
+						(List<LinkedHashMap<String, Object>>) branch
+						.get("projects"),
+						tmc);
+			}
 			// create all tasks
-			constructTasks(
-					(List<LinkedHashMap<String, Object>>) branch.get("tasks"),
-					(List<LinkedHashMap<String, Object>>) branch
-							.get("plannings"), tmc);
+			if(branch.get("tasks") != null){
+				List<LinkedHashMap<String, Object>> plannings = new ArrayList<LinkedHashMap<String, Object>>();
+				if(branch.get("plannings") != null){
+					plannings = (List<LinkedHashMap<String, Object>>) branch.get("plannings");
+				}
+				constructTasks(
+						(List<LinkedHashMap<String, Object>>) branch.get("tasks"),plannings, tmc);
+			}
+		}
+
+		//Delegations
+		if(objects.get("delegations") != null){
+			constructDelegations((List<LinkedHashMap<String, Object>>) objects.get("delegations"), tmc);
 		}
 
 		return tmc;
@@ -265,10 +281,12 @@ public class Parser {
 			TaskManController controller) {
 
 		Set<Integer> taskNrSet = new HashSet<Integer>();
+
 		for (LinkedHashMap<String, Object> planning : plannings) {
 			int taskNr = (int) (planning.get("task"));
 			taskNrSet.add(taskNr);
 		}
+
 		int counter = 0;
 		int planningCounter = 0;
 		for (LinkedHashMap<String, Object> task : tasks) {
@@ -333,7 +351,7 @@ public class Parser {
 					if (status.equals("executing")) {
 						LocalDateTime startTime = LocalDateTime.parse(
 								(CharSequence) plannings.get(planningCounter)
-										.get("plannedStartTime"),
+								.get("plannedStartTime"),
 								dateTimeFormatter);
 						controller.setExecuting(newTask, startTime);
 					} else {
@@ -358,11 +376,10 @@ public class Parser {
 
 			counter++;
 		}
-
 	}
 
 	/**
-	 * Constructs the projects
+	 * Constructs the plannings
 	 */
 	@SuppressWarnings("unchecked")
 	private void constructPlannings(LinkedHashMap<String, Object> planning,
@@ -400,5 +417,29 @@ public class Parser {
 		}
 		pbuilder.build();
 
+	}
+
+	/**
+	 * Construct delegations
+	 */
+	private void constructDelegations(List<LinkedHashMap<String, Object>> delegations,
+			TaskManController controller){
+		System.out.println(delegations);
+		for(LinkedHashMap<String, Object> delegation : delegations){
+
+			//get all information from delegation:
+			int branchFromNr = (int) delegation.get("branchFrom"); 
+			int projectNr = (int) delegation.get("project"); 
+			int taskNr = (int) delegation.get("task"); 
+			int branchToNr = (int) delegation.get("branchTo"); 
+
+			BranchOffice branchFrom = new ArrayList<>(controller.getAllOffices()).get(branchFromNr);
+			controller.logIn(branchFrom);
+			Project project = new ArrayList<>(controller.getAllProjects()).get(projectNr);
+			System.out.println(project.getAllTasks());
+			System.out.println(new ArrayList<>(project.getAllTasks()));
+			Task task = new ArrayList<>(project.getAllTasks()).get(taskNr);
+			controller.delegate(task,  new ArrayList<>(controller.getAllOffices()).get(branchToNr));
+		}
 	}
 }
