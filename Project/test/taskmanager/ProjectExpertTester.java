@@ -20,12 +20,12 @@ public class ProjectExpertTester extends TaskManTester {
 	public void testCreateProjects() {
 		createStandardProject(time.plusDays(1));
 
-		assertEquals(1, tmc.getAllProjects().size());
+		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
 		assertEquals(time, tmc.getTime());
 
 		Project project2 = createStandardProject(time.plusDays(1));
 
-		assertEquals(2, tmc.getAllProjects().size());
+		assertEquals(2, tmc.getAllProjectsActiveOffice().size());
 		assertEquals(time, project2.getCreationTime());
 	}
 

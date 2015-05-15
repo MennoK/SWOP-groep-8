@@ -68,7 +68,7 @@ public class UiTaskMan {
 	}
 
 	private void showProjects() throws ExitUseCaseException {
-		Project project = reader.select(tmc.getAllProjects());
+		Project project = reader.select(tmc.getAllProjectsAllOffices());
 		System.out.println(new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks(), false);
 		System.out.println(new ToStringVisitor().create(task));
@@ -83,12 +83,11 @@ public class UiTaskMan {
 		tmc.createProject(name, description, dueTime);
 	}
 
-	// TODO ask if task requires Ressources
 	private void createTask() throws ExitUseCaseException {
 		System.out.println("Creating a task\n"
 				+ "Please fill in the following form:\n"
 				+ "Adding task to which project?");
-		Project project = reader.select(tmc.getAllProjects());
+		Project project = reader.select(tmc.getAllProjectsActiveOffice());
 		TaskBuilder builder = Task.builder(
 				reader.getString("Give a description:"),
 				reader.getDuration("Give an estimate for the task duration:"),
