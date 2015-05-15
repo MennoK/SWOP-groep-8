@@ -45,7 +45,7 @@ public class ParserTester {
 	@BeforeClass
 	public static void setUp() {
 		try {
-			tmc = new Parser().parse("./input3.tman");
+			tmc = new Parser().parse("./InputParserTester.tman");
 			resourceTypeList = new ArrayList<ResourceType>(
 					tmc.getAllResourceTypes());
 			planningsList = new ArrayList<Planning>(tmc.getPlanner()
