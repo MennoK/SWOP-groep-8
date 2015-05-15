@@ -7,6 +7,7 @@ import taskmanager.Task.TaskBuilder;
 
 public class IllegalResourceException extends RuntimeException {
 
+	private static final long serialVersionUID = 2534173816702255362L;
 	private Set<ResourceType> requiredResourceTypes;
 	private ResourceType errorType;
 	private boolean conflicting;
