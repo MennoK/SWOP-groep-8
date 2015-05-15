@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import parser.Parser;
 import taskmanager.*;
 import taskmanager.Task.TaskBuilder;
@@ -71,9 +69,14 @@ public class UiTaskMan {
 
 	private void showProjects() throws ExitUseCaseException {
 		Project project = reader.select(tmc.getAllProjectsAllOffices());
-		System.out.println(new ToStringVisitor().create(project));
+		System.out.println(new SummerizingVisitor().createSummary(tmc
+				.getResponsibleBranch(project))
+				+ " "
+				+ new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks(), false);
 		System.out.println(new ToStringVisitor().create(task));
+		System.out.println(new ToStringVisitor().create(tmc.getPlanner()
+				.getPlanning(task)));
 	}
 
 	private void createProject() throws ExitUseCaseException {

@@ -2,6 +2,7 @@ package ui;
 
 import taskmanager.BranchOffice;
 import taskmanager.Developer;
+import taskmanager.Planning;
 import taskmanager.Project;
 import taskmanager.Resource;
 import taskmanager.ResourceType;
@@ -46,6 +47,11 @@ public class SummerizingVisitor implements Visitor {
 	@Override
 	public void visit(BranchOffice office) {
 		summary = office.getLocation();
+	}
+
+	@Override
+	public void visit(Planning plan) {
+		throw new UnsupportedOperationException("Not implemented!");
 	}
 
 }

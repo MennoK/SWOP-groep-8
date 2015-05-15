@@ -18,7 +18,7 @@ import utility.TimeSpan;
  * @author Groep 8
  *
  */
-public class Planning {
+public class Planning implements Visitable {
 
 	private Memento memento;
 	private TimeSpan timeSpan;
@@ -320,5 +320,13 @@ public class Planning {
 			}
 		}
 
+	}
+
+	/**
+	 * accept visitor for visiting this
+	 */
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }
