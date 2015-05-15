@@ -31,7 +31,7 @@ public class TaskTester extends TaskManTester {
 	public void setUp() {
 		super.setUp();
 		time = LocalDateTime.of(2015, 03, 03, 8, 0);
-		project = new Project("proj", "descr", time, time.plusYears(1));
+		project = createStandardProject(time.plusYears(1));
 
 		baseTask = Task.builder("a task", Duration.ofHours(8), 0.2).build(
 				project);
@@ -63,29 +63,27 @@ public class TaskTester extends TaskManTester {
 
 	@Test
 	public void getEstimatedFinishTimeAvaillableTask() {
-		assertEquals(LocalDateTime.of(2015, 03, 03, 17, 0),
+		assertEquals(time.plusDays(3).plusHours(9),
 				baseTask.getEstimatedFinishTime());
 	}
 
 	@Test
 	public void getEstimatedFinishTimeUvaillableTask() {
-		assertEquals(LocalDateTime.of(2015, 03, 04, 17, 0),
+		assertEquals(time.plusDays(6).plusHours(9),
 				dependentTask.getEstimatedFinishTime());
 	}
 
 	@Test
 	public void getEstimatedFinishTimeLevel2Task() {
-		assertEquals(LocalDateTime.of(2015, 03, 05, 17, 0),
+		assertEquals(time.plusDays(7).plusHours(9),
 				level2DependentTask.getEstimatedFinishTime());
 	}
 
 	@Test
 	public void testGetEstimatedFinishTime() {
-		Project project = new Project("proj", "descr", LocalDateTime.of(2015,
-				03, 03, 8, 0), LocalDateTime.of(2016, 03, 03, 8, 0));
 		Task task = Task.builder("bla", Duration.ofHours(5 * 8), 0.5).build(
 				project);
-		assertEquals(time.plusDays(6).plusHours(9),
+		assertEquals(time.plusDays(9).plusHours(9),
 				task.getEstimatedFinishTime());
 	}
 
