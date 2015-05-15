@@ -44,6 +44,12 @@ public class DelegatedTaskExpert {
 		delegatedTasks.remove(officeForDelegatedTask(task), task);
 	}
 
+	/**
+	 * returns the original branch office of a task
+	 *  
+	 * @param delegatedTask : the task you want the original office of
+	 * @return : the original office of the task
+	 */
 	public BranchOffice officeForDelegatedTask(Task delegatedTask) {
 		for (BranchOffice office : delegatedTasks.keySet()) {
 			if (delegatedTasks.containsEntry(office, delegatedTask)) {

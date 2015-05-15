@@ -67,11 +67,12 @@ public class TaskManController {
 	 */
 	public void delegate(Task task, BranchOffice branchOffice) {
 		if (taskIsDelegatedToActiveOffice(task)) {
-			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(
 					task,
 					activeOffice.getDelegatedTaskExpert()
 							.officeForDelegatedTask(task));
+			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
+		
 		} else {
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task,
 					activeOffice);
