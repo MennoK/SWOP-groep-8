@@ -36,11 +36,11 @@ public class DelegatedTaskExpert {
 	 * @param task
 	 *            : given task
 	 */
-	void addDelegatedTask(Task task, BranchOffice office){
+	void addDelegatedTask(Task task, BranchOffice office) {
 		this.delegatedTasks.put(office, task);
 	}
 
-	void removeDelegatedTask(Task task){
+	void removeDelegatedTask(Task task) {
 		delegatedTasks.remove(officeForDelegatedTask(task), task);
 	}
 
@@ -58,9 +58,10 @@ public class DelegatedTaskExpert {
 	 * 
 	 * @return delegatedTasks : set with delegated Tasks
 	 */
-	public Set<Task> getAllDelegatedTasks(){
-		if(!delegatedTasks.isEmpty()) {
-			return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks.values()));
+	public Set<Task> getAllDelegatedTasks() {
+		if (!delegatedTasks.isEmpty()) {
+			return Collections.unmodifiableSet(new HashSet<Task>(delegatedTasks
+					.values()));
 		} else {
 			return new HashSet<Task>();
 		}

@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 /**
  * A company consists of multiple branch offices.
  * 
@@ -35,29 +33,8 @@ public class Company {
 	 */
 	BranchOffice createBranchOffice(String location) {
 		BranchOffice branchOffice = new BranchOffice(location, clock);
-		this.addBranchOffice(branchOffice);
+		branchOffices.add(branchOffice);
 		return branchOffice;
-	}
-
-	/**
-	 * Adds the branch office to the set of branch offices if and only if the
-	 * given branch office is valid. This means the given branch office is not
-	 * null and not already in the set.
-	 * 
-	 * @param branchOffice
-	 *            : given branchOffice
-	 * 
-	 * @throws IllegalArgumentException
-	 *             : if the branch office is a null object or the branch office
-	 *             already exists
-	 */
-	@NonNull
-	private void addBranchOffice(BranchOffice branchOffice) {
-		if (getAllBranchOffices().contains(branchOffice)) {
-			throw new IllegalArgumentException(
-					"The given branch office already exists");
-		}
-		this.branchOffices.add(branchOffice);
 	}
 
 	/**

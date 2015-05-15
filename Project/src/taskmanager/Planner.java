@@ -71,9 +71,7 @@ public class Planner {
 					"Requires at least one developer to find a start time");
 		}
 
-		LocalDateTime time = LocalDateTime.of(startTime.getYear(),
-				startTime.getMonth(), startTime.getDayOfMonth(),
-				startTime.getHour(), startTime.getMinute());
+		LocalDateTime time = startTime;
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES
 				&& time.isBefore(startTime.plusYears(1))) {
