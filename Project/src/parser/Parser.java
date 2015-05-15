@@ -188,7 +188,7 @@ public class Parser {
 						.get("requires");
 				for (Integer resourceTypeNr : requiredResourceTypes) {
 					builder.addRequiredResourceTypes(resourceTypeList
-							.get(resourceTypeNr - 1));
+							.get(resourceTypeNr ));
 				}
 			}
 
@@ -197,7 +197,7 @@ public class Parser {
 						.get("conflictsWith");
 				for (Integer resourceTypeNr : conflictedResourceTypes) {
 					builder.addConflictedResourceTypes(resourceTypeList
-							.get(resourceTypeNr - 1));
+							.get(resourceTypeNr - 1 ));
 				}
 			}
 

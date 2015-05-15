@@ -35,5 +35,7 @@ public class IllegalResourceException extends RuntimeException{
 	public ResourceType getErrorType() {
 		return errorType;
 	}
+	
+	
 
 }

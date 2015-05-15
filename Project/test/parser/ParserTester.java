@@ -92,7 +92,7 @@ public class ParserTester {
 				.size());
 		List<ResourceType> conflictedRTlist = new ArrayList<ResourceType>(
 				resourceTypeList.get(2).getConflictedResourceTypes());
-		assertEquals("car", conflictedRTlist.get(0).getName());
+		assertEquals("white board", conflictedRTlist.get(0).getName());
 		assertEquals(0, resourceTypeList.get(2).getRequiredResourceTypes()
 				.size());
 	}
@@ -104,12 +104,12 @@ public class ParserTester {
 				.size());
 		List<ResourceType> conflictedRTlist = new ArrayList<ResourceType>(
 				resourceTypeList.get(3).getConflictedResourceTypes());
-		assertEquals("demo kit", conflictedRTlist.get(0).getName());
+		assertEquals("car", conflictedRTlist.get(0).getName());
 		assertEquals(1, resourceTypeList.get(3).getRequiredResourceTypes()
 				.size());
 		List<ResourceType> requiredRTlist = new ArrayList<ResourceType>(
 				resourceTypeList.get(3).getRequiredResourceTypes());
-		assertEquals("white board", requiredRTlist.get(0).getName());
+		assertEquals("demo kit", requiredRTlist.get(0).getName());
 	}
 
 	@Test
