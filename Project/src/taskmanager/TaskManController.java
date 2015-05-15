@@ -372,6 +372,24 @@ public class TaskManController {
 	}
 
 	/**
+	 * 
+	 * @return all the tasks that are delegated to the active office
+	 */
+	public Set<Task> getAllDelegatedTasks(){
+		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks();
+	}
+
+	/**
+	 * 
+	 * @param office 
+	 * 			: the office from which you want to receive the tasks that are delegated to that office
+	 * 
+	 * @return all the tasks that are delegated to the office
+	 */
+	public Set<Task> getAllDelegatedTasksTo(BranchOffice office){
+		return office.getDelegatedTaskExpert().getAllDelegatedTasks();
+	}
+	/**
 	 * Returns the time
 	 * 
 	 * @return LocalDateTime : time
