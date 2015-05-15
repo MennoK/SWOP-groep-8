@@ -75,8 +75,10 @@ public class UiTaskMan {
 				+ new ToStringVisitor().create(project));
 		Task task = reader.select(project.getAllTasks(), false);
 		System.out.println(new ToStringVisitor().create(task));
-		System.out.println(new ToStringVisitor().create(tmc.getPlanner()
-				.getPlanning(task)));
+		if (tmc.getPlanner().taskHasPlanning(task)) {
+			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
+					.getPlanning(task)));
+		}
 	}
 
 	private void createProject() throws ExitUseCaseException {
@@ -329,71 +331,77 @@ public class UiTaskMan {
 		}
 	}
 
-	private void projectManagerMenu() {
-		try {
-			tmc.logIn(reader.select(tmc.getAllOffices()));
-			printProjectManagerMenu();
-			int choice = reader.getInt("Select an option");
-			switch (choice) {
-			case 9:
-				return;
-			case 1:
-				showProjects();
-				break;
-			case 2:
-				createProject();
-				break;
-			case 3:
-				createTask();
-				break;
-			case 4:
-				planTask();
-				break;
-			case 5:
-				advanceTime();
-				break;
-			case 6:
-				runSimulation();
-				break;
-			case 7:
-				delegateTask();
-				break;
-			default:
-				System.out.println("Invalid choice, try again.");
-				break;
+	private void projectManagerMenu() throws ExitUseCaseException {
+		tmc.logIn(reader.select(tmc.getAllOffices()));
+		while (true) {
+			try {
+				printProjectManagerMenu();
+				int choice = reader.getInt("Select an option");
+				switch (choice) {
+				case 9:
+					tmc.logOut();
+					return;
+				case 1:
+					showProjects();
+					break;
+				case 2:
+					createProject();
+					break;
+				case 3:
+					createTask();
+					break;
+				case 4:
+					planTask();
+					break;
+				case 5:
+					advanceTime();
+					break;
+				case 6:
+					runSimulation();
+					break;
+				case 7:
+					delegateTask();
+					break;
+				default:
+					System.out.println("Invalid choice, try again.");
+					break;
+				}
+			} catch (ExitUseCaseException e) {
+				System.out
+						.println("Use case exited, returning to the main menu.");
 			}
-		} catch (ExitUseCaseException e) {
-			System.out.println("Use case exited, returning to the main menu.");
 		}
-		tmc.logOut();
 	}
 
-	private void developerMenu() {
-		try {
-			tmc.logIn(reader.select(tmc.getAllOffices()));
-			tmc.logIn(reader.select(tmc.getAllDevelopers()));
-			printDeveloperMenu();
-			int choice = reader.getInt("Select an option");
-			switch (choice) {
-			case 9:
-				return;
-			case 1:
-				showProjects();
-				break;
-			case 2:
-				updateTaskStatus();
-				break;
-			case 3:
-				advanceTime();
-				break;
-			default:
-				System.out.println("Invalid choice, try again.");
-				break;
+	private void developerMenu() throws ExitUseCaseException {
+		tmc.logIn(reader.select(tmc.getAllOffices()));
+		tmc.logIn(reader.select(tmc.getAllDevelopers()));
+		while (true) {
+			try {
+				printDeveloperMenu();
+				int choice = reader.getInt("Select an option");
+				switch (choice) {
+				case 9:
+					tmc.logOut();
+					return;
+				case 1:
+					showProjects();
+					break;
+				case 2:
+					updateTaskStatus();
+					break;
+				case 3:
+					advanceTime();
+					break;
+				default:
+					System.out.println("Invalid choice, try again.");
+					break;
+				}
+			} catch (ExitUseCaseException e) {
+				System.out
+						.println("Use case exited, returning to the main menu.");
 			}
-		} catch (ExitUseCaseException e) {
-			System.out.println("Use case exited, returning to the main menu.");
 		}
-		tmc.logOut();
 	}
 
 	public static void main(String[] args) {
