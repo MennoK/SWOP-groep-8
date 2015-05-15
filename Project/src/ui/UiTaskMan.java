@@ -11,6 +11,7 @@ import parser.Parser;
 import taskmanager.*;
 import taskmanager.Task.TaskBuilder;
 import taskmanager.exception.ConlictingPlanningException;
+import taskmanager.exception.IllegalResourceException;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
@@ -113,9 +114,18 @@ public class UiTaskMan {
 				.getInt("How many developers are required to work on this task?"));
 		try {
 			builder.build(project);
-		} catch (IllegalStateException e) {
+		} catch (IllegalResourceException e) {
 			System.out
-					.println("This task was Illegal. Did you check the ressource requirements?");
+					.println("The required resource type where not consistent.");
+			if (e.isConflicting()) {
+				System.out.println("There was a conflict between: "
+						+ Printer.list(e.getproblematicResourceTypes()));
+			} else {
+				System.out.println(new SummerizingVisitor().createSummary(e
+						.getErrorType())
+						+ " requires "
+						+ Printer.list(e.getproblematicResourceTypes()));
+			}
 			createTask();
 		}
 	}

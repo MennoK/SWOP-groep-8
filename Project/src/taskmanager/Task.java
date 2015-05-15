@@ -701,8 +701,8 @@ public class Task implements Visitable {
 		 * @param estimatedDuration
 		 *            : estimated duration of task
 		 * @param acceptableDeviation
-		 *            : acceptable deviation of a task           
-		 *            
+		 *            : acceptable deviation of a task
+		 * 
 		 * 
 		 */
 		public TaskBuilder(String description, Duration estimatedDuration,
@@ -761,8 +761,8 @@ public class Task implements Visitable {
 		}
 
 		/**
-		 * If the task requires more than 1 developer. It is possible to 
-		 * change the amount of required developers.
+		 * If the task requires more than 1 developer. It is possible to change
+		 * the amount of required developers.
 		 */
 		public TaskBuilder amountOfRequiredDevelopers(
 				int amountOfRequiredDevelopers) {
@@ -777,8 +777,9 @@ public class Task implements Visitable {
 							.getRequiredResourceTypes()) {
 						if (!requiredResourceTypes.keySet().contains(
 								requiredResourceType)) {
-							throw new IllegalResourceException(type, type
-									.getRequiredResourceTypes() , this);
+							throw new IllegalResourceException(type,
+									type.getRequiredResourceTypes(), this,
+									false);
 						}
 					}
 				}
@@ -792,28 +793,27 @@ public class Task implements Visitable {
 							.getConflictedResourceTypes()) {
 						if (requiredResourceTypes.keySet().contains(
 								conflictingType)) {
-							throw new IllegalResourceException(type, type
-									.getRequiredResourceTypes() , this);
+							throw new IllegalResourceException(type,
+									type.getRequiredResourceTypes(), this, true);
 						}
 					}
 				}
 			}
-			
+
 		}
+
 		/**
 		 * Build a Task after all the optional values have been set. An project
 		 * is required to add the created task to.
 		 */
 		public Task build(Project project) {
-				checkRequiredResources();
-				checkConflictingResources();
-				Task task = new Task(this, project.getClock());
-				project.updateDependencies(task, originalTask);
-				project.addTask(task);
-				return task;
+			checkRequiredResources();
+			checkConflictingResources();
+			Task task = new Task(this, project.getClock());
+			project.updateDependencies(task, originalTask);
+			project.addTask(task);
+			return task;
 		}
-
-		
 
 	}
 
