@@ -141,4 +141,70 @@ public class TaskManControllerTester extends TaskManTester {
 		assertEquals(2, office2.getDelegatedTaskExpert().getAllDelegatedTasks().size());
 		assertEquals(0, activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().size());
 	}
+	
+	@Test
+	public void logoutTest() {
+		assertNotNull(tmc.getActiveDeveloper());
+		assertNotNull(tmc.getActiveOffice());
+		tmc.logOut();
+		assertNull(tmc.getActiveDeveloper());
+		assertNull(tmc.getActiveOffice());
+	}
+	
+	@Test
+	public void ActiveOfficeTests() {
+		Task task = this.createTask(project, Duration.ofHours(2));
+		tmc.logOut();
+		try {
+			tmc.setExecuting(task, time);
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.setFinished(task, time);
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.setFailed(task, time);
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.getAllDelegatablePlannableTasks();
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.delegate(task, here);;
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.getPossibleStartTimes(task);
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.selectResources(task, new TimeSpan(time, time.plusHours(1)));
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+		try {
+			tmc.getAllTasks();
+			fail("Expected not logged in exception");
+		} catch(IllegalStateException e) {
+		}
+	}
+	
+	@Test
+	public void testGetAllProjects() {
+		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
+		assertEquals(1, tmc.getAllProjectsAllOffices().size());
+		tmc.logIn(tmc.createBranchOffice("newLocation"));
+		tmc.logIn(tmc.createDeveloper("newName"));
+		tmc.createProject("newproj", "ugh", time.plusHours(32));
+		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
+		assertEquals(2, tmc.getAllProjectsAllOffices().size());
+	}
 }
