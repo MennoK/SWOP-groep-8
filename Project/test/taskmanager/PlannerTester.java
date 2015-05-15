@@ -169,7 +169,10 @@ public class PlannerTester extends TaskManTester {
 		assertTrue(planner.getPossibleStartTimes(task7, time1,
 				tmc.getAllDevelopers()).contains(
 				(WorkTime.getFinishTime(time1, Duration.ofHours(6)))));
+	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testPossibleStartTimesNoDev() {
 	}
 
 	@Test

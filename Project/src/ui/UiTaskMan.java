@@ -76,7 +76,8 @@ public class UiTaskMan {
 		Task task = reader.select(project.getAllTasks(), false);
 		System.out.println(new SummerizingVisitor().createSummary(tmc
 				.getResponsibleBranch(task))
-				+ " " + new ToStringVisitor().create(task));
+				+ " "
+				+ new ToStringVisitor().create(task));
 		if (tmc.getPlanner().taskHasPlanning(task)) {
 			System.out.println(new ToStringVisitor().create(tmc.getPlanner()
 					.getPlanning(task)));
@@ -303,7 +304,8 @@ public class UiTaskMan {
 
 	private void printSwitchUserMenu() {
 		System.out.println("\nSwitch user menu:\n" + "1: Projectmanager\t"
-				+ "2: Developer\t" + "9: Exit");
+				+ "2: Developer\t" + "3: Show projects\n"
+				+ "4: Advance time\t\t" + "9: Exit");
 	}
 
 	private void printProjectManagerMenu() {
@@ -331,6 +333,12 @@ public class UiTaskMan {
 					break;
 				case 2:
 					developerMenu();
+					break;
+				case 3:
+					showProjects();
+					break;
+				case 4:
+					advanceTime();
 					break;
 				case 9:
 					reader.close();
