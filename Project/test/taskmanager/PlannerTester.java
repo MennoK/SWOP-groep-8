@@ -173,6 +173,12 @@ public class PlannerTester extends TaskManTester {
 
 	@Test(expected = IllegalStateException.class)
 	public void testPossibleStartTimesNoDev() {
+		BranchOffice emptyOffice = tmc.createBranchOffice("empty office");
+		tmc.logOut();
+		tmc.logIn(emptyOffice);
+		Project project = createStandardProject(time.plusDays(1));
+		Task task = createTask(project, Duration.ofHours(3));
+		tmc.getPossibleStartTimes(task);
 	}
 
 	@Test

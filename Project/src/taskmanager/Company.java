@@ -38,12 +38,10 @@ public class Company {
 	}
 
 	/**
-	 * Returns the unmodifiable set of all branch offices of the company
-	 * 
 	 * @return branchOffices : set of all branchOffices
 	 */
 	Set<BranchOffice> getAllBranchOffices() {
-		return Collections.unmodifiableSet(branchOffices);
+		return branchOffices;
 	}
 
 }
