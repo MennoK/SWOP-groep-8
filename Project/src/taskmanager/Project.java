@@ -64,18 +64,6 @@ public class Project implements Visitable {
 	}
 
 	/**
-	 * 
-	 * @param string
-	 * @param string2
-	 * @param time
-	 * @param time2
-	 */
-	public Project(String string, String string2, LocalDateTime time,
-			LocalDateTime time2) {
-		this(string, string2, time, time2, new TaskManClock(time));
-	}
-
-	/**
 	 * This method adds a given task to a project
 	 * 
 	 * @param task

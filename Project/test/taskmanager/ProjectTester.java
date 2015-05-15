@@ -27,12 +27,12 @@ public class ProjectTester extends TaskManTester {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDueTimeOnCreationTime() {
-		new Project("project", "desc", time, time);
+		createStandardProject(time);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testDueTimeBeforeCreationTime() {
-		new Project("project", "desc", time, time.minusHours(1));
+		createStandardProject(time.minusHours(1));
 	}
 
 	@Test
