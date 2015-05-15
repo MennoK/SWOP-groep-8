@@ -22,9 +22,13 @@ public class BranchOffice implements Visitable {
 	private Planner planner;
 	private TaskManClock clock;
 
+	
 	/**
-	 * Constructor of TaskManController. When a new TaskManController has been
-	 * created new expert classes will be created.
+	 * constructor of BranchOffice
+	 * @param location
+	 * 			: where the Branch office is located
+	 * @param clock
+	 * 			: keeps track of the system time
 	 */
 	BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object

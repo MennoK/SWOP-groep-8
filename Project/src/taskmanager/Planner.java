@@ -32,6 +32,11 @@ public class Planner {
 
 	private final ImmutableClock clock;
 
+	/**
+	 * default constructor of planner
+	 * 
+	 * @param clock : required to keep track of system time
+	 */
 	Planner(ImmutableClock clock) {
 		this.clock = clock;
 	}
@@ -129,7 +134,7 @@ public class Planner {
 				if (timeSpan.getBegin().getHour() >= type
 						.getDailyAvailability().getBegin().getHour()
 						&& timeSpan.getEnd().getHour() <= type
-								.getDailyAvailability().getEnd().getHour()) {
+						.getDailyAvailability().getEnd().getHour()) {
 					return true;
 				} else {
 					return false;
@@ -470,6 +475,12 @@ public class Planner {
 		}
 	}
 
+	/**
+	 * returns the task that has the given planning 
+	 * 
+	 * @param planning : the given planning
+	 * @return the task that is planned with the given planning
+	 */
 	public Task getTask(Planning planning) {
 		return this.plannings.inverse().get(planning);
 	}
@@ -498,7 +509,7 @@ public class Planner {
 			return;
 		if (isPlannableForTimeSpan(task, this.plannings.get(task)
 				.getDevelopers(), new TimeSpan(this.clock.getCurrentTime(),
-				task.getDuration()))) {
+						task.getDuration()))) {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
 			task.setStatus(TaskStatus.UNAVAILABLE);
@@ -530,12 +541,27 @@ public class Planner {
 		}
 	}
 
+	/**
+	 * checks if a taks has a planning
+	 * @param task : the task for which you want to know if it has a planning
+	 * @return true if the task has a planning
+	 */
 	public boolean taskHasPlanning(Task task) {
 		return this.plannings.get(task) != null;
 	}
 
+	/**
+	 * returns the planning of a task
+	 * 
+	 * @param task : the task for which you want the planning
+	 * @return the planning of the given task
+	 */
 	public Planning getPlanning(Task task) {
-		return this.plannings.get(task);
+		if(taskHasPlanning(task)){
+			return this.plannings.get(task);
+		}else {
+			return null;
+		}
 	}
 
 	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
