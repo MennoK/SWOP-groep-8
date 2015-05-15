@@ -21,7 +21,7 @@ public class Company {
 	 * Default constructor of Company class. Initializes a new set of branch
 	 * offices
 	 */
-	Company(ImmutableClock clock){
+	Company(ImmutableClock clock) {
 		this.clock = clock;
 		this.branchOffices = new LinkedHashSet<BranchOffice>();
 	}
@@ -33,20 +33,7 @@ public class Company {
 	 * @param name
 	 *            : given name
 	 */
-	BranchOffice createBranchOffice( String location) {
-		BranchOffice branchOffice = new BranchOffice(location, clock);
-		this.addBranchOffice(branchOffice);
-		return branchOffice;
-	}
-
-	/**
-	 * Creates a new branch office with the given name. and adds the new branch
-	 * office to the set of all branch offices
-	 * 
-	 * @param name
-	 *            : given name
-	 */
-	BranchOffice createBranchOffice(String location, TaskManClock clock) {
+	BranchOffice createBranchOffice(String location) {
 		BranchOffice branchOffice = new BranchOffice(location, clock);
 		this.addBranchOffice(branchOffice);
 		return branchOffice;
