@@ -29,9 +29,9 @@ public class Planner {
 	private HashBiMap<Task, Planning> plannings = HashBiMap.create();
 
 	private Memento memento;
-	
+
 	private final ImmutableClock clock;
-	
+
 	Planner(ImmutableClock clock) {
 		this.clock = clock;
 	}
@@ -61,7 +61,7 @@ public class Planner {
 	 * 
 	 * @return A set of localdateTimes
 	 */
-	public Set<LocalDateTime> getPossibleStartTimes(Task task,
+	Set<LocalDateTime> getPossibleStartTimes(Task task,
 			LocalDateTime startTime, Set<Developer> developers) {
 
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
@@ -101,8 +101,8 @@ public class Planner {
 	 */
 	boolean isPlannableForTimeSpan(Task task, Set<Developer> developers,
 			TimeSpan timeSpan) {
-		if (enoughDevelopersAvalaible(developersAvailableFor(developers, task,
-				timeSpan), task)
+		if (enoughDevelopersAvalaible(
+				developersAvailableFor(developers, task, timeSpan), task)
 				&& enoughResourcesAvailable(
 						resourcesAvailableFor(task, timeSpan), task)) {
 			return true;
@@ -153,7 +153,8 @@ public class Planner {
 	 */
 	private boolean enoughDevelopersAvalaible(
 			Set<Developer> developersAvailableFor, Task task) {
-		if (developersAvailableFor.size() >= task.getAmountOfRequiredDevelopers()) {
+		if (developersAvailableFor.size() >= task
+				.getAmountOfRequiredDevelopers()) {
 			return true;
 		} else {
 			return false;
@@ -190,7 +191,7 @@ public class Planner {
 	void removePlanning(Planning planning) {
 		plannings.inverse().remove(planning);
 	}
-	
+
 	void removePlanning(Task task) {
 		plannings.remove(task);
 	}
@@ -207,8 +208,7 @@ public class Planner {
 	 *            : all tasks where there is possible a conflict with
 	 * @return
 	 */
-	public Set<Task> getConflictingTasks(Task task, LocalDateTime time,
-			Set<Task> tasks) {
+	Set<Task> getConflictingTasks(Task task, LocalDateTime time, Set<Task> tasks) {
 		Set<Task> conflictingTasks = new LinkedHashSet<>();
 		for (Task conflictingTask : tasks) {
 
@@ -235,7 +235,7 @@ public class Planner {
 	 *            : the time at which there might be a conflict
 	 * @return
 	 */
-	public boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time) {
+	boolean hasConflictWithAPlannedTask(Task task, LocalDateTime time) {
 		TimeSpan taskTimeSpan = new TimeSpan(time, task.getDuration());
 		for (Planning planning : this.plannings.values()) {
 			if (taskTimeSpan.overlaps(planning.getTimeSpan())) {
@@ -427,29 +427,27 @@ public class Planner {
 	}
 
 	/**
-	 * returns conlicting plannings based on the information of a
-	 * planningbuilder
+	 * returns conlicting tasks based on the information of a planningbuilder
 	 * 
 	 * @param planningBuilder
 	 *            : the planningbuilder that contains the information for a
 	 *            planning that would conflict
-	 * @return : set of conflicting plannings
+	 * @return : set of conflicting tasks
 	 */
-	Set<Planning> getConflictingPlanningsForBuilder(
-			PlanningBuilder planningBuilder) {
-		Set<Planning> conflictingPlannings = new HashSet<>();
+	Set<Task> getConflictingTasksForBuilder(PlanningBuilder planningBuilder) {
+		Set<Task> conflictingPlannings = new HashSet<>();
 
 		for (Planning planning : this.getAllPlannings()) {
 			if (planning.getTimeSpan().overlaps(planningBuilder.getTimeSpan())) {
 				for (Developer developer : planningBuilder.getDevelopers()) {
 					if (planning.getDevelopers().contains(developer)) {
-						conflictingPlannings.add(planning);
+						conflictingPlannings.add(getTask(planning));
 					}
 				}
 				for (Resource resource : planningBuilder.getResources()) {
 					if (planning.getResources().contains(resource)
 							&& !conflictingPlannings.contains(planning)) {
-						conflictingPlannings.add(planning);
+						conflictingPlannings.add(getTask(planning));
 					}
 				}
 			}
@@ -474,7 +472,7 @@ public class Planner {
 		}
 	}
 
-	public Task getTask(Planning planning) {
+	private Task getTask(Planning planning) {
 		return this.plannings.inverse().get(planning);
 	}
 
@@ -495,12 +493,14 @@ public class Planner {
 	void updateStatus(Task task) {
 		if (task.getStatus() == TaskStatus.EXECUTING
 				|| task.getStatus() == TaskStatus.FINISHED
-				|| task.getStatus() == TaskStatus.FAILED || !this.taskHasPlanning(task)
+				|| task.getStatus() == TaskStatus.FAILED
+				|| !this.taskHasPlanning(task)
 				|| !task.checkDependenciesFinished())
 			// task status remains unchanged
 			return;
-		if (isPlannableForTimeSpan(task, this.plannings.get(task).getDevelopers(),
-				new TimeSpan(this.clock.getCurrentTime(), task.getDuration()))) {
+		if (isPlannableForTimeSpan(task, this.plannings.get(task)
+				.getDevelopers(), new TimeSpan(this.clock.getCurrentTime(),
+				task.getDuration()))) {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
 			task.setStatus(TaskStatus.UNAVAILABLE);
@@ -531,18 +531,20 @@ public class Planner {
 			}
 		}
 	}
-	
+
 	public boolean taskHasPlanning(Task task) {
 		return this.plannings.get(task) != null;
 	}
-	
-	public Planning getPlanning(Task task) {
+
+	Planning getPlanning(Task task) {
 		return this.plannings.get(task);
 	}
 
-	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task, Developer developer){
+	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
+			Developer developer) {
 		return Planning.builder(startTime, task, developer, this);
 	}
+
 	/**
 	 * Memento inner class of the planner
 	 * 

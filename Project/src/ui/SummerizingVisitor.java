@@ -1,8 +1,10 @@
 package ui;
 
+import taskmanager.BranchOffice;
 import taskmanager.Developer;
 import taskmanager.Project;
 import taskmanager.Resource;
+import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.Visitable;
 import taskmanager.Visitor;
@@ -32,8 +34,18 @@ public class SummerizingVisitor implements Visitor {
 	}
 
 	@Override
+	public void visit(ResourceType resourceType) {
+		summary = resourceType.getName();
+	}
+
+	@Override
 	public void visit(Resource resource) {
 		summary = resource.getName();
+	}
+
+	@Override
+	public void visit(BranchOffice office) {
+		summary = office.getLocation();
 	}
 
 }
