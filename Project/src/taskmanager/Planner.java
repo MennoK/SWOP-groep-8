@@ -71,11 +71,6 @@ public class Planner {
 
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 
-		if (developers.isEmpty()) {
-			throw new IllegalArgumentException(
-					"Requires at least one developer to find a start time");
-		}
-
 		LocalDateTime time = startTime;
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES

@@ -93,55 +93,78 @@ public class TaskManControllerTester extends TaskManTester {
 		assertEquals(TaskStatus.FAILED, task2.getStatus());
 		assertEquals(TaskStatus.AVAILABLE, task3.getStatus());
 	}
-	
+
 	@Test
-	public void getAllDelegatablePlannableTasksTest(){
+	public void getAllDelegatablePlannableTasksTest() {
 
 		BranchOffice activeOffice = tmc.getActiveOffice();
 		BranchOffice office2 = tmc.createBranchOffice("Wonderland");
-		Project project2 = office2.getProjectExpert().createProject("a project in wonderland", "capture the flag", time, time.plusDays(99));
-		
-		Task task1 = Task.builder("task1", Duration.ofHours(1), 1).build(project);
-		Task task2 = Task.builder("task1", Duration.ofHours(1), 1).build(project);
-		
-		Task task3 = Task.builder("task3", Duration.ofHours(1), 1).build(project2);
-				
+		Project project2 = office2.getProjectExpert().createProject(
+				"a project in wonderland", "capture the flag", time,
+				time.plusDays(99));
+
+		Task task1 = Task.builder("task1", Duration.ofHours(1), 1).build(
+				project);
+		Task task2 = Task.builder("task2", Duration.ofHours(1), 1).build(
+				project);
+
+		Task task3 = Task.builder("task3", Duration.ofHours(1), 1).build(
+				project2);
+		Task task4 = createPlannedTask(project, Duration.ofHours(8));
+
 		activeOffice.getDelegatedTaskExpert().addDelegatedTask(task3, office2);
-		assertTrue(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(task3));
+		assertTrue(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.contains(task3));
 		office2.getDelegatedTaskExpert().addDelegatedTask(task2, activeOffice);
-		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks().contains(task2));
+		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.contains(task2));
 
 		assertEquals(2, tmc.getAllDelegatablePlannableTasks().size());
 		assertTrue(tmc.getAllDelegatablePlannableTasks().contains(task1));
+		assertFalse(tmc.getAllDelegatablePlannableTasks().contains(task2));
 		assertTrue(tmc.getAllDelegatablePlannableTasks().contains(task3));
+		assertFalse(tmc.getAllDelegatablePlannableTasks().contains(task4));
 	}
-	
+
 	@Test
-	public void delegateTaskTest(){
-		//delegate a simple task from activeOffice to office 2
+	public void delegateTaskTest() {
+		// delegate a simple task from activeOffice to office 2
 		BranchOffice activeOffice = tmc.getActiveOffice();
 		BranchOffice office2 = tmc.createBranchOffice("Wonderland");
 		BranchOffice office3 = tmc.createBranchOffice("Not Wonderland");
-		Task taskToDelegate = Task.builder("delegate", Duration.ofHours(1), 1).build(project);
+		Task taskToDelegate = Task.builder("delegate", Duration.ofHours(1), 1)
+				.build(project);
 		tmc.delegate(taskToDelegate, office2);
-		
-		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate));
-		assertEquals(1, office2.getDelegatedTaskExpert().getAllDelegatedTasks().size());
-		
-		//delegate a task that has been delegated to active office to office 2
-		Task taskToDelegate2 = Task.builder("delegate2", Duration.ofHours(1), 1).build(project);;
-		activeOffice.getDelegatedTaskExpert().addDelegatedTask(taskToDelegate2, office3);
-		assertEquals(1, activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().size());
-		assertTrue(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate2));
+
+		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.contains(taskToDelegate));
+		assertEquals(1, office2.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.size());
+
+		// delegate a task that has been delegated to active office to office 2
+		Task taskToDelegate2 = Task
+				.builder("delegate2", Duration.ofHours(1), 1).build(project);
+		;
+		activeOffice.getDelegatedTaskExpert().addDelegatedTask(taskToDelegate2,
+				office3);
+		assertEquals(1, activeOffice.getDelegatedTaskExpert()
+				.getAllDelegatedTasks().size());
+		assertTrue(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.contains(taskToDelegate2));
 		tmc.delegate(taskToDelegate2, office2);
-		
-		assertFalse(activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate2));
-		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks().contains(taskToDelegate2));
-		assertEquals(office3, office2.getDelegatedTaskExpert().officeForDelegatedTask(taskToDelegate2));
-		assertEquals(2, office2.getDelegatedTaskExpert().getAllDelegatedTasks().size());
-		assertEquals(0, activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks().size());
+
+		assertFalse(activeOffice.getDelegatedTaskExpert()
+				.getAllDelegatedTasks().contains(taskToDelegate2));
+		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.contains(taskToDelegate2));
+		assertEquals(office3, office2.getDelegatedTaskExpert()
+				.officeForDelegatedTask(taskToDelegate2));
+		assertEquals(2, office2.getDelegatedTaskExpert().getAllDelegatedTasks()
+				.size());
+		assertEquals(0, activeOffice.getDelegatedTaskExpert()
+				.getAllDelegatedTasks().size());
 	}
-	
+
 	@Test
 	public void logoutTest() {
 		assertNotNull(tmc.getActiveDeveloper());
@@ -150,53 +173,105 @@ public class TaskManControllerTester extends TaskManTester {
 		assertNull(tmc.getActiveDeveloper());
 		assertNull(tmc.getActiveOffice());
 	}
-	
+
 	@Test
 	public void ActiveOfficeTests() {
-		Task task = this.createTask(project, Duration.ofHours(2));
+		Task task = createPlannedTask(project, Duration.ofHours(2));
+		Task taskExecuting = createPlannedTask(project, Duration.ofHours(2));
+		tmc.setExecuting(taskExecuting, time);
 		tmc.logOut();
 		try {
 			tmc.setExecuting(task, time);
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
-			tmc.setFinished(task, time);
+			tmc.setFinished(taskExecuting, time);
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
-			tmc.setFailed(task, time);
+			tmc.setFailed(taskExecuting, time);
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
 			tmc.getAllDelegatablePlannableTasks();
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
-			tmc.delegate(task, here);;
+			tmc.delegate(task, here);
+			;
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
 			tmc.getPossibleStartTimes(task);
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
 			tmc.selectResources(task, new TimeSpan(time, time.plusHours(1)));
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 		try {
 			tmc.getAllTasks();
 			fail("Expected not logged in exception");
-		} catch(IllegalStateException e) {
+		} catch (IllegalStateException e) {
 		}
 	}
-	
+
+	@Test
+	public void unmodifialbleSetTest() {
+		try {
+			tmc.getAllDelegatablePlannableTasks().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllDelegatedTasks().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllDelegatedTasksTo(here).clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllDevelopers().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllOffices().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllProjectsActiveOffice().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllProjectsAllOffices().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllResourceTypes().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+		try {
+			tmc.getAllTasks().clear();
+			fail("Expected UnsupportedOperationException");
+		} catch (UnsupportedOperationException e) {
+		}
+	}
+
 	@Test
 	public void testGetAllProjects() {
 		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
@@ -207,15 +282,21 @@ public class TaskManControllerTester extends TaskManTester {
 		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
 		assertEquals(2, tmc.getAllProjectsAllOffices().size());
 	}
-	
+
 	@Test
 	public void testGetAllTasks() {
 		assertEquals(0, tmc.getAllTasks().size());
-		this.createStandardProject(time.plusHours(24));
-		this.createPlannedTask(project, Duration.ofHours(5), dev);
+		createStandardProject(time.plusHours(24));
+		Task task1 = createPlannedTask(project, Duration.ofHours(5), dev);
+		Task task2 = createTask(project, Duration.ofHours(8));
+		Developer dev2 = tmc.createDeveloper("other guy");
+		Task task3 = createPlannedTask(project, Duration.ofHours(5), dev2);
 		assertEquals(1, tmc.getAllTasks().size());
+		assertTrue(tmc.getAllTasks().contains(task1));
+		assertFalse(tmc.getAllTasks().contains(task2));
+		assertFalse(tmc.getAllTasks().contains(task3));
 	}
-	
+
 	@Test
 	public void getResponsibleBranch() {
 		assertEquals(this.here, tmc.getResponsibleBranch(project));
@@ -224,9 +305,26 @@ public class TaskManControllerTester extends TaskManTester {
 	@Test
 	public void getResponsibleBranchForTask() {
 		Task task = this.createTask(project, Duration.ofHours(5));
-		assertEquals(this.here, tmc.getResponsibleBranch(task));
 		BranchOffice there = tmc.createBranchOffice("Celestijnenlaan 200a");
+		assertEquals(this.here, tmc.getResponsibleBranch(task));
 		tmc.delegate(task, there);
 		assertEquals(there, tmc.getResponsibleBranch(task));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void getResponsibleBranchForProjectNotInSystem() {
+		tmc.saveSystem();
+		Project project = createStandardProject(time.plusHours(1));
+		tmc.loadSystem();
+		tmc.getResponsibleBranch(project);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void getResponsibleBranchForTaskNotInSystem() {
+		tmc.saveSystem();
+		Project project = createStandardProject(time.plusHours(1));
+		Task task = createTask(project, Duration.ofHours(8));
+		tmc.loadSystem();
+		tmc.getResponsibleBranch(task);
 	}
 }
