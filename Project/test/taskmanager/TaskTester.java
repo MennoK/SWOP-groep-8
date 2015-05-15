@@ -15,6 +15,7 @@ import taskmanager.ResourceType;
 import taskmanager.Task;
 import taskmanager.TaskFinishedStatus;
 import taskmanager.TaskStatus;
+import taskmanager.exception.IllegalResourceException;
 import utility.TimeInterval;
 
 public class TaskTester extends TaskManTester {
@@ -304,7 +305,7 @@ public class TaskTester extends TaskManTester {
 				.addRequiredResourceType(resType, 1).build(project);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = IllegalResourceException.class)
 	public void createTaskWithIncorrectRequiredResources() {
 
 		ResourceType requirement = ResourceType.builder("resourcetype").build(
