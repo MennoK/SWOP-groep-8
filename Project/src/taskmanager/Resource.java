@@ -16,7 +16,7 @@ public class Resource implements Visitable {
 	 * @param name
 	 *            : given name of the resource
 	 */
-	public Resource(String name) {
+	Resource(String name) {
 		setName(name);
 	}
 
