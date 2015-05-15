@@ -240,7 +240,7 @@ public class Project implements Visitable {
 		if (this.getAllTasks().size() != 0) {
 			for (Task task : this.getAllTasks()) {
 				if (task.getStatus() == TaskStatus.UNAVAILABLE
-						|| task.getStatus() == TaskStatus.AVAILABLE) {
+						|| task.getStatus() == TaskStatus.AVAILABLE || task.getStatus() == TaskStatus.EXECUTING) {
 					return false;
 				}
 			}
