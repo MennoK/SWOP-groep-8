@@ -29,7 +29,7 @@ public class BranchOffice implements Visitable {
 	BranchOffice(String location, ImmutableClock clock) {
 		// temporary time object
 		this.clock = (TaskManClock) clock;
-		setLocation(location);
+        setLocation(location);
 		createDeveloperExpert();
 		createResourceExpert();
 		createProjectExpert();
@@ -149,6 +149,7 @@ public class BranchOffice implements Visitable {
 			this.getDelegatedTaskExpert().save(office);
 		}
 	}
+
 
 	/**
 	 * Loads the last saved state of the system

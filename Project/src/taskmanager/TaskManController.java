@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -145,7 +146,8 @@ public class TaskManController {
 	 */
 	private Set<Task> getUnplannedTasks() {
 		checkActiveOfficeForNull();
-		Set<Task> allTasks = new HashSet<Task>( activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks());
+		Set<Task> allTasks = new HashSet<Task>(activeOffice
+				.getDelegatedTaskExpert().getAllDelegatedTasks());
 		allTasks.addAll(activeOffice.getProjectExpert().getAllTasks());
 		return activeOffice.getPlanner().getUnplannedTasks(allTasks);
 	}
@@ -232,13 +234,26 @@ public class TaskManController {
 	}
 
 	/**
-	 * Returns a list of the projects
+	 * Returns a list of the projects from the active office
 	 * 
-	 * @return projects: list of projects
+	 * @return projects
 	 */
-	public Set<Project> getAllProjects() {
+	public Set<Project> getAllProjectsActiveOffice() {
 		return Collections.unmodifiableSet(activeOffice.getProjectExpert()
 				.getAllProjects());
+	}
+
+	/**
+	 * Returns a list of the projects of all offices
+	 * 
+	 * @return projects
+	 */
+	public Set<Project> getAllProjectsAllOffices() {
+		Set<Project> projects = new LinkedHashSet<Project>();
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			projects.addAll(office.getProjectExpert().getAllProjects());
+		}
+		return Collections.unmodifiableSet(projects);
 	}
 
 	/**
@@ -272,7 +287,7 @@ public class TaskManController {
 	public Set<Task> getAllTasks(Developer dev) {
 		checkActiveOfficeForNull();
 		Set<Task> tasks = new HashSet<Task>();
-		for (Project project : getAllProjects()) {
+		for (Project project : getAllProjectsActiveOffice()) {
 			for (Task task : project.getAllTasks()) {
 				if (activeOffice.getPlanner().taskHasPlanning(task)
 						&& activeOffice.getPlanner().getPlanning(task)
@@ -282,6 +297,19 @@ public class TaskManController {
 			}
 		}
 		return Collections.unmodifiableSet(tasks);
+	}
+
+	/**
+	 * @param project
+	 * @return The BranchOffice responsible for this project
+	 */
+	public BranchOffice getResponsibleBranch(Project project) {
+		for (BranchOffice office : company.getAllBranchOffices()) {
+			if (office.getProjectExpert().getAllProjects().contains(project)) {
+				return office;
+			}
+		}
+		throw new IllegalArgumentException("Project is not in the system");
 	}
 
 	/**

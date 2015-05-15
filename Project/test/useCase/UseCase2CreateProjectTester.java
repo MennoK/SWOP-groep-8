@@ -23,8 +23,8 @@ public class UseCase2CreateProjectTester extends UseCaseTestBasis {
 				.minusDays(6).minusHours(1), now.plusDays(3).minusHours(1));
 
 		// check if the project is correctly made
-		assertEquals(1, tmc.getAllProjects().size());
-		assertEquals(tmc.getAllProjects().size(), 1);
+		assertEquals(1, tmc.getAllProjectsActiveOffice().size());
+		assertEquals(tmc.getAllProjectsActiveOffice().size(), 1);
 		assertEquals("Project 1", project0.getName());
 		assertEquals("Description 1", project0.getDescription());
 		assertEquals(now.minusDays(6).minusHours(1), project0.getCreationTime());
@@ -35,7 +35,7 @@ public class UseCase2CreateProjectTester extends UseCaseTestBasis {
 				now.plusHours(4));
 
 		// check if both are projects are made
-		assertEquals(tmc.getAllProjects().size(), 2);
+		assertEquals(tmc.getAllProjectsActiveOffice().size(), 2);
 		assertEquals("Project 1", project0.getName());
 		assertEquals("Description 1", project0.getDescription());
 		assertEquals(now.minusDays(6).minusHours(1), project0.getCreationTime());

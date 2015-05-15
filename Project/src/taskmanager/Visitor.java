@@ -43,4 +43,11 @@ public interface Visitor {
 	 * @param office
 	 */
 	public void visit(BranchOffice office);
+
+	/**
+	 * Visit the plan
+	 * 
+	 * @param plan
+	 */
+	public void visit(Planning plan);
 }
