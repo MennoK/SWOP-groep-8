@@ -171,12 +171,16 @@ public class PlannerTester extends TaskManTester {
 				(WorkTime.getFinishTime(time1, Duration.ofHours(6)))));
 	}
 
+	@Test(expected = IllegalStateException.class)
+	public void testPossibleStartTimesNoDev() {
 		BranchOffice emptyOffice = tmc.createBranchOffice("empty office");
 		tmc.logOut();
 		tmc.logIn(emptyOffice);
 		Project project = createStandardProject(time.plusDays(1));
 		Task task = createTask(project, Duration.ofHours(3));
 		tmc.getPossibleStartTimes(task);
+	}
+
 	@Test
 	public void testHasConflictWithPlannedTask() {
 		// create planning for task 1 so that it can conflict with task 2 at
