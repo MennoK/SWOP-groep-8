@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import taskmanager.Planning.PlanningBuilder;
 import taskmanager.exception.UnplannableDevAmountException;
 import taskmanager.exception.UnplannableResourceAmountException;
 import taskmanager.exception.UnplannableResourceTypeException;
@@ -76,8 +77,8 @@ public class TaskManController {
 		if (taskIsDelegatedToActiveOffice(task)) {
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(
 					task,
-					activeOffice.getDelegatedTaskExpert()
-							.getOriginalOffice(task));
+					activeOffice.getDelegatedTaskExpert().getOriginalOffice(
+							task));
 			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
 
 		} else {
@@ -208,27 +209,33 @@ public class TaskManController {
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
 		checkActiveOfficeForNull();
-		
+
 		if (activeOffice.getDeveloperExpert().getAllDevelopers().isEmpty()) {
 			throw new IllegalStateException(
 					"Requires at least one developer to find a start time");
 		}
-		
-		if (activeOffice.getDeveloperExpert().getAllDevelopers().size() < task.getAmountOfRequiredDevelopers()){
-			throw new UnplannableDevAmountException(task.getAmountOfRequiredDevelopers());
+
+		if (activeOffice.getDeveloperExpert().getAllDevelopers().size() < task
+				.getAmountOfRequiredDevelopers()) {
+			throw new UnplannableDevAmountException(
+					task.getAmountOfRequiredDevelopers());
 		}
-		
-		for(ResourceType taskResource : task.getRequiredResourceTypes().keySet()){
 
-			if(this.getActiveOffice().getResourceExpert().getAllResourceTypes().contains(taskResource)){
+		for (ResourceType taskResource : task.getRequiredResourceTypes()
+				.keySet()) {
 
-				if(taskResource.getAllResources().size() < task.getRequiredResourceTypes().get(taskResource)){
-					throw new UnplannableResourceAmountException(task.getRequiredResourceTypes().get(taskResource), taskResource);
+			if (this.getActiveOffice().getResourceExpert()
+					.getAllResourceTypes().contains(taskResource)) {
+
+				if (taskResource.getAllResources().size() < task
+						.getRequiredResourceTypes().get(taskResource)) {
+					throw new UnplannableResourceAmountException(task
+							.getRequiredResourceTypes().get(taskResource),
+							taskResource);
 				}
+			} else {
+				throw new UnplannableResourceTypeException(taskResource);
 			}
-            else{
-                  throw new UnplannableResourceTypeException(taskResource);
-            }
 		}
 
 		return activeOffice.getPlanner().getPossibleStartTimes(task, getTime(),
@@ -417,11 +424,26 @@ public class TaskManController {
 	}
 
 	/**
+	 * Start the creation of a planning
+	 * 
+	 * @param startTime
+	 * @param task
+	 * @param developer
+	 * @return the builder capable of creating the planning
+	 */
+	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
+			Developer developer) {
+		checkActiveOfficeForNull();
+		return Planning.builder(startTime, task, developer, getPlanner());
+	}
+
+	/**
 	 * Returns the planning expert
 	 * 
 	 * @return planningExpert : planning expert
 	 */
 	public Planner getPlanner() {
+		checkActiveOfficeForNull();
 		return activeOffice.getPlanner();
 	}
 

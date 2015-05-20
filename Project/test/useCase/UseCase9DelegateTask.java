@@ -10,10 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskmanager.BranchOffice;
-import taskmanager.Developer;
 import taskmanager.Project;
-import taskmanager.Resource;
-import taskmanager.ResourceType;
 import taskmanager.Task;
 
 public class UseCase9DelegateTask extends UseCaseTestBasis {

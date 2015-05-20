@@ -42,12 +42,12 @@ public class UseCase1ShowProjectsTester extends UseCaseTestBasis {
 
 		task1 = Task.builder("Task 1", Duration.ofHours(5), 0.4)
 				.build(project1);
-		tmc.getPlanner().createPlanning(now, task1, activeUser).build();
+		tmc.createPlanning(now, task1, activeUser).build();
 		tmc.setExecuting(task1, now);
 		tmc.setFinished(task1, now.plusDays(1));
 		task2 = Task.builder("Task 2", Duration.ofHours(2), 0.4)
 				.build(project2);
-		tmc.getPlanner().createPlanning(now.plusHours(5), task2, jos).build();
+		tmc.createPlanning(now.plusHours(5), task2, jos).build();
 		task3 = Task.builder("Task 3", Duration.ofHours(3), 0.4)
 				.addDependencies(task2).build(project2);
 		Task.builder("task4", Duration.ofHours(2), 0.4).build(project3);
