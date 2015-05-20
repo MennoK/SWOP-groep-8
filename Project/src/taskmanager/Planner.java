@@ -12,6 +12,7 @@ import java.util.Set;
 import com.google.common.collect.HashBiMap;
 
 import taskmanager.Planning.PlanningBuilder;
+import taskmanager.exception.UnplannableDevAmountException;
 import utility.TimeSpan;
 import utility.WorkDay;
 import utility.WorkTime;
@@ -71,11 +72,6 @@ public class Planner {
 
 		Set<LocalDateTime> possibleStartTimes = new LinkedHashSet<LocalDateTime>();
 
-		if (developers.isEmpty()) {
-			throw new IllegalArgumentException(
-					"Requires at least one developer to find a start time");
-		}
-
 		LocalDateTime time = startTime;
 
 		while (possibleStartTimes.size() < TOTAL_POSSIBLE_START_TIMES
@@ -90,7 +86,8 @@ public class Planner {
 	}
 
 	/**
-	 * Checks whether a task is plannable for given time span
+	 * Checks whether a task is plannable for given time span. First checks
+	 * if the task is plannable.
 	 * 
 	 * @param task
 	 *            : given task to be planned
@@ -337,7 +334,7 @@ public class Planner {
 	 * Returns all available developers for a task during a given time span
 	 * 
 	 * @param developers
-	 *            : set of resources
+	 *            : set of developers
 	 * @param task
 	 *            : given task
 	 * @param timeSpan

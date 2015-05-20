@@ -1,6 +1,5 @@
 package taskmanager;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,12 +37,10 @@ public class Company {
 	}
 
 	/**
-	 * Returns the unmodifiable set of all branch offices of the company
-	 * 
 	 * @return branchOffices : set of all branchOffices
 	 */
 	Set<BranchOffice> getAllBranchOffices() {
-		return Collections.unmodifiableSet(branchOffices);
+		return branchOffices;
 	}
 
 }

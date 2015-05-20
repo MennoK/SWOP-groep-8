@@ -21,7 +21,7 @@ public class SummerizingVisitor implements Visitor {
 
 	@Override
 	public void visit(Task task) {
-		summary = "Task " + task.getId() + " " + task.getStatus();
+		summary = "Task " + task.getId() + ": " + task.getDescription() + " " + task.getStatus();
 	}
 
 	@Override

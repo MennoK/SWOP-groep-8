@@ -245,7 +245,7 @@ public class Parser {
 			TaskManController tmc) {
 		for (LinkedHashMap<String, Object> developer : developers) {
 			// get the developer name
-			String name = (String) developer.get("name");
+			String name= (String) developer.get("name");
 			tmc.createDeveloper(name);
 		}
 	}
@@ -311,7 +311,7 @@ public class Parser {
 						.get("prerequisiteTasks");
 				for (Integer taskNr : prerequisiteTasks) {
 					builder.addDependencies(new ArrayList<>(projectOfTask
-							.getAllTasks()).get(taskNr - 1));
+							.getAllTasks()).get(taskNr));
 				}
 			}
 
@@ -319,7 +319,13 @@ public class Parser {
 			if (task.get("alternativeFor") != null) {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				builder.setOriginalTask(new ArrayList<>(projectOfTask
-						.getAllTasks()).get(alternativeTaskNr - 1));
+						.getAllTasks()).get(alternativeTaskNr));
+			}
+			
+			//add amount of devs needed
+			if (task.get("requiredDevelopers") != null){
+				int amountOfDevs = (int) task.get("requiredDevelopers");
+				builder.amountOfRequiredDevelopers(amountOfDevs);
 			}
 
 			// add required resource types
@@ -338,7 +344,6 @@ public class Parser {
 			builder.build(projectOfTask);
 			Task newTask = new ArrayList<>(projectOfTask.getAllTasks())
 					.get(projectOfTask.getAllTasks().size() - 1);
-
 			alltasks.add(newTask);
 
 			if (taskNrSet.contains(counter)) {
@@ -423,7 +428,6 @@ public class Parser {
 	 */
 	private void constructDelegations(List<LinkedHashMap<String, Object>> delegations,
 			TaskManController controller){
-		System.out.println(delegations);
 		for(LinkedHashMap<String, Object> delegation : delegations){
 
 			//get all information from delegation:
@@ -435,8 +439,6 @@ public class Parser {
 			BranchOffice branchFrom = new ArrayList<>(controller.getAllOffices()).get(branchFromNr);
 			controller.logIn(branchFrom);
 			Project project = new ArrayList<>(controller.getAllProjectsActiveOffice()).get(projectNr);
-			System.out.println(project.getAllTasks());
-			System.out.println(new ArrayList<>(project.getAllTasks()));
 			Task task = new ArrayList<>(project.getAllTasks()).get(taskNr);
 			controller.delegate(task,  new ArrayList<>(controller.getAllOffices()).get(branchToNr));
 		}

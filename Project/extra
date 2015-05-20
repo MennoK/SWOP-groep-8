@@ -1,0 +1,98 @@
+
+branch:
+  - location: "Thuis Andre"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "white board"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Laptop 1"
+            type: 0
+          - name: "White Board 1"
+            type: 1
+    developer:
+          - name: "Andre Jacobs"
+    projects:
+          - name         : "Blok"
+            description  : "Studeren voor de examens"
+            creationTime : "2015-05-23 12:00"
+            dueTime      : "2015-06-21 18:00"
+    tasks:
+
+    plannings:
+
+ 
+
+branch:
+  - location: "Thuis Bruno"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Laptop 1"
+            type: 0
+    developer:
+          - name: "Bruno Lannoo"
+    projects:
+
+    tasks:
+
+    plannings:
+    
+
+branch:
+  - location: "Thuis Thomas"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "demo kit"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Desktop pc"
+            type: 0
+          - name: "Demokit"
+            type: 1
+    developer:
+          - name: "Thomas Marcelis"
+    projects:
+
+    tasks:
+
+    plannings:
+
+branch:
+  - location: "Thuis Menno"
+    resourceTypes:
+          - name              : "computer"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Laptop 1"
+            type: 0
+    developer:
+          - name: "Menno Keustermans"
+    projects:
+
+    tasks:
+
+    plannings:

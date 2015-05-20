@@ -1,0 +1,240 @@
+# The file format is a simple subset of YAML.
+# Everything after '#' is ignored (i.e. single line comment)
+# Input file created for the demo 
+
+systemTime: "2014-04-01 09:00"
+
+branch:
+  - location : "200A dep. cw"
+    dailyAvailability :
+          - startTime : "12:00"
+            endTime   : "17:00"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "white board"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "demo kit"
+            requires          : [0]
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Computer 1"
+            type: 0
+          - name: "Computer 2"
+            type: 0
+          - name: "Computer 3"
+            type: 0
+          - name: "Computer 4"
+            type: 0
+          - name: "White Board 1"
+            type: 1
+          - name: "White Board 2"
+            type: 1
+          - name: "Demo Kit 1"
+            type: 2
+          - name: "Demo Kit 2"
+            type: 2
+    developers:
+          - name     : "Andre Jacobs"
+          - name     : "Bruno Lannoo"
+          - name     : "Thomas Marcelis"
+          - name     : "Menno Keustermans"
+    projects:
+         - name         : "SWOP: iteratie 1"
+           description  : "iteratie 1 voor softwerp ontwerp"
+           creationTime : "2015-02-16 12:00"
+           dueTime      : "2015-03-13 18:00"
+
+         - name         : "SWOP: iteratie 2"
+           description  : "iteratie 2 voor softwerp ontwerp"
+           creationTime : "2015-03-16 12:00"
+           dueTime      : "2015-05-01 18:00"
+
+         - name         : "SWOP: iteratie 3"
+           description  : "iteratie 3 voor softwerp ontwerp"
+           creationTime : "2015-05-01 12:00"
+           dueTime      : "2015-06-12 18:45"
+    tasks:
+          - project            : 0
+            description        : "Design model en implementatie"
+            estimatedDuration  : 60
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      : [{type: 1,  quantity: 1}, {type: 0,  quantity: 4}]
+            requiredDevelopers: 4
+            prerequisiteTasks  :
+            status             : finished
+            startTime          : "2015-02-17 10:00"
+            endTime            : "2015-03-13 14:00"
+
+          - project            : 1
+            description        : "Design model en implementatie"
+            estimatedDuration  : 90
+            acceptableDeviation: 10
+            alternativeFor     :
+            requiredTypes      : [{type: 1,  quantity: 1}, {type: 0 ,  quantity: 4}]
+            requiredDevelopers: 4
+            prerequisiteTasks  :
+            status             : finished
+            startTime          : "2015-03-16 16:00"
+            endTime            : "2015-05-01 12:00"
+
+          - project            : 2
+            description        : "Design model"
+            estimatedDuration  : 4
+            acceptableDeviation: 80
+            alternativeFor     :
+            requiredTypes      : [{type: 1,  quantity: 1}] #Whiteboard
+            requiredDevelopers: 4
+            prerequisiteTasks  :
+            status             : finished
+            startTime          : "2015-05-11 10:00"
+            endTime            : "2015-05-11 18:00"
+
+          - project            : 2
+            description        : "Implementatie"
+            estimatedDuration  : 70
+            acceptableDeviation: 0
+            alternativeFor     :
+            requiredTypes      : [{type: 0,  quantity: 4}] #computers
+            prerequisiteTasks  : [0]
+            requiredDevelopers : 4
+            status             : finished
+            startTime          : "2015-05-12 16:00"
+            endTime            : "2015-05-20 15:00"
+
+          - project            : 2
+            description        : "presentatie voorbereiden"
+            estimatedDuration  : 70
+            acceptableDeviation: 0
+            alternativeFor     :
+            requiredTypes      : []
+            prerequisiteTasks  : []
+            requiredDevelopers : 4
+            status             :
+
+          - project            : 2
+            description        : "Demo geven"
+            estimatedDuration  : 1
+            acceptableDeviation: 10
+            alternativeFor     :
+            requiredTypes      : [{type: 2,  quantity: 1},{type: 0,  quantity: 1}] #demo kit
+            requiredDevelopers : 1
+            prerequisiteTasks  : [2]
+            status             : 
+
+    plannings:
+          - plannedStartTime : "2015-02-17 10:00"
+            developers       : [0,1,2,3]
+            task             : 0
+            resources        : [{type: 0,  resource: [0, 1, 2, 3]},{type: 1,  resource: [4]}]
+          - plannedStartTime : "2015-03-16 16:00"
+            developers       : [0,1,2,3]
+            task             : 1
+            resources        : [{type: 0,  resource: [0, 1, 2, 3]},{type: 1,  resource: [4]}]
+          - plannedStartTime : "2015-05-11 10:00"
+            developers       : [0,1,2,3]
+            task             : 2
+            resources        : [{type: 1,  resource: [4]}]
+          - plannedStartTime : "2015-05-12 16:00"
+            developers       : [0,1,2,3]
+            task             : 3
+            resources        : [{type: 0,  resource: [0, 1, 2, 3]}] 
+
+  - location: "Thuis Andre"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "white board"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Laptop 1"
+            type: 0
+          - name: "White Board 1"
+            type: 1
+    developers:
+          - name: "Andre Jacobs"
+    projects:
+          - name         : "Blok"
+            description  : "Studeren voor de examens"
+            creationTime : "2015-05-23 12:00"
+            dueTime      : "2015-06-21 18:00"
+    tasks:
+
+    plannings:
+
+  - location: "Thuis Bruno"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Laptop 1"
+            type: 0
+    developers:
+          - name: "Bruno Lannoo"
+    projects:
+
+    tasks:
+
+    plannings:
+    
+  - location: "Thuis Thomas"
+    resourceTypes:
+          - name              : "computer"
+            # Inner lists are between "[" and "]". Their items are seperated by ",".
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+          - name              : "demo kit"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Desktop pc"
+            type: 0
+          - name: "Demokit"
+            type: 1
+    developers:
+          - name: "Thomas Marcelis"
+    projects:
+
+    tasks:
+
+    plannings:
+
+  - location: "Thuis Menno"
+    resourceTypes:
+          - name              : "computer"
+            requires          : []
+            conflictsWith     : []
+            dailyAvailability :
+    resources:
+          - name: "Laptop 1"
+            type: 0
+    developers:
+          - name: "Menno Keustermans"
+    projects:
+
+    tasks:
+
+    plannings:        
+

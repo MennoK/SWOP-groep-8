@@ -20,11 +20,11 @@ branch:
             dailyAvailability :
           - name              : "demo kit"
             requires          : []
-            conflictsWith     : [1]
+            conflictsWith     : [2]
             dailyAvailability :
           - name              : "conference room"
             requires          : [2]
-            conflictsWith     : [3]
+            conflictsWith     : [1]
             dailyAvailability :
           - name              : "distributed testing setup"
             requires          : []
@@ -61,8 +61,8 @@ branch:
             type: 5
     developers:
           - name     : "John Deere"
-          - name     : "Tom Hawk"
-          - name     : "Bob Grylls"
+          - name     : "New Holland"
+          - name     : "Case Case"
     projects:
           - name         : "project x"
             description  : "a project description"
@@ -95,11 +95,11 @@ branch:
             dailyAvailability :
           - name              : "demo kit"
             requires          : []
-            conflictsWith     : [1]
+            conflictsWith     : [2]
             dailyAvailability :
           - name              : "conference room"
             requires          : [2]
-            conflictsWith     : [3]
+            conflictsWith     : [1]
             dailyAvailability :
           - name              : "distributed testing setup"
             requires          : []
