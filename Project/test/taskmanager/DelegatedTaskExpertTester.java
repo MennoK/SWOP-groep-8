@@ -53,13 +53,13 @@ public class DelegatedTaskExpertTester extends TaskManTester {
 		car.createResource("red car");
 		Task task = Task.builder("desc", Duration.ofHours(8), 0.5)
 				.addRequiredResourceType(car, 1).build(project);
-		tmc.delegate(task, bruggeOffice);
+		tmc.delegate(task, here);
 		tmc.logOut();
-		tmc.logIn(bruggeOffice);
+		tmc.logIn(here);
 		Developer dev = tmc.createDeveloper("Office2Worker");
 		List<LocalDateTime> times = new ArrayList<LocalDateTime>(
 				tmc.getPossibleStartTimes(task));
-		tmc.getPlanner().createPlanning(times.get(0), task, dev).build();
+		tmc.createPlanning(times.get(0), task, dev).build();
 	}
 
 	@Test

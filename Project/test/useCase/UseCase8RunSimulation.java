@@ -28,7 +28,7 @@ public class UseCase8RunSimulation extends UseCaseTestBasis {
 	private Task createStandardTask(Duration taskDuration) {
 		Task task = Task.builder("desc", taskDuration, 0.5).build(project);
 		Developer dev = tmc.createDeveloper("dev");
-		tmc.getPlanner().createPlanning(now, task, dev).build();
+		tmc.createPlanning(now, task, dev).build();
 		return task;
 	}
 

@@ -39,7 +39,7 @@ public class UseCase5AdvanceTime extends UseCaseTestBasis {
 				.build(project1);
 
 		Developer dev1 = tmc.createDeveloper("dev1");
-		tmc.getPlanner().createPlanning(now, task1, dev1).build();
+		tmc.createPlanning(now, task1, dev1).build();
 		tmc.setExecuting(task1, now.minusDays(6));
 		tmc.setFinished(task1, now.minusDays(5));
 	}

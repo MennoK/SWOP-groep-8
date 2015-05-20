@@ -566,11 +566,6 @@ public class Planner {
 		}
 	}
 
-	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
-			Developer developer) {
-		return Planning.builder(startTime, task, developer, this);
-	}
-
 	/**
 	 * Memento inner class of the planner
 	 * 

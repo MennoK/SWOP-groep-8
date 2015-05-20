@@ -37,8 +37,7 @@ public class UseCase7ResolveConflicts extends UseCaseTestBasis {
 		originalTask = Task.builder("a task", Duration.ofHours(8), 0.2).build(
 				project);
 
-		tmc.getPlanner().createPlanning(now, plannedConflictingTask, developer)
-				.build();
+		tmc.createPlanning(now, plannedConflictingTask, developer).build();
 
 	}
 
@@ -47,19 +46,16 @@ public class UseCase7ResolveConflicts extends UseCaseTestBasis {
 
 		try {
 			// Conflicts with PlannedConflictingTask
-			tmc.getPlanner()
-					.createPlanning(now.plusHours(1), originalTask, developer)
+			tmc.createPlanning(now.plusHours(1), originalTask, developer)
 					.build();
 		} catch (ConlictingPlanningException conflict) {
 			// Replan the conflicting task to solve the conflict
-			tmc.getPlanner()
-					.createPlanning(now.plusMonths(4), plannedConflictingTask,
-							developer).build();
+			tmc.createPlanning(now.plusMonths(4), plannedConflictingTask,
+					developer).build();
 		}
 		try {
 			// now planning works
-			tmc.getPlanner()
-					.createPlanning(now.plusHours(1), originalTask, developer)
+			tmc.createPlanning(now.plusHours(1), originalTask, developer)
 					.build();
 		} catch (ConlictingPlanningException conflict) {
 			fail("There should be no conflict anymore\n"
