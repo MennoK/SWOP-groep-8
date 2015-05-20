@@ -12,7 +12,6 @@ import java.util.Set;
 import com.google.common.collect.HashBiMap;
 
 import taskmanager.Planning.PlanningBuilder;
-import taskmanager.exception.UnplannableDevAmountException;
 import utility.TimeSpan;
 import utility.WorkDay;
 import utility.WorkTime;
@@ -36,7 +35,8 @@ public class Planner {
 	/**
 	 * default constructor of planner
 	 * 
-	 * @param clock : required to keep track of system time
+	 * @param clock
+	 *            : required to keep track of system time
 	 */
 	Planner(ImmutableClock clock) {
 		this.clock = clock;
@@ -86,8 +86,8 @@ public class Planner {
 	}
 
 	/**
-	 * Checks whether a task is plannable for given time span. First checks
-	 * if the task is plannable.
+	 * Checks whether a task is plannable for given time span. First checks if
+	 * the task is plannable.
 	 * 
 	 * @param task
 	 *            : given task to be planned
@@ -131,7 +131,7 @@ public class Planner {
 				if (timeSpan.getBegin().getHour() >= type
 						.getDailyAvailability().getBegin().getHour()
 						&& timeSpan.getEnd().getHour() <= type
-						.getDailyAvailability().getEnd().getHour()) {
+								.getDailyAvailability().getEnd().getHour()) {
 					return true;
 				} else {
 					return false;
@@ -446,7 +446,8 @@ public class Planner {
 				}
 				for (Resource resource : planningBuilder.getResources()) {
 					if (planning.getResources().contains(resource)
-							&& !conflictingPlannings.contains(getTask(planning))) {
+							&& !conflictingPlannings
+									.contains(getTask(planning))) {
 						conflictingPlannings.add(getTask(planning));
 					}
 				}
@@ -473,9 +474,10 @@ public class Planner {
 	}
 
 	/**
-	 * returns the task that has the given planning 
+	 * returns the task that has the given planning
 	 * 
-	 * @param planning : the given planning
+	 * @param planning
+	 *            : the given planning
 	 * @return the task that is planned with the given planning
 	 */
 	public Task getTask(Planning planning) {
@@ -506,7 +508,7 @@ public class Planner {
 			return;
 		if (isPlannableForTimeSpan(task, this.plannings.get(task)
 				.getDevelopers(), new TimeSpan(this.clock.getCurrentTime(),
-						task.getDuration()))) {
+				task.getDuration()))) {
 			task.setStatus(TaskStatus.AVAILABLE);
 		} else {
 			task.setStatus(TaskStatus.UNAVAILABLE);
@@ -540,7 +542,9 @@ public class Planner {
 
 	/**
 	 * checks if a taks has a planning
-	 * @param task : the task for which you want to know if it has a planning
+	 * 
+	 * @param task
+	 *            : the task for which you want to know if it has a planning
 	 * @return true if the task has a planning
 	 */
 	public boolean taskHasPlanning(Task task) {
@@ -550,13 +554,14 @@ public class Planner {
 	/**
 	 * returns the planning of a task
 	 * 
-	 * @param task : the task for which you want the planning
+	 * @param task
+	 *            : the task for which you want the planning
 	 * @return the planning of the given task
 	 */
 	public Planning getPlanning(Task task) {
-		if(taskHasPlanning(task)){
+		if (taskHasPlanning(task)) {
 			return this.plannings.get(task);
-		}else {
+		} else {
 			return null;
 		}
 	}
