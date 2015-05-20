@@ -5,6 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +57,9 @@ public class DelegatedTaskExpertTester extends TaskManTester {
 		tmc.logOut();
 		tmc.logIn(bruggeOffice);
 		Developer dev = tmc.createDeveloper("Office2Worker");
-		tmc.getPlanner().createPlanning(time, task, dev).build();
+		List<LocalDateTime> times = new ArrayList<LocalDateTime>(
+				tmc.getPossibleStartTimes(task));
+		tmc.getPlanner().createPlanning(times.get(0), task, dev).build();
 	}
 
 	@Test
