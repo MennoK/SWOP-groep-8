@@ -68,7 +68,7 @@ public class ResourceType implements Visitable {
 		this.addResource(resource);
 		return resource;
 	}
-
+	
 	/**
 	 * Adds the resource to the set of resources if and only if the given
 	 * resources is valid. This means the given resource is not null and not

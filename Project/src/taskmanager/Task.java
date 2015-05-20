@@ -503,6 +503,12 @@ public class Task implements Visitable {
 	public Map<ResourceType, Integer> getRequiredResourceTypes() {
 		return requiredResourceTypes;
 	}
+	
+	void updateRequiredResourceType(ResourceType oldType, ResourceType newType) {
+		if(this.requiredResourceTypes.containsKey(oldType)) {
+			this.requiredResourceTypes.put(newType, this.requiredResourceTypes.remove(oldType));
+		}
+	}
 
 	/**
 	 * 

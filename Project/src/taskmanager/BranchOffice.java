@@ -1,5 +1,8 @@
 package taskmanager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A branch office is a part of some company with a specific geo- graphical
  * location. Each branch office hosts its own projects, manages its own
@@ -175,6 +178,21 @@ public class BranchOffice implements Visitable {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
+	}
+
+	/**
+	 * Updates the resource type pointers of the task to the ones of this branch office
+	 * @param task
+	 */
+	public void updateTaskResourceTypes(Task task) {
+		Set<ResourceType> oldTypes = new HashSet<ResourceType>(task.getRequiredResourceTypes().keySet());
+		for(ResourceType oldType: oldTypes) {
+			for(ResourceType ourType: this.getResourceExpert().getAllResourceTypes()) {
+				if(oldType.getName().equals(ourType.getName())) {
+					task.updateRequiredResourceType(oldType, ourType);
+				}
+			}
+		}
 	}
 
 }

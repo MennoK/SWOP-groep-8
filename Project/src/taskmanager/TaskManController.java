@@ -84,6 +84,7 @@ public class TaskManController {
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task,
 					activeOffice);
 		}
+		branchOffice.updateTaskResourceTypes(task);
 	}
 
 	/**
@@ -207,7 +208,7 @@ public class TaskManController {
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
 		checkActiveOfficeForNull();
-
+		
 		if (activeOffice.getDeveloperExpert().getAllDevelopers().isEmpty()) {
 			throw new IllegalStateException(
 					"Requires at least one developer to find a start time");
@@ -217,15 +218,17 @@ public class TaskManController {
 			throw new UnplannableDevAmountException(task.getAmountOfRequiredDevelopers());
 		}
 		
-		for(ResourceType type : activeOffice.getResourceExpert().getAllResourceTypes()){
-			if(task.getRequiredResourceTypes().keySet().contains(type)){
-				if (type.getAllResources().size() < task.getRequiredResourceTypes().get(type)){
-					throw new UnplannableResourceAmountException(task.getRequiredResourceTypes().get(type), type);
+		for(ResourceType taskResource : task.getRequiredResourceTypes().keySet()){
+
+			if(this.getActiveOffice().getResourceExpert().getAllResourceTypes().contains(taskResource)){
+
+				if(taskResource.getAllResources().size() < task.getRequiredResourceTypes().get(taskResource)){
+					throw new UnplannableResourceAmountException(task.getRequiredResourceTypes().get(taskResource), taskResource);
 				}
 			}
-			else{
-				throw new UnplannableResourceTypeException(type);
-			}
+            else{
+                  throw new UnplannableResourceTypeException(taskResource);
+            }
 		}
 
 		return activeOffice.getPlanner().getPossibleStartTimes(task, getTime(),
