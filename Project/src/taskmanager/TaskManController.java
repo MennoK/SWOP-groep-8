@@ -8,9 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import taskmanager.Planning.PlanningBuilder;
-import taskmanager.exception.UnplannableDevAmountException;
-import taskmanager.exception.UnplannableResourceAmountException;
-import taskmanager.exception.UnplannableResourceTypeException;
 import utility.TimeSpan;
 
 public class TaskManController {
@@ -210,31 +207,35 @@ public class TaskManController {
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
 		checkActiveOfficeForNull();
 
-		if (activeOffice.getDeveloperExpert().getAllDevelopers().isEmpty()) {
-			throw new IllegalStateException(
-					"Requires at least one developer to find a start time");
-		}
-
-		if (activeOffice.getDeveloperExpert().getAllDevelopers().size() < task
+		if (getActiveOffice().getDeveloperExpert().getAllDevelopers().size() < task
 				.getAmountOfRequiredDevelopers()) {
-			throw new UnplannableDevAmountException(
-					task.getAmountOfRequiredDevelopers());
+			throw new IllegalStateException(
+					"Impossible to plan this task for the amount of developers ("
+							+ task.getAmountOfRequiredDevelopers()
+							+ "). Try delegating to another branch office ");
 		}
 
 		for (ResourceType taskResource : task.getRequiredResourceTypes()
 				.keySet()) {
 
-			if (this.getActiveOffice().getResourceExpert()
-					.getAllResourceTypes().contains(taskResource)) {
+			if (getActiveOffice().getResourceExpert().getAllResourceTypes()
+					.contains(taskResource)) {
 
 				if (taskResource.getAllResources().size() < task
 						.getRequiredResourceTypes().get(taskResource)) {
-					throw new UnplannableResourceAmountException(task
-							.getRequiredResourceTypes().get(taskResource),
-							taskResource);
+					throw new IllegalStateException(
+							"Impossible to plan this task for "
+									+ taskResource.getName()
+									+ " with the amount of resources ("
+									+ task.getRequiredResourceTypes().get(
+											taskResource)
+									+ "). Try delegating to another branch office ");
 				}
 			} else {
-				throw new UnplannableResourceTypeException(taskResource);
+				throw new IllegalStateException(
+						"Impossible to plan this task, because office does not have the resourceType: "
+								+ taskResource.getName()
+								+ ". Try delegating to another branch office ");
 			}
 		}
 
