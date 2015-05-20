@@ -125,7 +125,7 @@ branch:
             acceptableDeviation: 10
             alternativeFor     :
             requiredTypes      : [{type: 2,  quantity: 1},{type: 0,  quantity: 1}] #demo kit
-            requiredDevelopers : 1
+            requiredDevelopers : 4
             prerequisiteTasks  : [2]
             status             : 
 

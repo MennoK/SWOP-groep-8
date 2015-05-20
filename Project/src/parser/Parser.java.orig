@@ -203,7 +203,11 @@ public class Parser {
 						.get("conflictsWith");
 				for (Integer resourceTypeNr : conflictedResourceTypes) {
 					builder.addConflictedResourceTypes(resourceTypeList
+<<<<<<< HEAD
 							.get(resourceTypeNr -1));
+=======
+							.get(resourceTypeNr));
+>>>>>>> 9c483ac369cc74c68808bc79d40a117494622fe8
 				}
 			}
 
@@ -251,7 +255,7 @@ public class Parser {
 			TaskManController tmc) {
 		for (LinkedHashMap<String, Object> developer : developers) {
 			// get the developer name
-			String name= (String) developer.get("name");
+			String name = (String) developer.get("name");
 			tmc.createDeveloper(name);
 		}
 	}
@@ -305,8 +309,8 @@ public class Parser {
 					.get("acceptableDeviation")));
 			acceptableDeviation /= 100;
 
-			Project projectOfTask = new ArrayList<>(controller.getAllProjectsActiveOffice())
-					.get(projectNumber);
+			Project projectOfTask = new ArrayList<>(
+					controller.getAllProjectsActiveOffice()).get(projectNumber);
 
 			TaskBuilder builder = Task.builder(description, estimatedDuration,
 					acceptableDeviation);
@@ -328,8 +332,13 @@ public class Parser {
 						.getAllTasks()).get(alternativeTaskNr-1));
 			}
 
+<<<<<<< HEAD
+			//add amount of devs needed
+			if (task.get("requiredDevelopers") != null){
+=======
 			// add amount of devs needed
 			if (task.get("requiredDevelopers") != null) {
+>>>>>>> 9c483ac369cc74c68808bc79d40a117494622fe8
 				int amountOfDevs = (int) task.get("requiredDevelopers");
 				builder.amountOfRequiredDevelopers(amountOfDevs);
 			}
@@ -448,7 +457,9 @@ public class Parser {
 			Project project = new ArrayList<>(
 					controller.getAllProjectsActiveOffice()).get(projectNr);
 			Task task = new ArrayList<>(project.getAllTasks()).get(taskNr);
-			controller.delegate(task,  new ArrayList<>(controller.getAllOffices()).get(branchToNr));
+			controller
+					.delegate(task, new ArrayList<>(controller.getAllOffices())
+							.get(branchToNr));
 		}
 	}
 }
