@@ -384,7 +384,7 @@ public class ParserTester {
 		assertEquals(0, task3.getAcceptableDeviation(), 0.001);
 		assertNull(task3.getOriginal());
 
-		assertEquals(1, task3.getDependencies().size());
+		assertEquals(0, task3.getDependencies().size());
 		assertEquals(taskmanager.TaskStatus.FAILED, task3.getStatus());
 		assertEquals(
 				LocalDateTime.parse(("2014-01-02 18:00"), dateTimeFormatter),
@@ -403,7 +403,7 @@ public class ParserTester {
 		assertEquals("description", task4.getDescription());
 		assertEquals(Duration.ofHours(4), task4.getEstimatedDuration());
 		assertEquals(task4.getAcceptableDeviation(), 0, 0.001);
-		assertEquals(1, task4.getDependencies().size());
+		assertEquals(0, task4.getDependencies().size());
 		assertEquals(task4.getOriginal(), new ArrayList<>(
 				new ArrayList<Project>(tmc.getAllProjectsActiveOffice()).get(1)
 						.getAllTasks()).get(2));

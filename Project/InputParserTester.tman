@@ -85,6 +85,7 @@ branch:
             alternativeFor     :
             requiredTypes      : [{type: 0,  quantity: 2}, {type: 2,  quantity: 1}]
             prerequisiteTasks  :
+            requiredDevelopers : 2
             status             : finished
             startTime          : "2014-01-01 10:00"
             endTime            : "2014-01-02 17:00"
@@ -96,6 +97,7 @@ branch:
             alternativeFor     :
             requiredTypes      : []
             prerequisiteTasks  :
+            requiredDevelopers : 1
             status             : finished
             startTime          : "2014-01-02 17:10"
             endTime            : "2014-01-02 17:20"
@@ -107,6 +109,7 @@ branch:
             alternativeFor     :
             requiredTypes      : [{type: 5,  quantity: 1}]
             prerequisiteTasks  :
+            requiredDevelopers : 1
             status             :
 
           - project            : 1
@@ -115,7 +118,8 @@ branch:
             acceptableDeviation: 0
             alternativeFor     :
             requiredTypes      : []
-            prerequisiteTasks  : [1]
+            prerequisiteTasks  : []
+            requiredDevelopers : 1
             status             : failed
             startTime          : "2014-01-02 18:00"
             endTime            : "2014-03-25 18:00"
@@ -126,7 +130,8 @@ branch:
             acceptableDeviation: 0
             alternativeFor     : 3
             requiredTypes      : [{type: 5,  quantity: 1}]
-            prerequisiteTasks  : [1]
+            prerequisiteTasks  : []
+            requiredDevelopers : 1
             status             : executing
 
           - project            : 2
@@ -136,6 +141,7 @@ branch:
             alternativeFor     :
             requiredTypes      : []
             prerequisiteTasks  :
+            requiredDevelopers : 1
             status             :
 
           - project            : 2
@@ -145,6 +151,7 @@ branch:
             alternativeFor     :
             requiredTypes      : []
             prerequisiteTasks  :
+            requiredDevelopers : 1
             status             :
     plannings:
           - plannedStartTime : "2014-01-01 09:00"
@@ -155,7 +162,7 @@ branch:
             developers       : [1]
             task             : 1
             resources        : []
-          - plannedStartTime : "2014-01-02 18:00"
+          - plannedStartTime : "2014-01-02 18:01"
             developers       : [1]
             task             : 3
             resources        : []

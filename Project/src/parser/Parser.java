@@ -197,7 +197,7 @@ public class Parser {
 						.get("conflictsWith");
 				for (Integer resourceTypeNr : conflictedResourceTypes) {
 					builder.addConflictedResourceTypes(resourceTypeList
-							.get(resourceTypeNr  ));
+							.get(resourceTypeNr -1));
 				}
 			}
 
@@ -319,9 +319,9 @@ public class Parser {
 			if (task.get("alternativeFor") != null) {
 				int alternativeTaskNr = (int) task.get("alternativeFor");
 				builder.setOriginalTask(new ArrayList<>(projectOfTask
-						.getAllTasks()).get(alternativeTaskNr));
+						.getAllTasks()).get(alternativeTaskNr-1));
 			}
-			
+
 			//add amount of devs needed
 			if (task.get("requiredDevelopers") != null){
 				int amountOfDevs = (int) task.get("requiredDevelopers");
@@ -420,7 +420,6 @@ public class Parser {
 			}
 		}
 		pbuilder.build();
-
 	}
 
 	/**
