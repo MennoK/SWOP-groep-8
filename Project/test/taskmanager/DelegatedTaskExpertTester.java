@@ -12,8 +12,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskmanager.exception.UnplannableResourceTypeException;
-
 public class DelegatedTaskExpertTester extends TaskManTester {
 
 	private BranchOffice bruggeOffice;
@@ -46,7 +44,7 @@ public class DelegatedTaskExpertTester extends TaskManTester {
 				.contains(myTask));
 	}
 
-	@Test(expected = UnplannableResourceTypeException.class)
+	@Test(expected = IllegalStateException.class)
 	public void planDelegatedTaskNoRessourceAvaillable() {
 		ResourceType car = ResourceType.builder("car").build(
 				tmc.getActiveOffice());

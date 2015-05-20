@@ -12,9 +12,6 @@ import taskmanager.*;
 import taskmanager.Task.TaskBuilder;
 import taskmanager.exception.ConlictingPlanningException;
 import taskmanager.exception.IllegalResourceException;
-import taskmanager.exception.UnplannableDevAmountException;
-import taskmanager.exception.UnplannableResourceAmountException;
-import taskmanager.exception.UnplannableResourceTypeException;
 import ui.exception.ExitUseCaseException;
 import utility.TimeSpan;
 
@@ -163,21 +160,8 @@ public class UiTaskMan {
 			plan.build();
 		} catch (ConlictingPlanningException conflict) {
 			resolveConflict(conflict, task);
-		} catch (UnplannableDevAmountException e) {
-			System.out
-					.println("Impossible to plan this task for the amount of developers ("
-							+ e.getAmountOfDevelopers()
-							+ "). Try delegating to another branch office ");
-		} catch (UnplannableResourceAmountException e) {
-			System.out.println("Impossible to plan this task for "
-					+ e.getResourceType() + " with the amount of resources ("
-					+ e.getAmountOfResources()
-					+ "). Try delegating to another branch office ");
-		} catch (UnplannableResourceTypeException e) {
-			System.out
-					.println("Impossible to plan this task, because office does not have the resourceType: "
-							+ e.getResourceType()
-							+ ". Try delegating to another branch office ");
+		} catch (IllegalStateException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -204,9 +188,7 @@ public class UiTaskMan {
 		}
 	}
 
-	private TimeSpan planSelectTimeSpan(Task task) throws ExitUseCaseException,
-			UnplannableDevAmountException, UnplannableResourceAmountException,
-			UnplannableResourceTypeException {
+	private TimeSpan planSelectTimeSpan(Task task) throws ExitUseCaseException {
 		System.out.println("Possible starting times:");
 		System.out.println(Printer.listDates(new ArrayList<LocalDateTime>(tmc
 				.getPossibleStartTimes(task))));
