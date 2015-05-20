@@ -30,9 +30,11 @@ public class ResourceType implements Visitable {
 	private Memento memento;
 
 	/**
-	 * Constructor of resourceType that uses a builder to make a new resourceType 
+	 * Constructor of resourceType that uses a builder to make a new
+	 * resourceType
 	 * 
-	 * @param builder : the builder that is used
+	 * @param builder
+	 *            : the builder that is used
 	 */
 	public ResourceType(ResourceTypeBuilder builder) {
 		setName(builder.name);
@@ -112,7 +114,7 @@ public class ResourceType implements Visitable {
 	 * @throws IllegalArgumentException
 	 *             : if the given resource type is already in the list
 	 */
-	public void addRequiredResourceType(ResourceType requiredResourceType) {
+	void addRequiredResourceType(ResourceType requiredResourceType) {
 		if (requiredResourceType.hasRequiredResourceType(this))
 			throw new IllegalArgumentException(
 					"Tried to create a required resource type loop.");
@@ -175,7 +177,7 @@ public class ResourceType implements Visitable {
 	 * @param conflictedResourceType
 	 *            : resource type
 	 */
-	public void addConflictedResourceType(ResourceType conflictedResourceType) {
+	void addConflictedResourceType(ResourceType conflictedResourceType) {
 		if (conflictedResourceType.hasConflictedResourceType(this))
 			throw new IllegalArgumentException(
 					"Tried to create a required resource type loop.");

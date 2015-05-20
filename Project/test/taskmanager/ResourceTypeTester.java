@@ -70,7 +70,7 @@ public class ResourceTypeTester extends TaskManTester {
 		ResourceType resType = ResourceType.builder("type")
 				.addRequiredResourceTypes(requiredResourceType)
 				.build(tmc.getActiveOffice());
-		// TODO discuss do we need this function, doesn't the builder do this?
+
 		resType.addRequiredResourceType(requiredResourceType);
 	}
 
@@ -79,7 +79,7 @@ public class ResourceTypeTester extends TaskManTester {
 		ResourceType resType = ResourceType.builder("type")
 				.addRequiredResourceTypes(requiredResourceType)
 				.build(tmc.getActiveOffice());
-		// TODO discuss do we need this function, doesn't the builder do this?
+
 		resType.addConflictedResourceType(requiredResourceType);
 	}
 
@@ -88,7 +88,7 @@ public class ResourceTypeTester extends TaskManTester {
 		ResourceType resType = ResourceType.builder("type")
 				.addConflictedResourceTypes(conflictedResourceType)
 				.build(tmc.getActiveOffice());
-		// TODO discuss do we need this function, doesn't the builder do this?
+
 		resType.addRequiredResourceType(conflictedResourceType);
 	}
 
