@@ -195,4 +195,37 @@ public class BranchOffice implements Visitable {
 		}
 	}
 
+	void checkExecutionCapability(TaskManController taskManController, Task task) {
+		if (taskManController.getActiveOffice().getDeveloperExpert().getAllDevelopers().size() < task
+				.getAmountOfRequiredDevelopers()) {
+			throw new IllegalStateException("To many developers required ("
+					+ task.getAmountOfRequiredDevelopers()
+					+ "). Try delegating to another branch office.");
+		}
+	
+		for (ResourceType taskResource : task.getRequiredResourceTypes()
+				.keySet()) {
+	
+			if (taskManController.getActiveOffice().getResourceExpert().getAllResourceTypes()
+					.contains(taskResource)) {
+	
+				if (taskResource.getAllResources().size() < task
+						.getRequiredResourceTypes().get(taskResource)) {
+					throw new IllegalStateException(
+							"Impossible to plan this task for "
+									+ taskResource.getName()
+									+ " with the amount of resources ("
+									+ task.getRequiredResourceTypes().get(
+											taskResource)
+									+ "). Try delegating to another branch office.");
+				}
+			} else {
+				throw new IllegalStateException(
+						"Impossible to plan this task, because office does not have the resourceType: "
+								+ taskResource.getName()
+								+ ". Try delegating to another branch office.");
+			}
+		}
+	}
+
 }

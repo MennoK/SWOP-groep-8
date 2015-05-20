@@ -171,12 +171,20 @@ public class TaskManControllerTester extends TaskManTester {
 		assertNotNull(tmc.getActiveOffice());
 		tmc.logOut();
 		assertNull(tmc.getActiveDeveloper());
-		assertNull(tmc.getActiveOffice());
+		try {
+			tmc.getActiveOffice();
+
+			fail("Expected not logged in exception");
+		} catch (Exception e) {
+		}
 	}
 
 	@Test
 	public void ActiveOfficeTests() {
-		Task task = createPlannedTask(project, Duration.ofHours(2));
+		ResourceType car = ResourceType.builder("Car").build(here);
+		Resource redCar = car.createResource("red car");
+		Task task = createPlannedRessourceTask(project, Duration.ofHours(2),
+				car, redCar, time);
 		Task taskExecuting = createPlannedTask(project, Duration.ofHours(2));
 		tmc.setExecuting(taskExecuting, time);
 		tmc.logOut();

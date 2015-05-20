@@ -74,13 +74,13 @@ public class TaskManController {
 		if (taskIsDelegatedToActiveOffice(task)) {
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(
 					task,
-					activeOffice.getDelegatedTaskExpert().getOriginalOffice(
+					getActiveOffice().getDelegatedTaskExpert().getOriginalOffice(
 							task));
-			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
+			getActiveOffice().getDelegatedTaskExpert().removeDelegatedTask(task);
 
 		} else {
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(task,
-					activeOffice);
+					getActiveOffice());
 		}
 		branchOffice.updateTaskResourceTypes(task);
 	}
@@ -95,9 +95,8 @@ public class TaskManController {
 	 * @param startTime
 	 */
 	public void setExecuting(Task task, LocalDateTime startTime) {
-		checkActiveOfficeForNull();
 		task.setExecuting(startTime);
-		activeOffice.getPlanner().getPlanning(task)
+		getActiveOffice().getPlanner().getPlanning(task)
 				.setTimeSpan(new TimeSpan(startTime, task.getDuration()));
 		updateStatusAll();
 	}
@@ -110,9 +109,8 @@ public class TaskManController {
 	 * @param endTime
 	 */
 	public void setFinished(Task task, LocalDateTime endTime) {
-		checkActiveOfficeForNull();
 		task.setFinished(endTime);
-		activeOffice.getPlanner().getPlanning(task).setEndTime(endTime);
+		getActiveOffice().getPlanner().getPlanning(task).setEndTime(endTime);
 		updateStatusAll();
 	}
 
@@ -124,9 +122,8 @@ public class TaskManController {
 	 * @param endTime
 	 */
 	public void setFailed(Task task, LocalDateTime endTime) {
-		checkActiveOfficeForNull();
 		task.setFailed(endTime);
-		activeOffice.getPlanner().getPlanning(task).setEndTime(endTime);
+		getActiveOffice().getPlanner().getPlanning(task).setEndTime(endTime);
 		updateStatusAll();
 	}
 
@@ -148,11 +145,10 @@ public class TaskManController {
 	 * @return set of tasks without a planning
 	 */
 	private Set<Task> getUnplannedTasks() {
-		checkActiveOfficeForNull();
-		Set<Task> allTasks = new HashSet<Task>(activeOffice
+		Set<Task> allTasks = new HashSet<Task>(getActiveOffice()
 				.getDelegatedTaskExpert().getAllDelegatedTasks());
-		allTasks.addAll(activeOffice.getProjectExpert().getAllTasks());
-		return activeOffice.getPlanner().getUnplannedTasks(allTasks);
+		allTasks.addAll(getActiveOffice().getProjectExpert().getAllTasks());
+		return getActiveOffice().getPlanner().getUnplannedTasks(allTasks);
 	}
 
 	/**
@@ -183,8 +179,7 @@ public class TaskManController {
 	}
 
 	private boolean taskIsDelegatedToActiveOffice(Task unplannedTask) {
-		checkActiveOfficeForNull();
-		return activeOffice.getDelegatedTaskExpert().getAllDelegatedTasks()
+		return getActiveOffice().getDelegatedTaskExpert().getAllDelegatedTasks()
 				.contains(unplannedTask);
 	}
 
@@ -205,42 +200,11 @@ public class TaskManController {
 	 * @return A set of localdateTimes
 	 */
 	public Set<LocalDateTime> getPossibleStartTimes(Task task) {
-		checkActiveOfficeForNull();
+		getActiveOffice().checkExecutionCapability(this, task);
 
-		if (getActiveOffice().getDeveloperExpert().getAllDevelopers().size() < task
-				.getAmountOfRequiredDevelopers()) {
-			throw new IllegalStateException(
-					"Impossible to plan this task for the amount of developers ("
-							+ task.getAmountOfRequiredDevelopers()
-							+ "). Try delegating to another branch office ");
-		}
-
-		for (ResourceType taskResource : task.getRequiredResourceTypes()
-				.keySet()) {
-
-			if (getActiveOffice().getResourceExpert().getAllResourceTypes()
-					.contains(taskResource)) {
-
-				if (taskResource.getAllResources().size() < task
-						.getRequiredResourceTypes().get(taskResource)) {
-					throw new IllegalStateException(
-							"Impossible to plan this task for "
-									+ taskResource.getName()
-									+ " with the amount of resources ("
-									+ task.getRequiredResourceTypes().get(
-											taskResource)
-									+ "). Try delegating to another branch office ");
-				}
-			} else {
-				throw new IllegalStateException(
-						"Impossible to plan this task, because office does not have the resourceType: "
-								+ taskResource.getName()
-								+ ". Try delegating to another branch office ");
-			}
-		}
-
-		return activeOffice.getPlanner().getPossibleStartTimes(task, getTime(),
-				activeOffice.getDeveloperExpert().getAllDevelopers());
+		return getActiveOffice().getPlanner().getPossibleStartTimes(task,
+				getTime(),
+				getActiveOffice().getDeveloperExpert().getAllDevelopers());
 	}
 
 	/**
@@ -252,11 +216,10 @@ public class TaskManController {
 	 * @return The selected resources
 	 */
 	public Set<Resource> selectResources(Task task, TimeSpan timeSpan) {
-		checkActiveOfficeForNull();
 		Set<Resource> selected = new HashSet<Resource>();
 		for (ResourceType type : task.getRequiredResourceTypes().keySet()) {
 			ArrayList<Resource> available = new ArrayList<Resource>(
-					activeOffice.getPlanner().resourcesOfTypeAvailableFor(type,
+					getActiveOffice().getPlanner().resourcesOfTypeAvailableFor(type,
 							task, timeSpan));
 			selected.addAll(available.subList(0, task
 					.getRequiredResourceTypes().get(type)));
@@ -270,7 +233,7 @@ public class TaskManController {
 	 * @return projects
 	 */
 	public Set<Project> getAllProjectsActiveOffice() {
-		return Collections.unmodifiableSet(activeOffice.getProjectExpert()
+		return Collections.unmodifiableSet(getActiveOffice().getProjectExpert()
 				.getAllProjects());
 	}
 
@@ -293,7 +256,7 @@ public class TaskManController {
 	 * @return resourcetypes : set of all resource types
 	 */
 	public Set<ResourceType> getAllResourceTypes() {
-		return Collections.unmodifiableSet(activeOffice.getResourceExpert()
+		return Collections.unmodifiableSet(getActiveOffice().getResourceExpert()
 				.getAllResourceTypes());
 	}
 
@@ -303,7 +266,7 @@ public class TaskManController {
 	 * @return developers : set of all developers
 	 */
 	public Set<Developer> getAllDevelopers() {
-		return Collections.unmodifiableSet(activeOffice.getDeveloperExpert()
+		return Collections.unmodifiableSet(getActiveOffice().getDeveloperExpert()
 				.getAllDevelopers());
 	}
 
@@ -316,12 +279,11 @@ public class TaskManController {
 	 * @return All the tasks to which this developer is assigned.
 	 */
 	public Set<Task> getAllTasks() {
-		checkActiveOfficeForNull();
 		Set<Task> tasks = new HashSet<Task>();
 		for (Project project : getAllProjectsActiveOffice()) {
 			for (Task task : project.getAllTasks()) {
-				if (activeOffice.getPlanner().taskHasPlanning(task)
-						&& activeOffice.getPlanner().getPlanning(task)
+				if (getActiveOffice().getPlanner().taskHasPlanning(task)
+						&& getActiveOffice().getPlanner().getPlanning(task)
 								.getDevelopers().contains(activeDeveloper)) {
 					tasks.add(task);
 				}
@@ -392,7 +354,7 @@ public class TaskManController {
 	 */
 	public Project createProject(String name, String description,
 			LocalDateTime creationTime, LocalDateTime dueTime) {
-		return activeOffice.getProjectExpert().createProject(name, description,
+		return getActiveOffice().getProjectExpert().createProject(name, description,
 				creationTime, dueTime);
 	}
 
@@ -409,7 +371,7 @@ public class TaskManController {
 	 */
 	public Project createProject(String name, String description,
 			LocalDateTime dueTime) {
-		return activeOffice.getProjectExpert().createProject(name, description,
+		return getActiveOffice().getProjectExpert().createProject(name, description,
 				getTime(), dueTime);
 	}
 
@@ -421,7 +383,7 @@ public class TaskManController {
 	 *            : given name
 	 */
 	public Developer createDeveloper(String name) {
-		return activeOffice.getDeveloperExpert().createDeveloper(name);
+		return getActiveOffice().getDeveloperExpert().createDeveloper(name);
 	}
 
 	/**
@@ -434,7 +396,6 @@ public class TaskManController {
 	 */
 	public PlanningBuilder createPlanning(LocalDateTime startTime, Task task,
 			Developer developer) {
-		checkActiveOfficeForNull();
 		return Planning.builder(startTime, task, developer, getPlanner());
 	}
 
@@ -444,8 +405,7 @@ public class TaskManController {
 	 * @return planningExpert : planning expert
 	 */
 	public Planner getPlanner() {
-		checkActiveOfficeForNull();
-		return activeOffice.getPlanner();
+		return getActiveOffice().getPlanner();
 	}
 
 	/**
@@ -459,6 +419,9 @@ public class TaskManController {
 	 * @return The branch office where the user is currently logged in
 	 */
 	public BranchOffice getActiveOffice() {
+		if (activeOffice == null) {
+			throw new IllegalStateException("No active branch office");
+		}
 		return activeOffice;
 	}
 
@@ -473,7 +436,7 @@ public class TaskManController {
 	 * @return all the tasks that are delegated to the active office
 	 */
 	public Set<Task> getAllDelegatedTasks() {
-		return Collections.unmodifiableSet(activeOffice
+		return Collections.unmodifiableSet(getActiveOffice()
 				.getDelegatedTaskExpert().getAllDelegatedTasks());
 	}
 
@@ -529,21 +492,11 @@ public class TaskManController {
 	}
 
 	/**
-	 * Checks whether the active branch office is null or not. If its null, it
-	 * will throw an illegal state exception
-	 */
-	private void checkActiveOfficeForNull() {
-		if (this.activeOffice == null) {
-			throw new IllegalStateException("No active branch office");
-		}
-	}
-
-	/**
 	 * Saves the current state of the system. Only the last state is remembered
 	 */
 	public void saveSystem() {
 		for (BranchOffice office : this.getCompany().getAllBranchOffices()) {
-			office.saveSystem(this.activeOffice);
+			office.saveSystem(this.getActiveOffice());
 		}
 	}
 
@@ -552,7 +505,7 @@ public class TaskManController {
 	 */
 	public void loadSystem() {
 		for (BranchOffice office : this.getCompany().getAllBranchOffices()) {
-			office.loadSystem(this.activeOffice);
+			office.loadSystem(this.getActiveOffice());
 		}
 	}
 
