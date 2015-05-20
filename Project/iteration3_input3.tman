@@ -2,7 +2,7 @@
 # Everything after '#' is ignored (i.e. single line comment)
 # Input file created for the demo 
 
-systemTime: "2014-04-01 09:00"
+systemTime: "2015-04-01 09:00"
 
 branch:
   - location : "200A dep. cw"
@@ -125,7 +125,7 @@ branch:
             acceptableDeviation: 10
             alternativeFor     :
             requiredTypes      : [{type: 2,  quantity: 1},{type: 0,  quantity: 1}] #demo kit
-            requiredDevelopers : 4
+            requiredDevelopers : 1
             prerequisiteTasks  : [2]
             status             : 
 
@@ -171,6 +171,29 @@ branch:
             creationTime : "2015-05-23 12:00"
             dueTime      : "2015-06-21 18:00"
     tasks:
+          - project            : 0
+            description        : "Religie hoofdstuk 1 leren"
+            estimatedDuration  : 1
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      : 
+            requiredDevelopers : 1
+            prerequisiteTasks  :
+            status             : 
+            startTime          : 
+            endTime            : 
+
+          - project            : 0
+            description        : "SWOP design patterns leren"
+            estimatedDuration  : 1
+            acceptableDeviation: 50
+            alternativeFor     :
+            requiredTypes      :
+            requiredDevelopers : 1
+            prerequisiteTasks  :
+            status             : 
+            startTime          : 
+            endTime            : 
 
     plannings:
 
@@ -236,5 +259,4 @@ branch:
 
     tasks:
 
-    plannings:        
-
+    plannings: 
