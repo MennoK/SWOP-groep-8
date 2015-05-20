@@ -274,8 +274,6 @@ public class TaskManController {
 	 * 
 	 * Returns a set with all tasks of a given developer
 	 * 
-	 * @param dev
-	 *            the active Developer
 	 * @return All the tasks to which this developer is assigned.
 	 */
 	public Set<Task> getAllTasks() {
