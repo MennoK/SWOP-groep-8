@@ -60,7 +60,6 @@ public class Reader {
 		}
 	}
 
-	// TODO try to merge with select<Visitable>
 	LocalDateTime selectDate(Collection<LocalDateTime> options)
 			throws ExitUseCaseException {
 		List<LocalDateTime> listedOptions = new ArrayList<LocalDateTime>(

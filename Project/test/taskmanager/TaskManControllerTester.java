@@ -158,7 +158,7 @@ public class TaskManControllerTester extends TaskManTester {
 		assertTrue(office2.getDelegatedTaskExpert().getAllDelegatedTasks()
 				.contains(taskToDelegate2));
 		assertEquals(office3, office2.getDelegatedTaskExpert()
-				.officeForDelegatedTask(taskToDelegate2));
+				.getOriginalOffice(taskToDelegate2));
 		assertEquals(2, office2.getDelegatedTaskExpert().getAllDelegatedTasks()
 				.size());
 		assertEquals(0, activeOffice.getDelegatedTaskExpert()

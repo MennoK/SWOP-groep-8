@@ -21,8 +21,6 @@ public class UseCase4UpdateTaskStatusTester extends UseCaseTestBasis {
 	private Task task3;
 	private Task task4;
 
-	// TODO log in a user, select task available to that user, check assignment
-
 	@Before
 	public void setUp() {
 		super.setUpTMC(LocalDateTime.of(2015, 03, 02, 00, 00));

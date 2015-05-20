@@ -77,7 +77,7 @@ public class TaskManController {
 			branchOffice.getDelegatedTaskExpert().addDelegatedTask(
 					task,
 					activeOffice.getDelegatedTaskExpert()
-							.officeForDelegatedTask(task));
+							.getOriginalOffice(task));
 			activeOffice.getDelegatedTaskExpert().removeDelegatedTask(task);
 
 		} else {

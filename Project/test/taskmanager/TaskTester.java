@@ -248,7 +248,7 @@ public class TaskTester extends TaskManTester {
 		ResourceType resType = ResourceType.builder("resourcetype").build(
 				tmc.getActiveOffice());
 		resType.createResource("res1");
-		// TODO discuss isn't the builder responsible for this?
+
 		baseTask.addResourceType(resType, 1);
 		baseTask.addResourceType(resType, 1);
 	}

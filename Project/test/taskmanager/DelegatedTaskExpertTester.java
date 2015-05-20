@@ -29,7 +29,7 @@ public class DelegatedTaskExpertTester extends TaskManTester {
 		Task myTask = this.createTask(myProject, Duration.ofHours(5));
 		this.tmc.delegate(myTask, here);
 		assertTrue(here.getDelegatedTaskExpert().getAllDelegatedTasks().contains(myTask));
-		assertTrue(here.getDelegatedTaskExpert().officeForDelegatedTask(myTask).equals(bruggeOffice));
+		assertTrue(here.getDelegatedTaskExpert().getOriginalOffice(myTask).equals(bruggeOffice));
 		this.tmc.logIn(here);
 		this.tmc.logIn(dev);
 		this.tmc.delegate(myTask, bruggeOffice);

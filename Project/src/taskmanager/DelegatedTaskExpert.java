@@ -41,28 +41,30 @@ public class DelegatedTaskExpert {
 	}
 
 	void removeDelegatedTask(Task task) {
-		delegatedTasks.remove(officeForDelegatedTask(task), task);
+		delegatedTasks.remove(getOriginalOffice(task), task);
 	}
 
 	/**
 	 * returns the original branch office of a task
-	 *  
-	 * @param delegatedTask : the task you want the original office of
+	 * 
+	 * @param delegatedTask
+	 *            : the task you want the original office of
 	 * @return : the original office of the task
 	 */
-	public BranchOffice officeForDelegatedTask(Task delegatedTask) {
+	public BranchOffice getOriginalOffice(Task delegatedTask) {
 		BranchOffice returnOffice = null;
 		for (BranchOffice office : delegatedTasks.keySet()) {
 			if (delegatedTasks.containsEntry(office, delegatedTask)) {
 				returnOffice = office;
 			}
 		}
-		if(returnOffice != null){
-			return returnOffice;	
-		}else{
-			throw new IllegalArgumentException("the task is not delegated to this office");
+		if (returnOffice != null) {
+			return returnOffice;
+		} else {
+			throw new IllegalArgumentException(
+					"the task is not delegated to this office");
 		}
-		
+
 	}
 
 	/**
