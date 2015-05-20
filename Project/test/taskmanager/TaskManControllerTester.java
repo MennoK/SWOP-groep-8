@@ -40,6 +40,16 @@ public class TaskManControllerTester extends TaskManTester {
         tmc.getPossibleStartTimes(newTask);
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void possibleStartTimesNotEnoughResources() {
+		ResourceType car = ResourceType.builder("car").build(
+				tmc.getActiveOffice());
+		car.createResource("red car");
+		Task newTask = Task.builder("desc", Duration.ofHours(8), 0.5)
+				.addRequiredResourceType(car, 4).build(project);
+        tmc.getPossibleStartTimes(newTask);
+	}
+
 	@Test
 	public void SelectedRessourceTest() {
 		// Add 2 cars to the system
